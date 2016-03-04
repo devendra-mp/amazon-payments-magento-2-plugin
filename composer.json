@@ -1,6 +1,6 @@
 {
-    "name": "amazon/payment",
-    "description": "Integration with Amazon Payments",
+    "name": "amazon/module-payment",
+    "description": "Official Magento2 Plugin to integrate with Amazon Payments",
     "require": {
         "php": "~5.5.0|~5.6.0|~7.0.0",
         "magento/module-sales": "100.0.*",
