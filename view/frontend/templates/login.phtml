@@ -1,9 +1,9 @@
 <div id="LoginWithAmazon"> </div>
 
-    <script>
-        window.onAmazonLoginReady = function() {
-            amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
-        };
+<script>
+    window.onAmazonLoginReady = function() {
+        amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
+    };
 
     window.onAmazonPaymentsReady = function(){
         // render the button here
@@ -19,22 +19,22 @@
                 authRequest = amazon.Login.authorize (loginOptions, "https://amazon-payment.dev/customer/account");
             },
 
-        onError: function(error) {
-          // your error handling code.
-          // alert("The following error occurred: "
-          //        + error.getErrorCode()
-          //        + ' - ' + error.getErrorMessage());
-        }
-      });
+            onError: function(error) {
+                // your error handling code.
+                // alert("The following error occurred: "
+                //        + error.getErrorCode()
+                //        + ' - ' + error.getErrorMessage());
+            }
+        });
     }
-  </script>
+</script>
 
-  <script async="async" type='text/javascript'
-      src='https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'>
-  </script>
+<script async="async" type='text/javascript'
+    src='https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'>
+</script>
 
-  <script type="text/javascript">
+<script type="text/javascript">
     document.getElementById('Logout').onclick = function() {
         amazon.Login.logout();
     };
-  </script>
+</script>
