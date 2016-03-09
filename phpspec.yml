@@ -1,0 +1,6 @@
+extensions:
+    - Nagno\Phpspec\BootstrapMagento2\Bootstrap
+suites:
+    amazon:
+        namespace: Amazon
+        psr4_prefix: Amazon
