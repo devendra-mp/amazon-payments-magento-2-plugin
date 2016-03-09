@@ -8,7 +8,8 @@ define(
     [
         'jquery',
         "uiComponent",
-        'ko'
+        'ko',
+        'amazonPayment'
     ],
     function(
         $,
@@ -23,6 +24,7 @@ define(
             initialize: function () {
                 var self = this;
                 this._super();
+                console.log('hi');
             }
         });
     }
