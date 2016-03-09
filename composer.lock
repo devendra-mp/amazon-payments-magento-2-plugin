@@ -4,9 +4,52 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5623abcb43b2e1cc75babda035d6633f",
-    "content-hash": "c7e4c7b4946b3e369396f6cf95f5a3c3",
+    "hash": "1f2df37b3aa02d55cdaea2e43365652e",
+    "content-hash": "f3417d5c5f174c2875357bb6d3a262e1",
     "packages": [
+        {
+            "name": "magento/framework",
+            "version": "100.0.4",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/framework/magento-framework-100.0.4.0.zip",
+                "reference": null,
+                "shasum": "4281e1e0fc1a3fe399e4e2dbb7e120afd2d00239"
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-gd": "*",
+                "ext-hash": "*",
+                "ext-iconv": "*",
+                "ext-mcrypt": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-spl": "*",
+                "ext-xsl": "*",
+                "lib-libxml": "*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "ext-imagick": "Use Image Magick >=3.0.0 as an optional alternative image processing library"
+            },
+            "type": "magento2-library",
+            "autoload": {
+                "psr-4": {
+                    "Magento\\Framework\\": ""
+                },
+                "files": [
+                    "registration.php"
+                ]
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        }
+    ],
+    "packages-dev": [
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
@@ -60,76 +103,6 @@
                 "instantiate"
             ],
             "time": "2015-06-14 21:17:01"
-        },
-        {
-            "name": "magento/framework",
-            "version": "100.0.4",
-            "dist": {
-                "type": "zip",
-                "url": "https://repo.magento.com/archives/magento/framework/magento-framework-100.0.4.0.zip",
-                "reference": null,
-                "shasum": "4281e1e0fc1a3fe399e4e2dbb7e120afd2d00239"
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-dom": "*",
-                "ext-gd": "*",
-                "ext-hash": "*",
-                "ext-iconv": "*",
-                "ext-mcrypt": "*",
-                "ext-openssl": "*",
-                "ext-simplexml": "*",
-                "ext-spl": "*",
-                "ext-xsl": "*",
-                "lib-libxml": "*",
-                "php": "~5.5.0|~5.6.0|~7.0.0"
-            },
-            "suggest": {
-                "ext-imagick": "Use Image Magick >=3.0.0 as an optional alternative image processing library"
-            },
-            "type": "magento2-library",
-            "autoload": {
-                "psr-4": {
-                    "Magento\\Framework\\": ""
-                },
-                "files": [
-                    "registration.php"
-                ]
-            },
-            "license": [
-                "OSL-3.0",
-                "AFL-3.0"
-            ],
-            "description": "N/A"
-        },
-        {
-            "name": "nagno/phpspec-bootstrap-magento2",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nagno/phpspec-bootstrap-magento2.git",
-                "reference": "1aacf5be5909e1e64c2b8da34f498efb99508f1f"
-            },
-            "require": {
-                "phpspec/phpspec": "~2.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nagno\\Phpspec\\BootstrapMagento2\\": "src/nagno"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Norbert Nagy",
-                    "email": "norbert.nagy@sessiondigital.com"
-                }
-            ],
-            "description": "Bootstraps Mage2 for phpspec before the tests are running so the dinamically generated classes will work",
-            "time": "2015-08-22 19:07:27"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -916,7 +889,6 @@
             "time": "2016-02-23 07:41:20"
         }
     ],
-    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
