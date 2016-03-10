@@ -21,7 +21,6 @@ define(
             initialize: function () {
                 var self = this;
                 this._super();
-                console.log('pay');
             }
         });
     }

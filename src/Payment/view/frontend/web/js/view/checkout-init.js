@@ -23,7 +23,6 @@ define(
             initialize: function () {
                 var self = this;
                 this._super();
-                console.log('init');
 
                 window.onAmazonLoginReady = function() {
                     amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
