@@ -5,6 +5,7 @@
 
 var config = {
     paths: {
-        amazonPayment:           'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets'
-    }
+        amazonPayment: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets'
+    },
+    waitSeconds: 7
 };

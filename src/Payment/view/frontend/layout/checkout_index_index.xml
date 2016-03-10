@@ -11,9 +11,9 @@
                                     <item name="children" xsi:type="array">
                                         <item name="shipping-step" xsi:type="array">
                                             <item name="children" xsi:type="array">
-                                                <item name="amazon-pay" xsi:type="array">
-                                                    <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-pay</item>
-                                                    <item name="displayArea" xsi:type="string">amazon-pay</item>
+                                                <item name="amazon-init" xsi:type="array">
+                                                    <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-init</item>
+                                                    <item name="displayArea" xsi:type="string">amazon-init</item>
                                                     <item name="children" xsi:type="array">
                                                         <item name="component" xsi:type="string">uiComponent</item>
                                                         <item name="displayArea" xsi:type="string">before-amazon-pay</item>
@@ -21,6 +21,15 @@
                                                             <!-- before login form fields -->
                                                         </item>
                                                     </item>
+                                                </item>
+                                                <item name="amazon-pay" xsi:type="array">
+                                                    <item name="config" xsi:type="array">
+                                                        <item name="deps" xsi:type="array">
+                                                            <item name="0" xsi:type="string">checkout.steps.shipping-step.amazon-init</item>
+                                                        </item>
+                                                    </item>
+                                                    <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-pay</item>
+                                                    <item name="displayArea" xsi:type="string">amazon-pay</item>
                                                 </item>
                                             </item>
                                         </item>
