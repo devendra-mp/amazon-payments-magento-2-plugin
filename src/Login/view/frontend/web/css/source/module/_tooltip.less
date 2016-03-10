@@ -1,0 +1,55 @@
+/**
+* Tooltip styles
+**/
+
+.amazon-tooltip {
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 100%;
+    border: 2px solid @amazon-tooltip-border;
+    text-align: center;
+    display: inline;
+    position: relative;
+    float: left;
+    margin: 12px;
+}
+
+.amazon-tooltip span {
+    color: @amazon-tooltip-background;
+}
+
+.amazon-tooltip:hover {
+    color: @amazon-tooltip-background__hover;
+    border-color: @amazon-tooltip-border__hover;
+    text-decoration: none;
+}
+
+.amazon-tooltip:hover:after {
+    background: #333;
+    border-radius: 3px;
+    color: #fff;
+    left: 40px;
+    top: -5px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 50;
+    width: 200px;
+    display: inline-block;
+    content: attr(title);
+    font-size: 13px;
+}
+
+.amazon-tooltip:hover:before {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 3.5px 7px 3.5px 0;
+    border-color: transparent #333333 transparent transparent;
+    top: 5px;
+    content: "";
+    left: -10px;
+    position: absolute;
+    z-index: 99;
+}
