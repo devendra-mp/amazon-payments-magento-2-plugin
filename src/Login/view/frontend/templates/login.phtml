@@ -1,9 +1,13 @@
-<div id="LoginWithAmazon" class="login-with-amazon"></div>
+<div class="amazon-button-container">
+    <div id="LoginWithAmazon" class="login-with-amazon"></div>
 
-<a title="Are you an Amazon customer?" class="amazon-tooltip" href="javascript:void(0);" role="tooltip">
-    <span>?</span>
-</a>
-
+    <div class="amazon-tooltip-container">
+        <div class="field-tooltip toggle">
+            <span class="field-tooltip-action action-help" data-bind="mageInit: {'dropdown':{'activeClass': '_active'}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+            <div class="field-tooltip-content" data-target="dropdown" aria-hidden="true">Are you an Amazon customer?</div>
+        </div>
+    </div>
+</div>
 
 <script>
     window.onAmazonLoginReady = function() {
