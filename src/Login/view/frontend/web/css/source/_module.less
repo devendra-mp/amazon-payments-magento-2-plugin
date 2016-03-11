@@ -1,3 +1,26 @@
-.login-with-amazon {
-    margin-bottom: 22px;
+@import 'module/_vars.less';
+
+.amazon-button-container {
+    display: table;
+    margin: 0 0 22px;
+
+    @media all and (max-width: @screen__m) {
+        width: 100%;
+    }
+
+    &__cell {
+        display: table-cell;
+        min-width: 45px;
+        position: relative;
+    }
+
+    img {
+        display: block;
+    }
+
+    .field-tooltip {
+        margin: -12px 0 0;
+        top: 50%;
+        right: 5px;
+    }
 }

@@ -23,27 +23,6 @@ define(
             initialize: function () {
                 var self = this;
                 this._super();
-
-                window.onAmazonLoginReady = function() {
-                    amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
-                };
-
-                window.onAmazonPaymentsReady = function(){
-                    // render the button here
-                    var authRequest,
-                        loginOptions;
-
-                    OffAmazonPayments.Button("LoginWithAmazon", "A1BJXVS5F6XP", {
-                        type:  "PwA",
-                        color: "Gold",
-                        language: "en-GB",
-
-                        authorization: function() {
-                            loginOptions = {scope: "profile payments:widget payments:shipping_address"};
-                            authRequest = amazon.Login.authorize (loginOptions, "https://amazon-payment.dev/customer/account");
-                        }
-                    });
-                };
             }
         });
     }
