@@ -7,10 +7,13 @@ define([
     var _this;
 
     $.widget('amazon.AmazonButton', {
-
         options: {
             buttonType: 'LwA',
-            widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'
+            color: 'Gold',
+            size: 'medium',
+            language: 'en-GB',
+            widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
+            redirectURL: 'https://amazon-payment.dev/customer/account'
         },
 
         _create: function() {
@@ -26,12 +29,13 @@ define([
 
                 OffAmazonPayments.Button("LoginWithAmazon", "A1BJXVS5F6XP", {
                     type:  _this.options.buttonType,
-                    color: "Gold",
-                    language: "en-GB",
+                    color: _this.options.buttonColor,
+                    size: _this.options.buttonSize,
+                    language: _this.options.buttonLanguage,
 
                     authorization: function() {
                         loginOptions = {scope: "profile payments:widget payments:shipping_address"};
-                        authRequest = amazon.Login.authorize (loginOptions, "https://amazon-payment.dev/customer/account");
+                        authRequest = amazon.Login.authorize (loginOptions, _this.options.redirectURL);
                     }
                 });
             };
@@ -46,7 +50,6 @@ define([
             scriptTag.setAttribute('src', _this.options.widgetsScript);
             document.head.appendChild(scriptTag);
         }
-
     });
 
     return $.amazon.AmazonButton;
