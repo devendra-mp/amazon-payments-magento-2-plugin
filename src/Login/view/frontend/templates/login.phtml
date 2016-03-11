@@ -1,40 +1,11 @@
-<div id="LoginWithAmazon" class="login-with-amazon"></div>
-
-<script>
-    window.onAmazonLoginReady = function() {
-        amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
-    };
-
-    window.onAmazonPaymentsReady = function(){
-        // render the button here
-        var authRequest;
-
-        OffAmazonPayments.Button("LoginWithAmazon", "A1BJXVS5F6XP", {
-            type:  "LwA",
-            color: "Gold",
-            language: "en-GB",
-
-            authorization: function() {
-                loginOptions = {scope: "profile payments:widget payments:shipping_address"};
-                authRequest = amazon.Login.authorize (loginOptions, "https://amazon-payment.dev/amazon/login/authorise");
-            },
-
-            onError: function(error) {
-                // your error handling code.
-                // alert("The following error occurred: "
-                //        + error.getErrorCode()
-                //        + ' - ' + error.getErrorMessage());
-            }
-        });
-    }
-</script>
-
-<script async="async" type='text/javascript'
-    src='https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'>
-</script>
-
-<script type="text/javascript">
-    document.getElementById('Logout').onclick = function() {
-        amazon.Login.logout();
-    };
-</script>
+<div class="amazon-button-container">
+    <div class="amazon-button-container__cell">
+        <div id="LoginWithAmazon" class="login-with-amazon" data-mage-init='{"amazonButton": {"buttonType": "LwA"}}'></div>
+    </div>
+    <div class="amazon-button-container__cell">
+        <div class="field-tooltip toggle">
+            <span class="field-tooltip-action action-help" data-mage-init='{"dropdown": {"activeClass": "_active"}}' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+            <div class="field-tooltip-content" data-target="dropdown" aria-hidden="true">Are you an Amazon customer?</div>
+        </div>
+    </div>
+</div>
