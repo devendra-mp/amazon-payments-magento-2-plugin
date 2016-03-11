@@ -4,9 +4,10 @@ namespace Amazon\Login\Controller\Login;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Login\Api\Data\CustomerInterfaceFactory as AmazonCustomerFactory;
-use Amazon\Core\Domain\Name;
 use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerExtensionFactory;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Session;
@@ -57,6 +58,10 @@ class Authorise extends Action
      * @var AmazonCustomerFactory
      */
     private $amazonCustomerFactory;
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    private $customerRepository;
 
     public function __construct(
         Context $context,
@@ -67,7 +72,8 @@ class Authorise extends Action
         AccountRedirect $accountRedirect,
         Random $random,
         CustomerExtensionFactory $customerExtensionFactory,
-        AmazonCustomerFactory $amazonCustomerFactory
+        AmazonCustomerFactory $amazonCustomerFactory,
+        CustomerRepositoryInterface $customerRepository
     ) {
         parent::__construct($context);
 
@@ -79,6 +85,7 @@ class Authorise extends Action
         $this->random                   = $random;
         $this->customerExtensionFactory = $customerExtensionFactory;
         $this->amazonCustomerFactory    = $amazonCustomerFactory;
+        $this->customerRepository       = $customerRepository;
     }
 
     public function execute()
@@ -87,28 +94,47 @@ class Authorise extends Action
 
         if (is_array($userInfo)) {
             if (isset($userInfo['user_id'])) {
-                $customerData = $this->customerDataFactory->create();
-
-                $name = new Name($userInfo['name']);
-                $customerData->setFirstname($name->getFirstName());
-                $customerData->setLastname($name->getLastName());
-                $customerData->setEmail($userInfo['email']);
-                $password = $this->random->getRandomString(64);
-
-                $customer = $this->accountManagement->createAccount($customerData, $password);
-
                 $amazonCustomer = $this->amazonCustomerFactory->create();
+                $amazonCustomer->load($userInfo['user_id'], 'amazon_id');
 
-                $amazonCustomer
-                    ->setAmazonId($userInfo['user_id'])
-                    ->setCustomerId($customer->getId())
-                    ->save();
-
-                $this->customerSession->setCustomerDataAsLoggedIn($customer);
-                $this->customerSession->regenerateId();
+                if ($amazonCustomer->getId()) {
+                    $customer = $this->customerRepository->getById($amazonCustomer->getCustomerId());
+                    $this->loginCustomer($customer);
+                } else {
+                    $customer = $this->createCustomer($userInfo);
+                    $this->loginCustomer($customer);
+                }
             }
         }
 
         return $this->accountRedirect->getRedirect();
+    }
+
+    private function createCustomer($amazonData)
+    {
+        $customerData = $this->customerDataFactory->create();
+
+        $name = new Name($amazonData['name']);
+        $customerData->setFirstname($name->getFirstName());
+        $customerData->setLastname($name->getLastName());
+        $customerData->setEmail($amazonData['email']);
+        $password = $this->random->getRandomString(64);
+
+        $customer = $this->accountManagement->createAccount($customerData, $password);
+
+        $amazonCustomer = $this->amazonCustomerFactory->create();
+
+        $amazonCustomer
+            ->setAmazonId($amazonData['user_id'])
+            ->setCustomerId($customer->getId())
+            ->save();
+
+        return $customer;
+    }
+
+    private function loginCustomer(CustomerInterface $customerData)
+    {
+        $this->customerSession->setCustomerDataAsLoggedIn($customerData);
+        $this->customerSession->regenerateId();
     }
 }
