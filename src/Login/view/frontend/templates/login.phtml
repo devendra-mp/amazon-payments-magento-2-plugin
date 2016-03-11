@@ -16,7 +16,7 @@
 
             authorization: function() {
                 loginOptions = {scope: "profile payments:widget payments:shipping_address"};
-                authRequest = amazon.Login.authorize (loginOptions, "https://amazon-payment.dev/customer/account");
+                authRequest = amazon.Login.authorize (loginOptions, "https://amazon-payment.dev/amazon/login/authorise");
             },
 
             onError: function(error) {

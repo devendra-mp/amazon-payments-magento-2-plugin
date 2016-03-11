@@ -30,10 +30,12 @@
   },
   "autoload": {
     "files": [
+      "src/Core/registration.php",
       "src/Login/registration.php",
       "src/Payment/registration.php"
     ],
     "psr-4": {
+      "Amazon\\Core\\": "src/Core",
       "Amazon\\Login\\": "src/Login",
       "Amazon\\Payment\\": "src/Payment"
     }
