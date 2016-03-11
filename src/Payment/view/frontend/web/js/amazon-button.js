@@ -9,9 +9,9 @@ define([
     $.widget('amazon.AmazonButton', {
         options: {
             buttonType: 'LwA',
-            color: 'Gold',
-            size: 'medium',
-            language: 'en-GB',
+            buttonColor: 'Gold',
+            buttonSize: 'medium',
+            buttonLanguage: 'en-GB',
             widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
             redirectURL: 'https://amazon-payment.dev/customer/account'
         },
