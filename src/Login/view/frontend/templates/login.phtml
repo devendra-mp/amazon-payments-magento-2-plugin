@@ -1,5 +1,5 @@
 <div class="amazon-button-container">
-    <div id="LoginWithAmazon" class="login-with-amazon"></div>
+    <div id="LoginWithAmazon" class="login-with-amazon" data-mage-init="{'amazonButton':{}}"></div>
 
     <div class="amazon-tooltip-container">
         <div class="field-tooltip toggle">
@@ -8,42 +8,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    window.onAmazonLoginReady = function() {
-        amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
-    };
-
-    window.onAmazonPaymentsReady = function(){
-        // render the button here
-        var authRequest;
-
-        OffAmazonPayments.Button("LoginWithAmazon", "A1BJXVS5F6XP", {
-            type:  "LwA",
-            color: "Gold",
-            language: "en-GB",
-
-            authorization: function() {
-                loginOptions = {scope: "profile payments:widget payments:shipping_address"};
-                authRequest = amazon.Login.authorize (loginOptions, "https://amazon-payment.dev/customer/account");
-            },
-
-            onError: function(error) {
-                // your error handling code.
-                // alert("The following error occurred: "
-                //        + error.getErrorCode()
-                //        + ' - ' + error.getErrorMessage());
-            }
-        });
-    }
-</script>
-
-<script async="async" type='text/javascript'
-    src='https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'>
-</script>
-
-<script type="text/javascript">
-    document.getElementById('Logout').onclick = function() {
-        amazon.Login.logout();
-    };
-</script>
