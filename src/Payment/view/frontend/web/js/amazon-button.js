@@ -4,7 +4,8 @@ define([
 ], function($) {
     "use strict";
 
-    var _this;
+    var _this,
+        $button;
 
     $.widget('amazon.AmazonButton', {
         options: {
@@ -18,6 +19,8 @@ define([
 
         _create: function() {
             _this = this;
+            $button = this.element;
+
             window.onAmazonLoginReady = function() {
                 amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
             };
@@ -27,7 +30,7 @@ define([
                 var authRequest,
                     loginOptions;
 
-                OffAmazonPayments.Button("LoginWithAmazon", "A1BJXVS5F6XP", {
+                OffAmazonPayments.Button($button.attr('id'), "A1BJXVS5F6XP", {
                     type:  _this.options.buttonType,
                     color: _this.options.buttonColor,
                     size: _this.options.buttonSize,
