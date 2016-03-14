@@ -3,139 +3,79 @@
 namespace Amazon\Login\Controller\Login;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Core\Domain\Name;
-use Amazon\Login\Api\Data\CustomerInterfaceFactory as AmazonCustomerFactory;
-use Magento\Customer\Api\AccountManagementInterface;
-use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Api\Data\CustomerExtensionFactory;
+use Amazon\Core\Domain\AmazonCustomer;
+use Amazon\Login\Api\Data\Customer\CompositeMatcherInterface;
+use Amazon\Login\Api\Data\CustomerManagerInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
-use Magento\Customer\Api\Data\CustomerInterfaceFactory;
-use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
+use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Math\Random;
-use PayWithAmazon\ClientInterface;
 
 class Authorise extends Action
 {
     /**
-     * @var ClientInterface
+     * @var ClientFactoryInterface
      */
-    private $client;
+    protected $clientFactory;
 
     /**
-     * @var AccountManagementInterface
+     * @var CompositeMatcherInterface
      */
-    private $accountManagement;
+    protected $matcher;
 
     /**
-     * @var CustomerInterfaceFactory
+     * @var CustomerManagerInterface
      */
-    private $customerDataFactory;
+    protected $customerManager;
 
     /**
      * @var Session
      */
-    private $customerSession;
+    protected $session;
 
     /**
      * @var AccountRedirect
      */
-    private $accountRedirect;
-
-    /**
-     * @var Random
-     */
-    private $random;
-
-    /**
-     * @var CustomerExtensionFactory
-     */
-    private $customerExtensionFactory;
-
-    /**
-     * @var AmazonCustomerFactory
-     */
-    private $amazonCustomerFactory;
-    /**
-     * @var CustomerRepositoryInterface
-     */
-    private $customerRepository;
+    protected $accountRedirect;
 
     public function __construct(
         Context $context,
         ClientFactoryInterface $clientFactory,
-        AccountManagementInterface $accountManagement,
-        Session $customerSession,
-        CustomerInterfaceFactory $customerDataFactory,
-        AccountRedirect $accountRedirect,
-        Random $random,
-        CustomerExtensionFactory $customerExtensionFactory,
-        AmazonCustomerFactory $amazonCustomerFactory,
-        CustomerRepositoryInterface $customerRepository
+        CompositeMatcherInterface $matcher,
+        CustomerManagerInterface $customerManager,
+        Session $session,
+        AccountRedirect $accountRedirect
     ) {
         parent::__construct($context);
 
-        $this->client                   = $clientFactory->create();
-        $this->accountManagement        = $accountManagement;
-        $this->customerDataFactory      = $customerDataFactory;
-        $this->customerSession          = $customerSession;
-        $this->accountRedirect          = $accountRedirect;
-        $this->random                   = $random;
-        $this->customerExtensionFactory = $customerExtensionFactory;
-        $this->amazonCustomerFactory    = $amazonCustomerFactory;
-        $this->customerRepository       = $customerRepository;
+        $this->clientFactory = $clientFactory;
+        $this->matcher = $matcher;
+        $this->customerManager = $customerManager;
+        $this->session = $session;
+        $this->accountRedirect = $accountRedirect;
     }
 
     public function execute()
     {
-        $userInfo = $this->client->getUserInfo($this->getRequest()->getParam('access_token'));
+        $userInfo = $this->clientFactory->create()->getUserInfo($this->getRequest()->getParam('access_token'));
 
-        if (is_array($userInfo)) {
-            if (isset($userInfo['user_id'])) {
-                $amazonCustomer = $this->amazonCustomerFactory->create();
-                $amazonCustomer->load($userInfo['user_id'], 'amazon_id');
+        if (is_array($userInfo) && isset($userInfo['user_id'])) {
+            $amazonCustomer = new AmazonCustomer($userInfo['user_id'], $userInfo['email'], $userInfo['name']);
+            $customerData = ($this->matcher->match($amazonCustomer)) ?: $this->customerManager->create($amazonCustomer);
 
-                if ($amazonCustomer->getId()) {
-                    $customer = $this->customerRepository->getById($amazonCustomer->getCustomerId());
-                    $this->loginCustomer($customer);
-                } else {
-                    $customer = $this->createCustomer($userInfo);
-                    $this->loginCustomer($customer);
-                }
-            }
+            /**
+             * @todo: handle password check for matched existing customer
+             */
+            $this->loginCustomer($customerData);
         }
 
         return $this->accountRedirect->getRedirect();
     }
 
-    private function createCustomer($amazonData)
+    protected function loginCustomer(CustomerInterface $customerData)
     {
-        $customerData = $this->customerDataFactory->create();
-
-        $name = new Name($amazonData['name']);
-        $customerData->setFirstname($name->getFirstName());
-        $customerData->setLastname($name->getLastName());
-        $customerData->setEmail($amazonData['email']);
-        $password = $this->random->getRandomString(64);
-
-        $customer = $this->accountManagement->createAccount($customerData, $password);
-
-        $amazonCustomer = $this->amazonCustomerFactory->create();
-
-        $amazonCustomer
-            ->setAmazonId($amazonData['user_id'])
-            ->setCustomerId($customer->getId())
-            ->save();
-
-        return $customer;
-    }
-
-    private function loginCustomer(CustomerInterface $customerData)
-    {
-        $this->customerSession->setCustomerDataAsLoggedIn($customerData);
-        $this->customerSession->regenerateId();
+        $this->session->setCustomerDataAsLoggedIn($customerData);
+        $this->session->regenerateId();
     }
 }

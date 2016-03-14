@@ -11,17 +11,17 @@ class ClientFactory implements ClientFactoryInterface
     /**
      * @var ScopeConfigInterface
      */
-    private $config;
+    protected $config;
 
     /**
      * @var ObjectManagerInterface
      */
-    private $objectManager;
+    protected $objectManager;
 
     /**
      * @var string
      */
-    private $instanceName;
+    protected $instanceName;
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,

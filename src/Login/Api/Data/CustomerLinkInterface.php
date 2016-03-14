@@ -2,7 +2,7 @@
 
 namespace Amazon\Login\Api\Data;
 
-interface CustomerInterface
+interface CustomerLinkInterface
 {
     public function setAmazonId($amazonId);
 

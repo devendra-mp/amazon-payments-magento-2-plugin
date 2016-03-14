@@ -2,7 +2,7 @@
 
 namespace Amazon\Login\Plugin;
 
-use Amazon\Login\Api\Data\CustomerInterfaceFactory as AmazonCustomerFactory;
+use Amazon\Login\Api\Data\CustomerLinkInterfaceFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerExtensionFactory;
 use Magento\Customer\Api\Data\CustomerInterface;
@@ -12,26 +12,26 @@ class CustomerRepository
     /**
      * @var CustomerExtensionFactory
      */
-    private $customerExtensionFactory;
+    protected $customerExtensionFactory;
 
     /**
-     * @var AmazonCustomerFactory
+     * @var CustomerLinkInterfaceFactory
      */
-    private $amazonCustomerFactory;
+    protected $customerLinkFactory;
 
     public function __construct(
         CustomerExtensionFactory $customerExtensionFactory,
-        AmazonCustomerFactory $amazonCustomerFactory
+        CustomerLinkInterfaceFactory $customerLinkFactory
     ) {
         $this->customerExtensionFactory = $customerExtensionFactory;
-        $this->amazonCustomerFactory = $amazonCustomerFactory;
+        $this->customerLinkFactory = $customerLinkFactory;
     }
 
     public function afterGetById(CustomerRepositoryInterface $customerRepository, CustomerInterface $customer)
     {
         $customerExtension = ($customer->getExtensionAttributes()) ?: $this->customerExtensionFactory->create();
 
-        $amazonCustomer = $this->amazonCustomerFactory->create();
+        $amazonCustomer = $this->customerLinkFactory->create();
         $amazonCustomer->load($customer->getId(), 'customer_id');
 
         if ($amazonCustomer->getId()) {

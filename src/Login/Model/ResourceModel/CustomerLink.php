@@ -4,7 +4,7 @@ namespace Amazon\Login\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
-class Customer extends AbstractDb
+class CustomerLink extends AbstractDb
 {
     protected function _construct()
     {
