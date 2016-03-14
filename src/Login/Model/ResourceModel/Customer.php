@@ -8,6 +8,6 @@ class Customer extends AbstractDb
 {
     protected function _construct()
     {
-        $this->_init('amazon_customer', 'customer_id');
+        $this->_init('amazon_customer', 'entity_id');
     }
 }
