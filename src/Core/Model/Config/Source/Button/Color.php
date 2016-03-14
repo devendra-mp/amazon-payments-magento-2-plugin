@@ -17,18 +17,4 @@ class Color implements ArrayInterface
             ['value' => 'DarkGray', 'label' => __('Dark gray')],
         ];
     }
-
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'Gold' => __('Gold'),
-            'LightGray' => __('Light gray'),
-            'DarkGray' => __('Dark gray'),
-        ];
-    }
 }

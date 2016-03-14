@@ -17,18 +17,4 @@ class Payment implements ArrayInterface
             ['value' => 'A', 'label' => __('Amazon logo')],
         ];
     }
-
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'PwA' => __('Pay with Amazon'),
-            'Pay' => __('Pay'),
-            'A' => __('Amazon logo'),
-        ];
-    }
 }

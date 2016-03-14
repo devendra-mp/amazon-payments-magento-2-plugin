@@ -17,18 +17,4 @@ class Login implements ArrayInterface
             ['value' => 'A', 'label' => __('Amazon logo')],
         ];
     }
-
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'LwA' => __('Login with Amazon'),
-            'Login' => __('Login'),
-            'A' => __('Amazon logo'),
-        ];
-    }
 }
