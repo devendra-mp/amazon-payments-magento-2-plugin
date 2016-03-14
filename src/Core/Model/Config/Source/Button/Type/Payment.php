@@ -2,12 +2,12 @@
 
 namespace Amazon\Core\Model\Config\Source\Button\Type;
 
-class Payment implements \Magento\Framework\Option\ArrayInterface
+use Magento\Framework\Option\ArrayInterface;
+
+class Payment implements ArrayInterface
 {
     /**
-     * Options getter
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function toOptionArray()
     {

@@ -2,12 +2,12 @@
 
 namespace Amazon\Core\Model\Config\Source\Button;
 
-class Size implements \Magento\Framework\Option\ArrayInterface
+use Magento\Framework\Option\ArrayInterface;
+
+class Size implements ArrayInterface
 {
     /**
-     * Options getter
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function toOptionArray()
     {
