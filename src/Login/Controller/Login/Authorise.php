@@ -3,6 +3,7 @@
 namespace Amazon\Login\Controller\Login;
 
 use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Core\Domain\Name;
 use Amazon\Login\Api\Data\CustomerInterfaceFactory as AmazonCustomerFactory;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;

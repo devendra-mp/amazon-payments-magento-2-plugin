@@ -37,23 +37,23 @@ class ClientFactory implements ClientFactoryInterface
     {
         $config = [
             'secret_key' => $this->config->getValue(
-                'payment/amazon_payment/secret_key',
+                'payment/amazon_payment/client/secret_key',
                 ScopeInterface::SCOPE_STORE
             ),
             'access_key' => $this->config->getValue(
-                'payment/amazon_payment/access_key',
+                'payment/amazon_payment/client/access_key',
                 ScopeInterface::SCOPE_STORE
             ),
             'region'     => $this->config->getValue(
-                'payment/amazon_payment/region',
+                'payment/amazon_payment/client/region',
                 ScopeInterface::SCOPE_STORE
             ),
             'sandbox'    => (bool)$this->config->getValue(
-                'payment/amazon_payment/sandbox',
+                'payment/amazon_payment/developer/sandbox',
                 ScopeInterface::SCOPE_STORE
             ),
             'client_id'  => $this->config->getValue(
-                'payment/amazon_payment/client_id',
+                'payment/amazon_payment/client/client_id',
                 ScopeInterface::SCOPE_STORE
             )
         ];
