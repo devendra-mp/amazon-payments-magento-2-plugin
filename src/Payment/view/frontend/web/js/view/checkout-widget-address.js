@@ -36,35 +36,34 @@ define(
                 self = this;
                 this._super();
                 quote.shippingMethod.subscribe(function (value) {
-                    console.log('shipping method');
+                    //console.log('shipping method');
                 });
 
                 amazonCore._onAmazonLoginReady();
-                this.loadWidget();
+                this.setupAddressWidget();
                 amazonCore._loadAmazonWidgetsScript();
             },
-            testShippingAddress: function() {
-                //console.log(quote.shippingAddress());
+            checkAmazonLoggedIn: function() {
+                var loginOptions = {scope: "profile payments:widget payments:shipping_address", popup: true, interactive: 'never' };
 
-                // render the button here
-                var authRequest,
-                    loginOptions;
-
-                    loginOptions = {scope: "profile payments:widget payments:shipping_address", popup: true, interactive: 'never' };
-
-                    authRequest = amazon.Login.authorize (loginOptions, function(response) {
-                        if(!response.error) {
-                            self.isAmazonAccountLoggedIn(true);
-
-                        }
-                    });
+                amazon.Login.authorize (loginOptions, function(response) {
+                    if(!response.error) {
+                        self.isAmazonAccountLoggedIn(true);
+                    }
+                });
 
             },
-            loadWidget: function() {
+            setupAddressWidget: function() {
                 window.onAmazonPaymentsReady = function() {
-                    self.testShippingAddress();
-                    self.isAmazonAccountLoggedIn.subscribe(function(value) {
-                        if(value) {
+                    self.renderAddressWidget();
+                    self.checkAmazonLoggedIn();
+                }
+            },
+            renderAddressWidget: function() {
+                //subscribe to loggedIn value
+                this.isAmazonAccountLoggedIn.subscribe(function(value) {
+                    if(value) {
+                        setTimeout(function() {
                             new OffAmazonPayments.Widgets.AddressBook({
                                 sellerId: 'A1BJXVS5F6XP',
                                 onOrderReferenceCreate: function(orderReference) {
@@ -73,16 +72,6 @@ define(
                                 },
                                 onAddressSelect: function(orderReference) {
                                     console.log('onAddressSelect fired');
-                                    // Replace the following code with the action that you want to perform
-                                    // after the address is selected.
-                                    // The amazonOrderReferenceId can be used to retrieve
-                                    // the address details by calling the GetOrderReferenceDetails
-                                    // operation. If rendering the AddressBook and Wallet widgets on the
-                                    // same page, you should wait for this event before you render the
-                                    // Wallet widget for the first time.
-                                    // The Wallet widget will re-render itself on all subsequent
-                                    // onAddressSelect events, without any action from you. It is not
-                                    // recommended that you explicitly refresh it.
                                 },
                                 design: {
                                     designMode: 'responsive'
@@ -91,9 +80,10 @@ define(
                                     // your error handling code
                                 }
                             }).bind('addressBookWidgetDiv');
-                        }
-                    });
-                }
+                        }, 2000);
+
+                    }
+                });
             }
         });
     }
