@@ -36,26 +36,11 @@ class ClientFactory implements ClientFactoryInterface
     public function create()
     {
         $config = [
-            'secret_key' => $this->config->getValue(
-                'payment/amazon_payment/client/secret_key',
-                ScopeInterface::SCOPE_STORE
-            ),
-            'access_key' => $this->config->getValue(
-                'payment/amazon_payment/client/access_key',
-                ScopeInterface::SCOPE_STORE
-            ),
-            'region'     => $this->config->getValue(
-                'payment/amazon_payment/client/region',
-                ScopeInterface::SCOPE_STORE
-            ),
-            'sandbox'    => (bool)$this->config->getValue(
-                'payment/amazon_payment/developer/sandbox',
-                ScopeInterface::SCOPE_STORE
-            ),
-            'client_id'  => $this->config->getValue(
-                'payment/amazon_payment/client/client_id',
-                ScopeInterface::SCOPE_STORE
-            )
+            'secret_key'          => 'emjDblxKihA2BJw8zzsya0cELzzE0AHAk/Dms9Ir',
+            'access_key'          => 'AKIAJW4QNZTWAI7TB5OA',
+            'region'              => 'uk',
+            'sandbox'             => true,
+            'client_id'           => 'amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb'
         ];
 
         return $this->objectManager->create($this->instanceName, ['config' => $config]);
