@@ -23,11 +23,11 @@ define([
             $button = this.element;
 
             //load amazon global calls on window object
-            //core._onAmazonLoginReady();
-            //this._onAmazonPaymentsReady();
+            core._onAmazonLoginReady();
+            this._onAmazonPaymentsReady();
 
             //load amazon widgets script
-            //core._loadAmazonWidgetsScript();
+            core._loadAmazonWidgetsScript();
         },
         /**
          * onAmazonPaymentsReady
