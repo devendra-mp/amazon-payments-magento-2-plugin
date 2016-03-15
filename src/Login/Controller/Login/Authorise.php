@@ -7,9 +7,9 @@ use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Login\Api\Data\Customer\CompositeMatcherInterface;
 use Amazon\Login\Api\Data\CustomerManagerInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
-use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Framework\App\Action\Context;
 
 class Authorise extends Action
@@ -49,10 +49,10 @@ class Authorise extends Action
     ) {
         parent::__construct($context);
 
-        $this->clientFactory = $clientFactory;
-        $this->matcher = $matcher;
+        $this->clientFactory   = $clientFactory;
+        $this->matcher         = $matcher;
         $this->customerManager = $customerManager;
-        $this->session = $session;
+        $this->session         = $session;
         $this->accountRedirect = $accountRedirect;
     }
 
@@ -62,11 +62,19 @@ class Authorise extends Action
 
         if (is_array($userInfo) && isset($userInfo['user_id'])) {
             $amazonCustomer = new AmazonCustomer($userInfo['user_id'], $userInfo['email'], $userInfo['name']);
-            $customerData = ($this->matcher->match($amazonCustomer)) ?: $this->customerManager->create($amazonCustomer);
+
+            $customerData = $this->matcher->match($amazonCustomer);
 
             /**
-             * @todo: handle password check for matched existing customer
+             * @todo: deal with inactive customer record
              */
+            if ( ! $customerData->getId()) {
+                $customerData = $this->customerManager->create($amazonCustomer);
+            } else if ( ! $customerData->getExtensionAttributes()->getAmazonId()) {
+                $params = ['amazon_id' => $amazonCustomer->getId(), 'customer_id' => $customerData->getId()];
+                return $this->_forward('validate', null, null, $params);
+            }
+
             $this->loginCustomer($customerData);
         }
 
