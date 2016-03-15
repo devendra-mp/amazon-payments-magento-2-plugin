@@ -1,6 +1,20 @@
+<?php
+$helper = $this->helper('Amazon\Login\Helper\Data');
+?>
+<?php if ($helper->getLoginEnabled()): ?>
+    <?php
+    $buttonData = [
+        'amazonButton' => [
+            'buttonType' => $helper->getButtonType(),
+            'buttonColor' => $helper->getButtonColor(),
+            'buttonSize' => $helper->getButtonSize(),
+            'redirectURL' => $block->getUrl('amazon/login/authorise', ['_secure' => true])
+        ]
+    ];
+    ?>
 <div class="amazon-button-container">
     <div class="amazon-button-container__cell">
-        <div id="LoginWithAmazon" class="login-with-amazon" data-mage-init='{"amazonButton": {"buttonType": "LwA", "redirectURL" : "<?php echo $block->getUrl('amazon/login/authorise', ['_secure' => true]) ?>"}}'></div>
+        <div id="LoginWithAmazon" class="login-with-amazon" data-mage-init='<?php echo json_encode($buttonData); ?>'></div>
     </div>
     <div class="amazon-button-container__cell">
         <div class="field-tooltip toggle">
@@ -9,3 +23,4 @@
         </div>
     </div>
 </div>
+<?php endif; ?>
