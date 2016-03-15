@@ -1,0 +1,10 @@
+<!-- ko foreach: getRegion('before-widget-address') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
+
+<!-- ko if: (isAmazonAccountLoggedIn) -->
+    <style type="text/css">
+        #addressBookWidgetDiv{width: 400px; height: 228px;}
+    </style>
+    <div id="addressBookWidgetDiv" class="amazon-widget amazon-widget--address"></div>
+<!--/ko-->

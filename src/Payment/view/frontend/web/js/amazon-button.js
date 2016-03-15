@@ -1,7 +1,8 @@
 define([
     'jquery',
+    'amazonCore',
     'jquery/ui'
-], function($) {
+], function($, core) {
     "use strict";
 
     var _this,
@@ -22,21 +23,11 @@ define([
             $button = this.element;
 
             //load amazon global calls on window object
-            this._onAmazonLoginReady();
-            this._onAmazonPaymentsReady();
+            //core._onAmazonLoginReady();
+            //this._onAmazonPaymentsReady();
 
             //load amazon widgets script
-            this._loadAmazonWidgetsScript();
-        },
-        /**
-         * onAmazonLoginReady
-         * @private
-         */
-        _onAmazonLoginReady: function() {
-            window.onAmazonLoginReady = function() {
-                amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
-            };
-
+            //core._loadAmazonWidgetsScript();
         },
         /**
          * onAmazonPaymentsReady
@@ -60,15 +51,6 @@ define([
                     }
                 });
             };
-        },
-        /**
-         * Load amazon widgets script after global window functions have been declared
-         * @private
-         */
-        _loadAmazonWidgetsScript: function() {
-            var scriptTag = document.createElement('script');
-            scriptTag.setAttribute('src', _this.options.widgetsScript);
-            document.head.appendChild(scriptTag);
         }
     });
 
