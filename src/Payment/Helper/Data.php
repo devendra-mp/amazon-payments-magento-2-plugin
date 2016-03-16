@@ -149,4 +149,15 @@ class Data extends AbstractHelper
             $scope
         );
     }
+
+    /*
+     * @return bool
+     */
+    public function getDebugEnabled($scope = ScopeInterface::SCOPE_STORE)
+    {
+        return (bool) $this->config->getValue(
+            'payment/amazon_payment/developer/debug',
+            $scope
+        );
+    }
 }
