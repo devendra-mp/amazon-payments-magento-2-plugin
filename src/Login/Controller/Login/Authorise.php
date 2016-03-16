@@ -93,7 +93,7 @@ class Authorise extends Action
     protected function createCustomer(AmazonCustomer $amazonCustomer)
     {
         $customerData = $this->customerManager->create($amazonCustomer);
-        $this->customerManager->link($customerData->getId(), $amazonCustomer->getId());
+        $this->customerManager->updateLink($customerData->getId(), $amazonCustomer->getId());
 
         return $customerData;
     }

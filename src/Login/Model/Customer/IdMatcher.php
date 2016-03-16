@@ -4,36 +4,44 @@ namespace Amazon\Login\Model\Customer;
 
 use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Login\Api\Data\Customer\IdMatcherInterface;
-use Amazon\Login\Api\Data\CustomerLinkInterfaceFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 
 class IdMatcher implements IdMatcherInterface
 {
-    /**
-     * @var CustomerLinkInterfaceFactory
-     */
-    protected $customerLinkFactory;
-
     /**
      * @var CustomerRepositoryInterface
      */
     protected $customerRepository;
 
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
     public function __construct(
-        CustomerLinkInterfaceFactory $customerLinkFactory,
-        CustomerRepositoryInterface $customerRepository
+        CustomerRepositoryInterface $customerRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        $this->customerLinkFactory = $customerLinkFactory;
-        $this->customerRepository  = $customerRepository;
+        $this->customerRepository = $customerRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     public function match(AmazonCustomer $amazonCustomer)
     {
-        $customerLink = $this->customerLinkFactory->create();
-        $customerLink->load($amazonCustomer->getId(), 'amazon_id');
+        $this->searchCriteriaBuilder->addFilter(
+            'extension_attribute_amazon_id_amazon_id', $amazonCustomer->getId()
+        );
 
-        if ($customerLink->getId()) {
-            return $this->customerRepository->getById($customerLink->getCustomerId());
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->setPageSize(1)
+            ->setCurrentPage(1)
+            ->create();
+
+        $customerList = $this->customerRepository->getList($searchCriteria);
+
+        if (count($items = $customerList->getItems())) {
+            return current($items);
         }
 
         return null;

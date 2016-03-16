@@ -25,6 +25,12 @@ class Session
         $this->session->regenerateId();
     }
 
+    public function loginById($customerId)
+    {
+        $this->session->loginById($customerId);
+        $this->session->regenerateId();
+    }
+
     public function setValidationCredentials(ValidationCredentials $credentials)
     {
         $this->session->setAmazonValidationCredentials($credentials);

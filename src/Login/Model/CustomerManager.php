@@ -57,10 +57,13 @@ class CustomerManager implements CustomerManagerInterface
         return $customer;
     }
 
-    public function link($customerId, $amazonId)
+    public function updateLink($customerId, $amazonId)
     {
-        $this->customerLinkFactory
-            ->create()
+        $customerLink = $this->customerLinkFactory
+            ->create();
+
+        $customerLink
+            ->load($customerId)
             ->setAmazonId($customerId)
             ->setCustomerId($amazonId)
             ->save();

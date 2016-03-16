@@ -20,5 +20,5 @@ interface CustomerManagerInterface
      *
      * @return void
      */
-    public function link($customerId, $amazonId);
+    public function updateLink($customerId, $amazonId);
 }
