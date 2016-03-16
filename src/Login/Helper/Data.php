@@ -12,7 +12,7 @@ class Data extends AbstractHelper
      */
     public function getLoginEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
-        return (bool) $this->scopeConfig->getValue(
+        return (bool)$this->scopeConfig->getValue(
             'checkout/amazon_login/active',
             $scope
         );

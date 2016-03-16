@@ -12,7 +12,7 @@ class Data extends AbstractHelper
      */
     public function getPaymentEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
-        return (bool) $this->config->getValue(
+        return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/active',
             $scope
         );
@@ -23,7 +23,7 @@ class Data extends AbstractHelper
      */
     public function getMerchantId($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'payment/amazon_payment/client/merchant_id',
             $scope
         );
@@ -34,7 +34,7 @@ class Data extends AbstractHelper
      */
     public function getAccessKey($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'payment/amazon_payment/client/access_key',
             $scope
         );
@@ -45,7 +45,7 @@ class Data extends AbstractHelper
      */
     public function getSecretKey($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'payment/amazon_payment/client/secret_key',
             $scope
         );
@@ -56,7 +56,7 @@ class Data extends AbstractHelper
      */
     public function getClientId($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'payment/amazon_payment/client/client_id',
             $scope
         );
@@ -67,7 +67,7 @@ class Data extends AbstractHelper
      */
     public function getClientSecret($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'payment/amazon_payment/client/client_secret',
             $scope
         );
@@ -78,7 +78,7 @@ class Data extends AbstractHelper
      */
     public function getRegion($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'payment/amazon_payment/client/region',
             $scope
         );
@@ -89,7 +89,7 @@ class Data extends AbstractHelper
      */
     public function getCurrencyCode($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'payment/amazon_payment/client/currency_code',
             $scope
         );
@@ -100,7 +100,7 @@ class Data extends AbstractHelper
      */
     public function getOrderStatus($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'payment/amazon_payment/checkout/order_status',
             $scope
         );
@@ -111,7 +111,7 @@ class Data extends AbstractHelper
      */
     public function getButtonType($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'checkout/amazon_payment/button/type',
             $scope
         );
@@ -122,7 +122,7 @@ class Data extends AbstractHelper
      */
     public function getButtonColor($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'checkout/amazon_payment/button/color',
             $scope
         );
@@ -133,7 +133,7 @@ class Data extends AbstractHelper
      */
     public function getButtonSize($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->config->getValue(
+        return $this->scopeConfig->getValue(
             'checkout/amazon_payment/button/size',
             $scope
         );
@@ -144,7 +144,7 @@ class Data extends AbstractHelper
      */
     public function getSandboxEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
-        return (bool) $this->config->getValue(
+        return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/developer/sandbox',
             $scope
         );
@@ -155,7 +155,7 @@ class Data extends AbstractHelper
      */
     public function getDebugEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
-        return (bool) $this->config->getValue(
+        return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/developer/debug',
             $scope
         );
