@@ -8,7 +8,7 @@ use Magento\Customer\Api\Data\CustomerInterface;
 interface CompositeMatcherInterface
 {
     /**
-     * @param AmazonCustomer $customer
+     * @param AmazonCustomer $amazonCustomer
      *
      * @return CustomerInterface|null
      */

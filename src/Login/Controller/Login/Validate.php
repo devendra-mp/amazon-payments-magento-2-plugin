@@ -19,7 +19,6 @@ class Validate extends Action
     ) {
         parent::__construct($context);
 
-        $this->context     = $context;
         $this->pageFactory = $pageFactory;
     }
 

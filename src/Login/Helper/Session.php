@@ -25,10 +25,6 @@ class Session
         $this->session->regenerateId();
     }
 
-    /**
-     * @param integer $customerId
-     * @param integer $amazonId
-     */
     public function setValidationCredentials(ValidationCredentials $credentials)
     {
         $this->session->setAmazonValidationCredentials($credentials);
