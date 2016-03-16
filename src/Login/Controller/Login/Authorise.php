@@ -61,18 +61,18 @@ class Authorise extends Action
         $userInfo = $this->clientFactory->create()->getUserInfo($this->getRequest()->getParam('access_token'));
 
         if (is_array($userInfo) && isset($userInfo['user_id'])) {
+
             $amazonCustomer = new AmazonCustomer($userInfo['user_id'], $userInfo['email'], $userInfo['name']);
 
             $customerData = $this->matcher->match($amazonCustomer);
 
-            /**
-             * @todo: deal with inactive customer record
-             */
-            if ( ! $customerData->getId()) {
+            if (null === $customerData) {
                 $customerData = $this->customerManager->create($amazonCustomer);
-            } else if ( ! $customerData->getExtensionAttributes()->getAmazonId()) {
-                $params = ['amazon_id' => $amazonCustomer->getId(), 'customer_id' => $customerData->getId()];
-                return $this->_forward('validate', null, null, $params);
+                $this->customerManager->link($customerData->getId(), $amazonCustomer->getId());
+            } else if (null === $customerData->getExtensionAttributes()->getAmazonId()) {
+                $this->session->setAmazonCustomerId($amazonCustomer->getId());
+                $this->session->setAmazonMagentoCustomerId($customerData->getId());
+                return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
             }
 
             $this->loginCustomer($customerData);

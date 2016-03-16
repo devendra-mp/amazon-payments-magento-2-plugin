@@ -13,4 +13,12 @@ interface CustomerManagerInterface
      * @return CustomerInterface|null
      */
     public function create(AmazonCustomer $amazonCustomer);
+
+    /**
+     * @param integer $customerId
+     * @param string $amazonId
+     *
+     * @return void
+     */
+    public function link($customerId, $amazonId);
 }
