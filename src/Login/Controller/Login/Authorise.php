@@ -6,9 +6,9 @@ use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Login\Api\Data\Customer\CompositeMatcherInterface;
 use Amazon\Login\Api\Data\CustomerManagerInterface;
-use Magento\Customer\Api\Data\CustomerInterface;
+use Amazon\Login\Domain\ValidationCredentials;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
-use Magento\Customer\Model\Session;
+use Amazon\Login\Helper\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 
@@ -70,20 +70,14 @@ class Authorise extends Action
                 $customerData = $this->customerManager->create($amazonCustomer);
                 $this->customerManager->link($customerData->getId(), $amazonCustomer->getId());
             } else if (null === $customerData->getExtensionAttributes()->getAmazonId()) {
-                $this->session->setAmazonCustomerId($amazonCustomer->getId());
-                $this->session->setAmazonMagentoCustomerId($customerData->getId());
+                $credentials = new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
+                $this->session->setValidationCredentials($credentials);
                 return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
             }
 
-            $this->loginCustomer($customerData);
+            $this->session->login($customerData);
         }
 
         return $this->accountRedirect->getRedirect();
-    }
-
-    protected function loginCustomer(CustomerInterface $customerData)
-    {
-        $this->session->setCustomerDataAsLoggedIn($customerData);
-        $this->session->regenerateId();
     }
 }

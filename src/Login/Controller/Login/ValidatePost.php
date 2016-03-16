@@ -3,13 +3,13 @@
 namespace Amazon\Login\Controller\Login;
 
 use Amazon\Login\Api\Data\CustomerManagerInterface;
-use Magento\Customer\Api\Data\CustomerInterface;
+use Amazon\Login\Domain\ValidationCredentials;
+use Amazon\Login\Helper\Session;
+use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\ResourceModel\CustomerRepository;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Framework\Encryption\Encryptor;
 
 class ValidatePost extends Action
@@ -52,37 +52,33 @@ class ValidatePost extends Action
         Encryptor $encryptor,
         CustomerManagerInterface $customerManager,
         CustomerRepository $customerRepository
-    )
-    {
+    ) {
         parent::__construct($context);
 
-        $this->session = $session;
-        $this->accountRedirect = $accountRedirect;
-        $this->customerRegistry = $customerRegistry;
-        $this->encryptor = $encryptor;
-        $this->customerManager = $customerManager;
+        $this->session            = $session;
+        $this->accountRedirect    = $accountRedirect;
+        $this->customerRegistry   = $customerRegistry;
+        $this->encryptor          = $encryptor;
+        $this->customerManager    = $customerManager;
         $this->customerRepository = $customerRepository;
     }
 
     public function execute()
     {
-        $passwordHash = $this->customerRegistry->retrieveSecureData($this->session->getAmazonMagentoCustomerId())->getPasswordHash();
+        $credentials = $this->session->getValidationCredentials();
 
-        /**
-         * @todo: handle when customer has no password
-         */
-        if ($this->encryptor->validateHash($this->getRequest()->getParam('password'), $passwordHash)) {
-            $this->customerManager->link($this->session->getAmazonMagentoCustomerId(), $this->session->getAmazonCustomerId());
-            $this->loginCustomer($this->customerRepository->getById($this->session->getAmazonMagentoCustomerId()));
-            return $this->accountRedirect->getRedirect();
+        if ($credentials instanceof ValidationCredentials) {
+            $password = $this->getRequest()->getParam('password');
+            $hash     = $this->customerRegistry->retrieveSecureData($credentials->getCustomerId())->getPasswordHash();
+
+            if ($this->encryptor->validateHash($password, $hash)) {
+                $this->customerManager->link($credentials->getCustomerId(), $credentials->getAmazonId());
+                $this->session->login($this->customerRepository->getById($credentials->getCustomerId()));
+            } else {
+                return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
+            }
         }
 
-        return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
-    }
-
-    protected function loginCustomer(CustomerInterface $customerData)
-    {
-        $this->session->setCustomerDataAsLoggedIn($customerData);
-        $this->session->regenerateId();
+        return $this->accountRedirect->getRedirect();
     }
 }

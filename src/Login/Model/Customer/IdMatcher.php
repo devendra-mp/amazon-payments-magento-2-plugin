@@ -22,10 +22,9 @@ class IdMatcher implements IdMatcherInterface
     public function __construct(
         CustomerLinkInterfaceFactory $customerLinkFactory,
         CustomerRepositoryInterface $customerRepository
-    )
-    {
+    ) {
         $this->customerLinkFactory = $customerLinkFactory;
-        $this->customerRepository = $customerRepository;
+        $this->customerRepository  = $customerRepository;
     }
 
     public function match(AmazonCustomer $amazonCustomer)
