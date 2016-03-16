@@ -33,9 +33,6 @@ class IdMatcher implements IdMatcherInterface
         $customerLink->load($amazonCustomer->getId(), 'amazon_id');
 
         if ($customerLink->getId()) {
-            /**
-             * @todo: alter to deal with per store customer config, ensure fk constraint
-             */
             return $this->customerRepository->getById($customerLink->getCustomerId());
         }
 

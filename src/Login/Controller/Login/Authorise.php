@@ -7,8 +7,8 @@ use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Login\Api\Data\Customer\CompositeMatcherInterface;
 use Amazon\Login\Api\Data\CustomerManagerInterface;
 use Amazon\Login\Domain\ValidationCredentials;
-use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Amazon\Login\Helper\Session;
+use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 
@@ -61,23 +61,40 @@ class Authorise extends Action
         $userInfo = $this->clientFactory->create()->getUserInfo($this->getRequest()->getParam('access_token'));
 
         if (is_array($userInfo) && isset($userInfo['user_id'])) {
-
             $amazonCustomer = new AmazonCustomer($userInfo['user_id'], $userInfo['email'], $userInfo['name']);
 
-            $customerData = $this->matcher->match($amazonCustomer);
+            $processed = $this->processAmazonCustomer($amazonCustomer);
 
-            if (null === $customerData) {
-                $customerData = $this->customerManager->create($amazonCustomer);
-                $this->customerManager->link($customerData->getId(), $amazonCustomer->getId());
-            } else if (null === $customerData->getExtensionAttributes()->getAmazonId()) {
-                $credentials = new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
-                $this->session->setValidationCredentials($credentials);
+            if ($processed instanceof ValidationCredentials) {
                 return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
+            } else {
+                $this->session->login($processed);
             }
-
-            $this->session->login($customerData);
         }
 
         return $this->accountRedirect->getRedirect();
+    }
+
+    protected function processAmazonCustomer(AmazonCustomer $amazonCustomer)
+    {
+        $customerData = $this->matcher->match($amazonCustomer);
+
+        if (null === $customerData) {
+            return $this->createCustomer($amazonCustomer);
+        }
+
+        if (null === $customerData->getExtensionAttributes()->getAmazonId()) {
+            return new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
+        }
+
+        return $customerData;
+    }
+
+    protected function createCustomer(AmazonCustomer $amazonCustomer)
+    {
+        $customerData = $this->customerManager->create($amazonCustomer);
+        $this->customerManager->link($customerData->getId(), $amazonCustomer->getId());
+
+        return $customerData;
     }
 }
