@@ -2,9 +2,17 @@
     <!-- ko template: getTemplate() --><!-- /ko -->
 <!--/ko-->
 
-<!-- ko if: (isAmazonAccountLoggedIn) -->
+<div class="amazon-widget-container" data-bind="visible: isAmazonAccountLoggedIn && isCustomerLoggedIn">
     <style type="text/css">
         #addressBookWidgetDiv{width: 400px; height: 228px;}
     </style>
     <div id="addressBookWidgetDiv" class="amazon-widget amazon-widget--address"></div>
+</div>
+
+<!-- ko ifnot: (isAmazonAccountLoggedIn) -->
+    <!-- ko if: (isCustomerLoggedIn) -->
+        <!-- ko foreach: getRegion('amazon-init') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+    <!--/ko-->
 <!--/ko-->
