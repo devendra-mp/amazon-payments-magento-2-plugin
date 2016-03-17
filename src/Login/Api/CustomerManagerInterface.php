@@ -16,7 +16,7 @@ interface CustomerManagerInterface
 
     /**
      * @param integer $customerId
-     * @param string $amazonId
+     * @param string  $amazonId
      *
      * @return void
      */

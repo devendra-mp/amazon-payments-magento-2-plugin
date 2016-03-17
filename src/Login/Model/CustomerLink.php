@@ -13,21 +13,33 @@ class CustomerLink extends AbstractModel implements CustomerLinkInterface
         $this->_init(CustomerLinkResourceModel::class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setAmazonId($amazonId)
     {
         return $this->setData('amazon_id', $amazonId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getAmazonId()
     {
         return $this->getData('amazon_id');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setCustomerId($customerId)
     {
         return $this->setData('customer_id', $customerId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getCustomerId()
     {
         return $this->getData('customer_id');

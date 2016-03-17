@@ -4,10 +4,22 @@ namespace Amazon\Login\Plugin;
 
 use Closure;
 use Magento\Customer\Model\ResourceModel\Customer\Collection;
+use Magento\Eav\Model\Entity\Attribute\AttributeInterface;
 use Magento\Framework\DB\Select;
 
 class CustomerCollection
 {
+    /**
+     * Resolve issue with core magento not allowing extension attributes to be applied as filter
+     *
+     * @param Collection                              $collection
+     * @param Closure                                 $proceed
+     * @param AttributeInterface|integer|string|array $attribute
+     * @param array|string|null                       $condition
+     * @param string                                  $joinType
+     *
+     * @return Collection
+     */
     public function aroundAddAttributeToFilter(
         Collection $collection, Closure $proceed, $attribute, $condition = null, $joinType = 'inner'
     ) {

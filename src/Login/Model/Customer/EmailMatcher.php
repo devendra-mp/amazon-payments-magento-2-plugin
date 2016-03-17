@@ -14,12 +14,20 @@ class EmailMatcher implements EmailMatcherInterface
      */
     protected $customerRepository;
 
+    /**
+     * EmailMatcher constructor.
+     *
+     * @param CustomerRepositoryInterface $customerRepository
+     */
     public function __construct(
         CustomerRepositoryInterface $customerRepository
     ) {
         $this->customerRepository = $customerRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function match(AmazonCustomer $amazonCustomer)
     {
         try {

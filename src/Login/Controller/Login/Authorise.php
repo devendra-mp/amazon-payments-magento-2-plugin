@@ -39,6 +39,16 @@ class Authorise extends Action
      */
     protected $accountRedirect;
 
+    /**
+     * Authorise constructor.
+     *
+     * @param Context                   $context
+     * @param ClientFactoryInterface    $clientFactory
+     * @param CompositeMatcherInterface $matcher
+     * @param CustomerManagerInterface  $customerManager
+     * @param Session                   $session
+     * @param AccountRedirect           $accountRedirect
+     */
     public function __construct(
         Context $context,
         ClientFactoryInterface $clientFactory,

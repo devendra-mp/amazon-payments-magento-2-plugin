@@ -13,6 +13,12 @@ class Validate extends Action
      */
     private $pageFactory;
 
+    /**
+     * Validate constructor.
+     *
+     * @param Context     $context
+     * @param PageFactory $pageFactory
+     */
     public function __construct(
         Context $context,
         PageFactory $pageFactory

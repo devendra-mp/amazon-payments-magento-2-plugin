@@ -19,14 +19,23 @@ class IdMatcher implements IdMatcherInterface
      */
     private $searchCriteriaBuilder;
 
+    /**
+     * IdMatcher constructor.
+     *
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param SearchCriteriaBuilder       $searchCriteriaBuilder
+     */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        $this->customerRepository = $customerRepository;
+        $this->customerRepository    = $customerRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function match(AmazonCustomer $amazonCustomer)
     {
         $this->searchCriteriaBuilder->addFilter(

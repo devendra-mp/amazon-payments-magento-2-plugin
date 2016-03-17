@@ -19,14 +19,28 @@ class CustomerRepository
      */
     protected $customerLinkFactory;
 
+    /**
+     * CustomerRepository constructor.
+     *
+     * @param CustomerExtensionFactory     $customerExtensionFactory
+     * @param CustomerLinkInterfaceFactory $customerLinkFactory
+     */
     public function __construct(
         CustomerExtensionFactory $customerExtensionFactory,
         CustomerLinkInterfaceFactory $customerLinkFactory
     ) {
         $this->customerExtensionFactory = $customerExtensionFactory;
-        $this->customerLinkFactory = $customerLinkFactory;
+        $this->customerLinkFactory      = $customerLinkFactory;
     }
 
+    /**
+     * Add amazon id extension attribute to customer
+     *
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param CustomerInterface           $customer
+     *
+     * @return CustomerInterface
+     */
     public function afterGetById(CustomerRepositoryInterface $customerRepository, CustomerInterface $customer)
     {
         $this->setAmazonIdExtensionAttrubute($customer);
@@ -34,6 +48,14 @@ class CustomerRepository
         return $customer;
     }
 
+    /**
+     * Add amazon id extension attribute to customer
+     *
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param CustomerInterface           $customer
+     *
+     * @return CustomerInterface
+     */
     public function afterGet(CustomerRepositoryInterface $customerRepository, CustomerInterface $customer)
     {
         $this->setAmazonIdExtensionAttrubute($customer);

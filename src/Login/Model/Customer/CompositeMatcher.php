@@ -13,11 +13,19 @@ class CompositeMatcher implements CompositeMatcherInterface
      */
     protected $matchers;
 
+    /**
+     * CompositeMatcher constructor.
+     *
+     * @param array $matchers
+     */
     public function __construct(array $matchers)
     {
         $this->matchers = $matchers;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function match(AmazonCustomer $amazonCustomer)
     {
         foreach ($this->matchers as $matcher) {

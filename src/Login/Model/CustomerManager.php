@@ -3,9 +3,10 @@
 namespace Amazon\Login\Model;
 
 use Amazon\Core\Domain\AmazonCustomer;
-use Amazon\Login\Api\Data\CustomerLinkInterfaceFactory;
 use Amazon\Login\Api\CustomerManagerInterface;
+use Amazon\Login\Api\Data\CustomerLinkInterfaceFactory;
 use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Framework\Math\Random;
 
@@ -31,6 +32,14 @@ class CustomerManager implements CustomerManagerInterface
      */
     protected $customerLinkFactory;
 
+    /**
+     * CustomerManager constructor.
+     *
+     * @param CustomerInterfaceFactory     $customerDataFactory
+     * @param AccountManagementInterface   $accountManagement
+     * @param Random                       $random
+     * @param CustomerLinkInterfaceFactory $customerLinkFactory
+     */
     public function __construct(
         CustomerInterfaceFactory $customerDataFactory,
         AccountManagementInterface $accountManagement,
@@ -43,6 +52,13 @@ class CustomerManager implements CustomerManagerInterface
         $this->customerLinkFactory = $customerLinkFactory;
     }
 
+    /**
+     * Create magento customer using amazon customer details
+     *
+     * @param AmazonCustomer $amazonCustomer
+     *
+     * @return CustomerInterface
+     */
     public function create(AmazonCustomer $amazonCustomer)
     {
         $customerData = $this->customerDataFactory->create();
@@ -57,6 +73,12 @@ class CustomerManager implements CustomerManagerInterface
         return $customer;
     }
 
+    /**
+     * Create or update magento/amazon customer link entity
+     *
+     * @param integer $customerId
+     * @param string  $amazonId
+     */
     public function updateLink($customerId, $amazonId)
     {
         $customerLink = $this->customerLinkFactory
