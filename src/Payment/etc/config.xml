@@ -3,7 +3,7 @@
     <default>
         <payment>
             <amazon_payment>
-                <active>0</active>
+                <enabled>0</enabled>
                 <title>Amazon Payments</title>
                 <sort_order>1</sort_order>
             </amazon_payment>
