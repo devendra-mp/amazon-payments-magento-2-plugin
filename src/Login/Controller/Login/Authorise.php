@@ -66,6 +66,7 @@ class Authorise extends Action
             $processed = $this->processAmazonCustomer($amazonCustomer);
 
             if ($processed instanceof ValidationCredentials) {
+                $this->session->setValidationCredentials($processed);
                 return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
             } else {
                 $this->session->login($processed);
