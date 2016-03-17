@@ -4,7 +4,7 @@ namespace Amazon\Login\Model;
 
 use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Login\Api\Data\CustomerLinkInterfaceFactory;
-use Amazon\Login\Api\Data\CustomerManagerInterface;
+use Amazon\Login\Api\CustomerManagerInterface;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Framework\Math\Random;

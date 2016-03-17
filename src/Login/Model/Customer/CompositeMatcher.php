@@ -3,8 +3,8 @@
 namespace Amazon\Login\Model\Customer;
 
 use Amazon\Core\Domain\AmazonCustomer;
-use Amazon\Login\Api\Data\Customer\CompositeMatcherInterface;
-use Amazon\Login\Api\Data\Customer\MatcherInterface;
+use Amazon\Login\Api\Customer\CompositeMatcherInterface;
+use Amazon\Login\Api\Customer\MatcherInterface;
 
 class CompositeMatcher implements CompositeMatcherInterface
 {

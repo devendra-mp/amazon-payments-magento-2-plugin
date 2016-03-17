@@ -1,6 +1,6 @@
 <?php
 
-namespace Amazon\Login\Api\Data\Customer;
+namespace Amazon\Login\Api\Customer;
 
 interface IdMatcherInterface extends MatcherInterface
 {

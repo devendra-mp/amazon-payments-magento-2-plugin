@@ -1,6 +1,6 @@
 <?php
 
-namespace Amazon\Login\Api\Data;
+namespace Amazon\Login\Api;
 
 use Amazon\Core\Domain\AmazonCustomer;
 use Magento\Customer\Api\Data\CustomerInterface;

@@ -3,7 +3,7 @@
 namespace Amazon\Login\Model\Customer;
 
 use Amazon\Core\Domain\AmazonCustomer;
-use Amazon\Login\Api\Data\Customer\EmailMatcherInterface;
+use Amazon\Login\Api\Customer\EmailMatcherInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 
 class EmailMatcher implements EmailMatcherInterface

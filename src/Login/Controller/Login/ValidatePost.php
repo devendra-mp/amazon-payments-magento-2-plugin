@@ -2,7 +2,7 @@
 
 namespace Amazon\Login\Controller\Login;
 
-use Amazon\Login\Api\Data\CustomerManagerInterface;
+use Amazon\Login\Api\CustomerManagerInterface;
 use Amazon\Login\Domain\ValidationCredentials;
 use Amazon\Login\Helper\Session;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
@@ -67,6 +67,7 @@ class ValidatePost extends Action
                 $this->customerManager->updateLink($credentials->getCustomerId(), $credentials->getAmazonId());
                 $this->session->loginById($credentials->getCustomerId());
             } else {
+                $this->messageManager->addErrorMessage('The password supplied was incorrect');
                 return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
             }
         }

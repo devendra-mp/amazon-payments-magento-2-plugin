@@ -4,8 +4,8 @@ namespace Amazon\Login\Controller\Login;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonCustomer;
-use Amazon\Login\Api\Data\Customer\CompositeMatcherInterface;
-use Amazon\Login\Api\Data\CustomerManagerInterface;
+use Amazon\Login\Api\Customer\CompositeMatcherInterface;
+use Amazon\Login\Api\CustomerManagerInterface;
 use Amazon\Login\Domain\ValidationCredentials;
 use Amazon\Login\Helper\Session;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
