@@ -5,6 +5,7 @@ namespace Amazon\Login\Model\Customer;
 use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Login\Api\Customer\EmailMatcherInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class EmailMatcher implements EmailMatcherInterface
 {
@@ -21,10 +22,15 @@ class EmailMatcher implements EmailMatcherInterface
 
     public function match(AmazonCustomer $amazonCustomer)
     {
-        $customerData = $this->customerRepository->get($amazonCustomer->getEmail());
+        try {
+            $customerData = $this->customerRepository->get($amazonCustomer->getEmail());
 
-        if ($customerData->getId()) {
-            return $customerData;
+            if ($customerData->getId()) {
+                return $customerData;
+            }
+
+        } catch (NoSuchEntityException $exception) {
+            return null;
         }
 
         return null;
