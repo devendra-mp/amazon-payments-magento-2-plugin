@@ -24,12 +24,7 @@ class CustomerCollection
         Collection $collection, Closure $proceed, $attribute, $condition = null, $joinType = 'inner'
     ) {
         if (is_array($attribute)) {
-            foreach ($attribute as $key => $condition) {
-                if ('amazon_id' == $condition['attribute']) {
-                    $collection->getSelect()->where('extension_attribute_amazon_id.amazon_id = ?', $condition['eq']);
-                    unset($attribute[$key]);
-                }
-            }
+            $attribute = $this->addAmazonIdFilter($attribute, $collection);
 
             if (0 === count($attribute)) {
                 return $collection;
@@ -37,5 +32,17 @@ class CustomerCollection
         }
 
         return $proceed($attribute, $condition, $joinType);
+    }
+
+    protected function addAmazonIdFilter(array $attribute, Collection $collection)
+    {
+        foreach ($attribute as $key => $condition) {
+            if ('amazon_id' == $condition['attribute']) {
+                $collection->getSelect()->where('extension_attribute_amazon_id.amazon_id = ?', $condition['eq']);
+                unset($attribute[$key]);
+            }
+        }
+
+        return $attribute;
     }
 }

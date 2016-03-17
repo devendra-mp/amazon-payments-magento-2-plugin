@@ -36,7 +36,6 @@ interface CustomerLinkInterface
      */
     public function getCustomerId();
 
-
     /**
      * Save customer link
      *
