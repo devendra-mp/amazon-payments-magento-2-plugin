@@ -48,7 +48,7 @@ class ClientFactory implements ClientFactoryInterface
             'secret_key' => $this->paymentHelper->getClientSecret(),
             'access_key' => $this->paymentHelper->getAccessKey(),
             'region'     => $this->paymentHelper->getRegion(),
-            'sandbox'    => $this->paymentHelper->getSandboxEnabled(),
+            'sandbox'    => $this->paymentHelper->isSandboxEnabled(),
             'client_id'  => $this->paymentHelper->getClientId()
         ];
 
