@@ -23,7 +23,7 @@ class Login extends Template
      */
     public function isEnabled()
     {
-        return $this->loginHelper->getLoginEnabled();
+        return $this->loginHelper->isEnabled();
     }
 
     /**

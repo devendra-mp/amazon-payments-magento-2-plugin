@@ -10,10 +10,10 @@ class Data extends AbstractHelper
     /*
      * @return bool
      */
-    public function getPaymentEnabled($scope = ScopeInterface::SCOPE_STORE)
+    public function isEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
         return (bool)$this->scopeConfig->getValue(
-            'payment/amazon_payment/active',
+            'payment/amazon_payment/enabled',
             $scope
         );
     }
@@ -112,7 +112,7 @@ class Data extends AbstractHelper
     public function getButtonType($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'checkout/amazon_payment/button/type',
+            'payment/amazon_payment/button/type',
             $scope
         );
     }
@@ -123,7 +123,7 @@ class Data extends AbstractHelper
     public function getButtonColor($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'checkout/amazon_payment/button/color',
+            'payment/amazon_payment/button/color',
             $scope
         );
     }
@@ -134,7 +134,7 @@ class Data extends AbstractHelper
     public function getButtonSize($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'checkout/amazon_payment/button/size',
+            'payment/amazon_payment/button/size',
             $scope
         );
     }
@@ -142,7 +142,7 @@ class Data extends AbstractHelper
     /*
      * @return bool
      */
-    public function getSandboxEnabled($scope = ScopeInterface::SCOPE_STORE)
+    public function isSandboxEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
         return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/developer/sandbox',
@@ -153,7 +153,7 @@ class Data extends AbstractHelper
     /*
      * @return bool
      */
-    public function getDebugEnabled($scope = ScopeInterface::SCOPE_STORE)
+    public function isDebugEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
         return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/developer/debug',
