@@ -16,4 +16,7 @@
     <type name="Magento\Customer\Api\CustomerRepositoryInterface">
         <plugin name="amazon_login_customerrepository" type="Amazon\Login\Plugin\CustomerRepository" sortOrder="1" />
     </type>
+    <type name="Magento\Customer\Model\ResourceModel\Customer\Collection">
+        <plugin name="amazon_login_customercollection" type="Amazon\Login\Plugin\CustomerCollection" sortOrder="1" />
+    </type>
 </config>
