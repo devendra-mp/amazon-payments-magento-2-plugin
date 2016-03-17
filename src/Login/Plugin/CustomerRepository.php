@@ -43,7 +43,7 @@ class CustomerRepository
      */
     public function afterGetById(CustomerRepositoryInterface $customerRepository, CustomerInterface $customer)
     {
-        $this->setAmazonIdExtensionAttrubute($customer);
+        $this->setAmazonIdExtensionAttribute($customer);
 
         return $customer;
     }
@@ -58,12 +58,12 @@ class CustomerRepository
      */
     public function afterGet(CustomerRepositoryInterface $customerRepository, CustomerInterface $customer)
     {
-        $this->setAmazonIdExtensionAttrubute($customer);
+        $this->setAmazonIdExtensionAttribute($customer);
 
         return $customer;
     }
 
-    protected function setAmazonIdExtensionAttrubute(CustomerInterface $customer)
+    protected function setAmazonIdExtensionAttribute(CustomerInterface $customer)
     {
         $customerExtension = ($customer->getExtensionAttributes()) ?: $this->customerExtensionFactory->create();
 
