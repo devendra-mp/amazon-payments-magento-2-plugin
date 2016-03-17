@@ -12,7 +12,7 @@ use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 
-class Authorise extends Action
+class Authorize extends Action
 {
     /**
      * @var ClientFactoryInterface
@@ -40,7 +40,7 @@ class Authorise extends Action
     protected $accountRedirect;
 
     /**
-     * Authorise constructor.
+     * Authorize constructor.
      *
      * @param Context                   $context
      * @param ClientFactoryInterface    $clientFactory
