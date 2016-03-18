@@ -2,26 +2,33 @@
 
 namespace Amazon\Core\Client;
 
-use Magento\Framework\ObjectManagerInterface;
 use Amazon\Payment\Helper\Data;
+use Magento\Framework\ObjectManagerInterface;
 
 class ClientFactory implements ClientFactoryInterface
 {
     /**
      * @var ObjectManagerInterface
      */
-    private $objectManager;
+    protected $objectManager;
 
     /**
      * @var Data
      */
-    private $paymentHelper;
+    protected $paymentHelper;
 
     /**
      * @var string
      */
-    private $instanceName;
+    protected $instanceName;
 
+    /**
+     * ClientFactory constructor.
+     *
+     * @param ObjectManagerInterface $objectManager
+     * @param Data                   $paymentHelper
+     * @param string                 $instanceName
+     */
     public function __construct(
         ObjectManagerInterface $objectManager,
         Data $paymentHelper,
@@ -32,13 +39,16 @@ class ClientFactory implements ClientFactoryInterface
         $this->instanceName  = $instanceName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function create()
     {
         $config = [
             'secret_key' => $this->paymentHelper->getClientSecret(),
             'access_key' => $this->paymentHelper->getAccessKey(),
             'region'     => $this->paymentHelper->getRegion(),
-            'sandbox'    => $this->paymentHelper->getSandboxEnabled(),
+            'sandbox'    => $this->paymentHelper->isSandboxEnabled(),
             'client_id'  => $this->paymentHelper->getClientId()
         ];
 

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Validate Amazon Account</title>
+    </head>
+    <body>
+        <referenceBlock name="root">
+            <action method="setHeaderTitle">
+                <argument translate="true" name="title" xsi:type="string">Validate Amazon Account</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="validateAccount" template="Amazon_Login::form/validate.phtml" />
+        </referenceContainer>
+    </body>
+</page>
