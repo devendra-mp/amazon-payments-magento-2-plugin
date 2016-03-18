@@ -10,12 +10,12 @@ define([
 
     $.widget('amazon.AmazonButton', {
         options: {
-            buttonType: 'LwA',
-            buttonColor: 'Gold',
-            buttonSize: 'medium',
+            buttonType: window.checkoutConfig.login.amazonLogin.buttonType,
+            buttonColor: window.checkoutConfig.login.amazonLogin.buttonColor,
+            buttonSize: window.checkoutConfig.login.amazonLogin.buttonSize,
             buttonLanguage: 'en-GB',
             widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
-            redirectURL: 'https://amazon-payment.dev/customer/account'
+            redirectURL: window.checkoutConfig.login.amazonLogin.redirectURL
         },
 
         _create: function() {

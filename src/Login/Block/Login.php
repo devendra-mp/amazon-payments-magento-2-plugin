@@ -36,7 +36,7 @@ class Login extends Template
                 'buttonType' => $this->loginHelper->getButtonType(),
                 'buttonColor' => $this->loginHelper->getButtonColor(),
                 'buttonSize' => $this->loginHelper->getButtonSize(),
-                'redirectURL' => $this->getUrl('amazon/login/authorize', ['_secure' => true])
+                'redirectURL' => $this->loginHelper->getRedirectUrl()
             ]
         ];
 

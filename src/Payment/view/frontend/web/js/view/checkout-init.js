@@ -1,7 +1,3 @@
-/**
- * Copyright © 2015 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
 /*global define*/
 
 define(
@@ -26,6 +22,19 @@ define(
             initialize: function () {
                 var self = this;
                 this._super();
+            },
+            isEnabled: function () {
+                return window.checkoutConfig.payment.amazonPayment.isEnabled;
+            },
+            getButtonData: function () {
+                var buttonData = {
+                    'amazonButton': {
+                        'buttonType': window.checkoutConfig.payment.amazonPayment.buttonType,
+                        'buttonColor': window.checkoutConfig.payment.amazonPayment.buttonColor,
+                        'buttonSize': window.checkoutConfig.payment.amazonPayment.buttonSize
+                    }
+                };
+                return buttonData;
             }
         });
     }
