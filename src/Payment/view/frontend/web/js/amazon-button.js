@@ -35,7 +35,7 @@ define([
             if(window.checkoutConfig.payment.amazonPayment !== undefined && _this.options.buttonType === 'PwA') {
                 _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
                 _this.options.buttonSize = window.checkoutConfig.payment.amazonPayment.buttonSize;
-                _this.options.redirectURL = window.checkoutConfig.payment.amazonPayment.redirectUrl;
+                _this.options.redirectURL = window.checkoutConfig.payment.amazonPayment.redirectURL;
             }
         },
         /**
