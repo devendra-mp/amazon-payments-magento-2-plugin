@@ -15,7 +15,7 @@ define([
             buttonSize: 'medium',
             buttonLanguage: 'en-GB',
             widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
-            redirectURL: window.checkoutConfig.payment.amazonPayment.redirectUrl
+            redirectURL: null
         },
 
         _create: function() {
@@ -35,6 +35,7 @@ define([
             if(window.checkoutConfig.payment.amazonPayment !== undefined && _this.options.buttonType === 'PwA') {
                 _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
                 _this.options.buttonSize = window.checkoutConfig.payment.amazonPayment.buttonSize;
+                _this.options.redirectURL = window.checkoutConfig.payment.amazonPayment.redirectUrl;
             }
         },
         /**
