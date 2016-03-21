@@ -11,8 +11,7 @@ var config = {
     map: {
         '*': {
             amazonCore: 'Amazon_Payment/js/amazon-core',
-            amazonButton: 'Amazon_Payment/js/amazon-button',
-            amazonAddress: 'Amazon_Payment/js/amazon-address'
+            amazonButton: 'Amazon_Payment/js/amazon-button'
         }
     }
 };
