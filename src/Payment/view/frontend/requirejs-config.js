@@ -10,6 +10,7 @@ var config = {
     waitSeconds: 7,
     map: {
         '*': {
+            amazonCore: 'Amazon_Payment/js/amazon-core',
             amazonButton: 'Amazon_Payment/js/amazon-button'
         }
     }

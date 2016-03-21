@@ -1,7 +1,7 @@
 <?php if ($this->isEnabled()): ?>
     <div class="amazon-button-container">
         <div class="amazon-button-container__cell">
-            <div id="LoginWithAmazon" class="login-with-amazon" data-mage-init='<?php echo $this->getButtonData(); ?>'></div>
+            <div id="LoginWithAmazon" class="login-with-amazon" data-mage-init='{"amazonButton": <?php echo $this->getButtonData(); ?>}'></div>
         </div>
         <div class="amazon-button-container__cell">
             <div class="field-tooltip toggle">

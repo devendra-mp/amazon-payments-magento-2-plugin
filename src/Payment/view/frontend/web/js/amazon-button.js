@@ -1,7 +1,8 @@
 define([
     'jquery',
+    'amazonCore',
     'jquery/ui'
-], function($) {
+], function($, core) {
     "use strict";
 
     var _this,
@@ -14,29 +15,28 @@ define([
             buttonSize: 'medium',
             buttonLanguage: 'en-GB',
             widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
-            redirectURL: 'https://amazon-payment.dev/customer/account'
+            redirectURL: null
         },
 
         _create: function() {
             _this = this;
             $button = this.element;
 
+            this._verifyCheckoutConfig();
+
             //load amazon global calls on window object
-            this._onAmazonLoginReady();
+            core._onAmazonLoginReady();
             this._onAmazonPaymentsReady();
 
             //load amazon widgets script
-            this._loadAmazonWidgetsScript();
+            core._loadAmazonWidgetsScript();
         },
-        /**
-         * onAmazonLoginReady
-         * @private
-         */
-        _onAmazonLoginReady: function() {
-            window.onAmazonLoginReady = function() {
-                amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
-            };
-
+        _verifyCheckoutConfig: function() {
+            if(window.checkoutConfig.payment.amazonPayment !== undefined && _this.options.buttonType === 'PwA') {
+                _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
+                _this.options.buttonSize = window.checkoutConfig.payment.amazonPayment.buttonSize;
+                _this.options.redirectURL = window.checkoutConfig.payment.amazonPayment.redirectURL;
+            }
         },
         /**
          * onAmazonPaymentsReady
@@ -60,15 +60,6 @@ define([
                     }
                 });
             };
-        },
-        /**
-         * Load amazon widgets script after global window functions have been declared
-         * @private
-         */
-        _loadAmazonWidgetsScript: function() {
-            var scriptTag = document.createElement('script');
-            scriptTag.setAttribute('src', _this.options.widgetsScript);
-            document.head.appendChild(scriptTag);
         }
     });
 

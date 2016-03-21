@@ -50,4 +50,12 @@ class Data extends AbstractHelper
             $scope
         );
     }
+
+    /*
+     * @return string
+     */
+    public function getRedirectUrl()
+    {
+        return $this->_getUrl('amazon/login/authorize', ['_secure' => true]);
+    }
 }

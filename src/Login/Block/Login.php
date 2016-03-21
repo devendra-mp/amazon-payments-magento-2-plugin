@@ -32,12 +32,10 @@ class Login extends Template
     public function getButtonData()
     {
         $buttonData = [
-            'amazonButton' => [
-                'buttonType' => $this->loginHelper->getButtonType(),
-                'buttonColor' => $this->loginHelper->getButtonColor(),
-                'buttonSize' => $this->loginHelper->getButtonSize(),
-                'redirectURL' => $this->getUrl('amazon/login/authorize', ['_secure' => true])
-            ]
+            'buttonType' => $this->loginHelper->getButtonType(),
+            'buttonColor' => $this->loginHelper->getButtonColor(),
+            'buttonSize' => $this->loginHelper->getButtonSize(),
+            'redirectURL' => $this->loginHelper->getRedirectUrl()
         ];
 
         return json_encode($buttonData);
