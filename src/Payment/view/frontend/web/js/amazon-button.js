@@ -22,7 +22,9 @@ define([
             _this = this;
             $button = this.element;
 
-            this._verifyCheckoutConfig();
+            if (typeof window.checkoutConfig !== undefined) {
+                this._verifyCheckoutConfig();
+            }
 
             //load amazon global calls on window object
             core._onAmazonLoginReady();
