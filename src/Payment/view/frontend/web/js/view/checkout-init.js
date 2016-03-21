@@ -19,12 +19,10 @@ define(
                 template: 'Amazon_Payment/checkout-init'
             },
             isCustomerLoggedIn: customer.isLoggedIn,
+            isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             initialize: function () {
                 var self = this;
                 this._super();
-            },
-            isEnabled: function () {
-                return window.checkoutConfig.payment.amazonPayment.isEnabled;
             }
         });
     }

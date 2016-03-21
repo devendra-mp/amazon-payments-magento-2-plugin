@@ -42,6 +42,9 @@
                                                                     <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-widget-address</item>
                                                                     <item name="sortOrder" xsi:type="string">0</item>
                                                                     <item name="displayArea" xsi:type="string">amazon-widget-address</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="tooltip" xsi:type="string" translate="true">Are you an Amazon customer?</item>
+                                                                    </item>
                                                                     <item name="children" xsi:type="array">
                                                                         <item name="component" xsi:type="string">uiComponent</item>
                                                                         <item name="displayArea" xsi:type="string">before-widget-address</item>

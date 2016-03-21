@@ -14,7 +14,8 @@ define([
             buttonColor: 'Gold',
             buttonSize: 'medium',
             buttonLanguage: 'en-GB',
-            widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'
+            widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
+            redirectURL: window.checkoutConfig.payment.amazonPayment.redirectUrl
         },
 
         _create: function() {

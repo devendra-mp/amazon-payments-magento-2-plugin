@@ -33,13 +33,15 @@ define(
             },
             isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: ko.observable(false),
-            isEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
+            isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             initialize: function () {
                 self = this;
                 this._super();
                 quote.shippingMethod.subscribe(function (value) {
                     //console.log('shipping method');
                 });
+
+                console.log(window.checkoutConfig.payment.amazonPayment.isEnabled);
 
                 amazonCore._onAmazonLoginReady();
                 this.setupAddressWidget();
