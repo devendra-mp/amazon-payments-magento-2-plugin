@@ -33,6 +33,7 @@ define(
             },
             isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: ko.observable(false),
+            isEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             initialize: function () {
                 self = this;
                 this._super();
@@ -90,10 +91,8 @@ define(
                         //once we have the address we need to set it via the quote model
                         //then call the below function via the shippingProcessor in order
                         //to get the new rates based on the address
-                        console.log('addy select');
-                        var addy = quote.shippingAddress();
-                        addy.country_id = 'GB';
-                        quote.shippingAddress(addy);
+
+                        //quote.shippingAddress();
                         //shippingProcessor.getRates(self.getCurrentShippingAddress());
                     },
                     design: {

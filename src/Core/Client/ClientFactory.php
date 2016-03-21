@@ -2,45 +2,54 @@
 
 namespace Amazon\Core\Client;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Amazon\Payment\Helper\Data;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Store\Model\ScopeInterface;
 
 class ClientFactory implements ClientFactoryInterface
 {
     /**
-     * @var ScopeConfigInterface
-     */
-    private $config;
-
-    /**
      * @var ObjectManagerInterface
      */
-    private $objectManager;
+    protected $objectManager;
+
+    /**
+     * @var Data
+     */
+    protected $paymentHelper;
 
     /**
      * @var string
      */
-    private $instanceName;
+    protected $instanceName;
 
+    /**
+     * ClientFactory constructor.
+     *
+     * @param ObjectManagerInterface $objectManager
+     * @param Data                   $paymentHelper
+     * @param string                 $instanceName
+     */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
         ObjectManagerInterface $objectManager,
+        Data $paymentHelper,
         $instanceName = '\\PayWithAmazon\\ClientInterface'
     ) {
-        $this->config        = $scopeConfig;
         $this->objectManager = $objectManager;
+        $this->paymentHelper = $paymentHelper;
         $this->instanceName  = $instanceName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function create()
     {
         $config = [
-            'secret_key'          => 'emjDblxKihA2BJw8zzsya0cELzzE0AHAk/Dms9Ir',
-            'access_key'          => 'AKIAJW4QNZTWAI7TB5OA',
-            'region'              => 'uk',
-            'sandbox'             => true,
-            'client_id'           => 'amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb'
+            'secret_key' => $this->paymentHelper->getClientSecret(),
+            'access_key' => $this->paymentHelper->getAccessKey(),
+            'region'     => $this->paymentHelper->getRegion(),
+            'sandbox'    => $this->paymentHelper->isSandboxEnabled(),
+            'client_id'  => $this->paymentHelper->getClientId()
         ];
 
         return $this->objectManager->create($this->instanceName, ['config' => $config]);

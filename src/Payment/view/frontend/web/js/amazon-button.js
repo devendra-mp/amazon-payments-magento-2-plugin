@@ -14,13 +14,14 @@ define([
             buttonColor: 'Gold',
             buttonSize: 'medium',
             buttonLanguage: 'en-GB',
-            widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
-            redirectURL: 'https://amazon-payment.dev/customer/account'
+            widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'
         },
 
         _create: function() {
             _this = this;
             $button = this.element;
+
+            this._verifyCheckoutConfig();
 
             //load amazon global calls on window object
             core._onAmazonLoginReady();
@@ -28,6 +29,12 @@ define([
 
             //load amazon widgets script
             core._loadAmazonWidgetsScript();
+        },
+        _verifyCheckoutConfig: function() {
+            if(window.checkoutConfig.payment.amazonPayment !== undefined && _this.options.buttonType === 'PwA') {
+                _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
+                _this.options.buttonSize = window.checkoutConfig.payment.amazonPayment.buttonSize;
+            }
         },
         /**
          * onAmazonPaymentsReady
