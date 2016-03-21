@@ -22,7 +22,7 @@ define([
             _this = this;
             $button = this.element;
 
-            if (typeof window.checkoutConfig !== undefined) {
+            if (typeof window.checkoutConfig !== 'undefined') {
                 this._verifyCheckoutConfig();
             }
 
