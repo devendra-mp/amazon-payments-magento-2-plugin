@@ -3,7 +3,6 @@
   "description": "Official Magento2 Plugin to integrate with Amazon Payments",
   "require": {
     "php": "~5.5.0|~5.6.0|~7.0.0",
-    "magento/framework": "100.0.*",
     "amzn/login-and-pay-with-amazon-sdk-php": "dev-master"
   },
   "require-dev": {
@@ -64,6 +63,12 @@
       "Amazon\\Core\\": "src/Core",
       "Amazon\\Login\\": "src/Login",
       "Amazon\\Payment\\": "src/Payment"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Magento\\Framework\\": "../../magento/framework/",
+      "Magento\\": "../../../../app/code/Magento/"
     }
   }
 }

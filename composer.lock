@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "24e9c20df019cfc3303a71bbf82832b9",
-    "content-hash": "4896bf65a04f90195e50492770377307",
+    "hash": "efe61c08cb22298e6ed964cb785f0575",
+    "content-hash": "0fe259170af6e5f36e6c6b2b08269e2f",
     "packages": [
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
@@ -52,47 +52,6 @@
                 "payments"
             ],
             "time": "2016-03-04 13:56:22"
-        },
-        {
-            "name": "magento/framework",
-            "version": "100.0.4",
-            "dist": {
-                "type": "zip",
-                "url": "https://repo.magento.com/archives/magento/framework/magento-framework-100.0.4.0.zip",
-                "reference": null,
-                "shasum": "4281e1e0fc1a3fe399e4e2dbb7e120afd2d00239"
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-dom": "*",
-                "ext-gd": "*",
-                "ext-hash": "*",
-                "ext-iconv": "*",
-                "ext-mcrypt": "*",
-                "ext-openssl": "*",
-                "ext-simplexml": "*",
-                "ext-spl": "*",
-                "ext-xsl": "*",
-                "lib-libxml": "*",
-                "php": "~5.5.0|~5.6.0|~7.0.0"
-            },
-            "suggest": {
-                "ext-imagick": "Use Image Magick >=3.0.0 as an optional alternative image processing library"
-            },
-            "type": "magento2-library",
-            "autoload": {
-                "psr-4": {
-                    "Magento\\Framework\\": ""
-                },
-                "files": [
-                    "registration.php"
-                ]
-            },
-            "license": [
-                "OSL-3.0",
-                "AFL-3.0"
-            ],
-            "description": "N/A"
         }
     ],
     "packages-dev": [
@@ -660,7 +619,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jamescowie/behat-magento2-init.git",
-                "reference": "c0117f0bb73f8d5a766adba7a85672bfbf676c66"
+                "reference": "6c071d93e6be09c47d4371b0e74d31eb7be4fbdd"
             },
             "require": {
                 "behat/behat": "^3.0.0",
@@ -705,7 +664,7 @@
                 "magento2",
                 "tdd"
             ],
-            "time": "2016-03-22 09:45:34"
+            "time": "2016-03-22 12:21:04"
         },
         {
             "name": "bex/behat-screenshot",
