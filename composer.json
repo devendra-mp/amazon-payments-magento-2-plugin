@@ -7,7 +7,29 @@
     "amzn/login-and-pay-with-amazon-sdk-php": "dev-master"
   },
   "require-dev": {
-    "phpspec/phpspec": "^2.4.1"
+    "phpspec/phpspec": "^2.4.1",
+    "phpunit/phpunit": "4.1.0",
+    "squizlabs/php_codesniffer": "1.5.3",
+    "phpmd/phpmd": "@stable",
+    "pdepend/pdepend": "2.2.2",
+    "sjparkinson/static-review": "~4.1",
+    "fabpot/php-cs-fixer": "~1.2",
+    "sebastian/phpcpd": "2.*",
+    "behat/behat": "~3.0.15",
+    "behat/mink": "~1.6.0",
+    "behat/mink-extension": "~2.0.0",
+    "behat/mink-goutte-driver": "~1.1.0",
+    "bossa/phpspec2-expect": "1.*",
+    "peridot-php/webdriver-manager": "dev-master",
+    "sensiolabs/behat-page-object-extension": "2.0.*@dev",
+    "ocramius/proxy-manager": "^1.0",
+    "behat/mink-selenium2-driver": "*",
+    "symfony/process": "^2.0",
+    "nagno/phpspec-bootstrap-magento2": "~1.0",
+    "ciaranmcnulty/behat-stepthroughextension": "dev-master",
+    "bex/behat-browser-initialiser": "^1.0",
+    "bex/behat-screenshot": "^1.0",
+    "bex/behat-magento2-init": "dev-master"
   },
   "repositories": [
     {
@@ -17,6 +39,10 @@
     {
       "type": "git",
       "url": "https://github.com/nagno/phpspec-bootstrap-magento2.git"
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/jamescowie/behat-magento2-init.git"
     }
   ],
   "type": "magento2-module",
