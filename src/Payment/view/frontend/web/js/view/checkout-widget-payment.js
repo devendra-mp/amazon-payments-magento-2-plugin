@@ -7,8 +7,8 @@ define(
         'ko',
         'Magento_Customer/js/model/customer',
         'Magento_Checkout/js/model/quote',
-        'amazonCore'
-        //'amazonPayment'
+        'amazonCore',
+        'Amazon_Payment/js/model/core'
     ],
     function(
         $,
@@ -16,7 +16,8 @@ define(
         ko,
         customer,
         quote,
-        amazonCore
+        amazonCore,
+        am
     ) {
         'use strict';
         var self;
@@ -25,36 +26,17 @@ define(
                 template: 'Amazon_Payment/checkout-widget-payment'
             },
             options: {
-                sellerId: 'A1BJXVS5F6XP',
+                sellerId: 'AUGT0HMCLQVX1',
                 paymentWidgetDOMId: 'walletWidgetDiv'
             },
-            isCustomerLoggedIn: customer.isLoggedIn,
-            isAmazonAccountLoggedIn: ko.observable(false),
+            isCustomerLoggedIn: am.isCustomerLoggedIn,
+            isAmazonAccountLoggedIn: am.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             initialize: function () {
                 self = this;
                 this._super();
-                this.setupPaymentWidget();
             },
-            /**
-             * Check to see whether user is currently logged into Amazon
-             */
-            verifyAmazonLoggedIn: function() {
-                var loginOptions = {
-                    scope: "profile payments:widget payments:shipping_address",
-                    popup: true,
-                    interactive: 'never'
-                };
-                amazon.Login.authorize (loginOptions, function(response) {
-                    if(!response.error) {
-                        self.isAmazonAccountLoggedIn(true);
-                    }
-                });
-            },
-            /**
-             * Setup events and bindings for the Amazon Address widget
-             */
-            setupPaymentWidget: function() {
+            initPaymentWidget: function() {
                 self.renderPaymentWidget();
             },
             /**

@@ -68,15 +68,19 @@
                                             <item name="children" xsi:type="array">
                                                 <item name="payment" xsi:type="array">
                                                     <item name="children" xsi:type="array">
-                                                        <item name="amazon-widget-payment" xsi:type="array">
-                                                            <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-widget-payment</item>
-                                                            <item name="sortOrder" xsi:type="string">0</item>
-                                                            <item name="displayArea" xsi:type="string">amazon-widget-payment</item>
+                                                        <item name="beforeMethods" xsi:type="array">
                                                             <item name="children" xsi:type="array">
-                                                                <item name="component" xsi:type="string">uiComponent</item>
-                                                                <item name="displayArea" xsi:type="string">before-widget-payment</item>
-                                                                <item name="children" xsi:type="array">
-                                                                    <!-- before login form fields -->
+                                                                 <item name="amazon-widget-payment" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-widget-payment</item>
+                                                                    <item name="sortOrder" xsi:type="string">0</item>
+                                                                    <item name="displayArea" xsi:type="string">amazon-widget-payment</item>
+                                                                    <item name="children" xsi:type="array">
+                                                                        <item name="component" xsi:type="string">uiComponent</item>
+                                                                        <item name="displayArea" xsi:type="string">before-widget-payment</item>
+                                                                        <item name="children" xsi:type="array">
+                                                                            <!-- before login form fields -->
+                                                                        </item>
+                                                                    </item>
                                                                 </item>
                                                             </item>
                                                         </item>

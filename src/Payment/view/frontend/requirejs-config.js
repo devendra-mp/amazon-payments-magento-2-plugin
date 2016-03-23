@@ -6,7 +6,8 @@ var config = {
     map: {
         '*': {
             amazonCore: 'Amazon_Payment/js/amazon-core',
-            amazonButton: 'Amazon_Payment/js/amazon-button'
+            amazonButton: 'Amazon_Payment/js/amazon-button',
+            bluebird: 'Amazon_Payment/js/lib/bluebird.min'
         }
     }
 };

@@ -10,7 +10,9 @@ define(
         'Magento_Checkout/js/action/select-shipping-address',
         'Magento_Checkout/js/model/shipping-rate-processor/new-address',
         'Magento_Checkout/js/action/set-shipping-information',
-        'amazonCore'
+        'amazonCore',
+        'Amazon_Payment/js/model/core'
+
     ],
     function(
         $,
@@ -21,7 +23,8 @@ define(
         selectShippingAddress,
         shippingProcessor,
         setShippingInformationAction,
-        amazonCore
+        amazonCore,
+        am
     ) {
         'use strict';
         var self;
@@ -30,52 +33,22 @@ define(
                 template: 'Amazon_Payment/checkout-widget-address'
             },
             options: {
-                sellerId: 'A1BJXVS5F6XP',
+                sellerId: 'AUGT0HMCLQVX1',
                 addressWidgetDOMId: 'addressBookWidgetDiv'
             },
-            isCustomerLoggedIn: customer.isLoggedIn,
-            isAmazonAccountLoggedIn: ko.observable(false),
+            isCustomerLoggedIn: am.isCustomerLoggedIn,
+            isAmazonAccountLoggedIn: am.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             initialize: function () {
                 self = this;
                 this._super();
-                quote.shippingMethod.subscribe(function (value) {
-                    //console.log('shipping method');
-                });
-
-                amazonCore._onAmazonLoginReady();
-                this.setupAddressWidget();
-                amazonCore._loadAmazonWidgetsScript();
             },
             /**
              * Check to see whether user is currently logged into Amazon
              */
-            verifyAmazonLoggedIn: function() {
-                var loginOptions = {
-                    scope: "profile payments:widget payments:shipping_address",
-                    popup: true,
-                    interactive: 'never'
-                };
-                amazon.Login.authorize (loginOptions, function(response) {
-                    if(!response.error) {
-                        self.isAmazonAccountLoggedIn(true);
-                    }
-                });
-            },
-            /**
-             * Setup events and bindings for the Amazon Address widget
-             */
-            setupAddressWidget: function() {
-                window.onAmazonPaymentsReady = function() {
-                    self.isAmazonAccountLoggedIn.subscribe(function(value) {
-                        if(value) {
-                            setTimeout(function() {
-                                self.renderAddressWidget();
-                            },2000);
-                        }
-                    });
-                    self.verifyAmazonLoggedIn();
-                }
+
+            initWidget: function() {
+                self.renderAddressWidget();
             },
             /**
              * render Amazon address Widget
@@ -83,12 +56,13 @@ define(
             renderAddressWidget: function() {
                 new OffAmazonPayments.Widgets.AddressBook({
                     sellerId: self.options.sellerId,
-                    onOrderReferenceCreate: function(orderReference) {
-                        orderReference.getAmazonOrderReferenceId();
+                    onOrderReferenceCreate: function (orderReference) {
+                        var orderid = orderReference.getAmazonOrderReferenceId();
+                        amazonCore._setOrderReference(orderid);
                     },
-                    onAddressSelect: function(orderReference) {
+                    onAddressSelect: function (orderReference) {
                         console.log(orderReference);
-                        amazonCore._setOrderReference(orderReference);
+
                         //need to call GetOrderReferenceDetails (PHP) so need to do a proxy
                         //ajax call which sends the orderReference and gets back the address
                         //once we have the address we need to set it via the quote model
@@ -116,7 +90,7 @@ define(
                     design: {
                         designMode: 'responsive'
                     },
-                    onError: function(error) {
+                    onError: function (error) {
                         // your error handling code
                     }
                 }).bind(self.options.addressWidgetDOMId);
