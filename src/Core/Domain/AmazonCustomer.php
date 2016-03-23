@@ -15,14 +15,9 @@ class AmazonCustomer
     protected $email;
 
     /**
-     * @var string
+     * @var AmazonName
      */
-    protected $firstName;
-
-    /**
-     * @var string
-     */
-    protected $lastName;
+    protected $name;
 
     /**
      * AmazonCustomer constructor.
@@ -35,10 +30,7 @@ class AmazonCustomer
     {
         $this->id    = $id;
         $this->email = $email;
-
-        $nameParts       = explode(' ', trim($name), 2);
-        $this->firstName = $nameParts[0];
-        $this->lastName  = isset($nameParts[1]) ? $nameParts[1] : '.';
+        $this->name = new AmazonName($name);
     }
 
     /**
@@ -68,7 +60,7 @@ class AmazonCustomer
      */
     public function getFirstName()
     {
-        return $this->firstName;
+        return $this->name->getFirstName();
     }
 
     /**
@@ -78,6 +70,6 @@ class AmazonCustomer
      */
     public function getLastName()
     {
-        return $this->lastName;
+        return $this->name->getLastName();
     }
 }

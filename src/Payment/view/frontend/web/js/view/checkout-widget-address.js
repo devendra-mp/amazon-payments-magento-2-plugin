@@ -25,6 +25,10 @@ define(
     ) {
         'use strict';
         var self;
+
+        var amazonOrderReferenceId = null;
+        var addressConsentToken = null;
+
         return Component.extend({
             defaults: {
                 template: 'Amazon_Payment/checkout-widget-address'
@@ -58,6 +62,7 @@ define(
                 };
                 amazon.Login.authorize (loginOptions, function(response) {
                     if(!response.error) {
+                        addressConsentToken = response.access_token;
                         self.isAmazonAccountLoggedIn(true);
                     }
                 });
@@ -84,33 +89,30 @@ define(
                 new OffAmazonPayments.Widgets.AddressBook({
                     sellerId: self.options.sellerId,
                     onOrderReferenceCreate: function(orderReference) {
-                        orderReference.getAmazonOrderReferenceId();
+                        amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
                     },
                     onAddressSelect: function(orderReference) {
-                        console.log(orderReference);
-                        //need to call GetOrderReferenceDetails (PHP) so need to do a proxy
-                        //ajax call which sends the orderReference and gets back the address
-                        //once we have the address we need to set it via the quote model
-                        //then call the below function via the shippingProcessor in order
-                        //to get the new rates based on the address
-                        var shippingAddress = quote.shippingAddress();
+                        var data = {
+                            amazonOrderReferenceId : amazonOrderReferenceId,
+                            addressConsentToken : addressConsentToken
+                        };
 
-                        //update the current address model from the quote model
-                        shippingAddress.city = 'liverpool';
-                        shippingAddress.company = 'Session';
-                        shippingAddress.firstname = 'David';
-                        shippingAddress.countryId = 'GB';
-                        shippingAddress.lastname = 'Jones';
-                        shippingAddress.street = ['17 conway drive'];
-                        shippingAddress.region = 'merseyside';
-                        shippingAddress.postcode = 'wc3 h76';
-                        shippingAddress.regionId = 0;
-                        shippingAddress.telephone = '02058956587';
+                        $.ajax({
+                            type : 'POST',
+                            url: '/amazonpay/checkout/shipping',
+                            data: data,
+                            dataType: 'json'
+                        }).done(function(data) {
+                            var shippingAddress = quote.shippingAddress();
 
-                        //assign the shipping address to the quote model via method
-                        selectShippingAddress(shippingAddress);
+                            for (var prop in data) {
+                                shippingAddress[prop] = data[prop];
+                            }
 
-                        //shippingProcessor.getRates(self.getCurrentShippingAddress());
+                            console.log(shippingAddress);
+
+                            //shippingProcessor.getRates(self.getCurrentShippingAddress());
+                        });
                     },
                     design: {
                         designMode: 'responsive'
