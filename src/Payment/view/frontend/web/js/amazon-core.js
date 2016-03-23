@@ -4,7 +4,7 @@ define([
     "use strict";
 
     var options = {
-        widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'
+        widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'
     };
 
     return {
@@ -14,7 +14,7 @@ define([
          */
         _onAmazonLoginReady: function() {
             window.onAmazonLoginReady = function() {
-                amazon.Login.setClientId('amzn1.application-oa2-client.fe5d817cfb2b45dcaf1c2c15966454bb');
+                amazon.Login.setClientId('amzn1.application-oa2-client.15d69a1a3b83453a81ab480224d811cd');
             };
         },
         /**
