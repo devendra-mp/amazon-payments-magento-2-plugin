@@ -28,7 +28,7 @@ define(
                 template: 'Amazon_Payment/checkout-widget-address'
             },
             options: {
-                sellerId: 'A1BJXVS5F6XP',
+                sellerId: 'AUGT0HMCLQVX1',
                 addressWidgetDOMId: 'addressBookWidgetDiv'
             },
             isCustomerLoggedIn: customer.isLoggedIn,
