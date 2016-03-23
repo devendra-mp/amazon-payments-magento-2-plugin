@@ -17,11 +17,6 @@ filter:
         - 'src/*'
 
 build:
-
-    tests:
-        override:
-            - { command: 'bin/phpspec r -fprogress'}
-
     cache:
         directories: [ vendor/ ]
 
