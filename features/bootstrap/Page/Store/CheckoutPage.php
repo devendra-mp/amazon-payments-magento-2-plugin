@@ -22,7 +22,6 @@ class CheckoutPage extends StorePage
         'Place Order Button' => ['css' => 'button[title="Place Order"]'],
         'Order Confirmation' => ['css' => 'span:contains("Order Confirmation")'],
         'Order Number' => ['css' => '.order-number'],
-        'Sample Fragrance Form' => ['css' => '.samples__form'],
         'First Friend Name' => ['css' => '#name_1'],
         'First Friend Email' => ['css' => '#email_1'],
         'Send Samples' => ['css' => '.samples__form .button'],
@@ -92,37 +91,5 @@ class CheckoutPage extends StorePage
     public function getLastOrderNumber()
     {
         return self::$lastOrderNumber;
-    }
-
-    public function canSeeSampleFragranceForm()
-    {
-        return $this->hasElement('Sample Fragrance Form');
-    }
-
-    public function fillSampleFragranceFormWithTestData()
-    {
-        $testData = [
-            'First Friend Name' => 'Test Friend',
-            'First Friend Email' => 'myawesomefriend@sessiondigital.com'
-        ];
-        $this->fillSampleFragranceForm($testData);
-    }
-
-    public function fillSampleFragranceForm($formData = [])
-    {
-        foreach ($formData as $elementName => $elementValue) {
-            $this->setElementValue($elementName, $elementValue);
-        }
-    }
-
-    public function sendSampleFragrances()
-    {
-        $this->clickElement('Send Samples');
-        $this->waitUntilElementDisappear('Ajax Loader');
-    }
-
-    public function canSeeSampleFragranceSuccessfullySentMessage()
-    {
-        return $this->hasContent('successfully sent');
     }
 }
