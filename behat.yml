@@ -13,7 +13,6 @@ default:
         - Context\Store\CheckoutContext
         - Context\Store\OrderContext
         - Context\Store\MagentoCommandContext
-        - Context\Store\FileSystemContext
   extensions:
     Cjm\Behat\StepThroughExtension: ~
     Bex\Behat\Magento2InitExtension:

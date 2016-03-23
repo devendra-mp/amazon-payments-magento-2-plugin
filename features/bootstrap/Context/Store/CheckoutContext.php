@@ -65,42 +65,6 @@ class CheckoutContext extends PageObjectContext implements Context, SnippetAccep
     }
 
     /**
-     * @Given I see the sample fragrance form on the success page
-     */
-    public function iSeeTheSampleFragranceFormOnTheSuccessPage()
-    {
-        if (!$this->checkoutPage->canSeeSampleFragranceForm()) {
-            throw new \Exception("I can't see the sample fragrance form");
-        }
-    }
-
-    /**
-     * @When I fill the sample fragrance form with correct data
-     */
-    public function iFillTheSampleFragranceFormWithCorrectData()
-    {
-        $this->checkoutPage->fillSampleFragranceFormWithTestData();
-    }
-
-    /**
-     * @Then I should be able to send the samples
-     */
-    public function iShouldBeAbleToSendTheSamples()
-    {
-        $this->checkoutPage->sendSampleFragrances();
-    }
-
-    /**
-     * @Then I should see the sample fragrance successfully sent message
-     */
-    public function iShouldSeeTheSampleFragranceSuccessfullySentMessage()
-    {
-        if (!$this->checkoutPage->canSeeSampleFragranceSuccessfullySentMessage()) {
-            throw new \Exception("I can't see the success message");
-        }
-    }
-
-    /**
      * @When I open the cart page
      */
     public function iOpenTheCartPage()

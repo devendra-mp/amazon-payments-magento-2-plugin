@@ -46,20 +46,4 @@ class ProductContext extends PageObjectContext implements Context, SnippetAccept
     {
         $this->productPage->addToBasket();
     }
-
-    /**
-     * @Then the stock of the product with sku :sku should change to :qty for :warehouseCode warehouse
-     */
-    public function theProductStockShouldBe($sku, $qty, $warehouseCode)
-    {
-        $this->productFixture->checkQtyIs($sku, $qty, $warehouseCode);
-    }
-
-    /**
-     * @Then the stock status of the product with sku :sku should change to :stockstatus for :warehouseCode warehouse
-     */
-    public function theProductShouldHaveStockStatus($sku, $stockstatus, $warehouseCode)
-    {
-        $this->productFixture->checkStockStatusIs($sku, $stockstatus, $warehouseCode);
-    }
 }
