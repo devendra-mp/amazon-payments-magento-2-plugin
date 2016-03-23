@@ -5,9 +5,20 @@ define([
 ], function($) {
     "use strict";
 
-    var orderReference;
+    var orderReference,
+        clientId = 'amzn1.application-oa2-client.15d69a1a3b83453a81ab480224d811cd';
+        
+    function setClientId(cid) {
+        amazon.Login.setClientId(cid);
+    }
 
-    amazon.Login.setClientId('amzn1.application-oa2-client.15d69a1a3b83453a81ab480224d811cd');
+    if(typeof amazon === 'undefined') {
+        window.onAmazonLoginReady = function() {
+           setClientId(clientId);
+        }
+    } else {
+      setClientId(clientId);
+    }
 
     return {
         _setOrderReference: function(or) {
