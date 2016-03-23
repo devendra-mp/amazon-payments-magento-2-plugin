@@ -9,6 +9,7 @@ define(
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/action/select-shipping-address',
         'Magento_Checkout/js/model/shipping-rate-processor/new-address',
+        'Magento_Checkout/js/action/set-shipping-information',
         'amazonCore'
     ],
     function(
@@ -19,6 +20,7 @@ define(
         quote,
         selectShippingAddress,
         shippingProcessor,
+        setShippingInformationAction,
         amazonCore
     ) {
         'use strict';
@@ -41,8 +43,6 @@ define(
                     //console.log('shipping method');
                 });
 
-                console.log(window.checkoutConfig.payment.amazonPayment.isEnabled);
-
                 amazonCore._onAmazonLoginReady();
                 this.setupAddressWidget();
                 amazonCore._loadAmazonWidgetsScript();
@@ -57,7 +57,6 @@ define(
                     interactive: 'never'
                 };
                 amazon.Login.authorize (loginOptions, function(response) {
-                    console.log(response);
                     if(!response.error) {
                         self.isAmazonAccountLoggedIn(true);
                     }
@@ -72,7 +71,7 @@ define(
                         if(value) {
                             setTimeout(function() {
                                 self.renderAddressWidget();
-                            },0);
+                            },2000);
                         }
                     });
                     self.verifyAmazonLoggedIn();
@@ -88,13 +87,29 @@ define(
                         orderReference.getAmazonOrderReferenceId();
                     },
                     onAddressSelect: function(orderReference) {
+                        console.log(orderReference);
                         //need to call GetOrderReferenceDetails (PHP) so need to do a proxy
                         //ajax call which sends the orderReference and gets back the address
                         //once we have the address we need to set it via the quote model
                         //then call the below function via the shippingProcessor in order
                         //to get the new rates based on the address
+                        var shippingAddress = quote.shippingAddress();
 
-                        //quote.shippingAddress();
+                        //update the current address model from the quote model
+                        shippingAddress.city = 'liverpool';
+                        shippingAddress.company = 'Session';
+                        shippingAddress.firstname = 'David';
+                        shippingAddress.countryId = 'GB';
+                        shippingAddress.lastname = 'Jones';
+                        shippingAddress.street = ['17 conway drive'];
+                        shippingAddress.region = 'merseyside';
+                        shippingAddress.postcode = 'wc3 h76';
+                        shippingAddress.regionId = 0;
+                        shippingAddress.telephone = '02058956587';
+
+                        //assign the shipping address to the quote model via method
+                        selectShippingAddress(shippingAddress);
+
                         //shippingProcessor.getRates(self.getCurrentShippingAddress());
                     },
                     design: {
