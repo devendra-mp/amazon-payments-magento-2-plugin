@@ -17,11 +17,6 @@ filter:
         - 'src/*'
 
 build:
-
-    tests:
-        override:
-            - { }
-
     cache:
         directories: [ vendor/ ]
 
