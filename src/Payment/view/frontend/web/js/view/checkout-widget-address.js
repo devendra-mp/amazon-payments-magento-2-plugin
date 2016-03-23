@@ -88,6 +88,7 @@ define(
                     },
                     onAddressSelect: function(orderReference) {
                         console.log(orderReference);
+                        amazonCore._setOrderReference(orderReference);
                         //need to call GetOrderReferenceDetails (PHP) so need to do a proxy
                         //ajax call which sends the orderReference and gets back the address
                         //once we have the address we need to set it via the quote model
