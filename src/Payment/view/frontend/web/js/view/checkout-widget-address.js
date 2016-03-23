@@ -92,6 +92,8 @@ define(
                         amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
                     },
                     onAddressSelect: function(orderReference) {
+                        amazonCore._setOrderReference(orderReference);
+
                         var data = {
                             amazonOrderReferenceId : amazonOrderReferenceId,
                             addressConsentToken : addressConsentToken
@@ -108,6 +110,8 @@ define(
                             for (var prop in data) {
                                 shippingAddress[prop] = data[prop];
                             }
+
+                            selectShippingAddress(shippingAddress);
 
                             console.log(shippingAddress);
 

@@ -4,8 +4,9 @@ define([
     "use strict";
 
     var options = {
-        widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'
-    };
+            widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'
+        },
+        orderReference;
 
     return {
         /**
@@ -25,6 +26,12 @@ define([
             var scriptTag = document.createElement('script');
             scriptTag.setAttribute('src', options.widgetsScript);
             document.head.appendChild(scriptTag);
+        },
+        _setOrderReference: function(or) {
+            orderReference = or;
+        },
+        _getOrderReference: function() {
+            return orderReference;
         }
     };
 });
