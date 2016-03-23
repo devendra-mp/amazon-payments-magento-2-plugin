@@ -4,7 +4,7 @@ define([
     "use strict";
 
     var options = {
-            widgetsScript: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js'
+            widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/lpa/js/Widgets.js'
         },
         orderReference;
 
