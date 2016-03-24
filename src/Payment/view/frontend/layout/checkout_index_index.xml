@@ -55,11 +55,6 @@
                                                                 </item>
                                                             </item>
                                                         </item>
-                                                        <item name="shipping-address-fieldset" xsi:type="array">
-                                                            <item name="config" xsi:type="array">
-                                                                <item name="componentDisabled" xsi:type="boolean">true</item>
-                                                            </item>
-                                                        </item>
                                                     </item>
                                                 </item>
                                             </item>
