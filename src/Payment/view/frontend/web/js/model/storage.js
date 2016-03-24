@@ -14,7 +14,7 @@ define(
         'use strict';
 
         var isCustomerLoggedIn = customer.isLoggedIn,
-            isAmazonAccountLoggedIn = ko.observable(true),
+            isAmazonAccountLoggedIn = ko.observable(false),
             isAmazonEnabled = ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             orderReference,
             addressConsentToken = amazonCore.accessToken,
