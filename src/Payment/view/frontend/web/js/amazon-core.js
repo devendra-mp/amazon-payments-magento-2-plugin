@@ -1,30 +1,48 @@
 define([
-    'jquery'
-], function($) {
+    'jquery',
+    'ko',
+    'amazonPayment',
+    'bluebird'
+], function($, ko) {
     "use strict";
 
-    var options = {
-        widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'
-    };
+    var clientId = 'amzn1.application-oa2-client.15d69a1a3b83453a81ab480224d811cd',
+        amazonDefined = ko.observable(false),
+        accessToken = ko.observable(null);
+        
+    function setClientId(cid) {
+        amazonDefined(true);
+        amazon.Login.setClientId(cid);
+    }
+
+    if(typeof amazon === 'undefined') {
+        window.onAmazonLoginReady = function() {
+           setClientId(clientId);
+        }
+    } else {
+      setClientId(clientId);
+    }
 
     return {
         /**
-         * onAmazonLoginReady
-         * @private
+         * Verify a user is logged into amazon
+         * @returns {*}
          */
-        _onAmazonLoginReady: function() {
-            window.onAmazonLoginReady = function() {
-                amazon.Login.setClientId('amzn1.application-oa2-client.15d69a1a3b83453a81ab480224d811cd');
+        verifyAmazonLoggedIn: function() {
+            var loginOptions = {
+                scope: "profile payments:widget payments:shipping_address",
+                popup: true,
+                interactive: 'never'
             };
+
+            return new Promise(function(resolve, reject) {
+                amazon.Login.authorize (loginOptions, function(response) {
+                    accessToken(response.access_token);
+                    resolve(!response.error);
+                });
+            });
         },
-        /**
-         * Load amazon widgets script after global window functions have been declared
-         * @private
-         */
-        _loadAmazonWidgetsScript: function() {
-            var scriptTag = document.createElement('script');
-            scriptTag.setAttribute('src', options.widgetsScript);
-            document.head.appendChild(scriptTag);
-        }
+        amazonDefined: amazonDefined,
+        accessToken: accessToken
     };
 });

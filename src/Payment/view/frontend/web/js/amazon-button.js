@@ -1,8 +1,8 @@
 define([
     'jquery',
-    'amazonCore',
-    'jquery/ui'
-], function($, core) {
+    'jquery/ui',
+    'amazonCore'
+], function($) {
     "use strict";
 
     var _this,
@@ -25,14 +25,12 @@ define([
             if (typeof window.checkoutConfig !== 'undefined') {
                 this._verifyCheckoutConfig();
             }
-
-            //load amazon global calls on window object
-            core._onAmazonLoginReady();
-            this._onAmazonPaymentsReady();
-
-            //load amazon widgets script
-            core._loadAmazonWidgetsScript();
+            _this._renderAmazonButton();
         },
+        /**
+         * Verify if checkout config is available
+         * @private
+         */
         _verifyCheckoutConfig: function() {
             if(window.checkoutConfig.payment.amazonPayment !== undefined && _this.options.buttonType === 'PwA') {
                 _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
@@ -44,24 +42,21 @@ define([
          * onAmazonPaymentsReady
          * @private
          */
-        _onAmazonPaymentsReady: function() {
-            window.onAmazonPaymentsReady = function(){
-                // render the button here
-                var authRequest,
-                    loginOptions;
+        _renderAmazonButton: function() {
+            var authRequest,
+                loginOptions;
 
                 OffAmazonPayments.Button($button.attr('id'), "AUGT0HMCLQVX1", {
-                    type:  _this.options.buttonType,
+                    type: _this.options.buttonType,
                     color: _this.options.buttonColor,
                     size: _this.options.buttonSize,
                     language: _this.options.buttonLanguage,
 
-                    authorization: function() {
+                    authorization: function () {
                         loginOptions = {scope: "profile payments:widget payments:shipping_address"};
-                        authRequest = amazon.Login.authorize (loginOptions, _this.options.redirectURL);
+                        authRequest = amazon.Login.authorize(loginOptions, _this.options.redirectURL);
                     }
                 });
-            };
         }
     });
 

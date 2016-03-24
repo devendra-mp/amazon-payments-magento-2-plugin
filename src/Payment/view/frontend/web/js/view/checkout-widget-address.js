@@ -9,7 +9,9 @@ define(
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/action/select-shipping-address',
         'Magento_Checkout/js/model/shipping-rate-processor/new-address',
-        'amazonCore'
+        'Magento_Checkout/js/action/set-shipping-information',
+        'Amazon_Payment/js/model/storage'
+
     ],
     function(
         $,
@@ -19,10 +21,12 @@ define(
         quote,
         selectShippingAddress,
         shippingProcessor,
-        amazonCore
+        setShippingInformationAction,
+        amazonStorage
     ) {
         'use strict';
         var self;
+
         return Component.extend({
             defaults: {
                 template: 'Amazon_Payment/checkout-widget-address'
@@ -31,52 +35,15 @@ define(
                 sellerId: 'AUGT0HMCLQVX1',
                 addressWidgetDOMId: 'addressBookWidgetDiv'
             },
-            isCustomerLoggedIn: customer.isLoggedIn,
-            isAmazonAccountLoggedIn: ko.observable(false),
+            isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
+            isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             initialize: function () {
                 self = this;
                 this._super();
-                quote.shippingMethod.subscribe(function (value) {
-                    //console.log('shipping method');
-                });
-
-                console.log(window.checkoutConfig.payment.amazonPayment.isEnabled);
-
-                amazonCore._onAmazonLoginReady();
-                this.setupAddressWidget();
-                amazonCore._loadAmazonWidgetsScript();
             },
-            /**
-             * Check to see whether user is currently logged into Amazon
-             */
-            verifyAmazonLoggedIn: function() {
-                var loginOptions = {
-                    scope: "profile payments:widget payments:shipping_address",
-                    popup: true,
-                    interactive: 'never'
-                };
-                amazon.Login.authorize (loginOptions, function(response) {
-                    console.log(response);
-                    if(!response.error) {
-                        self.isAmazonAccountLoggedIn(true);
-                    }
-                });
-            },
-            /**
-             * Setup events and bindings for the Amazon Address widget
-             */
-            setupAddressWidget: function() {
-                window.onAmazonPaymentsReady = function() {
-                    self.isAmazonAccountLoggedIn.subscribe(function(value) {
-                        if(value) {
-                            setTimeout(function() {
-                                self.renderAddressWidget();
-                            },0);
-                        }
-                    });
-                    self.verifyAmazonLoggedIn();
-                }
+            initAddressWidget: function() {
+                self.renderAddressWidget();
             },
             /**
              * render Amazon address Widget
@@ -85,22 +52,44 @@ define(
                 new OffAmazonPayments.Widgets.AddressBook({
                     sellerId: self.options.sellerId,
                     onOrderReferenceCreate: function(orderReference) {
-                        orderReference.getAmazonOrderReferenceId();
+                        var orderid = orderReference.getAmazonOrderReferenceId();
+                        amazonStorage.setOrderReference(orderid);
                     },
-                    onAddressSelect: function(orderReference) {
+                    onAddressSelect: function (orderReference) {
                         //need to call GetOrderReferenceDetails (PHP) so need to do a proxy
                         //ajax call which sends the orderReference and gets back the address
                         //once we have the address we need to set it via the quote model
                         //then call the below function via the shippingProcessor in order
                         //to get the new rates based on the address
+                        var shippingAddress = quote.shippingAddress(),
+                            data = {
+                                amazonOrderReferenceId : amazonStorage.getOrderReference(),
+                                addressConsentToken : amazonStorage.getAddressConsentToken()
+                            };
 
-                        //quote.shippingAddress();
-                        //shippingProcessor.getRates(self.getCurrentShippingAddress());
+                        $.ajax({
+                            type : 'POST',
+                            url: '/amazonpay/checkout/shipping',
+                            data: data,
+                            dataType: 'json'
+                        }).done(function(data) {
+                            var shippingAddress = quote.shippingAddress();
+
+                            for (var prop in data) {
+                                shippingAddress[prop] = data[prop];
+                            }
+
+                            selectShippingAddress(shippingAddress);
+
+                            console.log(shippingAddress);
+
+                            //shippingProcessor.getRates(self.getCurrentShippingAddress());
+                        });
                     },
                     design: {
                         designMode: 'responsive'
                     },
-                    onError: function(error) {
+                    onError: function (error) {
                         // your error handling code
                     }
                 }).bind(self.options.addressWidgetDOMId);

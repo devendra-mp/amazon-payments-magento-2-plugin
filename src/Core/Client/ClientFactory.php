@@ -45,11 +45,12 @@ class ClientFactory implements ClientFactoryInterface
     public function create()
     {
         $config = [
-            'secret_key' => $this->paymentHelper->getClientSecret(),
-            'access_key' => $this->paymentHelper->getAccessKey(),
-            'region'     => $this->paymentHelper->getRegion(),
-            'sandbox'    => $this->paymentHelper->isSandboxEnabled(),
-            'client_id'  => $this->paymentHelper->getClientId()
+            'secret_key'  => $this->paymentHelper->getSecretKey(),
+            'access_key'  => $this->paymentHelper->getAccessKey(),
+            'merchant_id' => $this->paymentHelper->getMerchantId(),
+            'region'      => $this->paymentHelper->getRegion(),
+            'sandbox'     => $this->paymentHelper->isSandboxEnabled(),
+            'client_id'   => $this->paymentHelper->getClientId()
         ];
 
         return $this->objectManager->create($this->instanceName, ['config' => $config]);
