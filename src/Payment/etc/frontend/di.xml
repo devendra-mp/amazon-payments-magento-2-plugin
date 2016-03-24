@@ -7,4 +7,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Checkout\Block\Checkout\LayoutProcessorInterface">
+        <plugin name="amazon_payment_block_checkout_layout_processor" type="Amazon\Payment\Block\Checkout\LayoutProcessor" sortOrder="1" />
+    </type>
 </config>
