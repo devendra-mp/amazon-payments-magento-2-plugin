@@ -25,16 +25,12 @@ define([
             if (typeof window.checkoutConfig !== 'undefined') {
                 this._verifyCheckoutConfig();
             }
-
-            //load amazon global calls on window object
-            //core._onAmazonLoginReady();
-
-            _this._onAmazonPaymentsReady();
-
-
-            //load amazon widgets script
-            //core._loadAmazonWidgetsScript();
+            _this._renderAmazonButton();
         },
+        /**
+         * Verify if checkout config is available
+         * @private
+         */
         _verifyCheckoutConfig: function() {
             if(window.checkoutConfig.payment.amazonPayment !== undefined && _this.options.buttonType === 'PwA') {
                 _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
@@ -46,27 +42,21 @@ define([
          * onAmazonPaymentsReady
          * @private
          */
-        _onAmazonPaymentsReady: function() {
+        _renderAmazonButton: function() {
+            var authRequest,
+                loginOptions;
 
-                //window.onAmazonPaymentsReady = function(){
-                // render the button here
-                var authRequest,
-                    loginOptions;
+                OffAmazonPayments.Button($button.attr('id'), "AUGT0HMCLQVX1", {
+                    type: _this.options.buttonType,
+                    color: _this.options.buttonColor,
+                    size: _this.options.buttonSize,
+                    language: _this.options.buttonLanguage,
 
-
-                    OffAmazonPayments.Button($button.attr('id'), "AUGT0HMCLQVX1", {
-                        type: _this.options.buttonType,
-                        color: _this.options.buttonColor,
-                        size: _this.options.buttonSize,
-                        language: _this.options.buttonLanguage,
-
-                        authorization: function () {
-                            loginOptions = {scope: "profile payments:widget payments:shipping_address"};
-                            authRequest = amazon.Login.authorize(loginOptions, _this.options.redirectURL);
-                        }
-                    });
-
-            //};
+                    authorization: function () {
+                        loginOptions = {scope: "profile payments:widget payments:shipping_address"};
+                        authRequest = amazon.Login.authorize(loginOptions, _this.options.redirectURL);
+                    }
+                });
         }
     });
 

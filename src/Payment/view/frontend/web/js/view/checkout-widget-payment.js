@@ -7,8 +7,7 @@ define(
         'ko',
         'Magento_Customer/js/model/customer',
         'Magento_Checkout/js/model/quote',
-        'amazonCore',
-        'Amazon_Payment/js/model/core'
+        'Amazon_Payment/js/model/storage'
     ],
     function(
         $,
@@ -16,8 +15,7 @@ define(
         ko,
         customer,
         quote,
-        amazonCore,
-        am
+        amazonStorage
     ) {
         'use strict';
         var self;
@@ -29,8 +27,8 @@ define(
                 sellerId: 'AUGT0HMCLQVX1',
                 paymentWidgetDOMId: 'walletWidgetDiv'
             },
-            isCustomerLoggedIn: am.isCustomerLoggedIn,
-            isAmazonAccountLoggedIn: am.isAmazonAccountLoggedIn,
+            isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
+            isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             initialize: function () {
                 self = this;
@@ -45,8 +43,7 @@ define(
             renderPaymentWidget: function() {
                 new OffAmazonPayments.Widgets.Wallet({
                     sellerId: self.options.sellerId,
-                    amazonOrderReferenceId: amazonCore._getOrderReference(), //the one you created before, most likely in the addressBook widget
-                    //amazonOrderReferenceId: '', //the one you created before, most likely in the addressBook widget
+                    amazonOrderReferenceId: amazonStorage.getOrderReference(),
                     onPaymentSelect: function(orderReference) {
                         // Replace this code with the action that you want to perform
                         // after the payment method is selected.

@@ -10,8 +10,7 @@ define(
         'Magento_Checkout/js/action/select-shipping-address',
         'Magento_Checkout/js/model/shipping-rate-processor/new-address',
         'Magento_Checkout/js/action/set-shipping-information',
-        'amazonCore',
-        'Amazon_Payment/js/model/core'
+        'Amazon_Payment/js/model/storage'
 
     ],
     function(
@@ -23,8 +22,7 @@ define(
         selectShippingAddress,
         shippingProcessor,
         setShippingInformationAction,
-        amazonCore,
-        am
+        amazonStorage
     ) {
         'use strict';
         var self;
@@ -36,8 +34,8 @@ define(
                 sellerId: 'AUGT0HMCLQVX1',
                 addressWidgetDOMId: 'addressBookWidgetDiv'
             },
-            isCustomerLoggedIn: am.isCustomerLoggedIn,
-            isAmazonAccountLoggedIn: am.isAmazonAccountLoggedIn,
+            isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
+            isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
             initialize: function () {
                 self = this;
@@ -47,7 +45,7 @@ define(
              * Check to see whether user is currently logged into Amazon
              */
 
-            initWidget: function() {
+            initAddressWidget: function() {
                 self.renderAddressWidget();
             },
             /**
@@ -58,7 +56,7 @@ define(
                     sellerId: self.options.sellerId,
                     onOrderReferenceCreate: function (orderReference) {
                         var orderid = orderReference.getAmazonOrderReferenceId();
-                        amazonCore._setOrderReference(orderid);
+                        amazonStorage.setOrderReference(orderid);
                     },
                     onAddressSelect: function (orderReference) {
                         console.log(orderReference);

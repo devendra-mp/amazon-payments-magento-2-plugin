@@ -1,14 +1,16 @@
 define([
     'jquery',
+    'ko',
     'amazonPayment',
     'bluebird'
-], function($) {
+], function($, ko) {
     "use strict";
 
-    var orderReference,
-        clientId = 'amzn1.application-oa2-client.15d69a1a3b83453a81ab480224d811cd';
+    var clientId = 'amzn1.application-oa2-client.15d69a1a3b83453a81ab480224d811cd',
+        amazonDefined = ko.observable(false);
         
     function setClientId(cid) {
+        amazonDefined(true);
         amazon.Login.setClientId(cid);
     }
 
@@ -21,12 +23,10 @@ define([
     }
 
     return {
-        _setOrderReference: function(or) {
-            orderReference = or;
-        },
-        _getOrderReference: function() {
-            return orderReference;
-        },
+        /**
+         * Verify a user is logged into amazon
+         * @returns {*}
+         */
         verifyAmazonLoggedIn: function() {
             var loginOptions = {
                 scope: "profile payments:widget payments:shipping_address",
@@ -39,7 +39,7 @@ define([
                     resolve(!response.error);
                 });
             });
-        }
-
+        },
+        amazonDefined: amazonDefined
     };
 });
