@@ -22,15 +22,18 @@ define(
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
-         * @param value
+         * @param amazonDefined
          */
         function checkAmazonDefined(amazonDefined) {
            if(amazonDefined) {
                verifyAmazonLoggedIn();
-               //remove subscription to amazonDefined
+               //remove subscription to amazonDefined once loaded
                isAmazonDefined.dispose();
            }
         }
+
+        //run this on loading storage model. If not defined subscribe will trigger when true
+        checkAmazonDefined(amazonCore.amazonDefined());
 
         /**
          * Verifies amazon user is logged in
