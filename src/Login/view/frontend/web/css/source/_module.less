@@ -1,30 +1,62 @@
 @import 'module/_vars.less';
 
-.amazon-button-container {
-    display: table;
-    margin: 0 0 22px;
+& when (@media-common = true) {
 
-    @media all and (max-width: @screen__m) {
-        width: 100%;
+    .amazon-button-container {
+        display: table;
+        margin: 0 0 22px;
+
+        @media all and (max-width: @screen__m) {
+            width: 100%;
+        }
+
+        &__cell {
+            display: table-cell;
+            min-width: 45px;
+            position: relative;
+        }
+
+        img {
+            display: block;
+        }
+
+        .field-tooltip {
+            margin: -12px 0 0;
+            top: 50%;
+            right: 5px;
+        }
+
+        .checkout-shipping-address & {
+            margin: 22px 0;
+        }
     }
 
-    &__cell {
-        display: table-cell;
-        min-width: 45px;
-        position: relative;
+    .login-container {
+        .block {
+            &-amazon-login {
+                .actions-toolbar {
+                    margin-top: 25px;
+                }
+            }
+        }
     }
 
-    img {
-        display: block;
-    }
+}
 
-    .field-tooltip {
-        margin: -12px 0 0;
-        top: 50%;
-        right: 5px;
-    }
-
-    .checkout-shipping-address & {
-        margin: 22px 0;
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .login-container {
+        .block {
+            &-amazon-login {
+                float: right;
+                clear: none;
+                .actions-toolbar {
+                    margin-top: 25px;
+                }
+            }
+            &:nth-child(2) + .block-amazon-login {
+                clear: none;
+            }
+        }
     }
 }
+
