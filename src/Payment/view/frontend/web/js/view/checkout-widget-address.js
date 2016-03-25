@@ -56,28 +56,25 @@ define(
                         amazonStorage.setOrderReference(orderid);
                     },
                     onAddressSelect: function (orderReference) {
-                        //need to call GetOrderReferenceDetails (PHP) so need to do a proxy
-                        //ajax call which sends the orderReference and gets back the address
-                        //once we have the address we need to set it via the quote model
-                        //then call the below function via the shippingProcessor in order
-                        //to get the new rates based on the address
                         var shippingAddress = quote.shippingAddress(),
                             data = {
-                                amazonOrderReferenceId : amazonStorage.getOrderReference(),
                                 addressConsentToken : amazonStorage.getAddressConsentToken()
                             };
 
                         $.ajax({
-                            type : 'POST',
-                            url: '/amazonpay/checkout/shipping',
-                            data: data,
-                            dataType: 'json'
+                            type : 'PUT',
+                            url: '/rest/default/V1/amazon-shipping-address/' + amazonStorage.getOrderReference(),
+                            data: JSON.stringify(data),
+                            dataType: 'json',
+                            contentType: 'application/json; charset=utf-8'
                         }).done(function(data) {
                             var shippingAddress = quote.shippingAddress();
 
-                            for (var prop in data) {
-                                shippingAddress[prop] = data[prop];
-                            }
+                            $.each(data, function(k, v) {
+                                for (var prop in v) {
+                                    shippingAddress[prop] = v[prop];
+                                }
+                            });
 
                             selectShippingAddress(shippingAddress);
 
