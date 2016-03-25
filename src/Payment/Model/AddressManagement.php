@@ -6,7 +6,6 @@ use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonAddress;
 use Amazon\Payment\Api\AddressManagementInterface;
 use Amazon\Payment\Helper\Address;
-use Magento\Checkout\Model\Session;
 use PayWithAmazon\ResponseInterface;
 
 class AddressManagement implements AddressManagementInterface
@@ -21,16 +20,10 @@ class AddressManagement implements AddressManagementInterface
      */
     protected $address;
 
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    public function __construct(ClientFactoryInterface $clientFactory, Address $address, Session $session)
+    public function __construct(ClientFactoryInterface $clientFactory, Address $address)
     {
         $this->clientFactory = $clientFactory;
         $this->address       = $address;
-        $this->session       = $session;
     }
 
     /**
