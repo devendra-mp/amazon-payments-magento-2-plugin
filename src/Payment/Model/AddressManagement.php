@@ -1,15 +1,15 @@
 <?php
 
-namespace Amazon\Payment\Controller\Checkout;
+namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonAddress;
+use Amazon\Payment\Api\AddressManagementInterface;
 use Amazon\Payment\Helper\Address;
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
+use Magento\Checkout\Model\Session;
 use PayWithAmazon\ResponseInterface;
 
-class Shipping extends Action
+class AddressManagement implements AddressManagementInterface
 {
     /**
      * @var ClientFactoryInterface
@@ -21,15 +21,22 @@ class Shipping extends Action
      */
     protected $address;
 
-    public function __construct(Context $context, ClientFactoryInterface $clientFactory, Address $address)
-    {
-        parent::__construct($context);
+    /**
+     * @var Session
+     */
+    protected $session;
 
+    public function __construct(ClientFactoryInterface $clientFactory, Address $address, Session $session)
+    {
         $this->clientFactory = $clientFactory;
         $this->address       = $address;
+        $this->session       = $session;
     }
 
-    public function execute()
+    /**
+     * {@inheritDoc}
+     */
+    public function saveShippingAddress($amazonOrderReferenceId, $addressConsentToken)
     {
         $client = $this->clientFactory->create();
 
@@ -38,15 +45,14 @@ class Shipping extends Action
          */
         $response = $client->getOrderReferenceDetails(
             [
-                'amazon_order_reference_id' => $this->getRequest()->getParam('amazonOrderReferenceId'),
-                'address_consent_token'     => $this->getRequest()->getParam('addressConsentToken')
+                'amazon_order_reference_id' => $amazonOrderReferenceId,
+                'address_consent_token'     => $addressConsentToken
             ]
         );
 
         $amazonAddress = new AmazonAddress($response);
         $address       = $this->address->convertToMagentoEntity($amazonAddress);
-        $json          = $this->address->convertToJson($address);
 
-        $this->getResponse()->representJson($json);
+        return $this->address->convertToArray($address);
     }
 }
