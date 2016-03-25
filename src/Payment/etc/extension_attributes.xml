@@ -7,7 +7,7 @@
             </join>
         </attribute>
     </extension_attributes>
-    <extension_attributes for="Magento\Quote\Api\Data\CartInterface">
+    <extension_attributes for="Magento\Sales\Api\Data\OrderInterface">
         <attribute code="amazon_order_reference_id" type="string">
             <join reference_table="amazon_sales_order" reference_field="order_id" join_on_field="entity_id">
                 <field>amazon_order_reference_id</field>

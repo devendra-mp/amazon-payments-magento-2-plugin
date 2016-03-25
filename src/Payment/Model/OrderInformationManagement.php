@@ -3,10 +3,10 @@
 namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Magento\Checkout\Model\Session;
 use PayWithAmazon\ResponseInterface;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 
 class OrderInformationManagement implements OrderInformationManagementInterface
 {
@@ -35,6 +35,9 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         $this->quoteLinkFactory = $quoteLinkFactory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function saveOrderInformation($amazonOrderReferenceId)
     {
         $quote = $this->session->getQuote();
@@ -50,12 +53,12 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             ]
         );
 
-        $this->updateLink($quote->getId(), $amazonOrderReferenceId);
+        $this->updateQuoteLink($quote->getId(), $amazonOrderReferenceId);
 
         return true;
     }
 
-    public function updateLink($quoteId, $amazonOrderReferenceId)
+    protected function updateQuoteLink($quoteId, $amazonOrderReferenceId)
     {
         $quoteLink = $this->quoteLinkFactory
             ->create();
