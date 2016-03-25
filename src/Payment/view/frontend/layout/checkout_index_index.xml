@@ -17,16 +17,16 @@
                                                             <item name="children" xsi:type="array">
                                                                 <item name="before-login-form" xsi:type="array">
                                                                     <item name="children" xsi:type="array">
-                                                                        <item name="amazon-init" xsi:type="array">
-                                                                            <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-init</item>
+                                                                        <item name="amazon-button" xsi:type="array">
+                                                                            <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-button</item>
                                                                             <item name="sortOrder" xsi:type="string">0</item>
-                                                                            <item name="displayArea" xsi:type="string">amazon-init</item>
+                                                                            <item name="displayArea" xsi:type="string">amazon-button</item>
                                                                             <item name="config" xsi:type="array">
                                                                                 <item name="tooltip" xsi:type="string" translate="true">Are you an Amazon customer? Pay now with address and payment details stored in your Amazon account.</item>
                                                                             </item>
                                                                             <item name="children" xsi:type="array">
                                                                                 <item name="component" xsi:type="string">uiComponent</item>
-                                                                                <item name="displayArea" xsi:type="string">before-amazon-pay</item>
+                                                                                <item name="displayArea" xsi:type="string">before-amazon-button</item>
                                                                                 <item name="children" xsi:type="array">
                                                                                     <!-- before login form fields -->
                                                                                 </item>
@@ -69,6 +69,9 @@
                                                                     <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-widget-payment</item>
                                                                     <item name="sortOrder" xsi:type="string">0</item>
                                                                     <item name="displayArea" xsi:type="string">amazon-widget-payment</item>
+                                                                     <item name="config" xsi:type="array">
+                                                                         <item name="tooltip" xsi:type="string" translate="true">Are you an Amazon customer? Pay now with address and payment details stored in your Amazon account.</item>
+                                                                     </item>
                                                                     <item name="children" xsi:type="array">
                                                                         <item name="component" xsi:type="string">uiComponent</item>
                                                                         <item name="displayArea" xsi:type="string">before-widget-payment</item>

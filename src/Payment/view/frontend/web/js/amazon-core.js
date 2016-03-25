@@ -1,7 +1,7 @@
 define([
     'jquery',
     'ko',
-    'amazonPayment',
+    'amazonPaymentWidget',
     'bluebird'
 ], function($, ko) {
     "use strict";
@@ -38,8 +38,10 @@ define([
             return new Promise(function(resolve, reject) {
                 amazon.Login.authorize (loginOptions, function(response) {
                     accessToken(response.access_token);
-                    resolve(!response.error);
+                    !response.error ? resolve(!response.error) : reject(response.error);
                 });
+            }).catch(function(e) {
+                console.log('error: ' + e);
             });
         },
         amazonDefined: amazonDefined,
