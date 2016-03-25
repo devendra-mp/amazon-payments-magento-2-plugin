@@ -6,7 +6,7 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Amazon\Payment\Helper\Data;
 
-class Checkout extends Template
+class Link extends Template
 {
     /**
      * @var Data
