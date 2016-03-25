@@ -85,7 +85,7 @@ class CustomerManager implements CustomerManagerInterface
             ->create();
 
         $customerLink
-            ->load($customerId)
+            ->load($customerId, 'customer_id')
             ->setAmazonId($amazonId)
             ->setCustomerId($customerId)
             ->save();

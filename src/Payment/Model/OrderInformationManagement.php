@@ -64,7 +64,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             ->create();
 
         $quoteLink
-            ->load($quoteId)
+            ->load($quoteId, 'quote_id')
             ->setAmazonOrderReferenceId($amazonOrderReferenceId)
             ->setQuoteId($quoteId)
             ->save();
