@@ -1,0 +1,106 @@
+default:
+  suites:
+    amazon:
+      filters:
+        tags: "~@integration"
+      paths:
+        features: features/suites/amazon
+      contexts:
+        - Context\General\MailCatcherContext
+        - Context\General\BaseUrlInitContext
+        - Context\Admin\LoginContext
+        - Context\Store\ProductContext
+        - Context\Store\CheckoutContext
+        - Context\Store\OrderContext
+        - Context\Store\MagentoCommandContext
+  extensions:
+    Cjm\Behat\StepThroughExtension: ~
+    Bex\Behat\Magento2InitExtension:
+      magento_bootstrap:
+        -
+          path: '../../../app/bootstrap.php'
+      magento_configs:
+        -
+          path: 'admin/security/use_form_key'
+          value: 0
+    Bex\Behat\BrowserInitialiserExtension:
+      close_browser_after_scenario: true
+      browser_window_size: max
+    SensioLabs\Behat\PageObjectExtension:
+      namespaces:
+        page: [Page]
+    Behat\MinkExtension:
+      base_url: 'http://m2.docker'
+      default_session: firefox
+      javascript_session: firefox
+      sessions:
+        default:
+          selenium2:
+            wd_host: http://172.17.0.3:4444/wd/hub
+            browser: firefox
+        firefox:
+          selenium2:
+            wd_host: http://172.17.0.3:4444/wd/hub
+            browser: firefox
+        host_firefox:
+          selenium2:
+            wd_host: http://172.17.0.3:4445/wd/hub
+            browser: firefox
+      goutte:
+        guzzle_parameters:
+          curl.options:
+            CURLOPT_SSL_VERIFYPEER: false
+            CURLOPT_CERTINFO: false
+            CURLOPT_TIMEOUT: 120
+            ssl.certificate_authority: false
+      selenium2:
+        wd_host: http://172.17.0.3:4444/wd/hub
+        browser: firefox
+      # command to open the failing html pages:
+      show_cmd: echo '%s'
+      show_tmp_dir: /vagrant
+
+ci:
+  suites:
+    amazon:
+      filters:
+        tags: "~@skipci"
+  extensions:
+    Bex\Behat\ScreenshotExtension:
+      image_drivers:
+        local:
+          screenshot_directory: /home/scrutinizer/artifacts
+
+ci_local:
+  suites:
+    amazon:
+      filters:
+        tags: "~@skipci"
+
+wip:
+  suites:
+    amazon:
+      filters:
+        tags: "@wip"
+
+all:
+  suites:
+    amazon:
+      filters:
+        tags: "~@skipall"
+
+host_firefox:
+  extensions:
+    Behat\MinkExtension\ServiceContainer\MinkExtension:
+      default_session: host_firefox
+      javascript_session: host_firefox
+
+host_firefox_wip:
+  suites:
+    amazon:
+      filters:
+        tags: "@wip"
+  extensions:
+    Behat\MinkExtension\ServiceContainer\MinkExtension:
+      default_session: host_firefox
+      javascript_session: host_firefox

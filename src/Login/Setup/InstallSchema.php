@@ -2,6 +2,7 @@
 
 namespace Amazon\Login\Setup;
 
+use Amazon\Login\Model\ResourceModel\CustomerLink;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
@@ -10,11 +11,9 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 
 class InstallSchema implements InstallSchemaInterface
 {
-    const CUSTOMER_TABLE_NAME = 'amazon_customer';
-
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
-        $table = $setup->getConnection()->newTable(self::CUSTOMER_TABLE_NAME);
+        $table = $setup->getConnection()->newTable(CustomerLink::TABLE_NAME);
 
         $table
             ->addColumn(
@@ -46,7 +45,7 @@ class InstallSchema implements InstallSchemaInterface
             )
             ->addIndex(
                 $setup->getIdxName(
-                    self::CUSTOMER_TABLE_NAME, ['customer_id', 'amazon_id'], AdapterInterface::INDEX_TYPE_UNIQUE
+                    CustomerLink::TABLE_NAME, ['customer_id', 'amazon_id'], AdapterInterface::INDEX_TYPE_UNIQUE
                 ),
                 ['customer_id', 'amazon_id'],
                 ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
