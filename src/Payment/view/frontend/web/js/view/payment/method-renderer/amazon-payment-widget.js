@@ -1,9 +1,7 @@
-/*global define*/
-
 define(
     [
         'jquery',
-        "uiComponent",
+        'Magento_Checkout/js/view/payment/default',
         'ko',
         'Magento_Customer/js/model/customer',
         'Magento_Checkout/js/model/quote',
@@ -18,11 +16,14 @@ define(
         amazonStorage
     ) {
         'use strict';
+
         var self;
+
         return Component.extend({
             defaults: {
-                template: 'Amazon_Payment/checkout-widget-payment'
+                template: 'Amazon_Payment/payment/amazon-payment-widget'
             },
+
             options: {
                 sellerId: 'AUGT0HMCLQVX1',
                 paymentWidgetDOMId: 'walletWidgetDiv'
@@ -58,12 +59,14 @@ define(
                     },
                     onError: function(error) {
                         // Your error handling code.
-                        // During development you can use the following
-                        // code to view error messages:
-                        // console.log(error.getErrorCode() + ': ' + error.getErrorMessage());
-                        // See "Handling Errors" for more information.
                     }
                 }).bind(self.options.paymentWidgetDOMId);
+            },
+            getCode: function() {
+                return 'amazon_payment';
+            },
+            isActive: function() {
+                return true;
             }
         });
     }

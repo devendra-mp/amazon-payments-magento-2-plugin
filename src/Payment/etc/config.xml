@@ -8,7 +8,7 @@
                 <sort_order>1</sort_order>
                 <!-- payment gateway / processing defaults -->
                 <debug>1</debug>
-                <model>AmazonPaymentFacade</model>
+                <model>Amazon\Payment\Model\Method\Amazon</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
                 <title>Amazon Payment</title>
