@@ -32,7 +32,8 @@ define([
          * @private
          */
         _verifyCheckoutConfig: function() {
-            if(window.checkoutConfig.payment.amazonPayment !== undefined && _this.options.buttonType === 'PwA') {
+            if(window.checkoutConfig.payment.amazonPayment !== undefined) {
+                _this.options.buttonType = window.checkoutConfig.payment.amazonPayment.buttonType;
                 _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
                 _this.options.buttonSize = window.checkoutConfig.payment.amazonPayment.buttonSize;
                 _this.options.redirectURL = window.checkoutConfig.payment.amazonPayment.redirectURL;
