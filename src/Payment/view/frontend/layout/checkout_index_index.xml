@@ -60,23 +60,21 @@
                                             </item>
                                         </item>
                                         <item name="billing-step" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
                                             <item name="children" xsi:type="array">
                                                 <item name="payment" xsi:type="array">
                                                     <item name="children" xsi:type="array">
-                                                        <item name="beforeMethods" xsi:type="array">
+                                                        <item name="renders" xsi:type="array">
+                                                            <!-- merge payment method renders here -->
                                                             <item name="children" xsi:type="array">
-                                                                 <item name="amazon-widget-payment" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-widget-payment</item>
-                                                                    <item name="sortOrder" xsi:type="string">0</item>
-                                                                    <item name="displayArea" xsi:type="string">amazon-widget-payment</item>
-                                                                     <item name="config" xsi:type="array">
-                                                                         <item name="tooltip" xsi:type="string" translate="true">Are you an Amazon customer? Pay now with address and payment details stored in your Amazon account.</item>
-                                                                     </item>
-                                                                    <item name="children" xsi:type="array">
-                                                                        <item name="component" xsi:type="string">uiComponent</item>
-                                                                        <item name="displayArea" xsi:type="string">before-widget-payment</item>
-                                                                        <item name="children" xsi:type="array">
-                                                                            <!-- before login form fields -->
+                                                                <item name="amazon_payment" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Amazon_Payment/js/view/payment/amazon-pay</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="tooltip" xsi:type="string" translate="true">Are you an Amazon customer? Pay now with address and payment details stored in your Amazon account.</item>
+                                                                    </item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="amazon_payment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>
                                                                 </item>

@@ -10,4 +10,10 @@
     <type name="Magento\Checkout\Block\Checkout\LayoutProcessorInterface">
         <plugin name="amazon_payment_block_checkout_layout_processor" type="Amazon\Payment\Block\Checkout\LayoutProcessor" sortOrder="1" />
     </type>
+
+    <virtualType name="Amazon\Payment\Model\Config" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Amazon\Payment\Model\Method\Amazon::PAYMENT_METHOD_CODE</argument>
+        </arguments>
+    </virtualType>
 </config>
