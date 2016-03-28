@@ -44,6 +44,23 @@ define([
                 console.log('error: ' + e);
             });
         },
+        /**
+         * Log user out of Amazon
+         * @constructor
+         */
+        AmazonLogout: function() {
+            if(amazonDefined()) {
+                amazon.Login.logout();
+            } else {
+                var logout = amazonDefined.subscribe(function(defined) {
+                    if(defined) {
+                        amazon.Login.logout();
+                        logout.dispose(); //remove subscribe
+                    }
+                })
+            }
+
+        },
         amazonDefined: amazonDefined,
         accessToken: accessToken
     };
