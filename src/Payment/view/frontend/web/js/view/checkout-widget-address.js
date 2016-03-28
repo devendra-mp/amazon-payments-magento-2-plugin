@@ -68,13 +68,12 @@ define(
                             dataType: 'json',
                             contentType: 'application/json; charset=utf-8'
                         }).done(function(data) {
-                            var shippingAddress = quote.shippingAddress();
+                            var shippingAddress = quote.shippingAddress(),
+                                addressData = data.shift();
 
-                            $.each(data, function(k, v) {
-                                for (var prop in v) {
-                                    shippingAddress[prop] = v[prop];
-                                }
-                            });
+                            for (var prop in addressData) {
+                                shippingAddress[prop] = addressData[prop];
+                            }
 
                             selectShippingAddress(shippingAddress);
 

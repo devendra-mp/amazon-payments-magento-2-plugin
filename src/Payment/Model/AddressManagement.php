@@ -46,6 +46,6 @@ class AddressManagement implements AddressManagementInterface
         $amazonAddress = new AmazonAddress($response);
         $address       = $this->address->convertToMagentoEntity($amazonAddress);
 
-        return $this->address->convertToArray($address);
+        return [$this->address->convertToArray($address)];
     }
 }
