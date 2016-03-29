@@ -46,13 +46,7 @@ define(
                     sellerId: self.options.sellerId,
                     amazonOrderReferenceId: amazonStorage.getOrderReference(),
                     onPaymentSelect: function(orderReference) {
-                        $.ajax({
-                            type : 'PUT',
-                            url: '/rest/default/V1/amazon-order-information/' + amazonStorage.getOrderReference(),
-                            dataType: 'json'
-                        }).done(function(data) {
-                            console.log(data);
-                        });
+
                     },
                     design: {
                         designMode: 'responsive'
