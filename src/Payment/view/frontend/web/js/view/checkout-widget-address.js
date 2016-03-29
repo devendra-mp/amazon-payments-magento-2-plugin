@@ -11,7 +11,6 @@ define(
         'Magento_Checkout/js/model/shipping-rate-processor/new-address',
         'Magento_Checkout/js/action/set-shipping-information',
         'Amazon_Payment/js/model/storage'
-
     ],
     function(
         $,
