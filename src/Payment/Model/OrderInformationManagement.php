@@ -3,7 +3,6 @@
 namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Helper\Data;
 use Magento\Checkout\Model\Session;
@@ -24,23 +23,17 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     protected $clientFactory;
 
     /**
-     * @var QuoteLinkInterfaceFactory
-     */
-    protected $quoteLinkFactory;
-    /**
      * @var Data
      */
-    private $paymentHelper;
+    protected $paymentHelper;
 
     public function __construct(
         Session $session,
         ClientFactoryInterface $clientFactory,
-        QuoteLinkInterfaceFactory $quoteLinkFactory,
         Data $paymentHelper
     ) {
         $this->session          = $session;
         $this->clientFactory    = $clientFactory;
-        $this->quoteLinkFactory = $quoteLinkFactory;
         $this->paymentHelper    = $paymentHelper;
     }
 
@@ -65,13 +58,11 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             ,
             'platform_id'               => $this->paymentHelper->getMerchantId()
         ];
-
+        
         /**
          * @var ResponseInterface $response
          */
         $response = $this->clientFactory->create()->setOrderReferenceDetails($data);
-
-        $this->updateQuoteLink($quote->getId(), $amazonOrderReferenceId);
 
         return true;
     }
@@ -83,17 +74,5 @@ class OrderInformationManagement implements OrderInformationManagementInterface
                 ->reserveOrderId()
                 ->save();
         }
-    }
-
-    protected function updateQuoteLink($quoteId, $amazonOrderReferenceId)
-    {
-        $quoteLink = $this->quoteLinkFactory
-            ->create();
-
-        $quoteLink
-            ->load($quoteId, 'quote_id')
-            ->setAmazonOrderReferenceId($amazonOrderReferenceId)
-            ->setQuoteId($quoteId)
-            ->save();
     }
 }
