@@ -34,7 +34,7 @@ class ConfirmOrder implements ObserverInterface
      * @param LoggerInterface $logger
      * @param QuoteLinkInterfaceFactory $quoteLinkFactory
      * @param OrderLinkInterfaceFactory $orderLinkFactory
-     * @param OrderInformationManagement $informationManagement
+     * @param OrderInformationManagement $orderInformationManagement
      */
     public function __construct(LoggerInterface $logger,
                                 QuoteLinkInterfaceFactory $quoteLinkFactory,
