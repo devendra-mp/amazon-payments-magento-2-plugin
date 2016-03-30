@@ -75,4 +75,15 @@ class OrderInformationManagement implements OrderInformationManagementInterface
                 ->save();
         }
     }
+
+    public function confirmOrderReference($amazonOrderReferenceId)
+    {
+        $response = $this->clientFactory->create()->confirmOrderReference(
+            [
+                'amazon_order_reference_id' => $amazonOrderReferenceId
+            ]
+        );
+
+        return true;
+    }
 }
