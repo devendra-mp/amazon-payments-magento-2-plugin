@@ -8,7 +8,6 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\Data\OrderLinkInterfaceFactory;
-use Psr\Log\LoggerInterface;
 
 class ConfirmOrder implements ObserverInterface
 {
@@ -31,19 +30,16 @@ class ConfirmOrder implements ObserverInterface
 
     /**
      * ConfirmOrder constructor.
-     * @param LoggerInterface $logger
      * @param QuoteLinkInterfaceFactory $quoteLinkFactory
      * @param OrderLinkInterfaceFactory $orderLinkFactory
      * @param OrderInformationManagement $orderInformationManagement
      */
-    public function __construct(LoggerInterface $logger,
-                                QuoteLinkInterfaceFactory $quoteLinkFactory,
+    public function __construct(QuoteLinkInterfaceFactory $quoteLinkFactory,
                                 OrderLinkInterfaceFactory $orderLinkFactory,
                                 OrderInformationManagement $orderInformationManagement
     )
     {
-        $this->logger = $logger;
-        $this->quoteLinkFactory = $quoteLinkFactory;
+                $this->quoteLinkFactory = $quoteLinkFactory;
         $this->orderLinkFactory = $orderLinkFactory;
         $this->orderInformationManager = $orderInformationManagement;
     }
