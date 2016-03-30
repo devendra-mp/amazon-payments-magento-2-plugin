@@ -39,7 +39,7 @@ class ConfirmOrder implements ObserverInterface
     {
         $this->quoteLinkFactory = $quoteLinkFactory;
         $this->orderLinkFactory = $orderLinkFactory;
-        $this->orderInformationManager = $orderInformationManagement;
+        $this->orderInformationManagement = $orderInformationManagement;
     }
 
     public function execute(Observer $observer)
@@ -53,7 +53,7 @@ class ConfirmOrder implements ObserverInterface
             $amazonOrderReferenceId = $quoteLink->getAmazonOrderReferenceId();
 
             if ($amazonOrderReferenceId) {
-                $this->orderInformationManager->confirmOrderReference($amazonOrderReferenceId);
+                $this->orderInformationManagement->confirmOrderReference($amazonOrderReferenceId);
             }
         }
     }
