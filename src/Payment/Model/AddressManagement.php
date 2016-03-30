@@ -68,7 +68,7 @@ class AddressManagement implements AddressManagementInterface
         $quote = $this->session->getQuote();
         $this->updateQuoteLink($quote, $amazonOrderReferenceId);
 
-        return $this->address->convertToArray($address);
+        return [$this->address->convertToArray($address)];
     }
 
     protected function updateQuoteLink(Quote $quote, $amazonOrderReferenceId)
