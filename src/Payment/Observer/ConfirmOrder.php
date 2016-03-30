@@ -39,13 +39,13 @@ class ConfirmOrder implements ObserverInterface
     public function __construct(LoggerInterface $logger,
                                 QuoteLinkInterfaceFactory $quoteLinkFactory,
                                 OrderLinkInterfaceFactory $orderLinkFactory,
-                                OrderInformationManagement $informationManagement
+                                OrderInformationManagement $orderInformationManagement
     )
     {
         $this->logger = $logger;
         $this->quoteLinkFactory = $quoteLinkFactory;
         $this->orderLinkFactory = $orderLinkFactory;
-        $this->orderInformationManager = $informationManagement;
+        $this->orderInformationManager = $orderInformationManagement;
     }
 
     public function execute(Observer $observer)
