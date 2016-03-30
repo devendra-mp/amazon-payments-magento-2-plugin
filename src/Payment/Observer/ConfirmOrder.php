@@ -11,8 +11,6 @@ use Amazon\Payment\Api\Data\OrderLinkInterfaceFactory;
 
 class ConfirmOrder implements ObserverInterface
 {
-    protected $logger;
-
     /**
      * @var QuoteLinkInterfaceFactory
      */
@@ -39,7 +37,7 @@ class ConfirmOrder implements ObserverInterface
                                 OrderInformationManagement $orderInformationManagement
     )
     {
-                $this->quoteLinkFactory = $quoteLinkFactory;
+        $this->quoteLinkFactory = $quoteLinkFactory;
         $this->orderLinkFactory = $orderLinkFactory;
         $this->orderInformationManager = $orderInformationManagement;
     }
