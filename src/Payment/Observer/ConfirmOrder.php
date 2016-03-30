@@ -1,6 +1,6 @@
 <?php
 
-namespace Amazon\Payment\Model\Observer;
+namespace Amazon\Payment\Observer;
 
 use Amazon\Payment\Model\OrderInformationManagement;
 use Magento\Framework\Event\Observer;
@@ -52,13 +52,15 @@ class ConfirmOrder implements ObserverInterface
     {
         $order = $observer->getOrder();
 
-        $quoteId = $order->getQuoteId();
-        $quoteLink = $this->quoteLinkFactory->create();
-        $quoteLink->load($quoteId, 'quote_id');
-        $amazonOrderReferenceId = $quoteLink->getAmazonOrderReferenceId();
+        if ($order instanceof Order) {
+            $quoteId = $order->getQuoteId();
+            $quoteLink = $this->quoteLinkFactory->create();
+            $quoteLink->load($quoteId, 'quote_id');
+            $amazonOrderReferenceId = $quoteLink->getAmazonOrderReferenceId();
 
-        if ($amazonOrderReferenceId) {
-            $this->orderInformationManager->confirmOrderReference($amazonOrderReferenceId);
+            if ($amazonOrderReferenceId) {
+                $this->orderInformationManager->confirmOrderReference($amazonOrderReferenceId);
+            }
         }
     }
 }
