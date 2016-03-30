@@ -39,7 +39,7 @@ class ConfirmOrder implements ObserverInterface
     public function __construct(LoggerInterface $logger,
                                 QuoteLinkInterfaceFactory $quoteLinkFactory,
                                 OrderLinkInterfaceFactory $orderLinkFactory,
-                                \Amazon\Payment\Model\OrderInformationManagement $informationManagement
+                                OrderInformationManagement $informationManagement
     )
     {
         $this->logger = $logger;
