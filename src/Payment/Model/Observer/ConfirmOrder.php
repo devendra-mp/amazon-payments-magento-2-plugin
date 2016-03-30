@@ -57,6 +57,8 @@ class ConfirmOrder implements ObserverInterface
         $quoteLink->load($quoteId, 'quote_id');
         $amazonOrderReferenceId = $quoteLink->getAmazonOrderReferenceId();
 
-        $this->orderInformationManager->confirmOrderReference($amazonOrderReferenceId);
+        if ($amazonOrderReferenceId) {
+            $this->orderInformationManager->confirmOrderReference($amazonOrderReferenceId);
+        }
     }
 }
