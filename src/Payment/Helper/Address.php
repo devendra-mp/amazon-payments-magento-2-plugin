@@ -74,16 +74,16 @@ class Address
     public function convertToArray(AddressInterface $address)
     {
         $data = [
-            ['city'       => $address->getCity()],
-            ['firstname'  => $address->getFirstname()],
-            ['lastname'   => $address->getLastname()],
-            ['countryId'  => $address->getCountryId()],
-            ['street'     => $address->getStreet()],
-            ['postcode'   => $address->getPostcode()],
-            ['telephone'  => $address->getTelephone()],
-            ['region'     => $address->getRegion()->getRegion()],
-            ['regionCode' => $address->getRegion()->getRegionCode()],
-            ['regionId'   => $address->getRegion()->getRegionId()]
+            'city'       => $address->getCity(),
+            'firstname'  => $address->getFirstname(),
+            'lastname'   => $address->getLastname(),
+            'countryId'  => $address->getCountryId(),
+            'street'     => $address->getStreet(),
+            'postcode'   => $address->getPostcode(),
+            'telephone'  => $address->getTelephone(),
+            'region'     => $address->getRegion()->getRegion(),
+            'regionCode' => $address->getRegion()->getRegionCode(),
+            'regionId'   => $address->getRegion()->getRegionId()
         ];
 
         return $data;

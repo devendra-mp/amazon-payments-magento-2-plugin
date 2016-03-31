@@ -3,9 +3,11 @@
 namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
+use Amazon\Payment\Helper\Data;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\AppInterface;
+use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
 
 class OrderInformationManagement implements OrderInformationManagementInterface
@@ -21,18 +23,18 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     protected $clientFactory;
 
     /**
-     * @var QuoteLinkInterfaceFactory
+     * @var Data
      */
-    private $quoteLinkFactory;
+    protected $paymentHelper;
 
     public function __construct(
         Session $session,
         ClientFactoryInterface $clientFactory,
-        QuoteLinkInterfaceFactory $quoteLinkFactory
+        Data $paymentHelper
     ) {
         $this->session          = $session;
         $this->clientFactory    = $clientFactory;
-        $this->quoteLinkFactory = $quoteLinkFactory;
+        $this->paymentHelper    = $paymentHelper;
     }
 
     /**
@@ -42,31 +44,46 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     {
         $quote = $this->session->getQuote();
 
+        $this->setReservedOrderId($quote);
+
+        $data = [
+            'amazon_order_reference_id' => $amazonOrderReferenceId,
+            'amount'                    => $quote->getGrandTotal(),
+            'currency_code'             => $quote->getQuoteCurrencyCode(),
+            'seller_order_id'           => $quote->getReservedOrderId(),
+            'store_name'                => $quote->getStore()->getName(),
+            'custom_information'        =>
+                'Magento Version : ' . AppInterface::VERSION . ' ' .
+                'Plugin Version : ' . $this->paymentHelper->getModuleVersion()
+            ,
+            'platform_id'               => $this->paymentHelper->getMerchantId()
+        ];
+        
         /**
          * @var ResponseInterface $response
          */
-        $response = $this->clientFactory->create()->setOrderReferenceDetails(
-            [
-                'amazon_order_reference_id' => $amazonOrderReferenceId,
-                'amount'                    => $quote->getGrandTotal(),
-                'currency_code'             => $quote->getQuoteCurrencyCode()
-            ]
-        );
-
-        $this->updateQuoteLink($quote->getId(), $amazonOrderReferenceId);
+        $response = $this->clientFactory->create()->setOrderReferenceDetails($data);
 
         return true;
     }
 
-    protected function updateQuoteLink($quoteId, $amazonOrderReferenceId)
+    protected function setReservedOrderId(Quote $quote)
     {
-        $quoteLink = $this->quoteLinkFactory
-            ->create();
+        if ( ! $quote->getReservedOrderId()) {
+            $quote
+                ->reserveOrderId()
+                ->save();
+        }
+    }
 
-        $quoteLink
-            ->load($quoteId, 'quote_id')
-            ->setAmazonOrderReferenceId($amazonOrderReferenceId)
-            ->setQuoteId($quoteId)
-            ->save();
+    public function confirmOrderReference($amazonOrderReferenceId)
+    {
+        $response = $this->clientFactory->create()->confirmOrderReference(
+            [
+                'amazon_order_reference_id' => $amazonOrderReferenceId
+            ]
+        );
+
+        return true;
     }
 }

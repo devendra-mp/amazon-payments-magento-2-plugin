@@ -3,10 +3,25 @@
 namespace Amazon\Payment\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Module\ModuleListInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class Data extends AbstractHelper
 {
+    const MODULE_CODE = 'Amazon_Payment';
+
+    /**
+     * @var ModuleListInterface
+     */
+    protected $moduleList;
+
+    public function __construct(Context $context, ModuleListInterface $moduleList)
+    {
+        parent::__construct($context);
+        $this->moduleList = $moduleList;
+    }
+
     /*
      * @return bool
      */
@@ -159,5 +174,13 @@ class Data extends AbstractHelper
             'payment/amazon_payment/developer/debug',
             $scope
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getModuleVersion()
+    {
+        return $this->moduleList->getOne(static::MODULE_CODE)['setup_version'];
     }
 }
