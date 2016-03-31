@@ -13,7 +13,7 @@
                 <debug>1</debug>
                 <model>Amazon\Payment\Model\Method\Amazon</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <title>Amazon Payment</title>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
