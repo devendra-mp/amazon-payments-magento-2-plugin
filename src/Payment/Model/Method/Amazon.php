@@ -3,7 +3,6 @@
 namespace Amazon\Payment\Model\Method;
 
 use Magento\Framework\Exception\LocalizedException;
-use Psr\Log\LoggerInterface;
 
 class Amazon extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -24,7 +23,7 @@ class Amazon extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
-        LoggerInterface $generalLogger,
+        \Magento\Payment\Model\Method\Logger $logger,
         \Magento\Framework\Math\Random $random,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
