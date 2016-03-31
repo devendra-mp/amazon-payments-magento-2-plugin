@@ -2,31 +2,72 @@
 
 namespace Amazon\Payment\Model\Method;
 
-use Magento\Framework\Exception\LocalizedException;
+use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
+use Amazon\Payment\Helper\Data as AmazonPaymentHelper;
+use Magento\Framework\Api\AttributeValueFactory;
+use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
+use Magento\Payment\Helper\Data;
+use Magento\Payment\Model\InfoInterface;
+use Magento\Payment\Model\Method\AbstractMethod;
+use Magento\Payment\Model\Method\Logger;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order\Payment\Transaction;
+use PayWithAmazon\ResponseParser;
 
-class Amazon extends \Magento\Payment\Model\Method\AbstractMethod
+class Amazon extends AbstractMethod
 {
     const PAYMENT_METHOD_CODE = 'amazon_payment';
 
+    /**
+     * {@inheritDoc}
+     */
     protected $_code = self::PAYMENT_METHOD_CODE;
 
+    /**
+     * {@inheritDoc}
+     */
     protected $_canCapture = true;
 
+    /**
+     * {@inheritDoc}
+     */
     protected $_canAuthorize = true;
 
+    /**
+     * @var ClientFactoryInterface
+     */
+    protected $clientFactory;
+
+    /**
+     * @var AmazonPaymentHelper
+     */
+    protected $amazonPaymentHelper;
+
+    /**
+     * @var QuoteLinkInterfaceFactory
+     */
+    protected $quoteLinkFactory;
+
     public function __construct(
-        \Magento\Framework\Model\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
-        \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
-        \Magento\Payment\Helper\Data $paymentData,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Payment\Model\Method\Logger $logger,
-        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
-        \Magento\Payment\Model\Method\Logger $logger,
-        \Magento\Framework\Math\Random $random,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        Context $context,
+        Registry $registry,
+        ExtensionAttributesFactory $extensionFactory,
+        AttributeValueFactory $customAttributeFactory,
+        Data $paymentData,
+        ScopeConfigInterface $scopeConfig,
+        Logger $logger,
+        ClientFactoryInterface $clientFactory,
+        AmazonPaymentHelper $amazonPaymentHelper,
+        QuoteLinkInterfaceFactory $quoteLinkFactory,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct(
@@ -41,10 +82,102 @@ class Amazon extends \Magento\Payment\Model\Method\AbstractMethod
             $resourceCollection,
             $data
         );
+
+        $this->clientFactory       = $clientFactory;
+        $this->amazonPaymentHelper = $amazonPaymentHelper;
+        $this->quoteLinkFactory    = $quoteLinkFactory;
     }
 
-    public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    /**
+     * @param Payment $payment
+     * @param float   $amount
+     */
+    public function authorize(InfoInterface $payment, $amount)
     {
-        
+        $this->_authorize($payment, $amount, false);
+    }
+
+    /**
+     * @param Payment $payment
+     * @param float   $amount
+     */
+    public function capture(InfoInterface $payment, $amount)
+    {
+        if ($payment->getParentTransactionId()) {
+            $this->_capture($payment, $amount);
+        } else {
+            $this->_authorize($payment, $amount, true);
+        }
+    }
+
+    protected function _authorize(InfoInterface $payment, $amount, $capture = false)
+    {
+        $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
+
+        $data = [
+            'merchant_id'                => $this->amazonPaymentHelper->getMerchantId(),
+            'amazon_order_reference_id'  => $amazonOrderReferenceId,
+            'authorization_amount'       => $amount,
+            'currency_code'              => $this->getCurrencyCode($payment),
+            'authorization_reference_id' => $amazonOrderReferenceId . '-AUTH',
+            'capture_now'                => $capture,
+            'transaction_timeout'        => 0
+        ];
+
+        $client = $this->clientFactory->create();
+        /**
+         * @var ResponseParser $response
+         */
+        $response = $client->authorize($data);
+
+        $responseData = $response->toArray();
+
+        if ($capture) {
+            $transactionId = $responseData['AuthorizeResult']['AuthorizationDetails']['IdList']['member'];
+        } else {
+            $transactionId = $responseData['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
+            $payment->setIsTransactionClosed(false);
+        }
+
+        $payment->setTransactionId($transactionId);
+    }
+
+    protected function _capture(InfoInterface $payment, $amount)
+    {
+        $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
+        $authorizationId        = $payment->getParentTransactionId();
+
+        $data = [
+            'merchant_id'             => $this->amazonPaymentHelper->getMerchantId(),
+            'amazon_authorization_id' => $authorizationId,
+            'capture_amount'          => $amount,
+            'currency_code'           => $this->getCurrencyCode($payment),
+            'capture_reference_id'    => $amazonOrderReferenceId . '-CAP'
+        ];
+
+        $client = $this->clientFactory->create();
+        /**
+         * @var ResponseParser $response
+         */
+        $response     = $client->capture($data);
+        $responseData = $response->toArray();
+
+        $transactionId = $responseData['CaptureResult']['CaptureDetails']['AmazonCaptureId'];
+
+        $payment->setTransactionId($transactionId);
+    }
+
+    protected function getCurrencyCode(InfoInterface $payment)
+    {
+        return $payment->getOrder()->getOrderCurrencyCode();
+    }
+
+    protected function getAmazonOrderReferenceId(InfoInterface $payment)
+    {
+        $quoteId = $payment->getOrder()->getQuoteId();
+        $quote   = $this->quoteLinkFactory->create();
+        $quote->load($quoteId, 'quote_id');
+
+        return $quote->getAmazonOrderReferenceId();
     }
 }
