@@ -3,6 +3,26 @@
     .centered-button {
         text-align: center;
         display: inline-block;
+
+        .checkout-methods-items & {
+            margin-bottom: 0;
+
+            @media all and (max-width: @screen__m) {
+                width: auto;
+
+                .field-tooltip-content {
+                    right: -56px;
+                    top: 38px;
+                    left: auto;
+
+                    &:before,
+                    &:after {
+                        right: 56px;
+                    }
+
+                }
+            }
+        }
     }
 
     .amazon-widget--address {
