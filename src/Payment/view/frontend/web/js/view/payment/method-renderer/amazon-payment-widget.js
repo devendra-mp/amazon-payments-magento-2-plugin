@@ -37,6 +37,7 @@ define(
             },
             initPaymentWidget: function() {
                 self.renderPaymentWidget();
+                $('#amazon_payment').trigger('click');
             },
             /**
              * render Amazon payment Widget
