@@ -18,6 +18,13 @@
             <div id="walletWidgetDiv" class="amazon-widget amazon-widget--payment" data-bind="afterRender: initPaymentWidget"></div>
         </div>
 
+        <div class="amazon-shipping-address">
+            <!-- ko text: address().firstname --><!-- /ko --> <!-- ko text: address().lastname --><!-- /ko --><br/>
+            <!-- ko text: address().street --><!-- /ko --><br/>
+            <!-- ko text: address().city --><!-- /ko -->, <!-- ko text: address().region --><!-- /ko --> <!-- ko text: address().postcode --><!-- /ko --><br/>
+            <div data-bind="visible:checkCountryName(address().countryId)"><!-- ko text: getCountryName(address().countryId) --><!-- /ko --></div>
+            <!-- ko text: address().telephone --><!-- /ko -->
+        </div>
 
         <div class="payment-method-billing-address">
         </div>
