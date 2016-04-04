@@ -19,4 +19,7 @@
     <type name="Magento\Customer\Model\ResourceModel\Customer\Collection">
         <plugin name="amazon_login_customercollection" type="Amazon\Login\Plugin\CustomerCollection" sortOrder="1" />
     </type>
+    <type name="Magento\Checkout\Controller\Cart\Index">
+        <plugin name="amazon_login_cartcontroller" type="Amazon\Login\Plugin\CartController" sortOrder="1" />
+    </type>
 </config>
