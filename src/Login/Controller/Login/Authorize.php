@@ -94,8 +94,12 @@ class Authorize extends Action
             return $this->createCustomer($amazonCustomer);
         }
 
-        if (null === $customerData->getExtensionAttributes()->getAmazonId()) {
-            return new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
+        if ($amazonCustomer->getId() != $customerData->getExtensionAttributes()->getAmazonId()) {
+            if (!$this->session->isMagentoAccountLoggedIn()) {
+                return new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
+            }
+
+            $this->customerManager->updateLink($customerData->getId(), $amazonCustomer->getId());
         }
 
         return $customerData;
