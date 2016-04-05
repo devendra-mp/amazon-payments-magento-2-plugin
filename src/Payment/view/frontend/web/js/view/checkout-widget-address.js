@@ -10,7 +10,8 @@ define(
         'Magento_Checkout/js/action/select-shipping-address',
         'Magento_Checkout/js/model/shipping-rate-processor/new-address',
         'Magento_Checkout/js/action/set-shipping-information',
-        'Amazon_Payment/js/model/storage'
+        'Amazon_Payment/js/model/storage',
+        'Magento_Checkout/js/model/shipping-service'
     ],
     function(
         $,
@@ -21,7 +22,8 @@ define(
         selectShippingAddress,
         shippingProcessor,
         setShippingInformationAction,
-        amazonStorage
+        amazonStorage,
+        shippingService
     ) {
         'use strict';
         var self;
@@ -37,6 +39,7 @@ define(
             isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
+            rates: shippingService.getShippingRates(),
             initialize: function () {
                 self = this;
                 this._super();
@@ -48,6 +51,13 @@ define(
              * render Amazon address Widget
              */
             renderAddressWidget: function() {
+
+                this.rates.subscribe(function(value) {
+                    if (value.length > 0) {
+                        self.toggleNextStepActivation(true);
+                    }
+                });
+
                 new OffAmazonPayments.Widgets.AddressBook({
                     sellerId: self.options.sellerId,
                     onOrderReferenceCreate: function(orderReference) {
@@ -55,8 +65,7 @@ define(
                         amazonStorage.setOrderReference(orderid);
                     },
                     onAddressSelect: function (orderReference) {
-                        var shippingAddress = quote.shippingAddress(),
-                            data = {
+                        var data = {
                                 addressConsentToken : amazonStorage.getAddressConsentToken()
                             };
 
@@ -76,9 +85,10 @@ define(
 
                             selectShippingAddress(shippingAddress);
 
-                            console.log(shippingAddress);
-
                             //shippingProcessor.getRates(self.getCurrentShippingAddress());
+                        }).always(function() {
+                            //TODO: add error handling
+                            self.toggleNextStepActivation(false);
                         });
                     },
                     design: {
@@ -88,6 +98,9 @@ define(
                         // your error handling code
                     }
                 }).bind(self.options.addressWidgetDOMId);
+            },
+            toggleNextStepActivation: function(value) {
+                $('.continue', '#shipping-method-buttons-container').toggleClass('disabled', value);
             },
             /**
              * Get the current Shipping address set in the quote model

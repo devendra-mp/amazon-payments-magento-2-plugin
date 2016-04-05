@@ -27,6 +27,7 @@ define(
         'Magento_Checkout/js/checkout-data',
         'uiRegistry',
         'mage/translate',
+        'Amazon_Payment/js/model/storage',
         'Magento_Checkout/js/model/shipping-rate-service'
     ],
     function(
@@ -51,7 +52,8 @@ define(
         checkoutDataResolver,
         checkoutData,
         registry,
-        $t
+        $t,
+        amazonStorage
     ) {
         'use strict';
         var popUp = null;
@@ -192,13 +194,29 @@ define(
             },
 
             setShippingInformation: function () {
-                //if (this.validateShippingInformation()) {
+
+                // Amazon Payment changes - start
+                function setShippingInformationAmazon() {
                     setShippingInformationAction().done(
                         function() {
                             stepNavigator.next();
                         }
                     );
-                //}
+                }
+
+                if(amazonStorage.isAmazonAccountLoggedIn()) {
+
+                    setShippingInformationAmazon();
+
+                } else {
+
+                    if (this.validateShippingInformation()) {
+                        setShippingInformationAmazon();
+                    }
+
+                }
+                // Amazon Payment changes - end
+
             },
 
             validateShippingInformation: function () {
