@@ -65,8 +65,7 @@ define(
                         amazonStorage.setOrderReference(orderid);
                     },
                     onAddressSelect: function (orderReference) {
-                        var shippingAddress = quote.shippingAddress(),
-                            data = {
+                        var data = {
                                 addressConsentToken : amazonStorage.getAddressConsentToken()
                             };
 
