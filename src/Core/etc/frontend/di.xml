@@ -3,7 +3,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="amazon_login_config_provider" xsi:type="object">Amazon\Login\Model\ConfigProvider</item>
+                <item name="amazon_core_config_provider" xsi:type="object">Amazon\Core\Model\ConfigProvider</item>
             </argument>
         </arguments>
     </type>
