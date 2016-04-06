@@ -32,13 +32,12 @@ define([
          * @private
          */
         _verifyCheckoutConfig: function() {
-            if(window.checkoutConfig.payment.amazonPayment !== undefined) {
-                _this.options.buttonType = window.checkoutConfig.payment.amazonPayment.buttonType;
-                _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
-                _this.options.buttonSize = window.checkoutConfig.payment.amazonPayment.buttonSize;
-            }
-            if(window.checkoutConfig.login.amazonLogin !== undefined) {
-                _this.options.redirectURL = window.checkoutConfig.login.amazonLogin.redirectURL;
+            if(window.checkoutConfig.amazonPayments !== undefined) {
+                _this.options.merchantId = window.checkoutConfig.amazonPayments.merchantId;
+                _this.options.buttonType = window.checkoutConfig.amazonPayments.buttonTypePwa;
+                _this.options.buttonColor = window.checkoutConfig.amazonPayments.buttonColor;
+                _this.options.buttonSize = window.checkoutConfig.amazonPayments.buttonSize;
+                _this.options.redirectURL = window.checkoutConfig.amazonPayments.redirectURL;
             }
         },
         /**

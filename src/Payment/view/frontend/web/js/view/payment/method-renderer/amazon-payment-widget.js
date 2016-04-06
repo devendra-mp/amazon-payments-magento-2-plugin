@@ -33,7 +33,7 @@ define(
             },
             isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
+            isAmazonEnabled: ko.observable(window.checkoutConfig.amazonPayments.isPwaEnabled),
             address: quote.shippingAddress,
             initialize: function () {
                 self = this;

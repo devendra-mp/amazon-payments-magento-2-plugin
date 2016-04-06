@@ -21,7 +21,7 @@ define(
                 template: 'Amazon_Payment/checkout-button'
             },
             isCustomerLoggedIn: customer.isLoggedIn,
-            isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
+            isAmazonEnabled: ko.observable(window.checkoutConfig.amazonPayments.isPwaEnabled),
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             initialize: function () {
                 var self = this;

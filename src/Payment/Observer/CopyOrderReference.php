@@ -8,7 +8,6 @@ use Magento\Sales\Model\Order;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\Data\OrderLinkInterfaceFactory;
 
-
 class CopyOrderReference implements ObserverInterface
 {
     /**

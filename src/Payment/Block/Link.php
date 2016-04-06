@@ -4,25 +4,25 @@ namespace Amazon\Payment\Block;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Amazon\Payment\Helper\Data;
+use Amazon\Core\Helper\Data;
 
 class Link extends Template
 {
     /**
      * @var Data
      */
-    private $paymentHelper;
+    private $coreHelper;
 
-    public function __construct(Context $context, Data $paymentHelper) {
-        $this->paymentHelper = $paymentHelper;
+    public function __construct(Context $context, Data $coreHelper) {
+        $this->coreHelper = $coreHelper;
         parent::__construct($context);
     }
 
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isPwaEnabled()
     {
-        return $this->paymentHelper->isEnabled();
+        return $this->coreHelper->isPwaEnabled();
     }
 }
