@@ -61,7 +61,7 @@ class Session
 
     /**
      * For compatibility with customer_customer_authenticated event dispatched from standard login controller.
-     * The observers are also attached to this with the exception being password related ones which are omitted.
+     * The observers are also attached to this with the exception of password related ones.
      */
     protected function dispatchAuthenticationEvent()
     {
