@@ -10,7 +10,7 @@
             </action>
         </referenceBlock>
         <referenceContainer name="content">
-            <block class="Magento\Framework\View\Element\Template" name="validateAccount" template="Amazon_Login::form/validate.phtml" />
+            <block class="Amazon\Login\Block\Validate" name="validateAccount" template="Amazon_Login::form/validate.phtml" />
         </referenceContainer>
     </body>
 </page>

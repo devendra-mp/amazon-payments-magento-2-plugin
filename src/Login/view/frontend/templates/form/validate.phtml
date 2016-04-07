@@ -4,7 +4,7 @@
       id="form-validate"
       data-mage-init='{"validation":{}}'>
     <fieldset class="fieldset" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
-        <div class="field note"><?php /* @escapeNotVerified */ echo __('Please enter your magento password to link your account.'); ?></div>
+        <div class="field note"><?php /* @escapeNotVerified */ echo __('We already know you!'); ?></div>
         <div class="field email required">
             <label for="password" class="label"><span><?php /* @escapeNotVerified */ echo __('Password') ?></span></label>
             <div class="control">
@@ -15,6 +15,12 @@
     <div class="actions-toolbar">
         <div class="primary">
             <button type="submit" class="action submit primary"><span><?php /* @escapeNotVerified */ echo __('Submit') ?></span></button>
+        </div>
+        <div class="secondary">
+            <a class="action" href="<?php /* @escapeNotVerified */ echo $block->getContinueAsGuestUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue as Guest') ?></span></a>
+        </div>
+        <div class="secondary">
+            <a class="action" href="<?php /* @escapeNotVerified */ echo $block->getForgotPasswordUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Forgot PW?') ?></span></a>
         </div>
     </div>
 </form>
