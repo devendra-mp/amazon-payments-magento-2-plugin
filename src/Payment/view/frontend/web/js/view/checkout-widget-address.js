@@ -38,7 +38,7 @@ define(
             },
             isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isAmazonEnabled: ko.observable(window.checkoutConfig.amazonPayments.isPwaEnabled),
+            isAmazonEnabled: ko.observable(window.amazonPayments.isPwaEnabled),
             rates: shippingService.getShippingRates(),
             initialize: function () {
                 self = this;

@@ -15,7 +15,7 @@ define(
 
         var isCustomerLoggedIn = customer.isLoggedIn,
             isAmazonAccountLoggedIn = ko.observable(false),
-            isAmazonEnabled = ko.observable(window.checkoutConfig.amazonPayments.isPwaEnabled),
+            isAmazonEnabled = ko.observable(window.amazonPayments.isPwaEnabled),
             orderReference,
             addressConsentToken = amazonCore.accessToken,
             isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined);

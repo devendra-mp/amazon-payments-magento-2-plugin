@@ -22,7 +22,7 @@ define([
             _this = this;
             $button = this.element;
 
-            if (typeof window.checkoutConfig !== 'undefined') {
+            if (typeof window.amazonPayments !== 'undefined') {
                 this._verifyCheckoutConfig();
             }
             _this._renderAmazonButton();
@@ -32,12 +32,12 @@ define([
          * @private
          */
         _verifyCheckoutConfig: function() {
-            if(window.checkoutConfig.amazonPayments !== undefined) {
-                _this.options.merchantId = window.checkoutConfig.amazonPayments.merchantId;
-                _this.options.buttonType = window.checkoutConfig.amazonPayments.buttonTypePwa;
-                _this.options.buttonColor = window.checkoutConfig.amazonPayments.buttonColor;
-                _this.options.buttonSize = window.checkoutConfig.amazonPayments.buttonSize;
-                _this.options.redirectURL = window.checkoutConfig.amazonPayments.redirectURL;
+            if(window.amazonPayments !== undefined) {
+                _this.options.merchantId = window.amazonPayments.merchantId;
+                _this.options.buttonType = window.amazonPayments.buttonTypePwa;
+                _this.options.buttonColor = window.amazonPayments.buttonColor;
+                _this.options.buttonSize = window.amazonPayments.buttonSize;
+                _this.options.redirectURL = window.amazonPayments.redirectURL;
             }
         },
         /**
