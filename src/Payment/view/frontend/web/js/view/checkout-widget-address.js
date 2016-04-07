@@ -33,7 +33,7 @@ define(
                 template: 'Amazon_Payment/checkout-widget-address'
             },
             options: {
-                sellerId: 'AUGT0HMCLQVX1',
+                sellerId: window.amazonPayments.merchantId,
                 addressWidgetDOMId: 'addressBookWidgetDiv'
             },
             isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,

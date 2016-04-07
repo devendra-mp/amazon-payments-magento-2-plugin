@@ -28,7 +28,7 @@ define(
             },
 
             options: {
-                sellerId: 'AUGT0HMCLQVX1',
+                sellerId: window.amazonPayments.merchantId,
                 paymentWidgetDOMId: 'walletWidgetDiv'
             },
             isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,

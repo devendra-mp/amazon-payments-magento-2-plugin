@@ -48,7 +48,7 @@ define([
             var authRequest,
                 loginOptions;
 
-                OffAmazonPayments.Button($button.attr('id'), "AUGT0HMCLQVX1", {
+                OffAmazonPayments.Button($button.attr('id'), _this.options.merchantId, {
                     type: _this.options.buttonType,
                     color: _this.options.buttonColor,
                     size: _this.options.buttonSize,
