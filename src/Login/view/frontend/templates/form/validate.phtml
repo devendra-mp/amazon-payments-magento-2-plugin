@@ -1,26 +1,34 @@
-<form class="form password validate"
-      action="<?php /* @escapeNotVerified */ echo $block->getUrl('*/*/validatepost') ?>"
-      method="post"
-      id="form-validate"
-      data-mage-init='{"validation":{}}'>
-    <fieldset class="fieldset" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
-        <div class="field note"><?php /* @escapeNotVerified */ echo __('We already know you!'); ?></div>
-        <div class="field email required">
-            <label for="password" class="label"><span><?php /* @escapeNotVerified */ echo __('Password') ?></span></label>
-            <div class="control">
-                <input type="password" name="password" alt="password" id="password" class="input-text" value="" data-validate="{required:true}">
-            </div>
+<div class="amazon-validate-container">
+    <div class="block block-amazon-validate">
+        <div class="block-title">
+            <strong id="block-amazon-login-heading" role="heading" aria-level="2"><?php /* @escapeNotVerified */ echo __('We already know you!') ?></strong>
         </div>
-    </fieldset>
-    <div class="actions-toolbar">
-        <div class="primary">
-            <button type="submit" class="action submit primary"><span><?php /* @escapeNotVerified */ echo __('Submit') ?></span></button>
-        </div>
-        <div class="secondary">
-            <a class="action" href="<?php /* @escapeNotVerified */ echo $block->getContinueAsGuestUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue as Guest') ?></span></a>
-        </div>
-        <div class="secondary">
-            <a class="action" href="<?php /* @escapeNotVerified */ echo $block->getForgotPasswordUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Forgot PW?') ?></span></a>
+        <div class="block-content" aria-labelledby="block-amazon-login-heading">
+            <form class="form password validate"
+                  action="<?php /* @escapeNotVerified */ echo $block->getUrl('*/*/validatepost') ?>"
+                  method="post"
+                  id="form-validate"
+                  data-mage-init='{"validation":{}}'>
+                <fieldset class="fieldset" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+                    <div class="field email required">
+                        <label for="password" class="label"><span><?php /* @escapeNotVerified */ echo __('Password') ?></span></label>
+                        <div class="control">
+                            <input type="password" name="password" alt="password" id="password" class="input-text" value="" data-validate="{required:true}">
+                        </div>
+                    </div>
+                    <div class="actions-toolbar">
+                        <div class="primary">
+                            <button type="submit" class="action submit primary"><span><?php /* @escapeNotVerified */ echo __('Submit') ?></span></button>
+                        </div>
+                        <div class="secondary continue-as-guest">
+                            <a class="action" href="<?php /* @escapeNotVerified */ echo $block->getContinueAsGuestUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue as Guest') ?></span></a>
+                        </div>
+                        <div class="secondary forgot-password">
+                            <a class="action" href="<?php /* @escapeNotVerified */ echo $block->getForgotPasswordUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Forgot Your Password?') ?></span></a>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
         </div>
     </div>
-</form>
+</div>
