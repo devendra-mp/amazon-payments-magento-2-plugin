@@ -41,6 +41,7 @@ class Session
     public function login(CustomerInterface $customerData)
     {
         if ($customerData->getId() != $this->session->getId() || !$this->session->isLoggedIn()) {
+            $this->dispatchAuthenticationEvent();
             $this->session->setCustomerDataAsLoggedIn($customerData);
             $this->session->regenerateId();
         }
@@ -55,9 +56,19 @@ class Session
      */
     public function loginById($customerId)
     {
+        $this->dispatchAuthenticationEvent();
         $this->session->loginById($customerId);
         $this->session->regenerateId();
         $this->setAmazonAccountLoggedIn();
+    }
+
+    /**
+     * For compatibility with customer_customer_authenticated event dispatched from standard login controller.
+     * The observers are also attached to this with the exception of password related ones.
+     */
+    protected function dispatchAuthenticationEvent()
+    {
+        $this->eventManager->dispatch('amazon_customer_authenticated');
     }
 
     /**
