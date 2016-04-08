@@ -6,7 +6,7 @@ define([
 ], function($, ko) {
     "use strict";
 
-    var clientId = window.amazonPayments.clientId,
+    var clientId = window.amazonPayment.clientId,
         amazonDefined = ko.observable(false),
         accessToken = ko.observable(null);
         

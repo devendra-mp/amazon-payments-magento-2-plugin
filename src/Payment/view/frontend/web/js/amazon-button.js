@@ -10,13 +10,13 @@ define([
 
     $.widget('amazon.AmazonButton', {
         options: {
-            merchantId: window.amazonPayments.merchantId,
-            buttonType: window.amazonPayments.buttonTypePwa,
-            buttonColor: window.amazonPayments.buttonColor,
-            buttonSize: window.amazonPayments.buttonSize,
+            merchantId: window.amazonPayment.merchantId,
+            buttonType: window.amazonPayment.buttonTypePwa,
+            buttonColor: window.amazonPayment.buttonColor,
+            buttonSize: window.amazonPayment.buttonSize,
             buttonLanguage: 'en-GB',
             widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js',
-            redirectURL: window.amazonPayments.redirectURL
+            redirectURL: window.amazonPayment.redirectURL
         },
 
         _create: function() {
