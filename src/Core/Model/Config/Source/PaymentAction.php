@@ -12,8 +12,8 @@ class PaymentAction implements ArrayInterface
     public function toOptionArray()
     {
         return [
-            ['value' => 'shipment', 'label' => __('Charge on Shipment')],
-            ['value' => 'order', 'label' => __('Charge on Order')],
+            ['value' => 'authorize', 'label' => __('Charge on Shipment')],
+            ['value' => 'authorize_capture', 'label' => __('Charge on Order')],
         ];
     }
 }

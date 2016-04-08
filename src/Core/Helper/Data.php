@@ -14,7 +14,7 @@ class Data extends AbstractHelper
     public function getMerchantId($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/credentials/merchant_id',
+            'payment/amazon_payment/merchant_id',
             $scope
         );
     }
@@ -25,7 +25,7 @@ class Data extends AbstractHelper
     public function getAccessKey($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/credentials/access_key',
+            'payment/amazon_payment/access_key',
             $scope
         );
     }
@@ -36,7 +36,7 @@ class Data extends AbstractHelper
     public function getSecretKey($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/credentials/secret_key',
+            'payment/amazon_payment/secret_key',
             $scope
         );
     }
@@ -47,7 +47,7 @@ class Data extends AbstractHelper
     public function getClientId($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/credentials/client_id',
+            'payment/amazon_payment/client_id',
             $scope
         );
     }
@@ -58,7 +58,7 @@ class Data extends AbstractHelper
     public function getClientSecret($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/credentials/client_secret',
+            'payment/amazon_payment/client_secret',
             $scope
         );
     }
@@ -69,7 +69,7 @@ class Data extends AbstractHelper
     public function getPaymentRegion($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/credentials/payment_region',
+            'payment/amazon_payment/payment_region',
             $scope
         );
     }
@@ -105,7 +105,7 @@ class Data extends AbstractHelper
     public function isSandboxEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
         return (bool)$this->scopeConfig->getValue(
-            'payment/amazon_payment/general/credentials/sandbox',
+            'payment/amazon_payment/sandbox',
             $scope
         );
     }
@@ -116,7 +116,7 @@ class Data extends AbstractHelper
     public function isPwaEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
         return (bool)$this->scopeConfig->getValue(
-            'payment/amazon_payment/general/options/pwa_enabled',
+            'payment/amazon_payment/pwa_enabled',
             $scope
         );
     }
@@ -128,7 +128,7 @@ class Data extends AbstractHelper
     {
         $pwaEnabled = $this->isPwaEnabled($scope);
         $lwaEnabled = (bool)$this->scopeConfig->getValue(
-            'payment/amazon_payment/general/options/lwa_enabled',
+            'payment/amazon_payment/lwa_enabled',
             $scope
         );
 
@@ -141,7 +141,7 @@ class Data extends AbstractHelper
     public function getPaymentAction($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/options/payment_action',
+            'payment/amazon_payment/payment_action',
             $scope
         );
     }
@@ -152,7 +152,7 @@ class Data extends AbstractHelper
     public function getAuthorizationMode($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/options/authorization_mode',
+            'payment/amazon_payment/authorization_mode',
             $scope
         );
     }
@@ -163,7 +163,7 @@ class Data extends AbstractHelper
     public function getUpdateMechanism($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/general/options/update_mechanism',
+            'payment/amazon_payment/update_mechanism',
             $scope
         );
     }
@@ -174,7 +174,7 @@ class Data extends AbstractHelper
     public function getDisplayLanguage($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/frontend/display_language',
+            'payment/amazon_payment/display_language',
             $scope
         );
     }
@@ -185,7 +185,7 @@ class Data extends AbstractHelper
     public function getAuthenticationExperience($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/frontend/authentication_experience',
+            'payment/amazon_payment/authentication_experience',
             $scope
         );
     }
@@ -196,7 +196,7 @@ class Data extends AbstractHelper
     public function getButtonType($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/frontend/button_type',
+            'payment/amazon_payment/button_type',
             $scope
         );
     }
@@ -239,7 +239,7 @@ class Data extends AbstractHelper
     public function getButtonColor($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/frontend/button_color',
+            'payment/amazon_payment/button_color',
             $scope
         );
     }
@@ -250,7 +250,7 @@ class Data extends AbstractHelper
     public function getButtonSize($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/frontend/button_size',
+            'payment/amazon_payment/button_size',
             $scope
         );
     }
@@ -261,7 +261,7 @@ class Data extends AbstractHelper
     public function getNewOrderStatus($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/sales_options/new_order_status',
+            'payment/amazon_payment/new_order_status',
             $scope
         );
     }
@@ -272,7 +272,7 @@ class Data extends AbstractHelper
     public function getAuthorizedOrderStatus($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/sales_options/authorized_order_status',
+            'payment/amazon_payment/authorized_order_status',
             $scope
         );
     }
@@ -283,7 +283,7 @@ class Data extends AbstractHelper
     public function getCapturedOrderStatus($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/sales_options/captured_order_status',
+            'payment/amazon_payment/captured_order_status',
             $scope
         );
     }
@@ -295,7 +295,7 @@ class Data extends AbstractHelper
     public function getEmailStoreName($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/sales_options/email_store_name',
+            'payment/amazon_payment/email_store_name',
             $scope
         );
     }
@@ -306,7 +306,7 @@ class Data extends AbstractHelper
     public function getAdditionalAccessScope($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/sales_options/additional_access_scope',
+            'payment/amazon_payment/additional_access_scope',
             $scope
         );
     }
@@ -317,7 +317,7 @@ class Data extends AbstractHelper
     public function isExcludePackingStations($scope = ScopeInterface::SCOPE_STORE)
     {
         return (bool)$this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/sales_exclusions/exclude_packing_stations',
+            'payment/amazon_payment/exclude_packing_stations',
             $scope
         );
     }
@@ -328,7 +328,7 @@ class Data extends AbstractHelper
     public function isLoggingEnabled($scope = ScopeInterface::SCOPE_STORE)
     {
         return (bool)$this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/developer_options/logging',
+            'payment/amazon_payment/logging',
             $scope
         );
     }
@@ -339,7 +339,7 @@ class Data extends AbstractHelper
     public function getRestrictedIps($scope = ScopeInterface::SCOPE_STORE)
     {
         return $this->scopeConfig->getValue(
-            'payment/amazon_payment/advanced/developer_options/restricted_ips',
+            'payment/amazon_payment/restricted_ips',
             $scope
         );
     }
