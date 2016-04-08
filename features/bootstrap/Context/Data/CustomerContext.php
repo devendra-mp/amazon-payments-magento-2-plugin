@@ -1,13 +1,13 @@
 <?php
 
-namespace Context\Data\Store;
+namespace Context\Data;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Customer as CustomerFixture;
 use Magento\Customer\Api\Data\CustomerInterface;
 use PHPUnit_Framework_Assert;
 
-class LoginContext implements SnippetAcceptingContext
+class CustomerContext implements SnippetAcceptingContext
 {
     /**
      * @var CustomerFixture

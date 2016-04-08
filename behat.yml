@@ -6,7 +6,7 @@ default:
         features: features/suites/store
       contexts:
         - Context\Data\FixtureContext
-        - Context\Data\Store\LoginContext
+        - Context\Data\CustomerContext
         - Context\Web\Store\LoginContext
 
   extensions:
@@ -24,7 +24,7 @@ default:
         page: [Page]
 
     Behat\MinkExtension:
-      base_url: 'https://amazon-payment.dev'
+      base_url: 'http://amazon-payment.dev'
       show_cmd: echo '%s'
       show_tmp_dir: /vagrant
       default_session: goutte
