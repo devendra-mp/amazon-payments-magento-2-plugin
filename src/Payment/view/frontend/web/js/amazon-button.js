@@ -10,19 +10,33 @@ define([
 
     $.widget('amazon.AmazonButton', {
         options: {
-            merchantId: window.amazonPayment.merchantId,
-            buttonType: window.amazonPayment.buttonTypePwa,
-            buttonColor: window.amazonPayment.buttonColor,
-            buttonSize: window.amazonPayment.buttonSize,
+            merchantId: null,
+            buttonType: 'LwA',
+            buttonColor: 'Gold',
+            buttonSize: 'medium',
             buttonLanguage: 'en-GB',
             widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js',
-            redirectURL: window.amazonPayment.redirectURL
+            redirectURL: null
         },
 
         _create: function() {
             _this = this;
             $button = this.element;
+            this._verifyAmazonConfig();
             _this._renderAmazonButton();
+        },
+        /**
+         * Verify if checkout config is available
+         * @private
+         */
+        _verifyAmazonConfig: function() {
+            if(window.amazonPayment !== undefined) {
+                _this.options.merchantId = window.amazonPayment.merchantId;
+                _this.options.buttonType = window.amazonPayment.buttonTypePwa;
+                _this.options.buttonColor = window.amazonPayment.buttonColor;
+                _this.options.buttonSize = window.amazonPayment.buttonSize;
+                _this.options.redirectURL = window.amazonPayment.redirectURL;
+            }
         },
         /**
          * onAmazonPaymentsReady
