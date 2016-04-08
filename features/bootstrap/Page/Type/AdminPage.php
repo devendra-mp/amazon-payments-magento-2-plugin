@@ -14,7 +14,7 @@ class AdminPage extends Page
 {
     use PageObjectHelperMethods;
 
-    const ADMIN_BASE_URL = 'http://m2.docker';
+    const ADMIN_BASE_URL = 'http://amazon-payment.dev';
 
     /**
      * @param Session $session

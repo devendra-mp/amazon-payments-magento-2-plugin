@@ -4,10 +4,10 @@ namespace Helpers;
 
 class StoreBaseUrlProvider
 {
-    const EU_BASE_URL = 'http://eu.m2.docker';
-    const UK_BASE_URL = 'http://uk.m2.docker';
-    const US_BASE_URL = 'http://us.m2.docker';
-    const DEFAULT_STORE_BASE_URL = self::UK_BASE_URL;
+    const EU_BASE_URL = 'http://amazon-payment.dev';
+    const UK_BASE_URL = 'http://amazon-payment.dev';
+    const US_BASE_URL = 'http://amazon-payment.dev';
+    const DEFAULT_STORE_BASE_URL = self::US_BASE_URL;
 
     private static $_baseUrl = self::DEFAULT_STORE_BASE_URL;
 
