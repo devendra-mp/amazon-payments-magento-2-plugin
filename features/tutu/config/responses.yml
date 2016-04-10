@@ -1,0 +1,9 @@
+amazon_login:
+  request:
+    path: "/auth/o2/tokeninfo"
+    methods: ['GET']
+  response:
+    content: |
+      {% include '@resources/loginauth.json.twig' with {} %}
+
+
