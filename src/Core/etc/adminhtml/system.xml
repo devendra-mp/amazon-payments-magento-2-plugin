@@ -18,7 +18,7 @@
                             <validate>required-entry</validate>
                             <config_path>payment/amazon_payment/access_key</config_path>
                         </field>
-                        <field id="secret_key" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <field id="secret_key" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Secret Access Key</label>
                             <validate>required-entry</validate>
                             <config_path>payment/amazon_payment/secret_key</config_path>
@@ -28,7 +28,7 @@
                             <validate>required-entry</validate>
                             <config_path>payment/amazon_payment/client_id</config_path>
                         </field>
-                        <field id="client_secret" translate="label" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <field id="client_secret" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Client Secret</label>
                             <validate>required-entry</validate>
                             <config_path>payment/amazon_payment/client_secret</config_path>
