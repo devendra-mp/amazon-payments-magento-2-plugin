@@ -4,7 +4,8 @@ namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
-use Amazon\Payment\Helper\Data;
+use Amazon\Payment\Helper\Data as PaymentHelper;
+use Amazon\Core\Helper\Data as CoreHelper;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\AppInterface;
 use Magento\Quote\Model\Quote;
@@ -23,18 +24,25 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     protected $clientFactory;
 
     /**
-     * @var Data
+     * @var PaymentHelper
      */
     protected $paymentHelper;
+
+    /**
+     * @var CoreHelper
+     */
+    protected $coreHelper;
 
     public function __construct(
         Session $session,
         ClientFactoryInterface $clientFactory,
-        Data $paymentHelper
+        PaymentHelper $paymentHelper,
+        CoreHelper $coreHelper
     ) {
         $this->session          = $session;
         $this->clientFactory    = $clientFactory;
         $this->paymentHelper    = $paymentHelper;
+        $this->coreHelper       = $coreHelper;
     }
 
     /**
@@ -56,7 +64,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
                 'Magento Version : ' . AppInterface::VERSION . ' ' .
                 'Plugin Version : ' . $this->paymentHelper->getModuleVersion()
             ,
-            'platform_id'               => $this->paymentHelper->getMerchantId()
+            'platform_id'               => $this->coreHelper->getMerchantId()
         ];
         
         /**
