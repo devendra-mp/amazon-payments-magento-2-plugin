@@ -32,7 +32,6 @@ define([
         _verifyAmazonConfig: function() {
             if(window.amazonPayment !== undefined) {
                 _this.options.merchantId = window.amazonPayment.merchantId;
-                _this.options.buttonType = window.amazonPayment.buttonTypePwa;
                 _this.options.buttonColor = window.amazonPayment.buttonColor;
                 _this.options.buttonSize = window.amazonPayment.buttonSize;
                 _this.options.redirectURL = window.amazonPayment.redirectURL;
