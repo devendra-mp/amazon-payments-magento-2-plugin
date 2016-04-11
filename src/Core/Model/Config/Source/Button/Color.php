@@ -13,8 +13,8 @@ class Color implements ArrayInterface
     {
         return [
             ['value' => 'Gold', 'label' => __('Gold')],
-            ['value' => 'LightGray', 'label' => __('Light gray')],
-            ['value' => 'DarkGray', 'label' => __('Dark gray')],
+            ['value' => 'LightGray', 'label' => __('Light Gray')],
+            ['value' => 'DarkGray', 'label' => __('Dark Gray')],
         ];
     }
 }

@@ -10,6 +10,7 @@ define([
 
     $.widget('amazon.AmazonButton', {
         options: {
+            merchantId: null,
             buttonType: 'LwA',
             buttonColor: 'Gold',
             buttonSize: 'medium',
@@ -21,24 +22,20 @@ define([
         _create: function() {
             _this = this;
             $button = this.element;
-
-            if (typeof window.checkoutConfig !== 'undefined') {
-                this._verifyCheckoutConfig();
-            }
+            this._verifyAmazonConfig();
             _this._renderAmazonButton();
         },
         /**
          * Verify if checkout config is available
          * @private
          */
-        _verifyCheckoutConfig: function() {
-            if(window.checkoutConfig.payment.amazonPayment !== undefined) {
-                _this.options.buttonType = window.checkoutConfig.payment.amazonPayment.buttonType;
-                _this.options.buttonColor = window.checkoutConfig.payment.amazonPayment.buttonColor;
-                _this.options.buttonSize = window.checkoutConfig.payment.amazonPayment.buttonSize;
-            }
-            if(window.checkoutConfig.login.amazonLogin !== undefined) {
-                _this.options.redirectURL = window.checkoutConfig.login.amazonLogin.redirectURL;
+        _verifyAmazonConfig: function() {
+            if(window.amazonPayment !== undefined) {
+                _this.options.merchantId = window.amazonPayment.merchantId;
+                _this.options.buttonType = window.amazonPayment.buttonTypePwa;
+                _this.options.buttonColor = window.amazonPayment.buttonColor;
+                _this.options.buttonSize = window.amazonPayment.buttonSize;
+                _this.options.redirectURL = window.amazonPayment.redirectURL;
             }
         },
         /**
@@ -49,7 +46,7 @@ define([
             var authRequest,
                 loginOptions;
 
-                OffAmazonPayments.Button($button.attr('id'), "AUGT0HMCLQVX1", {
+                OffAmazonPayments.Button($button.attr('id'), _this.options.merchantId, {
                     type: _this.options.buttonType,
                     color: _this.options.buttonColor,
                     size: _this.options.buttonSize,
