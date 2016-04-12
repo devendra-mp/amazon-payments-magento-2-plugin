@@ -17,7 +17,7 @@ class IdMatcher implements IdMatcherInterface
     /**
      * @var SearchCriteriaBuilder
      */
-    private $searchCriteriaBuilder;
+    protected $searchCriteriaBuilder;
 
     /**
      * IdMatcher constructor.

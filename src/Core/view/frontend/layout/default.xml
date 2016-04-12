@@ -12,5 +12,8 @@
                 <block class="Magento\Framework\View\Element\Template" name="amazon_payments_mark" template="Amazon_Core::amazon_payments_mark.phtml"/>
             </container>
         </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Amazon\Core\Block\Config" name="amazon_config" template="Amazon_Core::config.phtml"/>
+        </referenceContainer>
     </body>
 </page>
