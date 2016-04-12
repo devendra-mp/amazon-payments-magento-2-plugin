@@ -81,6 +81,9 @@
                                                                 </item>
                                                             </item>
                                                         </item>
+                                                        <item name="payments-list" xsi:type="array">
+                                                            <item name="component" xsi:type="string">Amazon_Payment/js/view/payment/list</item>
+                                                        </item>
                                                     </item>
                                                 </item>
                                             </item>
