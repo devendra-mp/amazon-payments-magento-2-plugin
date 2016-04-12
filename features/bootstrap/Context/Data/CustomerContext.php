@@ -33,6 +33,15 @@ class CustomerContext implements SnippetAcceptingContext
     public function hasNeverLoggedInWithAmazon($email)
     {
         $customer = $this->customerFixture->get($email);
-        PHPUnit_Framework_Assert::assertEquals($email, $customer->getEmail());
+        PHPUnit_Framework_Assert::assertNull($customer->getExtensionAttributes()->getAmazonId());
+    }
+
+    /**
+     * @Then :email is associated with an amazon account
+     */
+    public function isAssociatedWithAnAmazonAccount($email)
+    {
+        $customer = $this->customerFixture->get($email, true);
+        PHPUnit_Framework_Assert::assertStringStartsWith('amzn1.account', $customer->getExtensionAttributes()->getAmazonId());
     }
 }

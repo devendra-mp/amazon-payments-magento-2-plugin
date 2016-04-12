@@ -18,13 +18,21 @@ default:
         -
           path: 'admin/security/use_form_key'
           value: 0
+        -
+          path: 'is_behat_running'
+          value: 1
 
     SensioLabs\Behat\PageObjectExtension:
       namespaces:
         page: [Page]
 
+    Cjm\Behat\LocalWebserverExtension:
+        host: 'api.sandbox.localhost'
+        port: 8000
+        docroot: %paths.base%/features/tutu/web
+
     Behat\MinkExtension:
-      base_url: 'http://amazon-payment.dev'
+      base_url: 'https://amazon-payment.dev'
       show_cmd: echo '%s'
       show_tmp_dir: /vagrant
       default_session: goutte
@@ -36,5 +44,15 @@ default:
               verify: false
         firefox:
           selenium2:
+            wd_host: http://localhost:4444/wd/hub
+            browser: firefox
+        host_firefox:
+          selenium2:
             wd_host: http://localhost:4445/wd/hub
             browser: firefox
+
+firefox:
+  extensions:
+    Behat\MinkExtension\ServiceContainer\MinkExtension:
+      default_session: host_firefox
+      javascript_session: host_firefox

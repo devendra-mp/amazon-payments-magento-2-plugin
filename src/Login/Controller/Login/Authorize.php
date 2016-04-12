@@ -101,7 +101,7 @@ class Authorize extends Action
         }
 
         if ($amazonCustomer->getId() != $customerData->getExtensionAttributes()->getAmazonId()) {
-            if (!$this->session->isMagentoAccountLoggedIn()) {
+            if ( ! $this->session->isMagentoAccountLoggedIn()) {
                 return new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
             }
 
