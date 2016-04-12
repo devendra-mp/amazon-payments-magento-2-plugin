@@ -4,7 +4,7 @@ namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
-use Amazon\Payment\Helper\Data as AmazonPaymentHelper;
+use Amazon\Core\Helper\Data as CoreHelper;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -46,9 +46,9 @@ class Amazon extends AbstractMethod
     protected $clientFactory;
 
     /**
-     * @var AmazonPaymentHelper
+     * @var CoreHelper
      */
-    protected $amazonPaymentHelper;
+    protected $coreHelper;
 
     /**
      * @var QuoteLinkInterfaceFactory
@@ -64,7 +64,7 @@ class Amazon extends AbstractMethod
         ScopeConfigInterface $scopeConfig,
         Logger $logger,
         ClientFactoryInterface $clientFactory,
-        AmazonPaymentHelper $amazonPaymentHelper,
+        CoreHelper $coreHelper,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
@@ -84,7 +84,7 @@ class Amazon extends AbstractMethod
         );
 
         $this->clientFactory       = $clientFactory;
-        $this->amazonPaymentHelper = $amazonPaymentHelper;
+        $this->coreHelper          = $coreHelper;
         $this->quoteLinkFactory    = $quoteLinkFactory;
     }
 
@@ -115,7 +115,7 @@ class Amazon extends AbstractMethod
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
 
         $data = [
-            'merchant_id'                => $this->amazonPaymentHelper->getMerchantId(),
+            'merchant_id'                => $this->coreHelper->getMerchantId(),
             'amazon_order_reference_id'  => $amazonOrderReferenceId,
             'authorization_amount'       => $amount,
             'currency_code'              => $this->getCurrencyCode($payment),
@@ -148,7 +148,7 @@ class Amazon extends AbstractMethod
         $authorizationId        = $payment->getParentTransactionId();
 
         $data = [
-            'merchant_id'             => $this->amazonPaymentHelper->getMerchantId(),
+            'merchant_id'             => $this->coreHelper->getMerchantId(),
             'amazon_authorization_id' => $authorizationId,
             'capture_amount'          => $amount,
             'currency_code'           => $this->getCurrencyCode($payment),
