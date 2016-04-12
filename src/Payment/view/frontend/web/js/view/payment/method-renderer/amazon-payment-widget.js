@@ -31,7 +31,7 @@ define(
                 sellerId: window.amazonPayment.merchantId,
                 paymentWidgetDOMId: 'walletWidgetDiv'
             },
-            isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
+            isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.amazonPayment.isPwaEnabled),
             address: quote.shippingAddress,
@@ -41,7 +41,7 @@ define(
             },
             initPaymentWidget: function() {
                 self.renderPaymentWidget();
-                $('#amazon_payment').trigger('click');
+                $('#amazon_payment').trigger('click'); //activate amazon payments method on render
             },
             /**
              * render Amazon payment Widget

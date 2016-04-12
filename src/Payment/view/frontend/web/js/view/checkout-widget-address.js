@@ -36,7 +36,7 @@ define(
                 sellerId: window.amazonPayment.merchantId,
                 addressWidgetDOMId: 'addressBookWidgetDiv'
             },
-            isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
+            isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.amazonPayment.isPwaEnabled),
             rates: shippingService.getShippingRates(),
