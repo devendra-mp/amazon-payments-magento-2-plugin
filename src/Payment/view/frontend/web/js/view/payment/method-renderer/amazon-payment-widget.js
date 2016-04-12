@@ -28,12 +28,12 @@ define(
             },
 
             options: {
-                sellerId: 'AUGT0HMCLQVX1',
+                sellerId: window.amazonPayment.merchantId,
                 paymentWidgetDOMId: 'walletWidgetDiv'
             },
             isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
+            isAmazonEnabled: ko.observable(window.amazonPayment.isPwaEnabled),
             address: quote.shippingAddress,
             initialize: function () {
                 self = this;

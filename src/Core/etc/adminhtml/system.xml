@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="amazon_payment" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Amazon Payments</label>
+                <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>General</label>
+                    <group id="credentials" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Credentials</label>
+                        <field id="merchant_id" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Id</label>
+                            <validate>required-entry</validate>
+                            <config_path>payment/amazon_payment/merchant_id</config_path>
+                        </field>
+                        <field id="access_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Access Key Id</label>
+                            <validate>required-entry</validate>
+                            <config_path>payment/amazon_payment/access_key</config_path>
+                        </field>
+                        <field id="secret_key" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Secret Access Key</label>
+                            <validate>required-entry</validate>
+                            <config_path>payment/amazon_payment/secret_key</config_path>
+                        </field>
+                        <field id="client_id" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Client Id</label>
+                            <validate>required-entry</validate>
+                            <config_path>payment/amazon_payment/client_id</config_path>
+                        </field>
+                        <field id="client_secret" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Client Secret</label>
+                            <validate>required-entry</validate>
+                            <config_path>payment/amazon_payment/client_secret</config_path>
+                        </field>
+                        <field id="payment_region" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payment Region</label>
+                            <validate>required-entry</validate>
+                            <source_model>Amazon\Core\Model\Config\Source\PaymentRegion</source_model>
+                            <config_path>payment/amazon_payment/payment_region</config_path>
+                        </field>
+                        <field id="sandbox" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Sandbox</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/amazon_payment/sandbox</config_path>
+                        </field>
+                    </group>
+                    <group id="options" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Options</label>
+                        <field id="pwa_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Enable Pay with Amazon</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/amazon_payment/pwa_enabled</config_path>
+                        </field>
+                        <field id="lwa_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Enable Login with Amazon</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/amazon_payment/lwa_enabled</config_path>
+                        </field>
+                        <field id="payment_action" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Payment Action</label>
+                            <source_model>Amazon\Core\Model\Config\Source\PaymentAction</source_model>
+                            <config_path>payment/amazon_payment/payment_action</config_path>
+                        </field>
+                        <!--
+                        <field id="authorization_mode" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Authorization Mode</label>
+                            <source_model>Amazon\Core\Model\Config\Source\AuthorizationMode</source_model>
+                            <config_path>payment/amazon_payment/authorization_mode</config_path>
+                        </field>
+                        -->
+                        <!--
+                        <field id="update_mechanism" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                            <label>Update Mechanism</label>
+                            <source_model>Amazon\Core\Model\Config\Source\UpdateMechanism</source_model>
+                            <config_path>payment/amazon_payment/update_mechanism</config_path>
+                        </field>
+                        -->
+                    </group>
+                </group>
+                <group id="advanced" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Advanced</label>
+                    <group id="frontend" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Frontend</label>
+                        <!--
+                        <field id="display_language" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Display Language</label>
+                            <config_path>payment/amazon_payment/display_language</config_path>
+                        </field>
+                        -->
+                        <!--
+                        <field id="authentication_experience" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Authentication Experience</label>
+                            <source_model>Amazon\Core\Model\Config\Source\AuthenticationExperience</source_model>
+                            <config_path>payment/amazon_payment/authentication_experience</config_path>
+                        </field>
+                        -->
+                        <field id="button_type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Button Type</label>
+                            <source_model>Amazon\Core\Model\Config\Source\Button\Type</source_model>
+                            <config_path>payment/amazon_payment/button_type</config_path>
+                        </field>
+                        <field id="button_color" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Button Color</label>
+                            <source_model>Amazon\Core\Model\Config\Source\Button\Color</source_model>
+                            <config_path>payment/amazon_payment/button_color</config_path>
+                        </field>
+                        <field id="button_size" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Button Size</label>
+                            <source_model>Amazon\Core\Model\Config\Source\Button\Size</source_model>
+                            <config_path>payment/amazon_payment/button_size</config_path>
+                        </field>
+                    </group>
+                    <!--
+                    <group id="sales_options" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sales Options</label>
+                        <field id="new_order_status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>New Order Status</label>
+                            <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                            <config_path>payment/amazon_payment/new_order_status</config_path>
+                        </field>
+                        <field id="authorized_order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Authorized Order Status</label>
+                            <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                            <config_path>payment/amazon_payment/authorized_order_status</config_path>
+                        </field>
+                        <field id="captured_order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Captured Order Status</label>
+                            <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                            <config_path>payment/amazon_payment/captured_order_status</config_path>
+                        </field>
+                        <field id="email_store_name" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Email Store Name</label>
+                            <config_path>payment/amazon_payment/email_store_name</config_path>
+                        </field>
+                        <field id="additional_access_scope" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Additional Access Scope</label>
+                            <config_path>payment/amazon_payment/additional_access_scope</config_path>
+                        </field>
+                    </group>
+                    <group id="sales_exclusions" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sales Exclusions</label>
+                        <field id="exclude_packing_stations" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Exclude Packing Stations</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/amazon_payment/exclude_packing_stations</config_path>
+                        </field>
+                    </group>
+                    <group id="developer_options" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Developer Options</label>
+                        <field id="logging" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                            <label>Logging</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/amazon_payment/logging</config_path>
+                        </field>
+                        <field id="restricted_ips" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Limit Testing Audience</label>
+                            <config_path>payment/amazon_payment/restricted_ips</config_path>
+                        </field>
+                    </group>
+                    -->
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

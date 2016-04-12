@@ -4,26 +4,26 @@ namespace Amazon\Login\Block;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Amazon\Login\Helper\Data;
+use Amazon\Core\Helper\Data;
 
 class Login extends Template
 {
     /**
      * @var Data
      */
-    private $loginHelper;
+    protected $coreHelper;
 
-    public function __construct(Context $context, Data $loginHelper) {
-        $this->loginHelper = $loginHelper;
+    public function __construct(Context $context, Data $coreHelper) {
+        $this->coreHelper = $coreHelper;
         parent::__construct($context);
     }
 
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isLwaEnabled()
     {
-        return $this->loginHelper->isEnabled();
+        return $this->coreHelper->isLwaEnabled();
     }
 
     /**
@@ -32,10 +32,10 @@ class Login extends Template
     public function getButtonData()
     {
         $buttonData = [
-            'buttonType' => $this->loginHelper->getButtonType(),
-            'buttonColor' => $this->loginHelper->getButtonColor(),
-            'buttonSize' => $this->loginHelper->getButtonSize(),
-            'redirectURL' => $this->loginHelper->getRedirectUrl()
+            'buttonType' => $this->coreHelper->getButtonTypeLwa(),
+            'buttonColor' => $this->coreHelper->getButtonColor(),
+            'buttonSize' => $this->coreHelper->getButtonSize(),
+            'redirectURL' => $this->coreHelper->getRedirectUrl()
         ];
 
         return json_encode($buttonData);
