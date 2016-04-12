@@ -3,6 +3,7 @@
 namespace Amazon\Core\Client;
 
 use Amazon\Core\Helper\Data;
+use Amazon\Core\Model\EnvironmentChecker;
 use Magento\Framework\ObjectManagerInterface;
 
 class ClientFactory implements ClientFactoryInterface
@@ -23,6 +24,11 @@ class ClientFactory implements ClientFactoryInterface
     protected $instanceName;
 
     /**
+     * @var EnvironmentChecker
+     */
+    protected $environmentChecker;
+
+    /**
      * ClientFactory constructor.
      *
      * @param ObjectManagerInterface $objectManager
@@ -32,11 +38,13 @@ class ClientFactory implements ClientFactoryInterface
     public function __construct(
         ObjectManagerInterface $objectManager,
         Data $coreHelper,
+        EnvironmentChecker $environmentChecker,
         $instanceName = '\\PayWithAmazon\\ClientInterface'
     ) {
-        $this->objectManager = $objectManager;
-        $this->coreHelper = $coreHelper;
-        $this->instanceName  = $instanceName;
+        $this->objectManager      = $objectManager;
+        $this->coreHelper         = $coreHelper;
+        $this->environmentChecker = $environmentChecker;
+        $this->instanceName       = $instanceName;
     }
 
     /**
@@ -53,6 +61,10 @@ class ClientFactory implements ClientFactoryInterface
             'client_id'   => $this->coreHelper->getClientId()
         ];
 
-        return $this->objectManager->create($this->instanceName, ['config' => $config]);
+        if ($this->environmentChecker->isTestMode()) {
+            return new Mock($config);
+        } else {
+            return $this->objectManager->create($this->instanceName, ['config' => $config]);
+        }
     }
 }

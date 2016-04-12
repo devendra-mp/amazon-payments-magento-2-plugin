@@ -8,6 +8,7 @@ use Amazon\Login\Api\Customer\CompositeMatcherInterface;
 use Amazon\Login\Api\CustomerManagerInterface;
 use Amazon\Login\Domain\ValidationCredentials;
 use Amazon\Login\Helper\Session;
+use Exception;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -68,19 +69,24 @@ class Authorize extends Action
 
     public function execute()
     {
-        $userInfo = $this->clientFactory->create()->getUserInfo($this->getRequest()->getParam('access_token'));
+        try {
+            $userInfo = $this->clientFactory->create()->getUserInfo($this->getRequest()->getParam('access_token'));
 
-        if (is_array($userInfo) && isset($userInfo['user_id'])) {
-            $amazonCustomer = new AmazonCustomer($userInfo['user_id'], $userInfo['email'], $userInfo['name']);
+            if (is_array($userInfo) && isset($userInfo['user_id'])) {
+                $amazonCustomer = new AmazonCustomer($userInfo['user_id'], $userInfo['email'], $userInfo['name']);
 
-            $processed = $this->processAmazonCustomer($amazonCustomer);
+                $processed = $this->processAmazonCustomer($amazonCustomer);
 
-            if ($processed instanceof ValidationCredentials) {
-                $this->session->setValidationCredentials($processed);
-                return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
-            } else {
-                $this->session->login($processed);
+                if ($processed instanceof ValidationCredentials) {
+                    $this->session->setValidationCredentials($processed);
+                    return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
+                } else {
+                    $this->session->login($processed);
+                }
             }
+
+        } catch (Exception $e) {
+            $this->messageManager->addError(__('Error processing Amazon Login'));
         }
 
         return $this->accountRedirect->getRedirect();
@@ -94,8 +100,12 @@ class Authorize extends Action
             return $this->createCustomer($amazonCustomer);
         }
 
-        if (null === $customerData->getExtensionAttributes()->getAmazonId()) {
-            return new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
+        if ($amazonCustomer->getId() != $customerData->getExtensionAttributes()->getAmazonId()) {
+            if ( ! $this->session->isMagentoAccountLoggedIn()) {
+                return new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
+            }
+
+            $this->customerManager->updateLink($customerData->getId(), $amazonCustomer->getId());
         }
 
         return $customerData;
