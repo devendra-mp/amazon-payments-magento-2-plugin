@@ -7,6 +7,9 @@
     <type name="Magento\Quote\Api\CartRepositoryInterface">
         <plugin name="amazon_payment_quoterepository" type="Amazon\Payment\Plugin\QuoteRepository" sortOrder="1" />
     </type>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="amazon_payment_orderrepository" type="Amazon\Payment\Plugin\OrderRepository" sortOrder="1" />
+    </type>
     <type name="Magento\Checkout\Api\ShippingInformationManagementInterface">
         <plugin name="amazon_payment_shippinginformationmanagement" type="Amazon\Payment\Plugin\ShippingInformationManagement" sortOrder="1" />
     </type>
