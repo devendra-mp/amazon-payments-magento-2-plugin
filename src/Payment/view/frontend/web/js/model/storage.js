@@ -13,8 +13,7 @@ define(
     ) {
         'use strict';
 
-        var isCustomerLoggedIn = customer.isLoggedIn,
-            isAmazonAccountLoggedIn = ko.observable(false),
+        var isAmazonAccountLoggedIn = ko.observable(false),
             isAmazonEnabled = ko.observable(window.amazonPayment.isPwaEnabled),
             orderReference,
             addressConsentToken = amazonCore.accessToken,
@@ -45,7 +44,6 @@ define(
         }
 
         return {
-            isCustomerLoggedIn: isCustomerLoggedIn,
             isAmazonAccountLoggedIn: isAmazonAccountLoggedIn,
             isAmazonEnabled: isAmazonEnabled,
             setOrderReference: function(or) {

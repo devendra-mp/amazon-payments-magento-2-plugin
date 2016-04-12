@@ -59,7 +59,7 @@ define(
         var popUp = null;
         return Component.extend({
             defaults: {
-                template: 'Magento_Checkout/shipping'
+                template: 'Amazon_Payment/shipping'
             },
             visible: ko.observable(!quote.isVirtual()),
             errorValidationMessage: ko.observable(false),
@@ -69,6 +69,8 @@ define(
             isNewAddressAdded: ko.observable(false),
             saveInAddressBook: true,
             quoteIsVirtual: quote.isVirtual(),
+            //AMAZON MODIFICATIONS HERE
+            isAmazonLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
 
             initialize: function () {
                 var self = this;
@@ -194,8 +196,7 @@ define(
             },
 
             setShippingInformation: function () {
-
-                // Amazon Payment changes - start
+                //Amazon Payment changes - start
                 function setShippingInformationAmazon() {
                     setShippingInformationAction().done(
                         function() {
@@ -205,18 +206,13 @@ define(
                 }
 
                 if(amazonStorage.isAmazonAccountLoggedIn()) {
-
                     setShippingInformationAmazon();
-
                 } else {
-
                     if (this.validateShippingInformation()) {
                         setShippingInformationAmazon();
                     }
-
                 }
                 // Amazon Payment changes - end
-
             },
 
             validateShippingInformation: function () {
