@@ -5,7 +5,6 @@ namespace Amazon\Core\Client;
 use Amazon\Core\Model\EnvironmentChecker;
 use Amazon\Payment\Helper\Data;
 use Magento\Framework\ObjectManagerInterface;
-use ReflectionClass;
 
 class ClientFactory implements ClientFactoryInterface
 {
@@ -62,40 +61,10 @@ class ClientFactory implements ClientFactoryInterface
             'client_id'   => $this->paymentHelper->getClientId()
         ];
 
-        $client = $this->objectManager->create($this->instanceName, ['config' => $config]);
-
         if ($this->environmentChecker->isTestMode()) {
-            $this->setTestEndpoints($client);
+            return new Mock($config);
+        } else {
+            return $this->objectManager->create($this->instanceName, ['config' => $config]);
         }
-
-        return $client;
-    }
-
-    protected function setTestEndpoints($client)
-    {
-        $reflection = new ReflectionClass($client);
-
-        $mwsServiceUrls = $reflection->getProperty('mwsServiceUrls');
-        $mwsServiceUrls->setAccessible(true);
-        $mwsServiceUrls->setValue(
-            $client,
-            [
-                'eu' => 'localhost:8000',
-                'na' => 'localhost:8000',
-                'jp' => 'localhost:8000'
-            ]
-        );
-
-        $profileEndpointUrls = $reflection->getProperty('profileEndpointUrls');
-        $profileEndpointUrls->setAccessible(true);
-        $profileEndpointUrls->setValue(
-            $client,
-            [
-                'uk' => 'localhost:8000',
-                'us' => 'localhost:8000',
-                'de' => 'localhost:8000',
-                'jp' => 'localhost:8000'
-            ]
-        );
     }
 }

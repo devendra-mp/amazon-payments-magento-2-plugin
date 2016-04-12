@@ -26,11 +26,6 @@ default:
       namespaces:
         page: [Page]
 
-    Cjm\Behat\LocalWebserverExtension:
-        host: 'api.sandbox.localhost'
-        port: 8000
-        docroot: %paths.base%/features/tutu/web
-
     Behat\MinkExtension:
       base_url: 'https://amazon-payment.dev'
       show_cmd: echo '%s'
