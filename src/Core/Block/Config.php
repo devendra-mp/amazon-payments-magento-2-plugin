@@ -41,4 +41,12 @@ class Config extends Template
 
         return $config;
     }
+
+    /**
+     * @return bool
+     */
+    public function isBadgeEnabled()
+    {
+        return ($this->coreHelper->isPwaEnabled() || $this->coreHelper->isLwaEnabled());
+    }
 }
