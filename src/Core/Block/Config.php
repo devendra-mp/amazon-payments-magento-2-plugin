@@ -49,4 +49,12 @@ class Config extends Template
     {
         return ($this->coreHelper->isPwaEnabled() || $this->coreHelper->isLwaEnabled());
     }
+
+    /**
+     * @return bool
+     */
+    public function isPwaEnabled()
+    {
+        return $this->coreHelper->isPwaEnabled();
+    }
 }
