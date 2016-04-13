@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3106968e0149198da26923454f7575a0",
-    "content-hash": "0fe259170af6e5f36e6c6b2b08269e2f",
+    "hash": "2dd529270e9ed35bc8cd6eb5128b6ec2",
+    "content-hash": "3fdc40b7521749dd699161e94fb59729",
     "packages": [
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
@@ -52,40 +52,2009 @@
                 "payments"
             ],
             "time": "2016-03-04 13:56:22"
+        },
+        {
+            "name": "magento/framework",
+            "version": "100.0.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/framework/magento-framework-100.0.6.0.zip",
+                "reference": null,
+                "shasum": "4dff9da487474f253224e115f8c75648692d789c"
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-gd": "*",
+                "ext-hash": "*",
+                "ext-iconv": "*",
+                "ext-mcrypt": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-spl": "*",
+                "ext-xsl": "*",
+                "lib-libxml": "*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "ext-imagick": "Use Image Magick >=3.0.0 as an optional alternative image processing library"
+            },
+            "type": "magento2-library",
+            "autoload": {
+                "psr-4": {
+                    "Magento\\Framework\\": ""
+                },
+                "files": [
+                    "registration.php"
+                ]
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-authorization",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-authorization/magento-module-authorization-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "d5c72484e7a225e17d4e56bcb6bef116161ceab3"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Authorization\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "Authorization module provides access to Magento ACL functionality."
+        },
+        {
+            "name": "magento/module-backend",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-backend/magento-module-backend-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "a34c57294fea7ffbc9ad9a6d50b2fc2254fade9b"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backup": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-developer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-reports": "100.0.*",
+                "magento/module-require-js": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-translation": "100.0.*",
+                "magento/module-user": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Backend\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-backup",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-backup/magento-module-backup-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "f00cae2d6da998dcd5d7c29ec254123a21c2eb8c"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-cron": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Backup\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-catalog",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-catalog/magento-module-catalog-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "9154268a53970efbb26412b8e4c52c4c85ac5238"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-catalog-rule": "100.0.*",
+                "magento/module-catalog-url-rewrite": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-configurable-product": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-indexer": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-msrp": "100.0.*",
+                "magento/module-page-cache": "100.0.*",
+                "magento/module-product-alert": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "magento/module-url-rewrite": "100.0.*",
+                "magento/module-widget": "100.0.*",
+                "magento/module-wishlist": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-catalog-sample-data": "Sample Data version:100.0.*",
+                "magento/module-cookie": "100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Catalog\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-catalog-import-export",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-catalog-import-export/magento-module-catalog-import-export-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "8251ef5b8e2e446d66599e46648444f98c2c8966"
+            },
+            "require": {
+                "ext-ctype": "*",
+                "magento/framework": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-catalog-url-rewrite": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-import-export": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\CatalogImportExport\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-catalog-inventory",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-catalog-inventory/magento-module-catalog-inventory-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "dd0bfa870d059359adb158796f25edafb4aaa185"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\CatalogInventory\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-catalog-rule",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-catalog-rule/magento-module-catalog-rule-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "29514c4f3e764b6e58753da565e488fb8b653c59"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-rule": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-catalog-rule-sample-data": "Sample Data version:100.0.*",
+                "magento/module-import-export": "100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\CatalogRule\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-catalog-url-rewrite",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-catalog-url-rewrite/magento-module-catalog-url-rewrite-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "f8a72f60d0e94c4a4c39a9c2e1eab760835ce282"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-import-export": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-import-export": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-url-rewrite": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\CatalogUrlRewrite\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-checkout",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-checkout/magento-module-checkout-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "34f0e260418e77b589fdf2d0a3169a063623c228"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-msrp": "100.0.*",
+                "magento/module-page-cache": "100.0.*",
+                "magento/module-payment": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-sales-rule": "100.0.*",
+                "magento/module-shipping": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-cookie": "100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Checkout\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-cms",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-cms/magento-module-cms-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "5e739065c857bd930225300ebc43cffa95605fbf"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-email": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "magento/module-variable": "100.0.*",
+                "magento/module-widget": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-cms-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Cms\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-cms-url-rewrite",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-cms-url-rewrite/magento-module-cms-url-rewrite-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "b25a5d6b37a86edefc33d10b9a8803b2c874147c"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-url-rewrite": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\CmsUrlRewrite\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-config",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-config/magento-module-config-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "8b12d541bf167dddeb6ed49ba91c1e391b2c6d1b"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-cron": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-email": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Config\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-configurable-product",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-configurable-product/magento-module-configurable-product-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "fb3adcc0a94a900f847e7158cdbecb26460f8975"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-msrp": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-configurable-sample-data": "Sample Data version:100.0.*",
+                "magento/module-product-links-sample-data": "Sample Data version:100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-webapi": "100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\ConfigurableProduct\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-contact",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-contact/magento-module-contact-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "13951bf52df116b52d6ff6a7ba522ab26bce164e"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Contact\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-cron",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-cron/magento-module-cron-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "ea7b3cb42c05f5913e7d2db00a66cf1a7c487b53"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-config": "100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Cron\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-customer",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-customer/magento-module-customer-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "b0bef856dde06f364c1506e6800b78f782fe2dda"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-authorization": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-integration": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-newsletter": "100.0.*",
+                "magento/module-page-cache": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-review": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "magento/module-wishlist": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-cookie": "100.0.*",
+                "magento/module-customer-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Customer\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-developer",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-developer/magento-module-developer-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "a1360ca14aff6919cbf48584ff867e2320922802"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Developer\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-directory",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-directory/magento-module-directory-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "2983e727fe1441b6f04013d6ec4a1ed3ce679683"
+            },
+            "require": {
+                "lib-libxml": "*",
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Directory\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-downloadable",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-downloadable/magento-module-downloadable-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "c44323ab7b39fa0833b0193b53d99047ff00f5aa"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-gift-message": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-downloadable-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Downloadable\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-eav",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-eav/magento-module-eav-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "e495529416e3c391a716d1adf2dc492979f83597"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Eav\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-email",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-email/magento-module-email-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "f51537cccc586b8da5b6f6eda4da6eac6a623561"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-variable": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Email\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-gift-message",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-gift-message/magento-module-gift-message-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "a731bace9979bb66c2f01f9fb28145aaa66cf279"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-multishipping": "100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\GiftMessage\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-grouped-product",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-grouped-product/magento-module-grouped-product-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "e06f107530068cf9cd67961778378a4affdd90b5"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-msrp": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-grouped-product-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\GroupedProduct\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-import-export",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-import-export/magento-module-import-export-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "325a88d0b0decb78ec217dfcf8702c876cb6af7a"
+            },
+            "require": {
+                "ext-ctype": "*",
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\ImportExport\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-indexer",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-indexer/magento-module-indexer-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "a0d39b7fada159e88cebfef93decd1790c8ef63e"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-page-cache": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Indexer\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-integration",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-integration/magento-module-integration-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "baee3f3ece2f2195fb203c8338c67c89c2768731"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-authorization": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-user": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Integration\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-media-storage",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-media-storage/magento-module-media-storage-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "67e16320bc304c95d34a66ec029fa771a100282e"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\MediaStorage\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-msrp",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-msrp/magento-module-msrp-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "653c1c33ba5d5a7293da933225a5a399553b275a"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-downloadable": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-grouped-product": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-bundle": "100.0.*",
+                "magento/module-msrp-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Msrp\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-newsletter",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-newsletter/magento-module-newsletter-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "8a5a5951722a525953237b72824c21a25428f0ef"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-cron": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-email": "100.0.*",
+                "magento/module-require-js": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-widget": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Newsletter\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-page-cache",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-page-cache/magento-module-page-cache-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "a8c9921fe26a8cd6a8a6e74e0ba78de4af8497fb"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\PageCache\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-payment",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-payment/magento-module-payment-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "adcbca4bc81e6c5257d088dec419bc486a34b78e"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Payment\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-product-alert",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-product-alert/magento-module-product-alert-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "f71ce95bf60cda3a91144024a06081f688c77f74"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\ProductAlert\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-quote",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-quote/magento-module-quote-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "bc9237e09c6e30f8abda8013b499f837514a071a"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-authorization": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-payment": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-sales-sequence": "100.0.*",
+                "magento/module-shipping": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Quote\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-reports",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-reports/magento-module-reports-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "d5c2f4784addb3daa935b3691e7faedce9b40d5c"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-downloadable": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-review": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-sales-rule": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "magento/module-widget": "100.0.*",
+                "magento/module-wishlist": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Reports\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-require-js",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-require-js/magento-module-require-js-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "7151e2ff3057d1eb18bc60562fce6cadbe73f631"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\RequireJs\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-review",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-review/magento-module-review-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "72160fcaa050f31e26f804ee9001b9df9ab5bd5c"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-newsletter": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-cookie": "100.0.*",
+                "magento/module-review-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Review\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-rss",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-rss/magento-module-rss-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "47602b4f89980a11ef068003801362a4da84f269"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Rss\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-rule",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-rule/magento-module-rule-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "106521d47b37f8a30c12d2f61fd7ed085560ee4b"
+            },
+            "require": {
+                "lib-libxml": "*",
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Rule\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-sales",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-sales/magento-module-sales-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "28988c385d0fe9693c6a02914d680a7463e7d3dd"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-authorization": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-gift-message": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-payment": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-reports": "100.0.*",
+                "magento/module-sales-rule": "100.0.*",
+                "magento/module-sales-sequence": "100.0.*",
+                "magento/module-shipping": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "magento/module-widget": "100.0.*",
+                "magento/module-wishlist": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-sales-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Sales\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-sales-rule",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-sales-rule/magento-module-sales-rule-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "8c3d084981bc50dd6417a931ee5471e665272664"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-rule": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-payment": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-reports": "100.0.*",
+                "magento/module-rule": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-shipping": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-widget": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-sales-rule-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\SalesRule\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-sales-sequence",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-sales-sequence/magento-module-sales-sequence-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "8be5c44ab31c6f007398ff94f17bbc112b56299a"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\SalesSequence\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-shipping",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-shipping/magento-module-shipping-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "f86d757b879e697b21795206f6e405f6648560a5"
+            },
+            "require": {
+                "ext-gd": "*",
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-contact": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-payment": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-tax": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "magento/module-user": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-fedex": "100.0.*",
+                "magento/module-ups": "100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Shipping\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-store",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-store/magento-module-store-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "cc18ba63c51c034567593fe92c1dc6dbbf32e331"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Store\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-tax",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-tax/magento-module-tax-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "4a6e8d0fa229e1a9d304859b4c78b6b9d8f04735"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-directory": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-page-cache": "100.0.*",
+                "magento/module-quote": "100.0.*",
+                "magento/module-reports": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-shipping": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-tax-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Tax\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-theme",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-theme/magento-module-theme-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "c57d9323453f949b04ae25bda7b40fbc46b06f89"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-config": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-media-storage": "100.0.*",
+                "magento/module-require-js": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-widget": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-theme-sample-data": "Sample Data version:100.0.*",
+                "magento/module-translation": "100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Theme\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-translation",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-translation/magento-module-translation-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "736832d2cd295f4b92364be03fda46b89d9a7c1b"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-developer": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Translation\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-ui",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-ui/magento-module-ui-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "38e5ef76430cddeb1b31168757e2372781e8fec2"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-authorization": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-eav": "100.0.*",
+                "magento/module-user": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Ui\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-url-rewrite",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-url-rewrite/magento-module-url-rewrite-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "7701c8037eb5d903dab47c5bfe7c42b18af6a4b7"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-url-rewrite": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-cms-url-rewrite": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\UrlRewrite\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-user",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-user/magento-module-user-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "72d89175b11c0bc7fabc652fffb6a7146391350f"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-authorization": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-email": "100.0.*",
+                "magento/module-integration": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\User\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-variable",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-variable/magento-module-variable-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "aa8ec2b7fae0196b087cae3f5cad97f7e43b79c7"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-email": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Variable\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-widget",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-widget/magento-module-widget-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "2287734c0e146452bf3936eb3e7a401ad424bb9b"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-cms": "100.0.*",
+                "magento/module-email": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-variable": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-widget-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Widget\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-wishlist",
+            "version": "100.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-wishlist/magento-module-wishlist-100.0.5.0.zip",
+                "reference": null,
+                "shasum": "fd8e0a487ce397b68b8099fe742355c0cff8dfa5"
+            },
+            "require": {
+                "magento/framework": "100.0.*",
+                "magento/module-backend": "100.0.*",
+                "magento/module-catalog": "100.0.*",
+                "magento/module-catalog-inventory": "100.0.*",
+                "magento/module-checkout": "100.0.*",
+                "magento/module-customer": "100.0.*",
+                "magento/module-grouped-product": "100.0.*",
+                "magento/module-rss": "100.0.*",
+                "magento/module-sales": "100.0.*",
+                "magento/module-store": "100.0.*",
+                "magento/module-theme": "100.0.*",
+                "magento/module-ui": "100.0.*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "suggest": {
+                "magento/module-bundle": "100.0.*",
+                "magento/module-configurable-product": "100.0.*",
+                "magento/module-cookie": "100.0.*",
+                "magento/module-downloadable": "100.0.*",
+                "magento/module-wishlist-sample-data": "Sample Data version:100.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Wishlist\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
         }
     ],
     "packages-dev": [
         {
             "name": "behat/behat",
-            "version": "v3.0.15",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Behat.git",
-                "reference": "b35ae3d45332d80c532af69cc36f780a9397a996"
+                "reference": "359d987b3064d78f2d3a6ba3a355277f3b09b47f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Behat/zipball/b35ae3d45332d80c532af69cc36f780a9397a996",
-                "reference": "b35ae3d45332d80c532af69cc36f780a9397a996",
+                "url": "https://api.github.com/repos/Behat/Behat/zipball/359d987b3064d78f2d3a6ba3a355277f3b09b47f",
+                "reference": "359d987b3064d78f2d3a6ba3a355277f3b09b47f",
                 "shasum": ""
             },
             "require": {
-                "behat/gherkin": "~4.3",
+                "behat/gherkin": "~4.4",
                 "behat/transliterator": "~1.0",
                 "ext-mbstring": "*",
                 "php": ">=5.3.3",
-                "symfony/class-loader": "~2.1",
-                "symfony/config": "~2.3",
-                "symfony/console": "~2.1",
-                "symfony/dependency-injection": "~2.1",
-                "symfony/event-dispatcher": "~2.1",
-                "symfony/translation": "~2.3",
-                "symfony/yaml": "~2.1"
+                "symfony/class-loader": "~2.1|~3.0",
+                "symfony/config": "~2.3|~3.0",
+                "symfony/console": "~2.1|~3.0",
+                "symfony/dependency-injection": "~2.1|~3.0",
+                "symfony/event-dispatcher": "~2.1|~3.0",
+                "symfony/translation": "~2.3|~3.0",
+                "symfony/yaml": "~2.1|~3.0"
             },
             "require-dev": {
-                "phpspec/prophecy-phpunit": "~1.0",
-                "phpunit/phpunit": "~4.0",
-                "symfony/process": "~2.1"
+                "phpunit/phpunit": "~4.5",
+                "symfony/process": "~2.1|~3.0"
             },
             "suggest": {
                 "behat/mink-extension": "for integration with Mink testing framework",
@@ -98,7 +2067,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0.x-dev"
+                    "dev-master": "3.1.x-dev"
                 }
             },
             "autoload": {
@@ -134,7 +2103,7 @@
                 "symfony",
                 "testing"
             ],
-            "time": "2015-02-22 14:10:33"
+            "time": "2016-03-28 07:04:45"
         },
         {
             "name": "behat/gherkin",
@@ -196,21 +2165,24 @@
         },
         {
             "name": "behat/mink",
-            "version": "v1.6.1",
+            "version": "v1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/Mink.git",
-                "reference": "8b68523a339ec991bcd638b39dc8f04f808da88a"
+                "reference": "e6930b9c74693dff7f4e58577e1b1743399f3ff9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/Mink/zipball/8b68523a339ec991bcd638b39dc8f04f808da88a",
-                "reference": "8b68523a339ec991bcd638b39dc8f04f808da88a",
+                "url": "https://api.github.com/repos/minkphp/Mink/zipball/e6930b9c74693dff7f4e58577e1b1743399f3ff9",
+                "reference": "e6930b9c74693dff7f4e58577e1b1743399f3ff9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.1",
-                "symfony/css-selector": "~2.0"
+                "symfony/css-selector": "~2.1|~3.0"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "~2.7|~3.0"
             },
             "suggest": {
                 "behat/mink-browserkit-driver": "extremely fast headless driver for Symfony\\Kernel-based apps (Sf2, Silex)",
@@ -221,7 +2193,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "1.7.x-dev"
                 }
             },
             "autoload": {
@@ -247,40 +2219,41 @@
                 "testing",
                 "web"
             ],
-            "time": "2015-02-04 17:02:06"
+            "time": "2016-03-05 08:26:18"
         },
         {
             "name": "behat/mink-browserkit-driver",
-            "version": "v1.2.0",
+            "version": "v1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/MinkBrowserKitDriver.git",
-                "reference": "aed8f4a596b79014a75254c3e337511c33e38cbd"
+                "reference": "10e67fb4a295efcd62ea0bf16025a85ea19534fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/MinkBrowserKitDriver/zipball/aed8f4a596b79014a75254c3e337511c33e38cbd",
-                "reference": "aed8f4a596b79014a75254c3e337511c33e38cbd",
+                "url": "https://api.github.com/repos/minkphp/MinkBrowserKitDriver/zipball/10e67fb4a295efcd62ea0bf16025a85ea19534fb",
+                "reference": "10e67fb4a295efcd62ea0bf16025a85ea19534fb",
                 "shasum": ""
             },
             "require": {
-                "behat/mink": "~1.6@dev",
-                "php": ">=5.3.1",
-                "symfony/browser-kit": "~2.0",
-                "symfony/dom-crawler": "~2.0"
+                "behat/mink": "^1.7.1@dev",
+                "php": ">=5.3.6",
+                "symfony/browser-kit": "~2.3|~3.0",
+                "symfony/dom-crawler": "~2.3|~3.0"
             },
             "require-dev": {
-                "silex/silex": "~1.2"
+                "silex/silex": "~1.2",
+                "symfony/phpunit-bridge": "~2.7|~3.0"
             },
             "type": "mink-driver",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Behat\\Mink\\Driver": "src/"
+                "psr-4": {
+                    "Behat\\Mink\\Driver\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -302,36 +2275,36 @@
                 "browser",
                 "testing"
             ],
-            "time": "2014-09-26 11:35:19"
+            "time": "2016-03-05 08:59:47"
         },
         {
             "name": "behat/mink-extension",
-            "version": "v2.0.1",
+            "version": "v2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/MinkExtension.git",
-                "reference": "06a4cb56614b047d8d15ea5cd392d19fd3d856e8"
+                "reference": "5b4bda64ff456104564317e212c823e45cad9d59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/MinkExtension/zipball/06a4cb56614b047d8d15ea5cd392d19fd3d856e8",
-                "reference": "06a4cb56614b047d8d15ea5cd392d19fd3d856e8",
+                "url": "https://api.github.com/repos/Behat/MinkExtension/zipball/5b4bda64ff456104564317e212c823e45cad9d59",
+                "reference": "5b4bda64ff456104564317e212c823e45cad9d59",
                 "shasum": ""
             },
             "require": {
                 "behat/behat": "~3.0,>=3.0.5",
                 "behat/mink": "~1.5",
                 "php": ">=5.3.2",
-                "symfony/config": "~2.2"
+                "symfony/config": "~2.2|~3.0"
             },
             "require-dev": {
-                "behat/mink-goutte-driver": "~1.0",
+                "behat/mink-goutte-driver": "~1.1",
                 "phpspec/phpspec": "~2.0"
             },
             "type": "behat-extension",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -361,37 +2334,40 @@
                 "test",
                 "web"
             ],
-            "time": "2014-09-23 10:59:27"
+            "time": "2016-02-15 07:55:18"
         },
         {
             "name": "behat/mink-goutte-driver",
-            "version": "v1.1.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/MinkGoutteDriver.git",
-                "reference": "2bf327b4166694ecaa8ae7f956cb6ae252ecf03e"
+                "reference": "8b9ad6d2d95bc70b840d15323365f52fcdaea6ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/MinkGoutteDriver/zipball/2bf327b4166694ecaa8ae7f956cb6ae252ecf03e",
-                "reference": "2bf327b4166694ecaa8ae7f956cb6ae252ecf03e",
+                "url": "https://api.github.com/repos/minkphp/MinkGoutteDriver/zipball/8b9ad6d2d95bc70b840d15323365f52fcdaea6ca",
+                "reference": "8b9ad6d2d95bc70b840d15323365f52fcdaea6ca",
                 "shasum": ""
             },
             "require": {
                 "behat/mink": "~1.6@dev",
                 "behat/mink-browserkit-driver": "~1.2@dev",
-                "fabpot/goutte": "~1.0.4|~2.0",
+                "fabpot/goutte": "~1.0.4|~2.0|~3.1",
                 "php": ">=5.3.1"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "~2.7|~3.0"
             },
             "type": "mink-driver",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Behat\\Mink\\Driver": "src/"
+                "psr-4": {
+                    "Behat\\Mink\\Driver\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -413,36 +2389,39 @@
                 "headless",
                 "testing"
             ],
-            "time": "2014-10-09 09:21:12"
+            "time": "2016-03-05 09:04:22"
         },
         {
             "name": "behat/mink-selenium2-driver",
-            "version": "v1.2.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/MinkSelenium2Driver.git",
-                "reference": "8018fee80bf6573f909ece3e0dfc07d0eb352210"
+                "reference": "473a9f3ebe0c134ee1e623ce8a9c852832020288"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/8018fee80bf6573f909ece3e0dfc07d0eb352210",
-                "reference": "8018fee80bf6573f909ece3e0dfc07d0eb352210",
+                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/473a9f3ebe0c134ee1e623ce8a9c852832020288",
+                "reference": "473a9f3ebe0c134ee1e623ce8a9c852832020288",
                 "shasum": ""
             },
             "require": {
-                "behat/mink": "~1.6@dev",
+                "behat/mink": "~1.7@dev",
                 "instaclick/php-webdriver": "~1.1",
                 "php": ">=5.3.1"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "~2.7"
             },
             "type": "mink-driver",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Behat\\Mink\\Driver": "src/"
+                "psr-4": {
+                    "Behat\\Mink\\Driver\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -471,7 +2450,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2014-09-29 13:12:12"
+            "time": "2016-03-05 09:10:18"
         },
         {
             "name": "behat/transliterator",
@@ -512,106 +2491,6 @@
                 "transliterator"
             ],
             "time": "2015-09-28 16:26:35"
-        },
-        {
-            "name": "bex/behat-browser-initialiser",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tkotosz/behat-browser-initialiser.git",
-                "reference": "473775c8c7271372bc0bb8132de30d312e2e5c71"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tkotosz/behat-browser-initialiser/zipball/473775c8c7271372bc0bb8132de30d312e2e5c71",
-                "reference": "473775c8c7271372bc0bb8132de30d312e2e5c71",
-                "shasum": ""
-            },
-            "require": {
-                "behat/behat": "^3.0.0",
-                "behat/mink-extension": "^2.0.0",
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "behat/mink-selenium2-driver": "^1.3.0",
-                "bex/behat-test-runner": "^1.1",
-                "jakoch/phantomjs-installer": "^1.9.8",
-                "phpspec/phpspec": "2.4.0-alpha2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tibor Kotosz",
-                    "email": "kotosy@gmail.com",
-                    "homepage": "https://github.com/tkotosz",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Extension for behat to help configure the browser",
-            "homepage": "https://github.com/tkotosz/behat-browser-initialiser",
-            "keywords": [
-                "BDD",
-                "Behat",
-                "TDD"
-            ],
-            "time": "2015-12-16 14:34:13"
-        },
-        {
-            "name": "bex/behat-extension-driver-locator",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tkotosz/behat-extension-driver-locator.git",
-                "reference": "af9fb11f5f3cc220ee2c08071ee9d50f11048b86"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tkotosz/behat-extension-driver-locator/zipball/af9fb11f5f3cc220ee2c08071ee9d50f11048b86",
-                "reference": "af9fb11f5f3cc220ee2c08071ee9d50f11048b86",
-                "shasum": ""
-            },
-            "require": {
-                "behat/behat": "^3.0.0",
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "phpspec/phpspec": "2.4.0-alpha2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tibor Kotosz",
-                    "email": "kotosy@gmail.com",
-                    "homepage": "https://github.com/tkotosz",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Driver locator tool for behat extensions",
-            "homepage": "https://github.com/tkotosz/behat-extension-driver-locator",
-            "keywords": [
-                "BDD",
-                "Behat",
-                "TDD"
-            ],
-            "time": "2015-12-17 13:26:09"
         },
         {
             "name": "bex/behat-magento2-init",
@@ -667,144 +2546,34 @@
             "time": "2016-03-22 12:21:04"
         },
         {
-            "name": "bex/behat-screenshot",
-            "version": "1.0.6",
+            "name": "ciaranmcnulty/behat-localwebserverextension",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/elvetemedve/behat-screenshot.git",
-                "reference": "a61be5dde09a921a38d670063b7be8b520d3b518"
+                "url": "https://github.com/ciaranmcnulty/behat-localwebserverextension.git",
+                "reference": "898f9491b3067acf60f58093d97058ecb414d9d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elvetemedve/behat-screenshot/zipball/a61be5dde09a921a38d670063b7be8b520d3b518",
-                "reference": "a61be5dde09a921a38d670063b7be8b520d3b518",
+                "url": "https://api.github.com/repos/ciaranmcnulty/behat-localwebserverextension/zipball/898f9491b3067acf60f58093d97058ecb414d9d9",
+                "reference": "898f9491b3067acf60f58093d97058ecb414d9d9",
                 "shasum": ""
             },
             "require": {
-                "behat/behat": "^3.0.0",
-                "behat/mink-extension": "^2.0.0",
-                "bex/behat-extension-driver-locator": "^1.0.2",
-                "php": ">=5.4",
-                "symfony/filesystem": "^2.7|^3.0"
-            },
-            "require-dev": {
-                "behat/mink-selenium2-driver": "^1.3.0",
-                "bex/behat-screenshot-image-driver-dummy": "^1.0",
-                "bex/behat-test-runner": "^1.0",
-                "jakoch/phantomjs-installer": "^1.9.8",
-                "phpspec/phpspec": "2.4.0-alpha2"
-            },
-            "suggest": {
-                "bex/behat-screenshot-image-driver-img42": "Allows to upload the screenshot to img42.com",
-                "bex/behat-screenshot-image-driver-unsee": "Allows to upload the screenshot to unsee.cc",
-                "bex/behat-screenshot-image-driver-uploadpie": "Allows to upload the screenshot to uploadpie.com"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Bex\\Behat\\ScreenshotExtension\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Geza Buza",
-                    "email": "bghome@gmail.com",
-                    "homepage": "https://twitter.com/medve540",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Tibor Kotosz",
-                    "email": "kotosy@gmail.com",
-                    "homepage": "https://github.com/tkotosz",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Extension for behat to help debug failing scenarios",
-            "homepage": "https://github.com/elvetemedve/behat-screenshot",
-            "keywords": [
-                "BDD",
-                "Behat",
-                "TDD",
-                "behat-screenshot"
-            ],
-            "time": "2016-02-10 09:55:43"
-        },
-        {
-            "name": "bossa/phpspec2-expect",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/BossaConsulting/phpspec2-expect.git",
-                "reference": "f3a80b7fa743b8a1078a7e320bd3e8b8b6283780"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/BossaConsulting/phpspec2-expect/zipball/f3a80b7fa743b8a1078a7e320bd3e8b8b6283780",
-                "reference": "f3a80b7fa743b8a1078a7e320bd3e8b8b6283780",
-                "shasum": ""
-            },
-            "require": {
-                "phpspec/phpspec": "~2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "expect.php"
-                ],
-                "psr-0": {
-                    "Bossa\\PhpSpec\\Expect\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marcello Duarte",
-                    "homepage": "http://marcelloduarte.net/"
-                }
-            ],
-            "description": "Helper that decorates any SUS with a phpspec lazy object wrapper",
-            "keywords": [
-                "BDD",
-                "SpecBDD",
-                "TDD",
-                "spec",
-                "specification"
-            ],
-            "time": "2014-09-12 09:25:51"
-        },
-        {
-            "name": "ciaranmcnulty/behat-stepthroughextension",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ciaranmcnulty/behat-stepthroughextension.git",
-                "reference": "a9989be0af0d509a91da194d26ad7039943ee111"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ciaranmcnulty/behat-stepthroughextension/zipball/a9989be0af0d509a91da194d26ad7039943ee111",
-                "reference": "a9989be0af0d509a91da194d26ad7039943ee111",
-                "shasum": ""
-            },
-            "require": {
-                "behat/behat": "~3.0"
-            },
-            "require-dev": {
-                "phpspec/phpspec": "dev-master",
-                "symfony/filesystem": "~2.3",
+                "behat/behat": "~3.0",
+                "php": "~5.4||~7.0",
                 "symfony/process": "~2.3"
             },
+            "require-dev": {
+                "behat/mink-extension": "~2.0",
+                "behat/mink-goutte-driver": "~1.0",
+                "ciaranmcnulty/phpspec-typehintedmethods": "~1.0",
+                "phpspec/phpspec": "~2.1"
+            },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "": "src"
+                "psr-4": {
+                    "Cjm\\Behat\\LocalWebserverExtension\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -819,14 +2588,14 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Extension for behat to help debug failing scenarios",
-            "homepage": "http://github.com/ciaranmcnulty/behat-stepthroughextension",
+            "description": "Extension for behat users who forget to start their webserver",
+            "homepage": "http://github.com/ciaranmcnulty/behat-localwebserverextension",
             "keywords": [
                 "BDD",
                 "Behat",
                 "TDD"
             ],
-            "time": "2014-09-07 14:32:13"
+            "time": "2016-02-02 12:22:32"
         },
         {
             "name": "doctrine/instantiator",
@@ -883,76 +2652,30 @@
             "time": "2015-06-14 21:17:01"
         },
         {
-            "name": "evenement/evenement",
-            "version": "v2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/igorw/evenement.git",
-                "reference": "f6e843799fd4f4184d54d8fc7b5b3551c9fa803e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/igorw/evenement/zipball/f6e843799fd4f4184d54d8fc7b5b3551c9fa803e",
-                "reference": "f6e843799fd4f4184d54d8fc7b5b3551c9fa803e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Evenement": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Igor Wiedler",
-                    "email": "igor@wiedler.ch",
-                    "homepage": "http://wiedler.ch/igor/"
-                }
-            ],
-            "description": "Événement is a very simple event dispatching library for PHP",
-            "keywords": [
-                "event-dispatcher",
-                "event-emitter"
-            ],
-            "time": "2012-11-02 14:49:47"
-        },
-        {
             "name": "fabpot/goutte",
-            "version": "v2.0.4",
+            "version": "v3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/Goutte.git",
-                "reference": "0ad3ee6dc2d0aaa832a80041a1e09bf394e99802"
+                "reference": "3cbc6ed222422a28400e470050f14928a153207e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/0ad3ee6dc2d0aaa832a80041a1e09bf394e99802",
-                "reference": "0ad3ee6dc2d0aaa832a80041a1e09bf394e99802",
+                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/3cbc6ed222422a28400e470050f14928a153207e",
+                "reference": "3cbc6ed222422a28400e470050f14928a153207e",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": ">=4,<6",
-                "php": ">=5.4.0",
-                "symfony/browser-kit": "~2.1",
-                "symfony/css-selector": "~2.1",
-                "symfony/dom-crawler": "~2.1"
+                "guzzlehttp/guzzle": "^6.0",
+                "php": ">=5.5.0",
+                "symfony/browser-kit": "~2.1|~3.0",
+                "symfony/css-selector": "~2.1|~3.0",
+                "symfony/dom-crawler": "~2.1|~3.0"
             },
             "type": "application",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -975,92 +2698,42 @@
             "keywords": [
                 "scraper"
             ],
-            "time": "2015-05-05 21:14:57"
-        },
-        {
-            "name": "fabpot/php-cs-fixer",
-            "version": "v1.11.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "41f70154642ec0f9ea9ea9c290943f3b5dfa76fc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/41f70154642ec0f9ea9ea9c290943f3b5dfa76fc",
-                "reference": "41f70154642ec0f9ea9ea9c290943f3b5dfa76fc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-tokenizer": "*",
-                "php": ">=5.3.6",
-                "sebastian/diff": "~1.1",
-                "symfony/console": "~2.3|~3.0",
-                "symfony/event-dispatcher": "~2.1|~3.0",
-                "symfony/filesystem": "~2.1|~3.0",
-                "symfony/finder": "~2.1|~3.0",
-                "symfony/process": "~2.3|~3.0",
-                "symfony/stopwatch": "~2.5|~3.0"
-            },
-            "require-dev": {
-                "satooshi/php-coveralls": "0.7.*@dev"
-            },
-            "bin": [
-                "php-cs-fixer"
-            ],
-            "type": "application",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\CS\\": "Symfony/CS/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Dariusz Rumiński",
-                    "email": "dariusz.ruminski@gmail.com"
-                },
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "A tool to automatically fix PHP code style",
-            "time": "2016-02-26 07:37:29"
+            "time": "2015-11-05 12:58:44"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "5.3.0",
+            "version": "6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "f3c8c22471cb55475105c14769644a49c3262b93"
+                "reference": "d094e337976dff9d8e2424e8485872194e768662"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f3c8c22471cb55475105c14769644a49c3262b93",
-                "reference": "f3c8c22471cb55475105c14769644a49c3262b93",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d094e337976dff9d8e2424e8485872194e768662",
+                "reference": "d094e337976dff9d8e2424e8485872194e768662",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/ringphp": "^1.1",
-                "php": ">=5.4.0"
+                "guzzlehttp/promises": "~1.0",
+                "guzzlehttp/psr7": "~1.1",
+                "php": ">=5.5.0"
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.0",
-                "psr/log": "^1.0"
+                "phpunit/phpunit": "~4.0",
+                "psr/log": "~1.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "6.2-dev"
                 }
             },
             "autoload": {
+                "files": [
+                    "src/functions_include.php"
+                ],
                 "psr-4": {
                     "GuzzleHttp\\": "src/"
                 }
@@ -1076,7 +2749,7 @@
                     "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "description": "Guzzle is a PHP HTTP client library",
             "homepage": "http://guzzlephp.org/",
             "keywords": [
                 "client",
@@ -1087,44 +2760,41 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-05-20 03:47:55"
+            "time": "2016-03-21 20:02:09"
         },
         {
-            "name": "guzzlehttp/ringphp",
+            "name": "guzzlehttp/promises",
             "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/guzzle/RingPHP.git",
-                "reference": "dbbb91d7f6c191e5e405e900e3102ac7f261bc0b"
+                "url": "https://github.com/guzzle/promises.git",
+                "reference": "bb9024c526b22f3fe6ae55a561fd70653d470aa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/dbbb91d7f6c191e5e405e900e3102ac7f261bc0b",
-                "reference": "dbbb91d7f6c191e5e405e900e3102ac7f261bc0b",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/bb9024c526b22f3fe6ae55a561fd70653d470aa8",
+                "reference": "bb9024c526b22f3fe6ae55a561fd70653d470aa8",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/streams": "~3.0",
-                "php": ">=5.4.0",
-                "react/promise": "~2.0"
+                "php": ">=5.5.0"
             },
             "require-dev": {
-                "ext-curl": "*",
                 "phpunit/phpunit": "~4.0"
-            },
-            "suggest": {
-                "ext-curl": "Guzzle will use specific adapters if cURL is present"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "GuzzleHttp\\Ring\\": "src/"
-                }
+                    "GuzzleHttp\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1137,25 +2807,32 @@
                     "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2015-05-20 03:37:09"
+            "description": "Guzzle promises library",
+            "keywords": [
+                "promise"
+            ],
+            "time": "2016-03-08 01:15:46"
         },
         {
-            "name": "guzzlehttp/streams",
-            "version": "3.0.0",
+            "name": "guzzlehttp/psr7",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/guzzle/streams.git",
-                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5"
+                "url": "https://github.com/guzzle/psr7.git",
+                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/streams/zipball/47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
-                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/2e89629ff057ebb49492ba08e6995d3a6a80021b",
+                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0"
@@ -1163,13 +2840,16 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "GuzzleHttp\\Stream\\": "src/"
-                }
+                    "GuzzleHttp\\Psr7\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1182,13 +2862,14 @@
                     "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "description": "Provides a simple abstraction over streams of data",
-            "homepage": "http://guzzlephp.org/",
+            "description": "PSR-7 message implementation",
             "keywords": [
-                "Guzzle",
-                "stream"
+                "http",
+                "message",
+                "stream",
+                "uri"
             ],
-            "time": "2014-10-12 19:18:40"
+            "time": "2016-02-18 21:54:00"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -1247,84 +2928,6 @@
                 "webtest"
             ],
             "time": "2015-06-15 20:19:33"
-        },
-        {
-            "name": "league/climate",
-            "version": "2.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/climate.git",
-                "reference": "28851c909017424f61cc6a62089316313c645d1c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/climate/zipball/28851c909017424f61cc6a62089316313c645d1c",
-                "reference": "28851c909017424f61cc6a62089316313c645d1c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "dev-master",
-                "phpunit/phpunit": "4.1.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "League\\CLImate\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Joe Tannenbaum",
-                    "email": "hey@joe.codes",
-                    "homepage": "http://joe.codes/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP's best friend for the terminal. CLImate allows you to easily output colored text, special formats, and more.",
-            "keywords": [
-                "cli",
-                "colors",
-                "command",
-                "php",
-                "terminal"
-            ],
-            "time": "2015-01-18 14:31:58"
-        },
-        {
-            "name": "nagno/phpspec-bootstrap-magento2",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nagno/phpspec-bootstrap-magento2.git",
-                "reference": "1aacf5be5909e1e64c2b8da34f498efb99508f1f"
-            },
-            "require": {
-                "phpspec/phpspec": "~2.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nagno\\Phpspec\\BootstrapMagento2\\": "src/nagno"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Norbert Nagy",
-                    "email": "norbert.nagy@sessiondigital.com"
-                }
-            ],
-            "description": "Bootstraps Mage2 for phpspec before the tests are running so the dinamically generated classes will work",
-            "time": "2015-08-22 19:07:27"
         },
         {
             "name": "ocramius/proxy-manager",
@@ -1388,385 +2991,6 @@
                 "service proxies"
             ],
             "time": "2015-08-09 04:28:19"
-        },
-        {
-            "name": "pdepend/pdepend",
-            "version": "2.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pdepend/pdepend.git",
-                "reference": "d3ae0d084d526cdc6c3f1b858fb7148de77b41c5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pdepend/pdepend/zipball/d3ae0d084d526cdc6c3f1b858fb7148de77b41c5",
-                "reference": "d3ae0d084d526cdc6c3f1b858fb7148de77b41c5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.7",
-                "symfony/config": "^2.3.0",
-                "symfony/dependency-injection": "^2.3.0",
-                "symfony/filesystem": "^2.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.0.0,<4.8",
-                "squizlabs/php_codesniffer": "^2.0.0"
-            },
-            "bin": [
-                "src/bin/pdepend"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "PDepend\\": "src/main/php/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Official version of pdepend to be handled with Composer",
-            "time": "2015-10-16 08:49:58"
-        },
-        {
-            "name": "peridot-php/webdriver-manager",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/peridot-php/webdriver-manager.git",
-                "reference": "38a1c9c90446b84f239120e05106243f628717d3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/peridot-php/webdriver-manager/zipball/38a1c9c90446b84f239120e05106243f628717d3",
-                "reference": "38a1c9c90446b84f239120e05106243f628717d3",
-                "shasum": ""
-            },
-            "require": {
-                "evenement/evenement": "~2.0",
-                "php": ">=5.4.0",
-                "splitbrain/php-archive": "~1.0",
-                "symfony/console": "~2.6"
-            },
-            "require-dev": {
-                "peridot-php/peridot-jumpstart": "~1.2",
-                "peridot-php/peridot-prophecy-plugin": "~1.1"
-            },
-            "bin": [
-                "bin/manager"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Peridot\\WebDriverManager\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Brian Scaturro",
-                    "email": "scaturrob@gmail.com"
-                }
-            ],
-            "description": "Library and command line tool for managing Selenium WebDriver",
-            "keywords": [
-                "selenium",
-                "testing",
-                "webdriver"
-            ],
-            "time": "2015-10-15 17:26:44"
-        },
-        {
-            "name": "phpdocumentor/reflection-docblock",
-            "version": "2.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "d68dbdc53dc358a816f00b300704702b2eaff7b8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/d68dbdc53dc358a816f00b300704702b2eaff7b8",
-                "reference": "d68dbdc53dc358a816f00b300704702b2eaff7b8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "suggest": {
-                "dflydev/markdown": "~1.0",
-                "erusev/parsedown": "~1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "phpDocumentor": [
-                        "src/"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mike van Riel",
-                    "email": "mike.vanriel@naenius.com"
-                }
-            ],
-            "time": "2015-02-03 12:10:50"
-        },
-        {
-            "name": "phpmd/phpmd",
-            "version": "2.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpmd/phpmd.git",
-                "reference": "fccbdb6b222f6d7a6d35af1c396ba5435cec76a9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpmd/phpmd/zipball/fccbdb6b222f6d7a6d35af1c396ba5435cec76a9",
-                "reference": "fccbdb6b222f6d7a6d35af1c396ba5435cec76a9",
-                "shasum": ""
-            },
-            "require": {
-                "pdepend/pdepend": "~2.0",
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.0",
-                "squizlabs/php_codesniffer": "^2.0"
-            },
-            "bin": [
-                "src/bin/phpmd"
-            ],
-            "type": "project",
-            "autoload": {
-                "psr-0": {
-                    "PHPMD\\": "src/main/php"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Manuel Pichler",
-                    "email": "github@manuel-pichler.de",
-                    "homepage": "https://github.com/manuelpichler",
-                    "role": "Project Founder"
-                },
-                {
-                    "name": "Other contributors",
-                    "homepage": "https://github.com/phpmd/phpmd/graphs/contributors",
-                    "role": "Contributors"
-                },
-                {
-                    "name": "Marc Würth",
-                    "email": "ravage@bluewin.ch",
-                    "homepage": "https://github.com/ravage84",
-                    "role": "Project Maintainer"
-                }
-            ],
-            "description": "PHPMD is a spin-off project of PHP Depend and aims to be a PHP equivalent of the well known Java tool PMD.",
-            "homepage": "http://phpmd.org/",
-            "keywords": [
-                "mess detection",
-                "mess detector",
-                "pdepend",
-                "phpmd",
-                "pmd"
-            ],
-            "time": "2016-03-10 17:17:44"
-        },
-        {
-            "name": "phpspec/php-diff",
-            "version": "v1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpspec/php-diff.git",
-                "reference": "30e103d19519fe678ae64a60d77884ef3d71b28a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/php-diff/zipball/30e103d19519fe678ae64a60d77884ef3d71b28a",
-                "reference": "30e103d19519fe678ae64a60d77884ef3d71b28a",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Diff": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Chris Boulton",
-                    "homepage": "http://github.com/chrisboulton",
-                    "role": "Original developer"
-                }
-            ],
-            "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays).",
-            "time": "2013-11-01 13:02:21"
-        },
-        {
-            "name": "phpspec/phpspec",
-            "version": "2.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpspec/phpspec.git",
-                "reference": "385ecb015e97c13818074f1517928b24d4a26067"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/385ecb015e97c13818074f1517928b24d4a26067",
-                "reference": "385ecb015e97c13818074f1517928b24d4a26067",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/instantiator": "^1.0.1",
-                "ext-tokenizer": "*",
-                "php": ">=5.3.3",
-                "phpspec/php-diff": "~1.0.0",
-                "phpspec/prophecy": "~1.4",
-                "sebastian/exporter": "~1.0",
-                "symfony/console": "~2.3|~3.0",
-                "symfony/event-dispatcher": "~2.1|~3.0",
-                "symfony/finder": "~2.1|~3.0",
-                "symfony/process": "^2.6|~3.0",
-                "symfony/yaml": "~2.1|~3.0"
-            },
-            "require-dev": {
-                "behat/behat": "^3.0.11",
-                "bossa/phpspec2-expect": "~1.0",
-                "phpunit/phpunit": "~4.4",
-                "symfony/filesystem": "~2.1|~3.0"
-            },
-            "suggest": {
-                "phpspec/nyan-formatters": "~1.0 – Adds Nyan formatters"
-            },
-            "bin": [
-                "bin/phpspec"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "PhpSpec": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com",
-                    "homepage": "http://everzet.com"
-                },
-                {
-                    "name": "Marcello Duarte",
-                    "homepage": "http://marcelloduarte.net/"
-                }
-            ],
-            "description": "Specification-oriented BDD framework for PHP 5.3+",
-            "homepage": "http://phpspec.net/",
-            "keywords": [
-                "BDD",
-                "SpecBDD",
-                "TDD",
-                "spec",
-                "specification",
-                "testing",
-                "tests"
-            ],
-            "time": "2016-03-20 20:34:32"
-        },
-        {
-            "name": "phpspec/prophecy",
-            "version": "v1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "3c91bdf81797d725b14cb62906f9a4ce44235972"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/3c91bdf81797d725b14cb62906f9a4ce44235972",
-                "reference": "3c91bdf81797d725b14cb62906f9a4ce44235972",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/instantiator": "^1.0.2",
-                "php": "^5.3|^7.0",
-                "phpdocumentor/reflection-docblock": "~2.0",
-                "sebastian/comparator": "~1.1",
-                "sebastian/recursion-context": "~1.0"
-            },
-            "require-dev": {
-                "phpspec/phpspec": "~2.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.5.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Prophecy\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com",
-                    "homepage": "http://everzet.com"
-                },
-                {
-                    "name": "Marcello Duarte",
-                    "email": "marcello.duarte@gmail.com"
-                }
-            ],
-            "description": "Highly opinionated mocking framework for PHP 5.3+",
-            "homepage": "https://github.com/phpspec/prophecy",
-            "keywords": [
-                "Double",
-                "Dummy",
-                "fake",
-                "mock",
-                "spy",
-                "stub"
-            ],
-            "time": "2016-02-15 07:46:21"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2137,35 +3361,32 @@
             "time": "2015-10-02 06:51:40"
         },
         {
-            "name": "react/promise",
-            "version": "v2.2.2",
+            "name": "psr/http-message",
+            "version": "1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/reactphp/promise.git",
-                "reference": "3aacad8bf10c7d83e6fa2089d413529888c2bedf"
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/promise/zipball/3aacad8bf10c7d83e6fa2089d413529888c2bedf",
-                "reference": "3aacad8bf10c7d83e6fa2089d413529888c2bedf",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
+                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.3.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "1.0.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "React\\Promise\\": "src/"
-                },
-                "files": [
-                    "src/functions_include.php"
-                ]
+                    "Psr\\Http\\Message\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2173,12 +3394,20 @@
             ],
             "authors": [
                 {
-                    "name": "Jan Sorgalla",
-                    "email": "jsorgalla@gmail.com"
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
                 }
             ],
-            "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-            "time": "2016-02-26 19:09:02"
+            "description": "Common interface for HTTP messages",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2015-05-04 20:22:00"
         },
         {
             "name": "sebastian/comparator",
@@ -2413,96 +3642,6 @@
             "time": "2015-06-21 07:55:53"
         },
         {
-            "name": "sebastian/finder-facade",
-            "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/finder-facade.git",
-                "reference": "2a6f7f57efc0aa2d23297d9fd9e2a03111a8c0b9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/finder-facade/zipball/2a6f7f57efc0aa2d23297d9fd9e2a03111a8c0b9",
-                "reference": "2a6f7f57efc0aa2d23297d9fd9e2a03111a8c0b9",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/finder": "~2.3|~3.0",
-                "theseer/fdomdocument": "~1.3"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "FinderFacade is a convenience wrapper for Symfony's Finder component.",
-            "homepage": "https://github.com/sebastianbergmann/finder-facade",
-            "time": "2016-02-17 07:02:23"
-        },
-        {
-            "name": "sebastian/phpcpd",
-            "version": "2.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/phpcpd.git",
-                "reference": "d3ad100fdf15805495f6ff19f473f4314c99390c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpcpd/zipball/d3ad100fdf15805495f6ff19f473f4314c99390c",
-                "reference": "d3ad100fdf15805495f6ff19f473f4314c99390c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "phpunit/php-timer": "~1.0",
-                "sebastian/finder-facade": "~1.1",
-                "sebastian/version": "~1.0",
-                "symfony/console": "~2.2",
-                "theseer/fdomdocument": "~1.4"
-            },
-            "bin": [
-                "phpcpd"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "Copy/Paste Detector (CPD) for PHP code.",
-            "homepage": "https://github.com/sebastianbergmann/phpcpd",
-            "time": "2015-03-26 14:47:38"
-        },
-        {
             "name": "sebastian/recursion-context",
             "version": "1.0.2",
             "source": {
@@ -2596,12 +3735,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/BehatPageObjectExtension.git",
-                "reference": "3d97637128ab0136fc71446015be9ebc6ac8afba"
+                "reference": "2e6b3793673e889fa72dc86cdf3683f7e91c72b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/BehatPageObjectExtension/zipball/3d97637128ab0136fc71446015be9ebc6ac8afba",
-                "reference": "3d97637128ab0136fc71446015be9ebc6ac8afba",
+                "url": "https://api.github.com/repos/sensiolabs/BehatPageObjectExtension/zipball/2e6b3793673e889fa72dc86cdf3683f7e91c72b9",
+                "reference": "2e6b3793673e889fa72dc86cdf3683f7e91c72b9",
                 "shasum": ""
             },
             "require": {
@@ -2652,204 +3791,29 @@
                 "Behat",
                 "page"
             ],
-            "time": "2016-03-16 11:59:54"
-        },
-        {
-            "name": "sjparkinson/static-review",
-            "version": "4.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sjparkinson/static-review.git",
-                "reference": "493c3410cf146a12fca84209bad126c494e125f0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sjparkinson/static-review/zipball/493c3410cf146a12fca84209bad126c494e125f0",
-                "reference": "493c3410cf146a12fca84209bad126c494e125f0",
-                "shasum": ""
-            },
-            "require": {
-                "league/climate": "~2.0",
-                "php": ">=5.4.0",
-                "symfony/console": "~2.0",
-                "symfony/process": "~2.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "~0.9",
-                "phpunit/phpunit": "~4.0",
-                "sensiolabs/security-checker": "~2.0",
-                "squizlabs/php_codesniffer": "~1.0"
-            },
-            "suggest": {
-                "sensiolabs/security-checker": "Required for ComposerSecurityReview.",
-                "squizlabs/php_codesniffer": "Required for PhpCodeSnifferReview."
-            },
-            "bin": [
-                "bin/static-review.php"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "StaticReview\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Samuel Parkinson",
-                    "email": "sam.james.parkinson@gmail.com",
-                    "homepage": "http://samp.im"
-                }
-            ],
-            "description": "An extendable framework for version control hooks.",
-            "time": "2014-09-22 08:40:36"
-        },
-        {
-            "name": "splitbrain/php-archive",
-            "version": "1.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/splitbrain/php-archive.git",
-                "reference": "c075304b44c4aadff0718af445e86bf730f331ff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/splitbrain/php-archive/zipball/c075304b44c4aadff0718af445e86bf730f331ff",
-                "reference": "c075304b44c4aadff0718af445e86bf730f331ff",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.5.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "splitbrain\\PHPArchive\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Andreas Gohr",
-                    "email": "andi@splitbrain.org"
-                }
-            ],
-            "description": "Pure-PHP implementation to read and write TAR and ZIP archives",
-            "keywords": [
-                "archive",
-                "extract",
-                "tar",
-                "unpack",
-                "unzip",
-                "zip"
-            ],
-            "time": "2015-08-12 13:24:34"
-        },
-        {
-            "name": "squizlabs/php_codesniffer",
-            "version": "1.5.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "396178ada8499ec492363587f037125bf7b07fcc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/396178ada8499ec492363587f037125bf7b07fcc",
-                "reference": "396178ada8499ec492363587f037125bf7b07fcc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-tokenizer": "*",
-                "php": ">=5.1.2"
-            },
-            "suggest": {
-                "phpunit/php-timer": "dev-master"
-            },
-            "bin": [
-                "scripts/phpcs"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-phpcs-fixer": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "CodeSniffer.php",
-                    "CodeSniffer/CLI.php",
-                    "CodeSniffer/Exception.php",
-                    "CodeSniffer/File.php",
-                    "CodeSniffer/Report.php",
-                    "CodeSniffer/Reporting.php",
-                    "CodeSniffer/Sniff.php",
-                    "CodeSniffer/Tokens.php",
-                    "CodeSniffer/Reports/",
-                    "CodeSniffer/CommentParser/",
-                    "CodeSniffer/Tokenizers/",
-                    "CodeSniffer/DocGenerators/",
-                    "CodeSniffer/Standards/AbstractPatternSniff.php",
-                    "CodeSniffer/Standards/AbstractScopeSniff.php",
-                    "CodeSniffer/Standards/AbstractVariableSniff.php",
-                    "CodeSniffer/Standards/IncorrectPatternException.php",
-                    "CodeSniffer/Standards/Generic/Sniffs/",
-                    "CodeSniffer/Standards/MySource/Sniffs/",
-                    "CodeSniffer/Standards/PEAR/Sniffs/",
-                    "CodeSniffer/Standards/PSR1/Sniffs/",
-                    "CodeSniffer/Standards/PSR2/Sniffs/",
-                    "CodeSniffer/Standards/Squiz/Sniffs/",
-                    "CodeSniffer/Standards/Zend/Sniffs/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Greg Sherwood",
-                    "role": "lead"
-                }
-            ],
-            "description": "PHP_CodeSniffer tokenises PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
-            "homepage": "http://www.squizlabs.com/php-codesniffer",
-            "keywords": [
-                "phpcs",
-                "standards"
-            ],
-            "time": "2014-05-01 03:07:07"
+            "time": "2016-03-16 12:03:35"
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "6b2085020b4e86fcb7ae44c3ab8ddb91774b33d2"
+                "reference": "e07127ac31230b30887c2dddf3708d883d239b14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/6b2085020b4e86fcb7ae44c3ab8ddb91774b33d2",
-                "reference": "6b2085020b4e86fcb7ae44c3ab8ddb91774b33d2",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/e07127ac31230b30887c2dddf3708d883d239b14",
+                "reference": "e07127ac31230b30887c2dddf3708d883d239b14",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
-                "symfony/dom-crawler": "~2.0,>=2.0.5|~3.0.0"
+                "php": ">=5.5.9",
+                "symfony/dom-crawler": "~2.8|~3.0"
             },
             "require-dev": {
-                "symfony/css-selector": "~2.0,>=2.0.5|~3.0.0",
-                "symfony/process": "~2.3.34|~2.7,>=2.7.6|~3.0.0"
+                "symfony/css-selector": "~2.8|~3.0",
+                "symfony/process": "~2.8|~3.0"
             },
             "suggest": {
                 "symfony/process": ""
@@ -2857,7 +3821,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2884,33 +3848,36 @@
             ],
             "description": "Symfony BrowserKit Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 11:34:40"
+            "time": "2016-03-04 07:55:57"
         },
         {
             "name": "symfony/class-loader",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/class-loader.git",
-                "reference": "517ab0554b6a5744d04480cb06873ffbd9442d73"
+                "reference": "cbb7e6a9c0213a0cffa5d9065ee8214ca4e83877"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/class-loader/zipball/517ab0554b6a5744d04480cb06873ffbd9442d73",
-                "reference": "517ab0554b6a5744d04480cb06873ffbd9442d73",
+                "url": "https://api.github.com/repos/symfony/class-loader/zipball/cbb7e6a9c0213a0cffa5d9065ee8214ca4e83877",
+                "reference": "cbb7e6a9c0213a0cffa5d9065ee8214ca4e83877",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
-                "symfony/polyfill-apcu": "~1.1"
+                "php": ">=5.5.9"
             },
             "require-dev": {
-                "symfony/finder": "~2.0,>=2.0.5|~3.0.0"
+                "symfony/finder": "~2.8|~3.0",
+                "symfony/polyfill-apcu": "~1.1"
+            },
+            "suggest": {
+                "symfony/polyfill-apcu": "For using ApcClassLoader on HHVM"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2937,25 +3904,25 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-30 15:58:35"
+            "time": "2016-03-30 10:41:14"
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "0f8f94e6a32b5c480024eed5fa5cbd2790d0ad19"
+                "reference": "980ee40c28f00acff8906c11b778aab5f0db74c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/0f8f94e6a32b5c480024eed5fa5cbd2790d0ad19",
-                "reference": "0f8f94e6a32b5c480024eed5fa5cbd2790d0ad19",
+                "url": "https://api.github.com/repos/symfony/config/zipball/980ee40c28f00acff8906c11b778aab5f0db74c2",
+                "reference": "980ee40c28f00acff8906c11b778aab5f0db74c2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
-                "symfony/filesystem": "~2.3|~3.0.0"
+                "php": ">=5.5.9",
+                "symfony/filesystem": "~2.8|~3.0"
             },
             "suggest": {
                 "symfony/yaml": "To use the yaml reference dumper"
@@ -2963,7 +3930,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2990,30 +3957,30 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-22 16:12:45"
+            "time": "2016-03-04 07:55:57"
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "56cc5caf051189720b8de974e4746090aaa10d44"
+                "reference": "6b1175135bc2a74c08a28d89761272de8beed8cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/56cc5caf051189720b8de974e4746090aaa10d44",
-                "reference": "56cc5caf051189720b8de974e4746090aaa10d44",
+                "url": "https://api.github.com/repos/symfony/console/zipball/6b1175135bc2a74c08a28d89761272de8beed8cd",
+                "reference": "6b1175135bc2a74c08a28d89761272de8beed8cd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
+                "php": ">=5.5.9",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.1|~3.0.0",
-                "symfony/process": "~2.1|~3.0.0"
+                "symfony/event-dispatcher": "~2.8|~3.0",
+                "symfony/process": "~2.8|~3.0"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
@@ -3023,7 +3990,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -3050,29 +4017,29 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-28 16:20:50"
+            "time": "2016-03-16 17:00:50"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "8d83ff9777cdbd83e7f90d9c48f4729823791a5e"
+                "reference": "65e764f404685f2dc20c057e889b3ad04b2e2db0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/8d83ff9777cdbd83e7f90d9c48f4729823791a5e",
-                "reference": "8d83ff9777cdbd83e7f90d9c48f4729823791a5e",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/65e764f404685f2dc20c057e889b3ad04b2e2db0",
+                "reference": "65e764f404685f2dc20c057e889b3ad04b2e2db0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -3103,32 +4070,29 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 05:14:19"
+            "time": "2016-03-04 07:55:57"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "62251761a7615435b22ccf562384c588b431be44"
+                "reference": "6a9058101b591edced21ca3c83c80a3978f5c6b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/62251761a7615435b22ccf562384c588b431be44",
-                "reference": "62251761a7615435b22ccf562384c588b431be44",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/6a9058101b591edced21ca3c83c80a3978f5c6b0",
+                "reference": "6a9058101b591edced21ca3c83c80a3978f5c6b0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
-            },
-            "conflict": {
-                "symfony/expression-language": "<2.6"
+                "php": ">=5.5.9"
             },
             "require-dev": {
-                "symfony/config": "~2.2|~3.0.0",
-                "symfony/expression-language": "~2.6|~3.0.0",
-                "symfony/yaml": "~2.1|~3.0.0"
+                "symfony/config": "~2.8|~3.0",
+                "symfony/expression-language": "~2.8|~3.0",
+                "symfony/yaml": "~2.8|~3.0"
             },
             "suggest": {
                 "symfony/config": "",
@@ -3138,7 +4102,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -3165,28 +4129,28 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-28 16:34:46"
+            "time": "2016-03-30 10:41:14"
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "e1a4b4c83f5ee6f5902f1d53035e3718909a0c11"
+                "reference": "18a06d7a9af41718c20764a674a0ebba3bc40d1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/e1a4b4c83f5ee6f5902f1d53035e3718909a0c11",
-                "reference": "e1a4b4c83f5ee6f5902f1d53035e3718909a0c11",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/18a06d7a9af41718c20764a674a0ebba3bc40d1f",
+                "reference": "18a06d7a9af41718c20764a674a0ebba3bc40d1f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
+                "php": ">=5.5.9",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "require-dev": {
-                "symfony/css-selector": "~2.8|~3.0.0"
+                "symfony/css-selector": "~2.8|~3.0"
             },
             "suggest": {
                 "symfony/css-selector": ""
@@ -3194,7 +4158,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -3221,31 +4185,31 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-28 16:20:50"
+            "time": "2016-03-23 13:23:25"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "78c468665c9568c3faaa9c416a7134308f2d85c3"
+                "reference": "9002dcf018d884d294b1ef20a6f968efc1128f39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/78c468665c9568c3faaa9c416a7134308f2d85c3",
-                "reference": "78c468665c9568c3faaa9c416a7134308f2d85c3",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9002dcf018d884d294b1ef20a6f968efc1128f39",
+                "reference": "9002dcf018d884d294b1ef20a6f968efc1128f39",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.0,>=2.0.5|~3.0.0",
-                "symfony/dependency-injection": "~2.6|~3.0.0",
-                "symfony/expression-language": "~2.6|~3.0.0",
-                "symfony/stopwatch": "~2.3|~3.0.0"
+                "symfony/config": "~2.8|~3.0",
+                "symfony/dependency-injection": "~2.8|~3.0",
+                "symfony/expression-language": "~2.8|~3.0",
+                "symfony/stopwatch": "~2.8|~3.0"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -3254,7 +4218,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -3281,29 +4245,29 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 05:14:19"
+            "time": "2016-03-10 10:34:12"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "65cb36b6539b1d446527d60457248f30d045464d"
+                "reference": "f82499a459dcade2ea56df94cc58b19c8bde3d20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/65cb36b6539b1d446527d60457248f30d045464d",
-                "reference": "65cb36b6539b1d446527d60457248f30d045464d",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/f82499a459dcade2ea56df94cc58b19c8bde3d20",
+                "reference": "f82499a459dcade2ea56df94cc58b19c8bde3d20",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -3330,109 +4294,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-22 15:02:30"
-        },
-        {
-            "name": "symfony/finder",
-            "version": "v3.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/finder.git",
-                "reference": "623bda0abd9aa29e529c8e9c08b3b84171914723"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/623bda0abd9aa29e529c8e9c08b3b84171914723",
-                "reference": "623bda0abd9aa29e529c8e9c08b3b84171914723",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Finder\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Finder Component",
-            "homepage": "https://symfony.com",
-            "time": "2016-01-27 05:14:46"
-        },
-        {
-            "name": "symfony/polyfill-apcu",
-            "version": "v1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-apcu.git",
-                "reference": "0c901e4e65a2f7ece68f0fd249b56d6ad3adc214"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-apcu/zipball/0c901e4e65a2f7ece68f0fd249b56d6ad3adc214",
-                "reference": "0c901e4e65a2f7ece68f0fd249b56d6ad3adc214",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting apcu_* functions to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "apcu",
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "time": "2016-03-03 16:49:40"
+            "time": "2016-03-27 10:24:39"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -3495,16 +4357,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v2.8.3",
+            "version": "v2.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "7dedd5b60550f33dca16dd7e94ef8aca8b67bbfe"
+                "reference": "fb467471952ef5cf8497c029980e556b47545333"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/7dedd5b60550f33dca16dd7e94ef8aca8b67bbfe",
-                "reference": "7dedd5b60550f33dca16dd7e94ef8aca8b67bbfe",
+                "url": "https://api.github.com/repos/symfony/process/zipball/fb467471952ef5cf8497c029980e556b47545333",
+                "reference": "fb467471952ef5cf8497c029980e556b47545333",
                 "shasum": ""
             },
             "require": {
@@ -3540,83 +4402,34 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-02 13:33:15"
-        },
-        {
-            "name": "symfony/stopwatch",
-            "version": "v3.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "4a204804952ff267ace88cf499e0b4bb302a475e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/4a204804952ff267ace88cf499e0b4bb302a475e",
-                "reference": "4a204804952ff267ace88cf499e0b4bb302a475e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Stopwatch\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Stopwatch Component",
-            "homepage": "https://symfony.com",
-            "time": "2016-01-03 15:35:16"
+            "time": "2016-03-23 13:11:46"
         },
         {
             "name": "symfony/translation",
-            "version": "v2.8.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "b7b4ebadd2b5e614ff7d2d6fc63e0ed0578909c7"
+                "reference": "f7a07af51ea067745a521dab1e3152044a2fb1f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/b7b4ebadd2b5e614ff7d2d6fc63e0ed0578909c7",
-                "reference": "b7b4ebadd2b5e614ff7d2d6fc63e0ed0578909c7",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/f7a07af51ea067745a521dab1e3152044a2fb1f2",
+                "reference": "f7a07af51ea067745a521dab1e3152044a2fb1f2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
+                "php": ">=5.5.9",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "conflict": {
-                "symfony/config": "<2.7"
+                "symfony/config": "<2.8"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.8",
-                "symfony/intl": "~2.4|~3.0.0",
-                "symfony/yaml": "~2.2|~3.0.0"
+                "symfony/config": "~2.8|~3.0",
+                "symfony/intl": "~2.8|~3.0",
+                "symfony/yaml": "~2.8|~3.0"
             },
             "suggest": {
                 "psr/log": "To use logging capability in translator",
@@ -3626,7 +4439,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -3653,20 +4466,20 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-02 09:49:18"
+            "time": "2016-03-25 01:41:20"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.3",
+            "version": "v2.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "2a4ee40acb880c56f29fb1b8886e7ffe94f3b995"
+                "reference": "584e52cb8f788a887553ba82db6caacb1d6260bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/2a4ee40acb880c56f29fb1b8886e7ffe94f3b995",
-                "reference": "2a4ee40acb880c56f29fb1b8886e7ffe94f3b995",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/584e52cb8f788a887553ba82db6caacb1d6260bb",
+                "reference": "584e52cb8f788a887553ba82db6caacb1d6260bb",
                 "shasum": ""
             },
             "require": {
@@ -3702,47 +4515,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-23 07:41:20"
-        },
-        {
-            "name": "theseer/fdomdocument",
-            "version": "1.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/theseer/fDOMDocument.git",
-                "reference": "d9ad139d6c2e8edf5e313ffbe37ff13344cf0684"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/theseer/fDOMDocument/zipball/d9ad139d6c2e8edf5e313ffbe37ff13344cf0684",
-                "reference": "d9ad139d6c2e8edf5e313ffbe37ff13344cf0684",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "lib-libxml": "*",
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convenience and to simplify the usage of DOM.",
-            "homepage": "https://github.com/theseer/fDOMDocument",
-            "time": "2015-05-27 22:58:02"
+            "time": "2016-03-04 07:54:35"
         },
         {
             "name": "zendframework/zend-code",
@@ -3855,10 +4628,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "amzn/login-and-pay-with-amazon-sdk-php": 20,
-        "phpmd/phpmd": 0,
-        "peridot-php/webdriver-manager": 20,
         "sensiolabs/behat-page-object-extension": 20,
-        "ciaranmcnulty/behat-stepthroughextension": 20,
         "bex/behat-magento2-init": 20
     },
     "prefer-stable": false,

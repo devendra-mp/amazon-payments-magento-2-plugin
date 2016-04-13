@@ -5,9 +5,11 @@
     <preference for="Amazon\Login\Api\Customer\CompositeMatcherInterface" type="Amazon\Login\Model\Customer\CompositeMatcher" />
     <preference for="Amazon\Login\Api\Customer\EmailMatcherInterface" type="Amazon\Login\Model\Customer\EmailMatcher" />
     <preference for="Amazon\Login\Api\Customer\IdMatcherInterface" type="Amazon\Login\Model\Customer\IdMatcher" />
+    <preference for="Amazon\Login\Api\Customer\SessionMatcherInterface" type="Amazon\Login\Model\Customer\SessionMatcher" />
     <type name="Amazon\Login\Api\Customer\CompositeMatcherInterface">
         <arguments>
             <argument name="matchers" xsi:type="array">
+                <item name="sessionmatcher" xsi:type="object">Amazon\Login\Api\Customer\SessionMatcherInterface</item>
                 <item name="idmatcher" xsi:type="object">Amazon\Login\Api\Customer\IdMatcherInterface</item>
                 <item name="emailmatcher" xsi:type="object">Amazon\Login\Api\Customer\EmailMatcherInterface</item>
             </argument>
