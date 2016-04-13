@@ -97,10 +97,16 @@ class OrderInformationManagement implements OrderInformationManagementInterface
 
     public function closeOrderReference($amazonOrderReferenceId)
     {
+        /**
+         * @var ResponseInterface $response
+         */
         $response = $this->clientFactory->create()->closeOrderReference(
             [
                 'amazon_order_reference_id' => $amazonOrderReferenceId
             ]
         );
+
+        $data = $response->toArray();
+        return (200 == $data['ResponseStatus']);
     }
 }

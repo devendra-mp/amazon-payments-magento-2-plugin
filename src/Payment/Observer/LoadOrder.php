@@ -1,16 +1,17 @@
 <?php
 
-namespace Amazon\Payment\Plugin;
+namespace Amazon\Payment\Observer;
 
 use Amazon\Payment\Api\Data\OrderLinkInterfaceFactory;
-use Magento\Sales\Api\Data\OrderExtensionInterfaceFactory;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Sales\Api\Data\OrderExtensionFactory;
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 
-class OrderRepository
+class LoadOrder implements ObserverInterface
 {
     /**
-     * @var OrderExtensionInterfaceFactory
+     * @var OrderExtensionFactory
      */
     protected $orderExtensionFactory;
 
@@ -20,31 +21,32 @@ class OrderRepository
     protected $orderLinkFactory;
 
     public function __construct(
-        OrderExtensionInterfaceFactory $orderExtensionFactory,
+        OrderExtensionFactory $orderExtensionFactory,
         OrderLinkInterfaceFactory $orderLinkFactory
     ) {
         $this->orderExtensionFactory = $orderExtensionFactory;
         $this->orderLinkFactory      = $orderLinkFactory;
     }
 
-    public function afterGet(OrderRepositoryInterface $orderRepository, OrderInterface $order)
+    public function execute(Observer $observer)
     {
+        $order = $observer->getOrder();
         $this->setAmazonOrderReferenceIdExtensionAttribute($order);
-
-        return $order;
     }
 
     protected function setAmazonOrderReferenceIdExtensionAttribute(OrderInterface $order)
     {
         $orderExtension = ($order->getExtensionAttributes()) ?: $this->orderExtensionFactory->create();
 
-        $amazonOrder = $this->orderLinkFactory->create();
-        $amazonOrder->load($order->getId(), 'order_id');
+        if ($order->getId()) {
+            $amazonOrder = $this->orderLinkFactory->create();
+            $amazonOrder->load($order->getId(), 'order_id');
 
-        if ($amazonOrder->getId()) {
-            $orderExtension->setAmazonOrderReferenceId($amazonOrder->getAmazonOrderReferenceId());
+            if ($amazonOrder->getId()) {
+                $orderExtension->setAmazonOrderReferenceId($amazonOrder->getAmazonOrderReferenceId());
+            }
         }
 
-        $amazonOrder->setExtensionAttributes($orderExtension);
+        $order->setExtensionAttributes($orderExtension);
     }
 }

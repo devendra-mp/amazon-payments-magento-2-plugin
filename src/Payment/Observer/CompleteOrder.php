@@ -23,11 +23,13 @@ class CompleteOrder implements ObserverInterface
 
     public function execute(Observer $observer)
     {
-        if (Order::STATE_COMPLETE == $observer->getTransport()->getState()) {
-            /**
-             * @var OrderInterface $order
-             */
-            $order                  = $observer->getOrder();
+        /**
+         * @var OrderInterface $order
+         */
+        $order    = $observer->getOrder();
+        $complete = Order::STATE_COMPLETE;
+
+        if ($order->getState() == $complete && $order->getStoredData()[OrderInterface::STATE] != $complete) {
             $amazonOrderReferenceId = $order->getExtensionAttributes()->getAmazonOrderReferenceId();
 
             if ($amazonOrderReferenceId) {
