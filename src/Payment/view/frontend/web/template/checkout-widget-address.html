@@ -6,7 +6,8 @@
     <!-- ko if: (isCustomerLoggedIn) -->
         <div class="amazon-widget-container">
             <style type="text/css">
-                #addressBookWidgetDiv{width: 400px; height: 228px;}            </style>
+                #addressBookWidgetDiv{width: 400px; height: 228px;}
+            </style>
             <div id="addressBookWidgetDiv" class="amazon-widget amazon-widget--address" data-bind="afterRender: initAddressWidget"></div>
         </div>
     <!--/ko-->
@@ -14,23 +15,4 @@
 
 <!-- ko foreach: getRegion('after-widget-address') -->
     <!-- ko template: getTemplate() --><!-- /ko -->
-<!--/ko-->
-
-<!-- ko ifnot: (isAmazonAccountLoggedIn) -->
-    <!-- ko if: (isAmazonEnabled) -->
-        <!-- ko if: (isCustomerLoggedIn) -->
-            <div class="amazon-button-container">
-                <div class="amazon-button-container__cell">
-                    <div id="LoginWithAmazon" class="login-with-amazon" data-bind="mageInit: {'amazonButton':{'buttonType': 'PwA'}}"></div>
-                </div>
-
-                <div class="amazon-button-container__cell">
-                    <div class="field-tooltip toggle">
-                        <span class="field-tooltip-action action-help" data-bind="mageInit: {'dropdown':{'activeClass': '_active'}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-                        <div class="field-tooltip-content" data-target="dropdown" aria-hidden="true" data-bind="text: tooltip"></div>
-                    </div>
-                </div>
-            </div>
-        <!--/ko-->
-    <!--/ko-->
 <!--/ko-->

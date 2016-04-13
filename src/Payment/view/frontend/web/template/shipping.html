@@ -10,6 +10,12 @@
          class="step-content"
          data-role="content">
 
+        <!-- ko ifnot: (isAmazonLoggedIn) -->
+            <!-- ko foreach: getRegion('amazon-pay-button') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        <!--/ko-->
+
         <!-- ko if: (!quoteIsVirtual) -->
         <!-- ko foreach: getRegion('customer-email') -->
         <!-- ko template: getTemplate() --><!-- /ko -->

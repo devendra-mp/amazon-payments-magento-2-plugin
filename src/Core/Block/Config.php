@@ -28,7 +28,7 @@ class Config extends Template
             'clientId' => $this->coreHelper->getClientId(),
             'isPwaEnabled' => $this->coreHelper->isPwaEnabled(),
             'isLwaEnabled' => $this->coreHelper->isLwaEnabled(),
-            'paymentAction' => $this->coreHelper->getPaymentAction(),
+            'chargeOnOrder' => $this->sanitizePaymentAction(),
             'authorizationMode' => $this->coreHelper->getAuthorizationMode(),
             'displayLanguage' => $this->coreHelper->getDisplayLanguage(),
             'authenticationExperience' => $this->coreHelper->getAuthenticationExperience(),
@@ -56,5 +56,13 @@ class Config extends Template
     public function isPwaEnabled()
     {
         return $this->coreHelper->isPwaEnabled();
+    }
+
+    /**
+     * @return bool
+     */
+    public function sanitizePaymentAction()
+    {
+        return ($this->coreHelper->getPaymentAction() === 'authorize_capture');
     }
 }
