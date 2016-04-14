@@ -75,7 +75,7 @@ class AddressManagement implements AddressManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function saveBillingAddress($amazonOrderReferenceId, $addressConsentToken)
+    public function getBillingAddress($amazonOrderReferenceId, $addressConsentToken)
     {
         try {
             $data = $this->getOrderReferenceDetails($amazonOrderReferenceId, $addressConsentToken);

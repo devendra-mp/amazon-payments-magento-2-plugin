@@ -8,7 +8,7 @@
         </resources>
     </route>
     <route url="/V1/amazon-billing-address/:amazonOrderReferenceId" method="PUT">
-        <service class="Amazon\Payment\Api\AddressManagementInterface" method="saveBillingAddress"/>
+        <service class="Amazon\Payment\Api\AddressManagementInterface" method="getBillingAddress"/>
         <resources>
             <resource ref="anonymous" />
         </resources>

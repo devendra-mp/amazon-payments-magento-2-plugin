@@ -10,7 +10,9 @@ define(
         'mage/storage',
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/action/get-totals',
-        'Magento_Checkout/js/model/error-processor'
+        'Magento_Checkout/js/model/error-processor',
+        'Magento_Checkout/js/model/address-converter',
+        'Magento_Checkout/js/action/select-billing-address'
     ],
     function(
         $,
@@ -23,7 +25,9 @@ define(
         storage,
         fullScreenLoader,
         getTotalsAction,
-        errorProcessor
+        errorProcessor,
+        addressConverter,
+        selectBillingAddress
     ) {
         'use strict';
 
@@ -93,10 +97,11 @@ define(
                     serviceUrl,
                     JSON.stringify(payload)
                 ).done(
-                    function() {
-                        if (!quote.isVirtual()) {
-                            getTotalsAction([]);
-                        }
+                    function(data) {
+                        var amazonAddress = data.shift();
+                        var addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
+
+                        selectBillingAddress(addressData);
                     }
                 ).fail(
                     function (response) {
