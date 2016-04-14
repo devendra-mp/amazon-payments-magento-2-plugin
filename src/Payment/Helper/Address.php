@@ -26,7 +26,9 @@ class Address
     protected $regionDataFactory;
 
     public function __construct(
-        AddressInterfaceFactory $addressFactory, RegionFactory $regionFactory, RegionInterfaceFactory $regionDataFactory
+        AddressInterfaceFactory $addressFactory,
+        RegionFactory $regionFactory,
+        RegionInterfaceFactory $regionDataFactory
     ) {
         $this->addressFactory    = $addressFactory;
         $this->regionFactory     = $regionFactory;
@@ -74,16 +76,16 @@ class Address
     public function convertToArray(AddressInterface $address)
     {
         $data = [
-            'city'       => $address->getCity(),
-            'firstname'  => $address->getFirstname(),
-            'lastname'   => $address->getLastname(),
-            'country_id'  => $address->getCountryId(),
-            'street'     => $address->getStreet(),
-            'postcode'   => $address->getPostcode(),
-            'telephone'  => $address->getTelephone(),
-            'region'     => $address->getRegion()->getRegion(),
-            'region_code' => $address->getRegion()->getRegionCode(),
-            'region_id'   => $address->getRegion()->getRegionId()
+            AddressInterface::CITY       => $address->getCity(),
+            AddressInterface::FIRSTNAME  => $address->getFirstname(),
+            AddressInterface::LASTNAME   => $address->getLastname(),
+            AddressInterface::COUNTRY_ID => $address->getCountryId(),
+            AddressInterface::STREET     => $address->getStreet(),
+            AddressInterface::POSTCODE   => $address->getPostcode(),
+            AddressInterface::TELEPHONE  => $address->getTelephone(),
+            AddressInterface::REGION     => $address->getRegion()->getRegion(),
+            'region_code'                => $address->getRegion()->getRegionCode(),
+            AddressInterface::REGION_ID  => $address->getRegion()->getRegionId()
         ];
 
         return $data;
