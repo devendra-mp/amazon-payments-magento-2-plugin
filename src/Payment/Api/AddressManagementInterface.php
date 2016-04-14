@@ -18,5 +18,5 @@ interface AddressManagementInterface
      *
      * @return array
      */
-    public function getBillingAddress($amazonOrderReferenceId, $addressConsentToken);
+    public function saveBillingAddress($amazonOrderReferenceId, $addressConsentToken);
 }

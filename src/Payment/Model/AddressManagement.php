@@ -9,9 +9,10 @@ use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Phrase;
+use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
-use UnexpectedValueException;
 
 class AddressManagement implements AddressManagementInterface
 {
@@ -63,16 +64,18 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($shippingAddress);
             }
 
+            $this->throwNotFoundErrorException();
+        } catch (WebapiException $e) {
+            throw $e;
         } catch (Exception $e) {
+            $this->throwUnknownErrorException();
         }
-
-        return null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getBillingAddress($amazonOrderReferenceId, $addressConsentToken)
+    public function saveBillingAddress($amazonOrderReferenceId, $addressConsentToken)
     {
         try {
             $data = $this->getOrderReferenceDetails($amazonOrderReferenceId, $addressConsentToken);
@@ -89,16 +92,28 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($billingAddress);
             }
 
+            $this->throwNotFoundErrorException();
+        } catch (WebapiException $e) {
+            throw $e;
         } catch (Exception $e) {
+            $this->throwUnknownErrorException();
         }
+    }
 
-        return null;
+    protected function throwUnknownErrorException()
+    {
+        throw new WebapiException(new Phrase('an unknown error occurred'), 0, WebapiException::HTTP_INTERNAL_ERROR);
+    }
+
+    protected function throwNotFoundErrorException()
+    {
+        throw new WebapiException(new Phrase('address not found'), 0, WebapiException::HTTP_NOT_FOUND);
     }
 
     protected function convertToMagentoAddress($address)
     {
-        $amazonAddress   = new AmazonAddress($address);
-        $magentoAddress  = $this->addressHelper->convertToMagentoEntity($amazonAddress);
+        $amazonAddress  = new AmazonAddress($address);
+        $magentoAddress = $this->addressHelper->convertToMagentoEntity($amazonAddress);
 
         return [$this->addressHelper->convertToArray($magentoAddress)];
     }
@@ -120,12 +135,12 @@ class AddressManagement implements AddressManagementInterface
 
         $data = $response->toArray();
 
-        if (200 == $data['ResponseStatus']) {
-            throw new UnexpectedValueException();
+        if (200 != $data['ResponseStatus']) {
+            $this->throwUnknownErrorException();
         }
 
-        if ( ! isset($data['GetOrderReferenceDetailsResult'])) {
-            throw new UnexpectedValueException();
+        if (!isset($data['GetOrderReferenceDetailsResult'])) {
+            $this->throwUnknownErrorException();
         }
 
         return $data['GetOrderReferenceDetailsResult'];

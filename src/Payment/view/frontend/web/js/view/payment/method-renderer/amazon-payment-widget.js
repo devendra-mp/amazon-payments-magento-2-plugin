@@ -6,7 +6,11 @@ define(
         'Magento_Customer/js/model/customer',
         'Magento_Customer/js/customer-data',
         'Magento_Checkout/js/model/quote',
-        'Amazon_Payment/js/model/storage'
+        'Amazon_Payment/js/model/storage',
+        'mage/storage',
+        'Magento_Checkout/js/model/full-screen-loader',
+        'Magento_Checkout/js/action/get-totals',
+        'Magento_Checkout/js/model/error-processor'
     ],
     function(
         $,
@@ -15,7 +19,11 @@ define(
         customer,
         customerData,
         quote,
-        amazonStorage
+        amazonStorage,
+        storage,
+        fullScreenLoader,
+        getTotalsAction,
+        errorProcessor
     ) {
         'use strict';
 
@@ -51,7 +59,7 @@ define(
                     sellerId: self.options.sellerId,
                     amazonOrderReferenceId: amazonStorage.getOrderReference(),
                     onPaymentSelect: function(orderReference) {
-
+                        self.setBillingAddressFromAmazon();
                     },
                     design: {
                         designMode: 'responsive'
@@ -72,6 +80,33 @@ define(
             },
             checkCountryName: function(countryId) {
                 return (countryData()[countryId] != undefined);
+            },
+            setBillingAddressFromAmazon: function() {
+                var serviceUrl = 'rest/default/V1/amazon-billing-address/' + amazonStorage.getOrderReference(),
+                    payload = {
+                        addressConsentToken : amazonStorage.getAddressConsentToken()
+                    };
+
+                fullScreenLoader.startLoader();
+
+                storage.put(
+                    serviceUrl,
+                    JSON.stringify(payload)
+                ).done(
+                    function() {
+                        if (!quote.isVirtual()) {
+                            getTotalsAction([]);
+                        }
+                    }
+                ).fail(
+                    function (response) {
+                        errorProcessor.process(response);
+                    }
+                ).always(
+                    function() {
+                        fullScreenLoader.stopLoader();
+                    }
+                );
             }
         });
     }

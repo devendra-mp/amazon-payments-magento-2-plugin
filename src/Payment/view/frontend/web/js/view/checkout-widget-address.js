@@ -12,7 +12,10 @@ define(
         'Magento_Checkout/js/action/set-shipping-information',
         'Amazon_Payment/js/model/storage',
         'Magento_Checkout/js/model/shipping-service',
-        'Magento_Checkout/js/model/address-converter'
+        'Magento_Checkout/js/model/address-converter',
+        'mage/storage',
+        'Magento_Checkout/js/model/full-screen-loader',
+        'Magento_Checkout/js/model/error-processor'
     ],
     function(
         $,
@@ -25,7 +28,10 @@ define(
         setShippingInformationAction,
         amazonStorage,
         shippingService,
-        addressConverter
+        addressConverter,
+        storage,
+        fullScreenLoader,
+        errorProcessor
     ) {
         'use strict';
         var self;
@@ -54,11 +60,13 @@ define(
              */
             renderAddressWidget: function() {
 
+                /*
                 this.rates.subscribe(function(value) {
                     if (value.length > 0) {
                         self.toggleNextStepActivation(true);
                     }
                 });
+                */
 
                 new OffAmazonPayments.Widgets.AddressBook({
                     sellerId: self.options.sellerId,
@@ -67,29 +75,7 @@ define(
                         amazonStorage.setOrderReference(orderid);
                     },
                     onAddressSelect: function (orderReference) {
-                        var data = {
-                                addressConsentToken : amazonStorage.getAddressConsentToken()
-                            };
-
-                        $.ajax({
-                            type : 'GET',
-                            url: '/rest/default/V1/amazon-shipping-address/' + amazonStorage.getOrderReference(),
-                            data: JSON.stringify(data),
-                            dataType: 'json',
-                            contentType: 'application/json; charset=utf-8'
-                        }).done(function(data) {
-
-                            var amazonAddress = data.shift();
-                            
-                            var addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
-
-                            //select shipping method
-                            selectShippingAddress(addressData);
-
-                        }).always(function() {
-                            //TODO: add error handling
-                            self.toggleNextStepActivation(true);
-                        });
+                        self.getShippingAddressFromAmazon();
                     },
                     design: {
                         designMode: 'responsive'
@@ -99,9 +85,11 @@ define(
                     }
                 }).bind(self.options.addressWidgetDOMId);
             },
+/*
             toggleNextStepActivation: function(value) {
                 //$('.continue', '#shipping-method-buttons-container').toggleClass('disabled', value);
             },
+*/
             /**
              * Get the current Shipping address set in the quote model
              */
@@ -114,6 +102,34 @@ define(
              */
             setCurrentShippingAddress: function(address) {
                 quote.shippingAddress(address);
+            },
+            getShippingAddressFromAmazon: function() {
+                shippingService.isLoading(true);
+
+                var serviceUrl = 'rest/default/V1/amazon-shipping-address/' + amazonStorage.getOrderReference(),
+                    payload = {
+                        addressConsentToken: amazonStorage.getAddressConsentToken()
+                    };
+
+                storage.put(
+                    serviceUrl,
+                    JSON.stringify(payload)
+                ).done(
+                    function (data) {
+                        var amazonAddress = data.shift();
+                        var addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
+
+                        selectShippingAddress(addressData);
+                    }
+                ).fail(
+                    function (response) {
+                        errorProcessor.process(response);
+                    }
+                ).always(
+                    function() {
+                        shippingService.isLoading(false);
+                    }
+                );
             }
         });
     }
