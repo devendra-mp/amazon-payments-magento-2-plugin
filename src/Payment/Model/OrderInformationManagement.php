@@ -3,9 +3,10 @@
 namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Helper\Data as PaymentHelper;
-use Amazon\Core\Helper\Data as CoreHelper;
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\AppInterface;
 use Magento\Quote\Model\Quote;
@@ -39,10 +40,10 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         PaymentHelper $paymentHelper,
         CoreHelper $coreHelper
     ) {
-        $this->session          = $session;
-        $this->clientFactory    = $clientFactory;
-        $this->paymentHelper    = $paymentHelper;
-        $this->coreHelper       = $coreHelper;
+        $this->session       = $session;
+        $this->clientFactory = $clientFactory;
+        $this->paymentHelper = $paymentHelper;
+        $this->coreHelper    = $coreHelper;
     }
 
     /**
@@ -66,7 +67,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             ,
             'platform_id'               => $this->coreHelper->getMerchantId()
         ];
-        
+
         /**
          * @var ResponseInterface $response
          */
@@ -97,16 +98,20 @@ class OrderInformationManagement implements OrderInformationManagementInterface
 
     public function closeOrderReference($amazonOrderReferenceId)
     {
-        /**
-         * @var ResponseInterface $response
-         */
-        $response = $this->clientFactory->create()->closeOrderReference(
-            [
-                'amazon_order_reference_id' => $amazonOrderReferenceId
-            ]
-        );
+        try {
+            /**
+             * @var ResponseInterface $response
+             */
+            $response = $this->clientFactory->create()->closeOrderReference(
+                [
+                    'amazon_order_reference_id' => $amazonOrderReferenceId
+                ]
+            );
 
-        $data = $response->toArray();
-        return (200 == $data['ResponseStatus']);
+            $data = $response->toArray();
+            return (200 == $data['ResponseStatus']);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
