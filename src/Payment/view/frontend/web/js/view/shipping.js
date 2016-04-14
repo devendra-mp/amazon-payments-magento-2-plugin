@@ -41,7 +41,6 @@ define(
                         }
                     );
                 }
-
                 if(amazonStorage.isAmazonAccountLoggedIn()) {
                     setShippingInformationAmazon();
                 } else {

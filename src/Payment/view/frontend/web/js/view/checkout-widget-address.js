@@ -11,7 +11,8 @@ define(
         'Magento_Checkout/js/model/shipping-rate-processor/new-address',
         'Magento_Checkout/js/action/set-shipping-information',
         'Amazon_Payment/js/model/storage',
-        'Magento_Checkout/js/model/shipping-service'
+        'Magento_Checkout/js/model/shipping-service',
+        'Magento_Checkout/js/model/address-converter'
     ],
     function(
         $,
@@ -23,7 +24,8 @@ define(
         shippingProcessor,
         setShippingInformationAction,
         amazonStorage,
-        shippingService
+        shippingService,
+        addressConverter
     ) {
         'use strict';
         var self;
@@ -76,19 +78,17 @@ define(
                             dataType: 'json',
                             contentType: 'application/json; charset=utf-8'
                         }).done(function(data) {
-                            var shippingAddress = quote.shippingAddress(),
-                                addressData = data.shift();
 
-                            for (var prop in addressData) {
-                                shippingAddress[prop] = addressData[prop];
-                            }
+                            var amazonAddress = data.shift();
+                            
+                            var addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
 
-                            selectShippingAddress(shippingAddress);
+                            //select shipping method
+                            selectShippingAddress(addressData);
 
-                            //shippingProcessor.getRates(self.getCurrentShippingAddress());
                         }).always(function() {
                             //TODO: add error handling
-                            self.toggleNextStepActivation(false);
+                            self.toggleNextStepActivation(true);
                         });
                     },
                     design: {
@@ -100,7 +100,7 @@ define(
                 }).bind(self.options.addressWidgetDOMId);
             },
             toggleNextStepActivation: function(value) {
-                $('.continue', '#shipping-method-buttons-container').toggleClass('disabled', value);
+                //$('.continue', '#shipping-method-buttons-container').toggleClass('disabled', value);
             },
             /**
              * Get the current Shipping address set in the quote model

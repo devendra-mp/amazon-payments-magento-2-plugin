@@ -77,13 +77,13 @@ class Address
             'city'       => $address->getCity(),
             'firstname'  => $address->getFirstname(),
             'lastname'   => $address->getLastname(),
-            'countryId'  => $address->getCountryId(),
+            'country_id'  => $address->getCountryId(),
             'street'     => $address->getStreet(),
             'postcode'   => $address->getPostcode(),
             'telephone'  => $address->getTelephone(),
             'region'     => $address->getRegion()->getRegion(),
-            'regionCode' => $address->getRegion()->getRegionCode(),
-            'regionId'   => $address->getRegion()->getRegionId()
+            'region_code' => $address->getRegion()->getRegionCode(),
+            'region_id'   => $address->getRegion()->getRegionId()
         ];
 
         return $data;
