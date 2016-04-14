@@ -7,9 +7,11 @@ use Amazon\Core\Domain\AmazonAddress;
 use Amazon\Payment\Api\AddressManagementInterface;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Helper\Address;
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
+use UnexpectedValueException;
 
 class AddressManagement implements AddressManagementInterface
 {
@@ -21,7 +23,7 @@ class AddressManagement implements AddressManagementInterface
     /**
      * @var Address
      */
-    protected $address;
+    protected $addressHelper;
 
     /**
      * @var QuoteLinkInterfaceFactory
@@ -35,12 +37,12 @@ class AddressManagement implements AddressManagementInterface
 
     public function __construct(
         ClientFactoryInterface $clientFactory,
-        Address $address,
+        Address $addressHelper,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
         Session $session
     ) {
         $this->clientFactory    = $clientFactory;
-        $this->address          = $address;
+        $this->addressHelper    = $addressHelper;
         $this->quoteLinkFactory = $quoteLinkFactory;
         $this->session          = $session;
     }
@@ -48,7 +50,61 @@ class AddressManagement implements AddressManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function saveShippingAddress($amazonOrderReferenceId, $addressConsentToken)
+    public function getShippingAddress($amazonOrderReferenceId, $addressConsentToken)
+    {
+        try {
+            $data = $this->getOrderReferenceDetails($amazonOrderReferenceId, $addressConsentToken);
+
+            $this->updateQuoteLink($amazonOrderReferenceId);
+
+            if (isset($data['OrderReferenceDetails']['Destination']['PhysicalDestination'])) {
+                $shippingAddress = $data['OrderReferenceDetails']['Destination']['PhysicalDestination'];
+
+                return $this->convertToMagentoAddress($shippingAddress);
+            }
+
+        } catch (Exception $e) {
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBillingAddress($amazonOrderReferenceId, $addressConsentToken)
+    {
+        try {
+            $data = $this->getOrderReferenceDetails($amazonOrderReferenceId, $addressConsentToken);
+
+            $this->updateQuoteLink($amazonOrderReferenceId);
+
+            if (isset($data['OrderReferenceDetails']['BillingAddress']['PhysicalAddress'])) {
+                $billingAddress = $data['OrderReferenceDetails']['BillingAddress']['PhysicalAddress'];
+
+                return $this->convertToMagentoAddress($billingAddress);
+            } elseif (isset($data['OrderReferenceDetails']['Destination']['PhysicalDestination'])) {
+                $billingAddress = $data['OrderReferenceDetails']['Destination']['PhysicalDestination'];
+
+                return $this->convertToMagentoAddress($billingAddress);
+            }
+
+        } catch (Exception $e) {
+        }
+
+        return null;
+    }
+
+    protected function convertToMagentoAddress($address)
+    {
+        $amazonAddress   = new AmazonAddress($address);
+        $magentoAddress  = $this->addressHelper->convertToMagentoEntity($amazonAddress);
+
+        return [$this->addressHelper->convertToArray($magentoAddress)];
+    }
+
+
+    protected function getOrderReferenceDetails($amazonOrderReferenceId, $addressConsentToken)
     {
         $client = $this->clientFactory->create();
 
@@ -62,17 +118,22 @@ class AddressManagement implements AddressManagementInterface
             ]
         );
 
-        $amazonAddress = new AmazonAddress($response);
-        $address       = $this->address->convertToMagentoEntity($amazonAddress);
+        $data = $response->toArray();
 
-        $quote = $this->session->getQuote();
-        $this->updateQuoteLink($quote, $amazonOrderReferenceId);
+        if (200 == $data['ResponseStatus']) {
+            throw new UnexpectedValueException();
+        }
 
-        return [$this->address->convertToArray($address)];
+        if ( ! isset($data['GetOrderReferenceDetailsResult'])) {
+            throw new UnexpectedValueException();
+        }
+
+        return $data['GetOrderReferenceDetailsResult'];
     }
 
-    protected function updateQuoteLink(Quote $quote, $amazonOrderReferenceId)
+    protected function updateQuoteLink($amazonOrderReferenceId)
     {
+        $quote     = $this->session->getQuote();
         $quoteLink = $this->quoteLinkFactory
             ->create();
 

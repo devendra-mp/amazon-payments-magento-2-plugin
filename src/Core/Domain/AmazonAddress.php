@@ -41,12 +41,8 @@ class AmazonAddress
      */
     protected $telephone;
 
-    public function __construct(ResponseInterface $response)
+    public function __construct(array $address)
     {
-        $data = $response->toArray();
-        $address
-              = $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
-
         $this->name = new AmazonName($address['Name']);
 
         $this->lines = [];

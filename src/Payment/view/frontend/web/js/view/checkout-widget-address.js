@@ -72,7 +72,7 @@ define(
                             };
 
                         $.ajax({
-                            type : 'PUT',
+                            type : 'GET',
                             url: '/rest/default/V1/amazon-shipping-address/' + amazonStorage.getOrderReference(),
                             data: JSON.stringify(data),
                             dataType: 'json',
