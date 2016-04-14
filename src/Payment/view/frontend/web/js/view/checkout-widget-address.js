@@ -33,12 +33,12 @@ define(
                 template: 'Amazon_Payment/checkout-widget-address'
             },
             options: {
-                sellerId: 'AUGT0HMCLQVX1',
+                sellerId: window.amazonPayment.merchantId,
                 addressWidgetDOMId: 'addressBookWidgetDiv'
             },
-            isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
+            isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
+            isAmazonEnabled: ko.observable(window.amazonPayment.isPwaEnabled),
             rates: shippingService.getShippingRates(),
             initialize: function () {
                 self = this;

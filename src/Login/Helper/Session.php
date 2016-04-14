@@ -40,9 +40,12 @@ class Session
      */
     public function login(CustomerInterface $customerData)
     {
-        $this->dispatchAuthenticationEvent();
-        $this->session->setCustomerDataAsLoggedIn($customerData);
-        $this->session->regenerateId();
+        if ($customerData->getId() != $this->session->getId() || !$this->session->isLoggedIn()) {
+            $this->dispatchAuthenticationEvent();
+            $this->session->setCustomerDataAsLoggedIn($customerData);
+            $this->session->regenerateId();
+        }
+
         $this->setAmazonAccountLoggedIn();
     }
 
@@ -120,5 +123,15 @@ class Session
     public function isAmazonAccountLoggedIn()
     {
         return (bool)$this->session->getAmazonAccountLoggedIn();
+    }
+
+    /**
+     * Check if Magento account is logged in
+     *
+     * @return bool
+     */
+    public function isMagentoAccountLoggedIn()
+    {
+        return $this->session->isLoggedIn();
     }
 }

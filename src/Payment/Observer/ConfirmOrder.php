@@ -2,12 +2,11 @@
 
 namespace Amazon\Payment\Observer;
 
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Model\OrderInformationManagement;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
-use Amazon\Payment\Api\Data\OrderLinkInterfaceFactory;
 
 class ConfirmOrder implements ObserverInterface
 {
@@ -17,28 +16,21 @@ class ConfirmOrder implements ObserverInterface
     protected $quoteLinkFactory;
 
     /**
-     * @var OrderLinkInterfaceFactory
-     */
-    protected $orderLinkFactory;
-
-    /**
      * @var OrderInformationManagement
      */
     protected $orderInformationManagement;
 
     /**
      * ConfirmOrder constructor.
-     * @param QuoteLinkInterfaceFactory $quoteLinkFactory
-     * @param OrderLinkInterfaceFactory $orderLinkFactory
+     *
+     * @param QuoteLinkInterfaceFactory  $quoteLinkFactory
      * @param OrderInformationManagement $orderInformationManagement
      */
-    public function __construct(QuoteLinkInterfaceFactory $quoteLinkFactory,
-                                OrderLinkInterfaceFactory $orderLinkFactory,
-                                OrderInformationManagement $orderInformationManagement
-    )
-    {
-        $this->quoteLinkFactory = $quoteLinkFactory;
-        $this->orderLinkFactory = $orderLinkFactory;
+    public function __construct(
+        QuoteLinkInterfaceFactory $quoteLinkFactory,
+        OrderInformationManagement $orderInformationManagement
+    ) {
+        $this->quoteLinkFactory           = $quoteLinkFactory;
         $this->orderInformationManagement = $orderInformationManagement;
     }
 
@@ -47,7 +39,7 @@ class ConfirmOrder implements ObserverInterface
         $order = $observer->getOrder();
 
         if ($order instanceof Order) {
-            $quoteId = $order->getQuoteId();
+            $quoteId   = $order->getQuoteId();
             $quoteLink = $this->quoteLinkFactory->create();
             $quoteLink->load($quoteId, 'quote_id');
             $amazonOrderReferenceId = $quoteLink->getAmazonOrderReferenceId();

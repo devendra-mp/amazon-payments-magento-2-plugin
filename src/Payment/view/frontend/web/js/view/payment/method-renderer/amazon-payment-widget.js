@@ -28,12 +28,12 @@ define(
             },
 
             options: {
-                sellerId: 'AUGT0HMCLQVX1',
+                sellerId: window.amazonPayment.merchantId,
                 paymentWidgetDOMId: 'walletWidgetDiv'
             },
-            isCustomerLoggedIn: amazonStorage.isCustomerLoggedIn,
+            isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isAmazonEnabled: ko.observable(window.checkoutConfig.payment.amazonPayment.isEnabled),
+            isAmazonEnabled: ko.observable(window.amazonPayment.isPwaEnabled),
             address: quote.shippingAddress,
             initialize: function () {
                 self = this;
@@ -41,7 +41,7 @@ define(
             },
             initPaymentWidget: function() {
                 self.renderPaymentWidget();
-                $('#amazon_payment').trigger('click');
+                $('#amazon_payment').trigger('click'); //activate amazon payments method on render
             },
             /**
              * render Amazon payment Widget

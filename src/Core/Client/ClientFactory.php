@@ -2,7 +2,8 @@
 
 namespace Amazon\Core\Client;
 
-use Amazon\Payment\Helper\Data;
+use Amazon\Core\Helper\Data;
+use Amazon\Core\Model\EnvironmentChecker;
 use Magento\Framework\ObjectManagerInterface;
 
 class ClientFactory implements ClientFactoryInterface
@@ -15,7 +16,7 @@ class ClientFactory implements ClientFactoryInterface
     /**
      * @var Data
      */
-    protected $paymentHelper;
+    protected $coreHelper;
 
     /**
      * @var string
@@ -23,20 +24,27 @@ class ClientFactory implements ClientFactoryInterface
     protected $instanceName;
 
     /**
+     * @var EnvironmentChecker
+     */
+    protected $environmentChecker;
+
+    /**
      * ClientFactory constructor.
      *
      * @param ObjectManagerInterface $objectManager
-     * @param Data                   $paymentHelper
+     * @param Data                   $coreHelper
      * @param string                 $instanceName
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
-        Data $paymentHelper,
+        Data $coreHelper,
+        EnvironmentChecker $environmentChecker,
         $instanceName = '\\PayWithAmazon\\ClientInterface'
     ) {
-        $this->objectManager = $objectManager;
-        $this->paymentHelper = $paymentHelper;
-        $this->instanceName  = $instanceName;
+        $this->objectManager      = $objectManager;
+        $this->coreHelper         = $coreHelper;
+        $this->environmentChecker = $environmentChecker;
+        $this->instanceName       = $instanceName;
     }
 
     /**
@@ -45,14 +53,18 @@ class ClientFactory implements ClientFactoryInterface
     public function create()
     {
         $config = [
-            'secret_key'  => $this->paymentHelper->getSecretKey(),
-            'access_key'  => $this->paymentHelper->getAccessKey(),
-            'merchant_id' => $this->paymentHelper->getMerchantId(),
-            'region'      => $this->paymentHelper->getRegion(),
-            'sandbox'     => $this->paymentHelper->isSandboxEnabled(),
-            'client_id'   => $this->paymentHelper->getClientId()
+            'secret_key'  => $this->coreHelper->getSecretKey(),
+            'access_key'  => $this->coreHelper->getAccessKey(),
+            'merchant_id' => $this->coreHelper->getMerchantId(),
+            'region'      => $this->coreHelper->getRegion(),
+            'sandbox'     => $this->coreHelper->isSandboxEnabled(),
+            'client_id'   => $this->coreHelper->getClientId()
         ];
 
-        return $this->objectManager->create($this->instanceName, ['config' => $config]);
+        if ($this->environmentChecker->isTestMode()) {
+            return new Mock($config);
+        } else {
+            return $this->objectManager->create($this->instanceName, ['config' => $config]);
+        }
     }
 }

@@ -15,7 +15,7 @@ class Size implements ArrayInterface
             ['value' => 'small', 'label' => __('Small')],
             ['value' => 'medium', 'label' => __('Medium')],
             ['value' => 'large', 'label' => __('Large')],
-            ['value' => 'x-large', 'label' => __('Extra large')],
+            ['value' => 'x-large', 'label' => __('Extra Large')],
         ];
     }
 }
