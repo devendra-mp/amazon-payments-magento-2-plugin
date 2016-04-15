@@ -1,10 +1,8 @@
 define([
     'jquery',
-    'Magento_Customer/js/customer-data',
-    'Magento_Customer/js/section-config',
     'jquery/ui',
     'amazonCore'
-], function($, customerData, sectionConfig) {
+], function($) {
     "use strict";
 
     var _this,
@@ -17,9 +15,7 @@ define([
             buttonColor: 'Gold',
             buttonSize: 'medium',
             buttonLanguage: 'en-GB',
-            widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js',
-            redirectUrl: null,
-            loginPostUrl: null
+            redirectURL: null
         },
 
         _create: function() {
@@ -37,8 +33,7 @@ define([
                 _this.options.merchantId = window.amazonPayment.merchantId;
                 _this.options.buttonColor = window.amazonPayment.buttonColor;
                 _this.options.buttonSize = window.amazonPayment.buttonSize;
-                _this.options.redirectUrl = window.amazonPayment.redirectUrl;
-                _this.options.loginPostUrl = window.amazonPayment.loginPostUrl;
+                _this.options.redirectURL = window.amazonPayment.redirectURL;
             }
         },
         /**
@@ -56,14 +51,8 @@ define([
                     language: _this.options.buttonLanguage,
 
                     authorization: function () {
-                        loginOptions = {scope: "profile payments:widget payments:shipping_address"};
-                        authRequest = amazon.Login.authorize(loginOptions, function(event) {
-                            var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
-                            if (sections) {
-                                customerData.invalidate(sections);
-                            }
-                            window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
-                        });
+                        loginOptions = {scope: "profile payments:widget payments:shipping_address payments:billing_address"};
+                        authRequest = amazon.Login.authorize(loginOptions, _this.options.redirectURL);
                     }
                 });
         }

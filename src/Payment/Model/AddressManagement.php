@@ -92,7 +92,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($billingAddress);
             }
 
-            $this->throwNotFoundErrorException();
+            $this->throwUnknownErrorException();
         } catch (WebapiException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -105,11 +105,6 @@ class AddressManagement implements AddressManagementInterface
         throw new WebapiException(new Phrase('an unknown error occurred'), 0, WebapiException::HTTP_INTERNAL_ERROR);
     }
 
-    protected function throwNotFoundErrorException()
-    {
-        throw new WebapiException(new Phrase('address not found'), 0, WebapiException::HTTP_NOT_FOUND);
-    }
-
     protected function convertToMagentoAddress($address)
     {
         $amazonAddress  = new AmazonAddress($address);
@@ -117,8 +112,7 @@ class AddressManagement implements AddressManagementInterface
 
         return [$this->addressHelper->convertToArray($magentoAddress)];
     }
-
-
+    
     protected function getOrderReferenceDetails($amazonOrderReferenceId, $addressConsentToken)
     {
         $client = $this->clientFactory->create();
