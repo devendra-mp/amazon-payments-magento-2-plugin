@@ -45,8 +45,6 @@ class Session
             $this->session->setCustomerDataAsLoggedIn($customerData);
             $this->session->regenerateId();
         }
-
-        $this->setAmazonAccountLoggedIn();
     }
 
     /**
@@ -59,7 +57,6 @@ class Session
         $this->dispatchAuthenticationEvent();
         $this->session->loginById($customerId);
         $this->session->regenerateId();
-        $this->setAmazonAccountLoggedIn();
     }
 
     /**
@@ -94,43 +91,11 @@ class Session
     }
 
     /**
-     * Set flag to indicate that amazon account is logged in
-     *
-     * @return null
-     */
-    public function setAmazonAccountLoggedIn()
-    {
-        $this->session->setAmazonAccountLoggedIn(true);
-        $this->eventManager->dispatch('amazon_account_login');
-    }
-
-    /**
-     * Set flag to indicate that amazon account is logged out
-     *
-     * @return null
-     */
-    public function setAmazonAccountLoggedOut()
-    {
-        $this->session->setAmazonAccountLoggedIn(false);
-        $this->eventManager->dispatch('amazon_account_logout');
-    }
-
-    /**
-     * Get flag to find if amazon account is logged in
-     *
-     * @return bool
-     */
-    public function isAmazonAccountLoggedIn()
-    {
-        return (bool)$this->session->getAmazonAccountLoggedIn();
-    }
-
-    /**
      * Check if Magento account is logged in
      *
      * @return bool
      */
-    public function isMagentoAccountLoggedIn()
+    public function isLoggedIn()
     {
         return $this->session->isLoggedIn();
     }
