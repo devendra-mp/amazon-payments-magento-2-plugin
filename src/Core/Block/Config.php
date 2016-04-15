@@ -4,6 +4,7 @@ namespace Amazon\Core\Block;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Customer\Model\Url;
 use Amazon\Core\Helper\Data;
 
 class Config extends Template
@@ -13,8 +14,14 @@ class Config extends Template
      */
     protected $coreHelper;
 
-    public function __construct(Context $context, Data $coreHelper) {
+    /**
+     * @var Url
+     */
+    protected $url;
+
+    public function __construct(Context $context, Data $coreHelper, Url $url) {
         $this->coreHelper = $coreHelper;
+        $this->url = $url;
         parent::__construct($context);
     }
 
@@ -36,7 +43,8 @@ class Config extends Template
             'buttonTypeLwa' => $this->coreHelper->getButtonTypeLwa(),
             'buttonColor' => $this->coreHelper->getButtonColor(),
             'buttonSize' => $this->coreHelper->getButtonSize(),
-            'redirectURL' => $this->coreHelper->getRedirectUrl(),
+            'redirectUrl' => $this->coreHelper->getRedirectUrl(),
+            'loginPostUrl' => $this->url->getLoginPostUrl(),
         ];
 
         return $config;

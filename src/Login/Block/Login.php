@@ -25,19 +25,4 @@ class Login extends Template
     {
         return $this->coreHelper->isLwaEnabled();
     }
-
-    /**
-     * @return string
-     */
-    public function getButtonData()
-    {
-        $buttonData = [
-            'buttonType' => $this->coreHelper->getButtonTypeLwa(),
-            'buttonColor' => $this->coreHelper->getButtonColor(),
-            'buttonSize' => $this->coreHelper->getButtonSize(),
-            'redirectURL' => $this->coreHelper->getRedirectUrl()
-        ];
-
-        return json_encode($buttonData);
-    }
 }
