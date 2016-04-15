@@ -18,13 +18,13 @@
                     </div>
                     <div class="actions-toolbar">
                         <div class="primary">
-                            <button type="submit" class="action submit primary"><span><?php /* @escapeNotVerified */ echo __('Submit') ?></span></button>
+                            <button type="submit" class="action submit primary"><span><?php /* @escapeNotVerified */ echo __('Ok') ?></span></button>
                         </div>
                         <div class="secondary continue-as-guest">
-                            <a class="action" href="<?php /* @escapeNotVerified */ echo $block->getContinueAsGuestUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue as Guest') ?></span></a>
+                            <a class="action secondary" href="<?php /* @escapeNotVerified */ echo $block->getContinueAsGuestUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue as Guest') ?></span></a>
                         </div>
                         <div class="secondary forgot-password">
-                            <a class="action" href="<?php /* @escapeNotVerified */ echo $block->getForgotPasswordUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Forgot Your Password?') ?></span></a>
+                            <a class="action secondary" href="<?php /* @escapeNotVerified */ echo $block->getForgotPasswordUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Forgot Your Password?') ?></span></a>
                         </div>
                     </div>
                 </fieldset>
