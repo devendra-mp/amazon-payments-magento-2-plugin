@@ -17,7 +17,6 @@ define([
             buttonColor: 'Gold',
             buttonSize: 'medium',
             buttonLanguage: 'en-GB',
-            widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js',
             redirectUrl: null,
             loginPostUrl: null
         },
@@ -56,7 +55,7 @@ define([
                     language: _this.options.buttonLanguage,
 
                     authorization: function () {
-                        loginOptions = {scope: "profile payments:widget payments:shipping_address"};
+                        loginOptions = {scope: "profile payments:widget payments:shipping_address payments:billing_address"};
                         authRequest = amazon.Login.authorize(loginOptions, function(event) {
                             var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
                             if (sections) {
