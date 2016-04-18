@@ -2,6 +2,7 @@ define([
     'jquery',
     'Magento_Customer/js/customer-data',
     'Magento_Customer/js/section-config',
+    'amazonCore',
     'jquery/ui'
 ], function($, customerData, sectionConfig) {
     "use strict";
