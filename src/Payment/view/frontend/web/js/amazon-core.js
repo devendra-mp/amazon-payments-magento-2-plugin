@@ -30,7 +30,7 @@ define([
          */
         verifyAmazonLoggedIn: function() {
             var loginOptions = {
-                scope: "profile payments:widget payments:shipping_address",
+                scope: "profile payments:widget payments:shipping_address payments:billing_address",
                 popup: true,
                 interactive: 'never'
             };

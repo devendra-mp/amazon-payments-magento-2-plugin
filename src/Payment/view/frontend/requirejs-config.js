@@ -1,6 +1,6 @@
 var config = {
     paths: {
-        amazonPaymentWidget: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets'
+        amazonPaymentWidget: 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets'
     },
     waitSeconds: 7,
     map: {

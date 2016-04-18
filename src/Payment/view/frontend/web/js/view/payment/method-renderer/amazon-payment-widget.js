@@ -46,7 +46,8 @@ define(
             isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             isAmazonEnabled: ko.observable(window.amazonPayment.isPwaEnabled),
-            address: quote.shippingAddress,
+            shippingAddress: quote.shippingAddress,
+            billingAddress: quote.billingAddress,
             initialize: function () {
                 self = this;
                 this._super();
@@ -69,7 +70,7 @@ define(
                         designMode: 'responsive'
                     },
                     onError: function(error) {
-                        // Your error handling code.
+                        errorProcessor.process(error);
                     }
                 }).bind(self.options.paymentWidgetDOMId);
             },

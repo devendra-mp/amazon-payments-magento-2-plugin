@@ -10,7 +10,6 @@
     </div>
     <div class="payment-method-content">
 
-
         <div class="amazon-widget-container">
             <style type="text/css">
                 #walletWidgetDiv{width: 400px; height: 228px;}
@@ -19,18 +18,31 @@
         </div>
 
         <div class="amazon-shipping-address">
-            <!-- ko text: address().firstname --><!-- /ko --> <!-- ko text: address().lastname --><!-- /ko --><br/>
-            <!-- ko text: address().street --><!-- /ko --><br/>
-            <!-- ko text: address().city --><!-- /ko -->, <!-- ko text: address().region --><!-- /ko --> <!-- ko text: address().postcode --><!-- /ko --><br/>
-            <div data-bind="visible:checkCountryName(address().countryId)"><!-- ko text: getCountryName(address().countryId) --><!-- /ko --></div>
-            <!-- ko text: address().telephone --><!-- /ko -->
+            <div class="block-title">
+                <strong id="block-amazon-shipping" role="heading" aria-level="2" data-bind="i18n: 'Shipping Address'"></strong>
+            </div>
+            <!-- ko text: shippingAddress().firstname --><!-- /ko --> <!-- ko text: shippingAddress().lastname --><!-- /ko --><br/>
+            <!-- ko text: shippingAddress().street --><!-- /ko --><br/>
+            <!-- ko text: shippingAddress().city --><!-- /ko -->, <!-- ko text: shippingAddress().region --><!-- /ko --> <!-- ko text: shippingAddress().postcode --><!-- /ko --><br/>
+            <div data-bind="visible:checkCountryName(shippingAddress().countryId)"><!-- ko text: getCountryName(shippingAddress().countryId) --><!-- /ko --></div>
+            <!-- ko text: shippingAddress().telephone --><!-- /ko -->
         </div>
 
-        <div class="payment-method-billing-address">
+        <!-- ko if: (billingAddress) -->
+        <div class="amazon-billing-address">
+            <div class="block-title">
+                <strong id="block-amazon-billing" role="heading" aria-level="2" data-bind="i18n: 'Billing Address'"></strong>
+            </div>
+            <!-- ko text: billingAddress().firstname --><!-- /ko --> <!-- ko text: billingAddress().lastname --><!-- /ko --><br/>
+            <!-- ko text: billingAddress().street --><!-- /ko --><br/>
+            <!-- ko text: billingAddress().city --><!-- /ko -->, <!-- ko text: billingAddress().region --><!-- /ko --> <!-- ko text: billingAddress().postcode --><!-- /ko --><br/>
+            <div data-bind="visible:checkCountryName(billingAddress().countryId)"><!-- ko text: getCountryName(billingAddress().countryId) --><!-- /ko --></div>
+            <!-- ko text: billingAddress().telephone --><!-- /ko -->
         </div>
-        <div class="checkout-agreements-block">
+        <!--/ko-->
 
-        </div>
+        <div class="checkout-agreements-block"></div>
+
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"

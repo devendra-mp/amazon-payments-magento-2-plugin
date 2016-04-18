@@ -52,6 +52,9 @@ define(
                 self = this;
                 this._super();
             },
+            /**
+             * Call when component template is rendered
+             */
             initAddressWidget: function() {
                 self.renderAddressWidget();
             },
@@ -81,7 +84,7 @@ define(
                         designMode: 'responsive'
                     },
                     onError: function (error) {
-                        // your error handling code
+                        errorProcessor.process(error);
                     }
                 }).bind(self.options.addressWidgetDOMId);
             },
@@ -91,18 +94,8 @@ define(
             },
 */
             /**
-             * Get the current Shipping address set in the quote model
+             * Get shipping address from Amazon API
              */
-            getCurrentShippingAddress: function() {
-                return quote.shippingAddress();
-            },
-            /**
-             * Set the shipping address in the quote model
-             * @param address
-             */
-            setCurrentShippingAddress: function(address) {
-                quote.shippingAddress(address);
-            },
             getShippingAddressFromAmazon: function() {
                 shippingService.isLoading(true);
 
@@ -116,8 +109,8 @@ define(
                     JSON.stringify(payload)
                 ).done(
                     function (data) {
-                        var amazonAddress = data.shift();
-                        var addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
+                        var amazonAddress = data.shift(),
+                            addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
 
                         selectShippingAddress(addressData);
                     }
