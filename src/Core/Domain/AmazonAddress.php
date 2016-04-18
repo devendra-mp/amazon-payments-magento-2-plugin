@@ -22,7 +22,7 @@ class AmazonAddress
     protected $city;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $state;
 
@@ -41,12 +41,8 @@ class AmazonAddress
      */
     protected $telephone;
 
-    public function __construct(ResponseInterface $response)
+    public function __construct(array $address)
     {
-        $data = $response->toArray();
-        $address
-              = $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
-
         $this->name = new AmazonName($address['Name']);
 
         $this->lines = [];
@@ -60,10 +56,16 @@ class AmazonAddress
         }
 
         $this->city        = $address['City'];
-        $this->state       = $address['StateOrRegion'];
         $this->postCode    = $address['PostalCode'];
         $this->countryCode = $address['CountryCode'];
-        $this->telephone   = $address['Phone'];
+
+        if (isset($address['Phone'])) {
+            $this->telephone = $address['Phone'];
+        }
+
+        if (isset($address['StateOrRegion'])) {
+            $this->state = $address['StateOrRegion'];
+        }
     }
 
     /**

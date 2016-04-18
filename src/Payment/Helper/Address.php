@@ -26,7 +26,9 @@ class Address
     protected $regionDataFactory;
 
     public function __construct(
-        AddressInterfaceFactory $addressFactory, RegionFactory $regionFactory, RegionInterfaceFactory $regionDataFactory
+        AddressInterfaceFactory $addressFactory,
+        RegionFactory $regionFactory,
+        RegionInterfaceFactory $regionDataFactory
     ) {
         $this->addressFactory    = $addressFactory;
         $this->regionFactory     = $regionFactory;
@@ -49,19 +51,37 @@ class Address
         $address->setStreet($amazonAddress->getLines());
         $address->setPostcode($amazonAddress->getPostCode());
         $address->setTelephone($amazonAddress->getTelephone());
-        $address->setCountryId(strtoupper($amazonAddress->getCountryCode()));
+        $address->setCountryId($this->getCountryId($amazonAddress));
 
-        $region = $this->regionFactory->create();
-        $region->loadByCode($amazonAddress->getState(), $address->getCountryId());
-
-        $regionData = $this->regionDataFactory->create();
-        $regionData->setRegionId($region->getId())
-            ->setRegionCode($region->getCode())
-            ->setRegion($region->getDefaultName());
-
-        $address->setRegion($regionData);
+        if ($amazonAddress->getState()) {
+            $address->setRegion($this->getRegionData($amazonAddress, $address->getCountryId()));
+        }
 
         return $address;
+    }
+
+    protected function getCountryId(AmazonAddress $amazonAddress)
+    {
+        return strtoupper($amazonAddress->getCountryCode());
+    }
+
+    protected function getRegionData(AmazonAddress $amazonAddress, $countryId)
+    {
+        $region     = $this->regionFactory->create();
+        $regionData = $this->regionDataFactory->create();
+
+        $region->loadByCode($amazonAddress->getState(), $countryId);
+
+        if ($region->getId()) {
+            $regionData
+                ->setRegionId($region->getId())
+                ->setRegionCode($region->getCode())
+                ->setRegion($region->getDefaultName());
+        } else {
+            $regionData->setRegion($amazonAddress->getState());
+        }
+
+        return $regionData;
     }
 
     /**
@@ -74,17 +94,26 @@ class Address
     public function convertToArray(AddressInterface $address)
     {
         $data = [
-            'city'       => $address->getCity(),
-            'firstname'  => $address->getFirstname(),
-            'lastname'   => $address->getLastname(),
-            'countryId'  => $address->getCountryId(),
-            'street'     => $address->getStreet(),
-            'postcode'   => $address->getPostcode(),
-            'telephone'  => $address->getTelephone(),
-            'region'     => $address->getRegion()->getRegion(),
-            'regionCode' => $address->getRegion()->getRegionCode(),
-            'regionId'   => $address->getRegion()->getRegionId()
+            AddressInterface::CITY       => $address->getCity(),
+            AddressInterface::FIRSTNAME  => $address->getFirstname(),
+            AddressInterface::LASTNAME   => $address->getLastname(),
+            AddressInterface::COUNTRY_ID => $address->getCountryId(),
+            AddressInterface::STREET     => $address->getStreet(),
+            AddressInterface::POSTCODE   => $address->getPostcode()
         ];
+
+        if ($address->getTelephone()) {
+            $data[AddressInterface::TELEPHONE] = $address->getTelephone();
+        }
+
+        if ($address->getRegion()) {
+            $data[AddressInterface::REGION] = $address->getRegion()->getRegion();
+            
+            if ($address->getRegion()->getRegionId()) {
+                $data[AddressInterface::REGION_ID] = $address->getRegion()->getRegionId();
+                $data['region_code']               = $address->getRegion()->getRegionCode();
+            }
+        }
 
         return $data;
     }
