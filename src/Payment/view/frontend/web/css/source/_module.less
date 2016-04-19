@@ -33,11 +33,29 @@
         }
     }
 
+    .amazon-widget {
+        max-width: 400px;
+        height: 228px;
+    }
+
     .amazon-widget--address {
         margin-top: 20px;
     }
 
-    .amazon-shipping-address, .amazon-billing-address {
-        margin: 20px 0 0 20px;
+    .amazon-addresses {
+        margin-top: 20px;
+        .amazon-address {
+            margin-bottom: 20px;
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .amazon-addresses {
+        &:extend(.abs-add-clearfix-desktop all);
+        .amazon-address {
+            &:extend(.abs-blocks-2columns all);
+            margin-bottom: 0;
+        }
     }
 }
