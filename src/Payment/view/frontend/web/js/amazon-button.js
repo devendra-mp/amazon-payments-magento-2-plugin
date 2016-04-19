@@ -46,26 +46,27 @@ define([
          * @private
          */
         _renderAmazonButton: function() {
+
             var authRequest,
                 loginOptions;
             
-                OffAmazonPayments.Button($button.attr('id'), _this.options.merchantId, {
-                    type: _this.options.buttonType,
-                    color: _this.options.buttonColor,
-                    size: _this.options.buttonSize,
-                    language: _this.options.buttonLanguage,
+            OffAmazonPayments.Button($button.attr('id'), _this.options.merchantId, {
+                type: _this.options.buttonType,
+                color: _this.options.buttonColor,
+                size: _this.options.buttonSize,
+                language: _this.options.buttonLanguage,
 
-                    authorization: function () {
-                        loginOptions = {scope: "profile payments:widget payments:shipping_address payments:billing_address"};
-                        authRequest = amazon.Login.authorize(loginOptions, function(event) {
-                            var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
-                            if (sections) {
-                                customerData.invalidate(sections);
-                            }
-                            window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
-                        });
-                    }
-                });
+                authorization: function () {
+                    loginOptions = {scope: "profile payments:widget payments:shipping_address payments:billing_address"};
+                    authRequest = amazon.Login.authorize(loginOptions, function(event) {
+                        var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
+                        if (sections) {
+                            customerData.invalidate(sections);
+                        }
+                        window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
+                    });
+                }
+            });
         }
     });
 
