@@ -74,13 +74,4 @@ class Config extends Template
     {
         return ($this->coreHelper->getPaymentAction() === 'authorize_capture');
     }
-
-    /**
-     *
-     * @return string
-     */
-    public function getWidgetUrl()
-    {
-        return $this->coreHelper->getWidgetUrl();
-    }
 }
