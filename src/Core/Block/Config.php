@@ -31,6 +31,7 @@ class Config extends Template
     public function getConfig()
     {
         $config = [
+            'widgetUrl' => $this->coreHelper->getWidgetUrl(),
             'merchantId' => $this->coreHelper->getMerchantId(),
             'clientId' => $this->coreHelper->getClientId(),
             'isPwaEnabled' => $this->coreHelper->isPwaEnabled(),
@@ -72,5 +73,15 @@ class Config extends Template
     public function sanitizePaymentAction()
     {
         return ($this->coreHelper->getPaymentAction() === 'authorize_capture');
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getWidgetUrl()
+    {
+        //return $this->coreHelper->getWidgetUrl();
+        return 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets';
     }
 }

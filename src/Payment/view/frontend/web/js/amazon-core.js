@@ -1,7 +1,6 @@
 define([
     'jquery',
     'ko',
-    'amazonPaymentWidget',
     'bluebird'
 ], function($, ko) {
     "use strict";
@@ -64,4 +63,5 @@ define([
         amazonDefined: amazonDefined,
         accessToken: accessToken
     };
+
 });

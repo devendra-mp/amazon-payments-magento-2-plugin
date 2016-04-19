@@ -12,14 +12,14 @@ define([
 
     $.widget('amazon.AmazonButton', {
         options: {
+            widgetUrl: null,
             merchantId: null,
             buttonType: 'LwA',
             buttonColor: 'Gold',
             buttonSize: 'medium',
             buttonLanguage: 'en-GB',
-            widgetsScript: 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js',
             redirectUrl: null,
-            loginPostUrl: null
+            loginPostUrl: null,
         },
 
         _create: function() {
@@ -34,6 +34,7 @@ define([
          */
         _verifyAmazonConfig: function() {
             if(window.amazonPayment !== undefined) {
+                _this.options.widgetUrl = window.amazonPayment.widgetUrl;
                 _this.options.merchantId = window.amazonPayment.merchantId;
                 _this.options.buttonType = (_this.options.buttonType == 'LwA') ? window.amazonPayment.buttonTypeLwa : window.amazonPayment.buttonTypePwa;
                 _this.options.buttonColor = window.amazonPayment.buttonColor;
@@ -47,8 +48,9 @@ define([
          * @private
          */
         _renderAmazonButton: function() {
-            var authRequest,
-                loginOptions;
+            require([_this.options.widgetUrl], function($) {
+                var authRequest,
+                    loginOptions;
 
                 OffAmazonPayments.Button($button.attr('id'), _this.options.merchantId, {
                     type: _this.options.buttonType,
@@ -67,6 +69,7 @@ define([
                         });
                     }
                 });
+            });
         }
     });
 

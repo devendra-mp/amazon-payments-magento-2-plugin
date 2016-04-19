@@ -100,6 +100,33 @@ class Data extends AbstractHelper
     }
 
     /*
+     * @return string
+     */
+    public function getWidgetUrl($scope = ScopeInterface::SCOPE_STORE)
+    {
+        $paymentRegion = $this->getPaymentRegion($scope);
+        $sandboxEnabled = $this->isSandboxEnabled($scope);
+
+        $widgetUrlMap = [
+            'de' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/js/Widgets.js',
+            'uk' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/js/Widgets.js',
+            'us' => 'https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js',
+            'jp' => 'https://origin-na.ssl-images-amazon.com/images/G/09/EP/offAmazonPayments/sandbox/prod/lpa/js/Widgets.js',
+        ];
+
+        if ($sandboxEnabled) {
+            $widgetUrlMap = [
+                'de' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/js/Widgets.js',
+                'uk' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/js/Widgets.js',
+                'us' => 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js',
+                'jp' => 'https://origin-na.ssl-images-amazon.com/images/G/09/EP/offAmazonPayments/sandbox/prod/lpa/js/Widgets.js',
+            ];
+        }
+
+        return array_key_exists($paymentRegion, $widgetUrlMap) ? $widgetUrlMap[$paymentRegion]: '';
+    }
+
+    /*
      * @return bool
      */
     public function isSandboxEnabled($scope = ScopeInterface::SCOPE_STORE)
