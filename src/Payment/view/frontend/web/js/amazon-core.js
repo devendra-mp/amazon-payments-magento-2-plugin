@@ -1,6 +1,7 @@
 define([
     'jquery',
     'ko',
+    'amazonWidgets',
     'bluebird'
 ], function($, ko) {
     "use strict";

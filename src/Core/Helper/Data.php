@@ -108,16 +108,16 @@ class Data extends AbstractHelper
         $sandboxEnabled = $this->isSandboxEnabled($scope);
 
         $widgetUrlMap = [
-            'de' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/js/Widgets.js',
-            'uk' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/js/Widgets.js',
+            'de' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/lpa/js/Widgets.js',
+            'uk' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/lpa/js/Widgets.js',
             'us' => 'https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js',
             'jp' => 'https://origin-na.ssl-images-amazon.com/images/G/09/EP/offAmazonPayments/sandbox/prod/lpa/js/Widgets.js',
         ];
 
         if ($sandboxEnabled) {
             $widgetUrlMap = [
-                'de' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/js/Widgets.js',
-                'uk' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/js/Widgets.js',
+                'de' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
+                'uk' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js',
                 'us' => 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js',
                 'jp' => 'https://origin-na.ssl-images-amazon.com/images/G/09/EP/offAmazonPayments/sandbox/prod/lpa/js/Widgets.js',
             ];

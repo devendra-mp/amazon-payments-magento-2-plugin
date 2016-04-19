@@ -81,7 +81,6 @@ class Config extends Template
      */
     public function getWidgetUrl()
     {
-        //return $this->coreHelper->getWidgetUrl();
-        return 'https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets';
+        return $this->coreHelper->getWidgetUrl();
     }
 }
