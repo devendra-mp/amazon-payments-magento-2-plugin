@@ -3,6 +3,7 @@ namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Page\Store\Checkout;
+use PHPUnit_Framework_Assert;
 
 class CheckoutContext implements SnippetAcceptingContext
 {
@@ -61,6 +62,7 @@ class CheckoutContext implements SnippetAcceptingContext
      */
     public function theBillingAddressForMyPaymentMethodShouldBeDisplayed()
     {
-        echo $this->checkoutPage->getBillingAddress();
+        $billingAddress = $this->checkoutPage->getBillingAddress();
+        PHPUnit_Framework_Assert::stringContains($billingAddress, 'Amber Kelly 87 Terrick Rd EILEAN DARACH, IV23 2TW United Kingdom');
     }
 }

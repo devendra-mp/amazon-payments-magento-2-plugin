@@ -89,4 +89,9 @@ trait PageTrait
         $xpath = $this->getElement($elementName)->getXpath();
         return $this->getDriver()->isVisible($xpath);
     }
+
+    public function waitForAjaxRequestsToComplete($maxWait = 120000)
+    {
+        $this->getDriver()->wait($maxWait, 'jQuery.active == 0');
+    }
 }

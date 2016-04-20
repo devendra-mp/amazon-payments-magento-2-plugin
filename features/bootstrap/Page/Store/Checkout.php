@@ -13,56 +13,63 @@ class Checkout extends Page
 
     protected $elements
         = [
-            'shipping-widget'         => '#OffAmazonPaymentsWidgets0IFrame',
-            'payment-widget'          => '#OffAmazonPaymentsWidgets1IFrame',
-            'first-amazon-address'    => ['css' => '.address-list-container a:nth-of-type(1)'],
-            'first-amazon-payment'    => ['css' => '.payment-list-container a:nth-of-type(1)'],
-            'go-to-billing'           => ['css' => 'button.continue'],
-            'block-loader'            => ['css' => '._block-content-loading'],
-            'body-loader'             => ['css' => '.loading-mask'],
-            'default-shipping-method' => '#s_method_flatrate',
-            'billing-address'         => ['css' => '.amazon-billing-address']
+            'shipping-widget'       => '#OffAmazonPaymentsWidgets0IFrame',
+            'payment-widget'        => '#OffAmazonPaymentsWidgets1IFrame',
+            'first-amazon-address'  => ['css' => '.address-list li:nth-of-type(1) a'],
+            'first-amazon-payment'  => ['css' => '.payment-list li:nth-of-type(1) a'],
+            'go-to-billing'         => ['css' => 'button.continue.primary'],
+            'first-shipping-method' => ['css' => 'input[name="shipping_method"]:nth-of-type(1)'],
+            'billing-address'       => ['css' => '.amazon-billing-address'],
+            'full-screen-loader'    => ['css' => '.loading-mask']
         ];
 
     public function selectFirstAmazonShippingAddress()
     {
         $this->waitForElement('shipping-widget');
 
-        $currentWindow = $this->getDriver()->getWindowName();
         $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets0IFrame');
 
         $this->clickElement('first-amazon-address');
 
-        $this->getDriver()->switchToWindow($currentWindow);
+        $this->getDriver()->switchToIFrame(null);
+
+        $this->waitForAjaxRequestsToComplete();
     }
 
     public function selectFirstAmazonPaymentMethod()
     {
+        $this->waitForCondition('1 === 2', 30000);
+
         $this->waitForElement('payment-widget');
 
-        $currentWindow = $this->getDriver()->getWindowName();
         $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets1IFrame');
 
         $this->clickElement('first-amazon-payment');
 
-        $this->getDriver()->switchToWindow($currentWindow);
+        $this->getDriver()->switchToIFrame(null);
+
+        $this->waitForAjaxRequestsToComplete();
     }
 
     public function selectDefaultShippingMethod()
     {
-        $this->waitUntilElementDisappear('block-loader');
-        $this->waitForElement('default-shipping-method');
+        $defaultShippingMethod = $this->getElementWithWait('first-shipping-method');
+
+        if ( ! $defaultShippingMethod->isChecked()) {
+            $defaultShippingMethod->click();
+        }
     }
 
     public function goToBilling()
     {
-        $this->waitUntilElementDisappear('block-loader');
+        $this->waitForCondition('1 === 2', 30000);
+        $this->waitForAjaxRequestsToComplete();
+        
         $this->clickElement('go-to-billing');
-        $this->waitUntilElementDisappear('body-loader');
     }
 
     public function getBillingAddress()
     {
-        $this->getElementText('billing-address');
+        return $this->getElementText('billing-address');
     }
 }

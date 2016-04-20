@@ -46,6 +46,7 @@ class LoginContext implements SnippetAcceptingContext
     {
         $this->loginPage->open();
         $this->loginPage->loginAmazonCustomer($email, $this->getAmazonPassword());
+        $this->customerFixture->track($email);
     }
 
 
@@ -56,6 +57,7 @@ class LoginContext implements SnippetAcceptingContext
     {
         $this->basketPage->open();
         $this->basketPage->loginAmazonCustomer($email, $this->getAmazonPassword());
+        $this->customerFixture->track($email);
     }
 
     protected function getAmazonPassword()
