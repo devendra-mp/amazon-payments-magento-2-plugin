@@ -61,11 +61,7 @@ class ClientFactory implements ClientFactoryInterface
             'sandbox'     => $this->coreHelper->isSandboxEnabled(ScopeInterface::SCOPE_STORE, $storeId),
             'client_id'   => $this->coreHelper->getClientId(ScopeInterface::SCOPE_STORE, $storeId)
         ];
-
-        if ($this->environmentChecker->isTestMode()) {
-            return new Mock($config);
-        } else {
-            return $this->objectManager->create($this->instanceName, ['config' => $config]);
-        }
+        
+        return $this->objectManager->create($this->instanceName, ['config' => $config]);
     }
 }

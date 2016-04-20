@@ -7,7 +7,10 @@ default:
       contexts:
         - Context\Data\FixtureContext
         - Context\Data\CustomerContext
+        - Context\Data\ProductContext
         - Context\Web\Store\LoginContext
+        - Context\Web\Store\BasketContext
+        - Context\Web\Store\CheckoutContext
 
   extensions:
     Bex\Behat\Magento2InitExtension:
