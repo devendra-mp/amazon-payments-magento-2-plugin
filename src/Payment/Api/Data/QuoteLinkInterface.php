@@ -35,4 +35,20 @@ interface QuoteLinkInterface
      * @return integer
      */
     public function getQuoteId();
+
+    /**
+     * Set sandbox simulation reference
+     *
+     * @param string $sandboxSimulationReference
+     *
+     * @return $this
+     */
+    public function setSandboxSimulationReference($sandboxSimulationReference);
+
+    /**
+     * Get sandbox simulation reference
+     *
+     * @return string
+     */
+    public function getSandboxSimulationReference();
 }

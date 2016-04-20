@@ -44,4 +44,20 @@ class QuoteLink extends AbstractModel implements QuoteLinkInterface
     {
         return $this->getData('quote_id');
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSandboxSimulationReference($sandboxSimulationReference)
+    {
+        return $this->setData('sandbox_simulation_reference', $sandboxSimulationReference);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSandboxSimulationReference()
+    {
+        return $this->getData('sandbox_simulation_reference');
+    }
 }

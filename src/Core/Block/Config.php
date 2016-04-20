@@ -49,6 +49,10 @@ class Config extends Template
             'loginPostUrl' => $this->url->getLoginPostUrl(),
         ];
 
+        if ($this->coreHelper->isSandboxEnabled()) {
+            $config['sandboxSimulationLabels'] = $this->coreHelper->getSandboxSimulationLabels();
+        }
+
         return $config;
     }
 

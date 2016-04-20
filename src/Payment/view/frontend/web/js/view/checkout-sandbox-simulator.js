@@ -18,23 +18,23 @@ define(
             sandboxSimulationScenarios = ko.observableArray([
                 {
                     labelText: 'Default',
-                    simulationValue: 1
+                    simulationValue: 'default'
                 },
                 {
                     labelText: 'Authorization - Declined - InvalidPaymentMethod: Authorization soft decline',
-                    simulationValue: 2
+                    simulationValue: 'Authorization:Declined:InvalidPaymentMethod'
                 },
                 {
                     labelText: 'Authorization - Declined - AmazonRejected: Authorization hard decline',
-                    simulationValue: 3
+                    simulationValue: 'Authorization:Declined:AmazonRejected'
                 },
                 {
                     labelText: 'Authorization - Declined - TransactionTimedOut: Authorization time out',
-                    simulationValue: 4
+                    simulationValue: 'Authorization:Declined:TransactionTimedOut'
                 },
                 {
                     labelText: 'Capture - Declined - AmazonRejected: Capture declined',
-                    simulationValue: 5
+                    simulationValue: 'Capture:Declined:AmazonRejected'
                 }
             ]);
 
@@ -44,7 +44,7 @@ define(
             },
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             isSandboxEnabled: ko.observable(window.amazonPayment.isSandboxEnabled),
-            sandboxSimulationString: amazonStorage.sandboxSimulationString,
+            sandboxSimulationReference: amazonStorage.sandboxSimulationReference,
             sandboxSimulationScenarios: sandboxSimulationScenarios,
             initialize: function () {
                 self = this;

@@ -12,4 +12,10 @@
     <event name="sales_order_load_after">
         <observer name="amazon_payment_load_order" instance="Amazon\Payment\Observer\LoadOrder" />
     </event>
+    <event name="amazon_payment_authorize_before">
+        <observer name="amazon_payment_sandbox_simulation_authorization" instance="Amazon\Payment\Observer\SandboxSimulation" />
+    </event>
+    <event name="amazon_payment_capture_before">
+        <observer name="amazon_payment_sandbox_simulation_capture" instance="Amazon\Payment\Observer\SandboxSimulation" />
+    </event>
 </config>

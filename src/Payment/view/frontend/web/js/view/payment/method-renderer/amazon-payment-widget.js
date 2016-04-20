@@ -113,6 +113,14 @@ define(
                         fullScreenLoader.stopLoader();
                     }
                 );
+            },
+            getData: function() {
+                return {
+                    "method": this.item.method,
+                    "additional_data": {
+                        "sandbox_simulation_reference": amazonStorage.sandboxSimulationReference()
+                    }
+                }
             }
         });
     }
