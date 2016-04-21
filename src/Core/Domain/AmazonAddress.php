@@ -39,6 +39,11 @@ class AmazonAddress
      */
     protected $telephone;
 
+    /**
+     * AmazonAddress constructor.
+     *
+     * @param array $address
+     */
     public function __construct(array $address)
     {
         $this->name = new AmazonName($address['Name']);

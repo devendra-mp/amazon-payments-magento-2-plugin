@@ -233,19 +233,19 @@ class Amazon extends AbstractMethod
 
     protected function getAmazonOrderReferenceId(InfoInterface $payment)
     {
-        $quoteId = $payment->getOrder()->getQuoteId();
-        $quote   = $this->quoteLinkFactory->create();
-        $quote->load($quoteId, 'quote_id');
+        $quoteId   = $payment->getOrder()->getQuoteId();
+        $quoteLink = $this->quoteLinkFactory->create();
+        $quoteLink->load($quoteId, 'quote_id');
 
-        return $quote->getAmazonOrderReferenceId();
+        return $quoteLink->getAmazonOrderReferenceId();
     }
 
     protected function deleteAmazonOrderReferenceId(InfoInterface $payment)
     {
-        $quoteId = $payment->getOrder()->getQuoteId();
-        $quote   = $this->quoteLinkFactory->create();
-        $quote->load($quoteId, 'quote_id');
+        $quoteId   = $payment->getOrder()->getQuoteId();
+        $quoteLink = $this->quoteLinkFactory->create();
+        $quoteLink->load($quoteId, 'quote_id');
 
-        $quote->delete();
+        $quoteLink->delete();
     }
 }

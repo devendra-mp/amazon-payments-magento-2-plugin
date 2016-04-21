@@ -22,7 +22,12 @@ class AmazonAuthorizationResponse
      * @var string|null
      */
     protected $authorizeTransactionId;
-    
+
+    /**
+     * AmazonAuthorizationResponse constructor.
+     *
+     * @param ResponseInterface $reponse
+     */
     public function __construct(ResponseInterface $reponse)
     {
         $data = $reponse->toArray();
@@ -56,6 +61,8 @@ class AmazonAuthorizationResponse
     }
 
     /**
+     * Get authorize transaction id
+     *
      * @return null|string
      */
     public function getAuthorizeTransactionId()
@@ -64,6 +71,8 @@ class AmazonAuthorizationResponse
     }
 
     /**
+     * Get capture transaction id
+     * 
      * @return null|string
      */
     public function getCaptureTransactionId()
