@@ -5,6 +5,21 @@
         display: inline-block;
     }
 
+    .checkout-payment-method {
+        .amazon-sandbox-simulator {
+            .lib-css(border-bottom, @checkout-payment-option-title__border);
+
+            .payment-option-title {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            .amazon-sandbox-simulator-scenario {
+                margin-bottom: 10px;
+            }
+        }
+    }
+
     .checkout-methods-items {
 
         .centered-button {
@@ -46,6 +61,14 @@
         margin-top: 20px;
         .amazon-address {
             margin-bottom: 20px;
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__s) {
+    .checkout-payment-method {
+        .amazon-sandbox-simulator {
+            .lib-css(border-top, @checkout-payment-option-title__border);
         }
     }
 }

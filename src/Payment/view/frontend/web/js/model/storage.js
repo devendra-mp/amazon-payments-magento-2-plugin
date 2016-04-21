@@ -17,7 +17,8 @@ define(
             isAmazonEnabled = ko.observable(window.amazonPayment.isPwaEnabled),
             orderReference,
             addressConsentToken = amazonCore.accessToken,
-            isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined);
+            isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined),
+            sandboxSimulationString = ko.observable(0);
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
@@ -46,6 +47,7 @@ define(
         return {
             isAmazonAccountLoggedIn: isAmazonAccountLoggedIn,
             isAmazonEnabled: isAmazonEnabled,
+            sandboxSimulationString: sandboxSimulationString,
             setOrderReference: function(or) {
                 orderReference = or;
             },
