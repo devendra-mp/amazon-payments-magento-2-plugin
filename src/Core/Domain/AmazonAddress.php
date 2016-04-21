@@ -2,8 +2,6 @@
 
 namespace Amazon\Core\Domain;
 
-use PayWithAmazon\ResponseInterface;
-
 class AmazonAddress
 {
     /**

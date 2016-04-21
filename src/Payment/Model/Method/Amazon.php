@@ -3,15 +3,21 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Core\Helper\Data as CoreHelper;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
+use Amazon\Payment\Domain\AmazonAuthorizationResponse;
+use Amazon\Payment\Domain\AmazonAuthorizationStatus;
+use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Exception\RemoteServiceUnavailableException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Phrase;
 use Magento\Framework\Registry;
+use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
@@ -83,9 +89,9 @@ class Amazon extends AbstractMethod
             $data
         );
 
-        $this->clientFactory       = $clientFactory;
-        $this->coreHelper          = $coreHelper;
-        $this->quoteLinkFactory    = $quoteLinkFactory;
+        $this->clientFactory    = $clientFactory;
+        $this->coreHelper       = $coreHelper;
+        $this->quoteLinkFactory = $quoteLinkFactory;
     }
 
     /**
@@ -121,25 +127,72 @@ class Amazon extends AbstractMethod
             'currency_code'              => $this->getCurrencyCode($payment),
             'authorization_reference_id' => $amazonOrderReferenceId . '-AUTH',
             'capture_now'                => $capture,
-            'transaction_timeout'        => 0
+            'transaction_timeout'        => 0,
+            'seller_authorization_note'  => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"TransactionTimedOut"}}'
         ];
 
         $client = $this->clientFactory->create();
-        /**
-         * @var ResponseParser $response
-         */
-        $response = $client->authorize($data);
 
-        $responseData = $response->toArray();
+        try {
+            $response = new AmazonAuthorizationResponse($client->authorize($data));
 
-        if ($capture) {
-            $transactionId = $responseData['AuthorizeResult']['AuthorizationDetails']['IdList']['member'];
-        } else {
-            $transactionId = $responseData['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
-            $payment->setIsTransactionClosed(false);
+            $this->validateAuthorizationResponse($response);
+
+            if ($capture) {
+                $transactionId = $response->getCaptureTransactionId();
+            } else {
+                $transactionId = $response->getAuthorizeTransactionId();
+                $payment->setIsTransactionClosed(false);
+            }
+
+            $payment->setTransactionId($transactionId);
+        } catch (WebapiException $e) {
+            throw $e;
+        } catch (Exception $e) {
+            $this->processHardDecline($payment);
+        }
+    }
+
+    protected function validateAuthorizationResponse(AmazonAuthorizationResponse $response)
+    {
+        $status = $response->getStatus();
+
+        switch ($status->getState()) {
+            case AmazonAuthorizationStatus::STATE_OPEN:
+            case AmazonAuthorizationStatus::STATE_PENDING:
+                return true;
+            case AmazonAuthorizationStatus::STATE_DECLINED:
+                switch ($status->getReasonCode()) {
+                    case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
+                        $this->processSoftDecline();
+                        break;
+                }
+                break;
         }
 
-        $payment->setTransactionId($transactionId);
+        throw new Exception;
+    }
+
+    protected function processHardDecline(InfoInterface $payment)
+    {
+        /**
+         * @todo: remove amazon order id from quote
+         * @todo: cancel amazon order
+         */
+        throw new WebapiException(
+            new Phrase('Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'),
+            AmazonAuthorizationStatus::CODE_HARD_DECLINE,
+            WebapiException::HTTP_FORBIDDEN
+        );
+    }
+
+    protected function processSoftDecline()
+    {
+        throw new WebapiException(
+            new Phrase('There has been a problem with the selected payment method on your Amazon account, please choose another one.'),
+            AmazonAuthorizationStatus::CODE_SOFT_DECLINE,
+            WebapiException::HTTP_FORBIDDEN
+        );
     }
 
     protected function _capture(InfoInterface $payment, $amount)
