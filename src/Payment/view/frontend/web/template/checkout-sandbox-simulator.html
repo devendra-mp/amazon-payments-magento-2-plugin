@@ -4,45 +4,37 @@
 
 <!-- ko if: (isAmazonAccountLoggedIn) -->
     <!-- ko if: (isSandboxEnabled) -->
-
-<div class="amazon-sandbox-simulator payment-option _collapsible"
-     data-bind="mageInit: {'collapsible':{'openedState': '_active'}}">
-    <div class="payment-option-title field choice" data-role="title">
-        <span class="action action-toggle" id="amazon-sandbox-simulator-heading" role="heading" aria-level="2">
-            <!-- ko i18n: 'Simulate Payment Scenarios'--><!-- /ko -->
-        </span>
-    </div>
-    <div class="payment-option-content" data-role="content">
-        <div class="amazon-sandbox-simulator-scenarios" data-bind="foreach: sandboxSimulationScenarios">
-            <div data-bind="attr: {class: 'field choice amazon-sandbox-simulator-scenario amazon-sandbox-simulator-scenario-' + $index()}">
-                <div class="control">
-                    <input type="radio" class="radio" data-bind="
-                            checkedValue: simulationValue,
-                            checked: $parent.sandboxSimulationString,
-                            attr: {
-                                name: 'amazon-sandbox-simulator-scenario-' + $index(),
-                                id: 'amazon-sandbox-simulator-scenario-' + $index(),
-                                'aria-labelledby': 'amazon-sandbox-simulator-scenario-' + $index()
-                            }"/>
-                    <label class="label" data-bind="
-                            attr: {
-                                id: 'amazon-sandbox-simulator-scenario-' + $index() + '-label',
-                                for: 'amazon-sandbox-simulator-scenario-' + $index()
-                            }">
-                        <span data-bind="i18n: labelText"></span>
-                    </label>
+        <div class="amazon-sandbox-simulator payment-option _collapsible"
+             data-bind="mageInit: {'collapsible':{'openedState': '_active'}}">
+            <div class="payment-option-title field choice" data-role="title">
+                <span class="action action-toggle" id="amazon-sandbox-simulator-heading" role="heading" aria-level="2">
+                    <!-- ko i18n: 'Simulate Payment Scenarios'--><!-- /ko -->
+                </span>
+            </div>
+            <div class="payment-option-content" data-role="content">
+                <div class="amazon-sandbox-simulator-scenarios" data-bind="foreach: sandboxSimulationScenarios">
+                    <div data-bind="attr: {class: 'field choice amazon-sandbox-simulator-scenario amazon-sandbox-simulator-scenario-' + $index()}">
+                        <div class="control">
+                            <input type="radio" class="radio" data-bind="
+                                    checkedValue: simulationValue,
+                                    checked: $parent.sandboxSimulationString,
+                                    attr: {
+                                        name: 'amazon-sandbox-simulator-scenario-' + $index(),
+                                        id: 'amazon-sandbox-simulator-scenario-' + $index(),
+                                        'aria-labelledby': 'amazon-sandbox-simulator-scenario-' + $index()
+                                    }"/>
+                            <label class="label" data-bind="
+                                    attr: {
+                                        id: 'amazon-sandbox-simulator-scenario-' + $index() + '-label',
+                                        for: 'amazon-sandbox-simulator-scenario-' + $index()
+                                    }">
+                                <span data-bind="i18n: labelText"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-
-
-
-
-
     <!--/ko-->
 <!--/ko-->
 
