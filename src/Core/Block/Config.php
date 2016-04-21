@@ -31,6 +31,7 @@ class Config extends Template
     public function getConfig()
     {
         $config = [
+            'widgetUrl' => $this->coreHelper->getWidgetUrl(),
             'merchantId' => $this->coreHelper->getMerchantId(),
             'clientId' => $this->coreHelper->getClientId(),
             'isPwaEnabled' => $this->coreHelper->isPwaEnabled(),
