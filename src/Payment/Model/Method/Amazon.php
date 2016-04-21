@@ -5,6 +5,7 @@ namespace Amazon\Payment\Model\Method;
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
+use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Exception;
@@ -12,7 +13,6 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\Exception\RemoteServiceUnavailableException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Phrase;
@@ -61,6 +61,11 @@ class Amazon extends AbstractMethod
      */
     protected $quoteLinkFactory;
 
+    /**
+     * @var OrderInformationManagementInterface
+     */
+    protected $orderInformationManagement;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -72,6 +77,7 @@ class Amazon extends AbstractMethod
         ClientFactoryInterface $clientFactory,
         CoreHelper $coreHelper,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
+        OrderInformationManagementInterface $orderInformationManagement,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -89,9 +95,10 @@ class Amazon extends AbstractMethod
             $data
         );
 
-        $this->clientFactory    = $clientFactory;
-        $this->coreHelper       = $coreHelper;
-        $this->quoteLinkFactory = $quoteLinkFactory;
+        $this->clientFactory              = $clientFactory;
+        $this->coreHelper                 = $coreHelper;
+        $this->quoteLinkFactory           = $quoteLinkFactory;
+        $this->orderInformationManagement = $orderInformationManagement;
     }
 
     /**
@@ -149,7 +156,7 @@ class Amazon extends AbstractMethod
         } catch (WebapiException $e) {
             throw $e;
         } catch (Exception $e) {
-            $this->processHardDecline($payment);
+            $this->processHardDecline($payment, $amazonOrderReferenceId);
         }
     }
 
@@ -170,15 +177,14 @@ class Amazon extends AbstractMethod
                 break;
         }
 
-        throw new Exception;
+        throw new Exception();
     }
 
-    protected function processHardDecline(InfoInterface $payment)
+    protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
-        /**
-         * @todo: remove amazon order id from quote
-         * @todo: cancel amazon order
-         */
+        $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
+        $this->deleteAmazonOrderReferenceId($payment);
+
         throw new WebapiException(
             new Phrase('Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'),
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
@@ -232,5 +238,14 @@ class Amazon extends AbstractMethod
         $quote->load($quoteId, 'quote_id');
 
         return $quote->getAmazonOrderReferenceId();
+    }
+
+    protected function deleteAmazonOrderReferenceId(InfoInterface $payment)
+    {
+        $quoteId = $payment->getOrder()->getQuoteId();
+        $quote   = $this->quoteLinkFactory->create();
+        $quote->load($quoteId, 'quote_id');
+
+        $quote->delete();
     }
 }
