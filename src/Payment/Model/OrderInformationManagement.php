@@ -51,29 +51,34 @@ class OrderInformationManagement implements OrderInformationManagementInterface
      */
     public function saveOrderInformation($amazonOrderReferenceId)
     {
-        $quote = $this->session->getQuote();
+        try {
+            $quote = $this->session->getQuote();
 
-        $this->setReservedOrderId($quote);
+            $this->setReservedOrderId($quote);
 
-        $data = [
-            'amazon_order_reference_id' => $amazonOrderReferenceId,
-            'amount'                    => $quote->getGrandTotal(),
-            'currency_code'             => $quote->getQuoteCurrencyCode(),
-            'seller_order_id'           => $quote->getReservedOrderId(),
-            'store_name'                => $quote->getStore()->getName(),
-            'custom_information'        =>
-                'Magento Version : ' . AppInterface::VERSION . ' ' .
-                'Plugin Version : ' . $this->paymentHelper->getModuleVersion()
-            ,
-            'platform_id'               => $this->coreHelper->getMerchantId()
-        ];
+            $data = [
+                'amazon_order_reference_id' => $amazonOrderReferenceId,
+                'amount'                    => $quote->getGrandTotal(),
+                'currency_code'             => $quote->getQuoteCurrencyCode(),
+                'seller_order_id'           => $quote->getReservedOrderId(),
+                'store_name'                => $quote->getStore()->getName(),
+                'custom_information'        =>
+                    'Magento Version : ' . AppInterface::VERSION . ' ' .
+                    'Plugin Version : ' . $this->paymentHelper->getModuleVersion()
+                ,
+                'platform_id'               => $this->coreHelper->getMerchantId()
+            ];
 
-        /**
-         * @var ResponseInterface $response
-         */
-        $response = $this->clientFactory->create()->setOrderReferenceDetails($data);
+            /**
+             * @var ResponseInterface $response
+             */
+            $response = $this->clientFactory->create()->setOrderReferenceDetails($data);
 
-        return true;
+            $data = $response->toArray();
+            return (200 == $data['ResponseStatus']);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     protected function setReservedOrderId(Quote $quote)

@@ -6,6 +6,7 @@ use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Closure;
 use Magento\Checkout\Api\Data\ShippingInformationInterface;
 use Magento\Checkout\Api\ShippingInformationManagementInterface;
+use Magento\Framework\Exception\RemoteServiceUnavailableException;
 use Magento\Quote\Api\CartRepositoryInterface;
 
 class ShippingInformationManagement
@@ -40,7 +41,11 @@ class ShippingInformationManagement
         $amazonOrderReferenceId = $quote->getExtensionAttributes()->getAmazonOrderReferenceId();
 
         if ($amazonOrderReferenceId) {
-            $this->orderInformationManagement->saveOrderInformation($amazonOrderReferenceId);
+            $saveOrderInformation = $this->orderInformationManagement->saveOrderInformation($amazonOrderReferenceId);
+
+            if (!$saveOrderInformation) {
+                throw new RemoteServiceUnavailableException();
+            }
         }
         
         return $return;
