@@ -9,10 +9,12 @@ define(
         'Amazon_Payment/js/model/storage',
         'mage/storage',
         'Magento_Checkout/js/model/full-screen-loader',
+        'Amazon_Payment/js/action/place-order',
         'Magento_Checkout/js/action/get-totals',
         'Magento_Checkout/js/model/error-processor',
         'Magento_Checkout/js/model/address-converter',
-        'Magento_Checkout/js/action/select-billing-address'
+        'Magento_Checkout/js/action/select-billing-address',
+        'Magento_Checkout/js/model/payment/additional-validators'
     ],
     function(
         $,
@@ -24,10 +26,12 @@ define(
         amazonStorage,
         storage,
         fullScreenLoader,
+        placeOrderAction,
         getTotalsAction,
         errorProcessor,
         addressConverter,
-        selectBillingAddress
+        selectBillingAddress,
+        additionalValidators
     ) {
         'use strict';
 
@@ -113,6 +117,25 @@ define(
                         fullScreenLoader.stopLoader();
                     }
                 );
+            },
+            placeOrder: function (data, event) {
+                var self = this,
+                    placeOrder;
+
+                if (event) {
+                    event.preventDefault();
+                }
+
+                if (this.validate() && additionalValidators.validate()) {
+                    this.isPlaceOrderActionAllowed(false);
+                    placeOrder = placeOrderAction(this.getData(), this.redirectAfterPlaceOrder);
+
+                    $.when(placeOrder).fail(function () {
+                        self.isPlaceOrderActionAllowed(true);
+                    }).done(this.afterPlaceOrder.bind(this));
+                    return true;
+                }
+                return false;
             }
         });
     }
