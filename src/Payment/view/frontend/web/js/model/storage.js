@@ -44,14 +44,16 @@ define(
                isAmazonAccountLoggedIn(response);
            });
         }
-
         return {
             isAmazonAccountLoggedIn: isAmazonAccountLoggedIn,
             isAmazonEnabled: isAmazonEnabled,
             amazonDeclineCode: amazonDeclineCode,
             sandboxSimulationString: sandboxSimulationString,
-            setAmazonAccountLoggedOut: function(){
-                isAmazonAccountLoggedIn = false;
+            amazonlogOut: function() {
+                if(amazonCore.amazonDefined()) {
+                    amazon.Login.logout();
+                }
+                this.isAmazonAccountLoggedIn(false);
             },
             setOrderReference: function(or) {
                 orderReference = or;

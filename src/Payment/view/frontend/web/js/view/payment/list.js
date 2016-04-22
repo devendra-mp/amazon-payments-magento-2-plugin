@@ -28,46 +28,50 @@ define([
                 }, this, 'arrayChange');
 
             this._super();
-            this._handleDeclines();
+            this._setupDeclineHandler();
 
             return this;
         },
-        _changeDecline: function(value) {
-            amazonStorage.amazonDeclineCode(value);
-        },
-        _handleDeclines: function() {
-            //amazonStorage
+        /**
+         * handle decline codes
+         * @private
+         */
+        _setupDeclineHandler: function() {
             amazonStorage.amazonDeclineCode.subscribe(function(declined) {
-                if(declined === 4273) {
-                    this._logoutOfAmazon();
-                    this._reloadPaymentMethods();
-                } else {
-                    this._removePaymentMethods();
+                switch(declined) {
+                    //hard decline
+                    case 4273:
+                        amazonStorage.amazonlogOut();
+                        this._reloadPaymentMethods();
+                        break;
+                    //soft decline
+                    case 7638:
+                        this._reInitializeAmazonWalletWidget();
+                        break;
+                    default:
+                        break;
                 }
             }, this);
         },
-        _logoutOfAmazon: function() {
-            console.log('logout');
-            amazon.Login.logout();
-            amazonStorage.setAmazonAccountLoggedOut();
-        },
+        /**
+         * reload payment methods on decline
+         * @private
+         */
         _reloadPaymentMethods: function() {
             _.each(paymentMethods(), function (paymentMethodData) {
-                if (paymentMethodData.method === 'amazon_payment') {
-                    this.removeRenderer(paymentMethodData.method);
-                } else {
-                    this.createRenderer(paymentMethodData); // rerender other payment methods
-                }
-            }, this);
-        },
-        _removePaymentMethods: function() {
-            _.each(paymentMethods(), function (paymentMethodData) {
-                if (paymentMethodData.method !== 'amazon_payment') {
+                if (paymentMethodData.method === 'amazon_payment' && !amazonStorage.isAmazonAccountLoggedIn()) {
                     this.removeRenderer(paymentMethodData.method);
                 } else {
                     this.createRenderer(paymentMethodData);
                 }
             }, this);
+        },
+        /**
+         * handles soft decline
+         * @private
+         */
+        _reInitializeAmazonWalletWidget: function() {
+            //soft decline
         }
     });
 });
