@@ -19,7 +19,7 @@ define(
             addressConsentToken = amazonCore.accessToken,
             isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined),
             amazonDeclineCode = ko.observable(false),
-            sandboxSimulationReference = ko.observable('default');
+            sandboxSimulationString = ko.observable(null);
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
@@ -49,9 +49,12 @@ define(
             isAmazonAccountLoggedIn: isAmazonAccountLoggedIn,
             isAmazonEnabled: isAmazonEnabled,
             amazonDeclineCode: amazonDeclineCode,
-            sandboxSimulationReference: sandboxSimulationReference,
-            setAmazonAccountLoggedOut: function(){
-              isAmazonAccountLoggedIn = false;
+            sandboxSimulationString: sandboxSimulationString,
+            amazonlogOut: function() {
+                if(amazonCore.amazonDefined()) {
+                    amazon.Login.logout();
+                }
+                this.isAmazonAccountLoggedIn(false);
             },
             setOrderReference: function(or) {
                 orderReference = or;
