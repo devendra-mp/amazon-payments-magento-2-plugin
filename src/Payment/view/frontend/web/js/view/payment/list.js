@@ -39,11 +39,17 @@ define([
             //amazonStorage
             amazonStorage.amazonDeclineCode.subscribe(function(declined) {
                 if(declined === 4273) {
+                    this._logoutOfAmazon();
                     this._reloadPaymentMethods();
                 } else {
                     this._removePaymentMethods();
                 }
             }, this);
+        },
+        _logoutOfAmazon: function() {
+            console.log('logout');
+            amazon.Login.logout();
+            amazonStorage.setAmazonAccountLoggedOut();
         },
         _reloadPaymentMethods: function() {
             _.each(paymentMethods(), function (paymentMethodData) {

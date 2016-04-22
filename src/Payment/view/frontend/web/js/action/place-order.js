@@ -10,9 +10,10 @@ define(
         'mage/url',
         'Magento_Checkout/js/model/error-processor',
         'Magento_Customer/js/model/customer',
-        'Magento_Checkout/js/model/full-screen-loader'
+        'Magento_Checkout/js/model/full-screen-loader',
+        'Amazon_Payment/js/model/storage'
     ],
-    function (quote, urlBuilder, storage, url, errorProcessor, customer, fullScreenLoader) {
+    function (quote, urlBuilder, storage, url, errorProcessor, customer, fullScreenLoader, amazonStorage) {
         'use strict';
 
         return function (paymentData, redirectOnSuccess, messageContainer) {
@@ -54,7 +55,7 @@ define(
             ).fail(
                 function (response) {
                     errorProcessor.process(response);
-                    console.log(response);
+                    amazonStorage.amazonDeclineCode(response.responseJSON.code);
                     fullScreenLoader.stopLoader();
                 }
             );

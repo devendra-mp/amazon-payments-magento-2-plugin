@@ -50,6 +50,9 @@ define(
             isAmazonEnabled: isAmazonEnabled,
             amazonDeclineCode: amazonDeclineCode,
             sandboxSimulationString: sandboxSimulationString,
+            setAmazonAccountLoggedOut: function(){
+                isAmazonAccountLoggedIn = false;
+            },
             setOrderReference: function(or) {
                 orderReference = or;
             },
