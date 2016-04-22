@@ -18,7 +18,8 @@ define(
             orderReference,
             addressConsentToken = amazonCore.accessToken,
             isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined),
-            sandboxSimulationString = ko.observable(0);
+            amazonDeclineCode = ko.observable(false),
+            sandboxSimulationString = ko.observable(null);
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
@@ -47,6 +48,7 @@ define(
         return {
             isAmazonAccountLoggedIn: isAmazonAccountLoggedIn,
             isAmazonEnabled: isAmazonEnabled,
+            amazonDeclineCode: amazonDeclineCode,
             sandboxSimulationString: sandboxSimulationString,
             setOrderReference: function(or) {
                 orderReference = or;

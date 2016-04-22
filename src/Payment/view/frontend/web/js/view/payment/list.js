@@ -20,31 +20,48 @@ define([
                     checkoutDataResolver.resolvePaymentMethod();
                     //remove renderer for "deleted" payment methods
                     _.each(changes, function (change) {
-                        if(change.value.method === 'amazon_payment') {
-                            if(!amazonStorage.isAmazonAccountLoggedIn()) {
-                                change.status = 'deleted';
-                            }
-                        } else {
-                            if(amazonStorage.isAmazonAccountLoggedIn()) {
-                                change.status = 'deleted';
-                            }
-                        }
-                        if (change.status === 'deleted') {
+                        if(amazonStorage.isAmazonAccountLoggedIn() && change.value.method !== 'amazon_payment') {
                             this.removeRenderer(change.value.method);
-                        }
-                    }, this);
-
-                    //add renderer for "added" payment methods
-                    _.each(changes, function (change) {
-                        if (change.status === 'added') {
-                            this.createRenderer(change.value);
+                            change.status = 'deleted';
                         }
                     }, this);
                 }, this, 'arrayChange');
 
             this._super();
+            this._handleDeclines();
 
             return this;
+        },
+        _changeDecline: function(value) {
+            amazonStorage.amazonDeclineCode(value);
+        },
+        _handleDeclines: function() {
+            //amazonStorage
+            amazonStorage.amazonDeclineCode.subscribe(function(declined) {
+                if(declined === 4273) {
+                    this._reloadPaymentMethods();
+                } else {
+                    this._removePaymentMethods();
+                }
+            }, this);
+        },
+        _reloadPaymentMethods: function() {
+            _.each(paymentMethods(), function (paymentMethodData) {
+                if (paymentMethodData.method === 'amazon_payment') {
+                    this.removeRenderer(paymentMethodData.method);
+                } else {
+                    this.createRenderer(paymentMethodData); // rerender other payment methods
+                }
+            }, this);
+        },
+        _removePaymentMethods: function() {
+            _.each(paymentMethods(), function (paymentMethodData) {
+                if (paymentMethodData.method !== 'amazon_payment') {
+                    this.removeRenderer(paymentMethodData.method);
+                } else {
+                    this.createRenderer(paymentMethodData);
+                }
+            }, this);
         }
     });
 });
