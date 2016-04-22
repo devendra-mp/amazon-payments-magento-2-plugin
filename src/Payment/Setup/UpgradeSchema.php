@@ -62,5 +62,20 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $setup->getConnection()->createTable($table);
             }
         }
+
+        if (version_compare($context->getVersion(), '1.2.0', '<')) {
+
+            $setup->getConnection()->addColumn(
+                $setup->getTable(QuoteLink::TABLE_NAME),
+                'sandbox_simulation_reference',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'length' => 255,
+                    'nullable' => true,
+                    'comment' => 'Sandbox simulation reference'
+                ]
+            );
+
+        }
     }
 }

@@ -9,6 +9,7 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\DataObject;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
@@ -124,12 +125,15 @@ class Amazon extends AbstractMethod
             'transaction_timeout'        => 0
         ];
 
+        $transport = new DataObject($data);
+        $this->_eventManager->dispatch('amazon_payment_authorize_before', ['context' => 'authorization', 'payment' => $payment, 'transport' => $transport]);
+        $data = $transport->getData();
+
         $client = $this->clientFactory->create();
         /**
          * @var ResponseParser $response
          */
         $response = $client->authorize($data);
-
         $responseData = $response->toArray();
 
         if ($capture) {
@@ -154,6 +158,10 @@ class Amazon extends AbstractMethod
             'currency_code'           => $this->getCurrencyCode($payment),
             'capture_reference_id'    => $amazonOrderReferenceId . '-CAP'
         ];
+
+        $transport = new DataObject($data);
+        $this->_eventManager->dispatch('amazon_payment_capture_before', ['context' => 'capture', 'payment' => $payment, 'transport' => $transport]);
+        $data = $transport->getData();
 
         $client = $this->clientFactory->create();
         /**

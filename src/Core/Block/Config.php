@@ -47,7 +47,12 @@ class Config extends Template
             'buttonSize' => $this->coreHelper->getButtonSize(),
             'redirectUrl' => $this->coreHelper->getRedirectUrl(),
             'loginPostUrl' => $this->url->getLoginPostUrl(),
+            'sandboxSimulationOptions' => [],
         ];
+
+        if ($this->coreHelper->isSandboxEnabled()) {
+            $config['sandboxSimulationOptions'] = $this->transformSandboxSimulationOptions();
+        }
 
         return $config;
     }
@@ -74,5 +79,23 @@ class Config extends Template
     public function sanitizePaymentAction()
     {
         return ($this->coreHelper->getPaymentAction() === 'authorize_capture');
+    }
+
+    /**
+     * @return array
+     */
+    public function transformSandboxSimulationOptions()
+    {
+        $sandboxSimulationOptions = $this->coreHelper->getSandboxSimulationOptions();
+        $output = [];
+
+        foreach ($sandboxSimulationOptions as $key => $value) {
+            $output[] = [
+                'labelText' => $value,
+                'simulationValue' => $key,
+            ];
+        }
+
+        return $output;
     }
 }

@@ -378,4 +378,36 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('amazon/login/authorize', ['_secure' => true]);
     }
+
+    /**
+     * @return array
+     */
+    public function getSandboxSimulationStrings()
+    {
+        $simulationStrings = [
+            'default' => null,
+            'Authorization:Declined:InvalidPaymentMethod' => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod"}}',
+            'Authorization:Declined:AmazonRejected' => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}',
+            'Authorization:Declined:TransactionTimedOut' => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"TransactionTimedOut"}}',
+            'Capture:Declined:AmazonRejected' => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}',
+        ];
+
+        return $simulationStrings;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSandboxSimulationOptions()
+    {
+        $simulationlabels = [
+            'default' => 'Default',
+            'Authorization:Declined:InvalidPaymentMethod' => 'Authorization - Declined - InvalidPaymentMethod: Authorization soft decline',
+            'Authorization:Declined:AmazonRejected' => 'Authorization - Declined - AmazonRejected: Authorization hard decline',
+            'Authorization:Declined:TransactionTimedOut' => 'Authorization - Declined - TransactionTimedOut: Authorization time out',
+            'Capture:Declined:AmazonRejected' => 'Capture - Declined - AmazonRejected: Capture declined',
+        ];
+
+        return $simulationlabels;
+    }
 }

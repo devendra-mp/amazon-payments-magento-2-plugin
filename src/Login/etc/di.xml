@@ -16,12 +16,12 @@
         </arguments>
     </type>
     <type name="Magento\Customer\Api\CustomerRepositoryInterface">
-        <plugin name="amazon_login_customerrepository" type="Amazon\Login\Plugin\CustomerRepository" sortOrder="1" />
+        <plugin name="amazon_login_customer_repository" type="Amazon\Login\Plugin\CustomerRepository" sortOrder="1" />
     </type>
     <type name="Magento\Customer\Model\ResourceModel\Customer\Collection">
-        <plugin name="amazon_login_customercollection" type="Amazon\Login\Plugin\CustomerCollection" sortOrder="1" />
+        <plugin name="amazon_login_customer_collection" type="Amazon\Login\Plugin\CustomerCollection" sortOrder="1" />
     </type>
     <type name="Magento\Checkout\Controller\Cart\Index">
-        <plugin name="amazon_login_cartcontroller" type="Amazon\Login\Plugin\CartController" sortOrder="1" />
+        <plugin name="amazon_login_cart_controller" type="Amazon\Login\Plugin\CartController" sortOrder="1" />
     </type>
 </config>
