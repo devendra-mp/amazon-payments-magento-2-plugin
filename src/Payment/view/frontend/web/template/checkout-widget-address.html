@@ -3,9 +3,9 @@
 <!--/ko-->
 
 <!-- ko if: (isAmazonAccountLoggedIn) -->
-    <!-- ko if: (isCustomerLoggedIn) -->
-            <div id="addressBookWidgetDiv" class="amazon-widget amazon-widget--address" data-bind="afterRender: initAddressWidget"></div>
-    <!--/ko-->
+    <div class="amazon-widget-container">
+        <div id="addressBookWidgetDiv" class="amazon-widget amazon-widget--address" data-bind="afterRender: initAddressWidget"></div>
+    </div>
 <!--/ko-->
 
 <!-- ko foreach: getRegion('after-widget-address') -->
