@@ -3,8 +3,8 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Core\Helper\Data as CoreHelper;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
@@ -142,7 +142,10 @@ class Amazon extends AbstractMethod
         ];
 
         $transport = new DataObject($data);
-        $this->_eventManager->dispatch('amazon_payment_authorize_before', ['context' => 'authorization', 'payment' => $payment, 'transport' => $transport]);
+        $this->_eventManager->dispatch(
+            'amazon_payment_authorize_before',
+            ['context' => 'authorization', 'payment' => $payment, 'transport' => $transport]
+        );
         $data = $transport->getData();
 
         $client = $this->clientFactory->create();
@@ -195,7 +198,9 @@ class Amazon extends AbstractMethod
         $this->deleteAmazonOrderReferenceId($payment);
 
         throw new WebapiException(
-            new Phrase('Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'),
+            new Phrase(
+                'Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'
+            ),
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
@@ -204,7 +209,9 @@ class Amazon extends AbstractMethod
     protected function processSoftDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
         throw new WebapiException(
-            new Phrase('There has been a problem with the selected payment method on your Amazon account, please choose another one.'),
+            new Phrase(
+                'There has been a problem with the selected payment method on your Amazon account, please choose another one.'
+            ),
             AmazonAuthorizationStatus::CODE_SOFT_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
@@ -224,7 +231,9 @@ class Amazon extends AbstractMethod
         ];
 
         $transport = new DataObject($data);
-        $this->_eventManager->dispatch('amazon_payment_capture_before', ['context' => 'capture', 'payment' => $payment, 'transport' => $transport]);
+        $this->_eventManager->dispatch(
+            'amazon_payment_capture_before', ['context' => 'capture', 'payment' => $payment, 'transport' => $transport]
+        );
         $data = $transport->getData();
 
         $client = $this->clientFactory->create();
@@ -246,19 +255,20 @@ class Amazon extends AbstractMethod
 
     protected function getAmazonOrderReferenceId(InfoInterface $payment)
     {
-        $quoteId   = $payment->getOrder()->getQuoteId();
-        $quoteLink = $this->quoteLinkFactory->create();
-        $quoteLink->load($quoteId, 'quote_id');
-
-        return $quoteLink->getAmazonOrderReferenceId();
+        $this->getQuoteLink($payment)->getAmazonOrderReferenceId();
     }
 
     protected function deleteAmazonOrderReferenceId(InfoInterface $payment)
+    {
+        $this->getQuoteLink($payment)->delete();
+    }
+
+    protected function getQuoteLink(InfoInterface $payment)
     {
         $quoteId   = $payment->getOrder()->getQuoteId();
         $quoteLink = $this->quoteLinkFactory->create();
         $quoteLink->load($quoteId, 'quote_id');
 
-        $quoteLink->delete();
+        return $quoteLink;
     }
 }
