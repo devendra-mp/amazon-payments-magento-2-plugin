@@ -398,7 +398,7 @@ class Data extends AbstractHelper
     /**
      * @return array
      */
-    public function getSandboxSimulationLabels()
+    public function getSandboxSimulationOptions()
     {
         $simulationlabels = [
             'default' => 'Default',
