@@ -255,7 +255,7 @@ class Amazon extends AbstractMethod
 
     protected function getAmazonOrderReferenceId(InfoInterface $payment)
     {
-        $this->getQuoteLink($payment)->getAmazonOrderReferenceId();
+        return $this->getQuoteLink($payment)->getAmazonOrderReferenceId();
     }
 
     protected function deleteAmazonOrderReferenceId(InfoInterface $payment)
