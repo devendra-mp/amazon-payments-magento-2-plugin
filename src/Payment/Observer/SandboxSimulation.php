@@ -37,12 +37,12 @@ class SandboxSimulation implements ObserverInterface
             $context = $observer->getEvent()->getContext();
             $payment = $observer->getEvent()->getPayment();
 
-            $simulationReference = $this->_getSimulationReference($payment);
+            $simulationReference = $this->getSimulationReference($payment);
 
             if (!empty($simulationReference)) {
-                $simulationString = $this->_getSimulationString($simulationReference);
+                $simulationString = $this->getSimulationString($simulationReference);
                 if (!empty($simulationString)) {
-                    $requestParameter = $this->_getRequestParameter($context);
+                    $requestParameter = $this->getRequestParameter($context);
                     $observer->getTransport()->addData([$requestParameter => $simulationString]);
                 }
             }
@@ -53,9 +53,9 @@ class SandboxSimulation implements ObserverInterface
      * @param $payment
      * @return string
      */
-    protected function _getSimulationReference($payment) {
-        $simulationReference = $this->_getSimulationReferenceFromPayment($payment);
-        $quoteLink = $this->_getQuoteLink($payment);
+    protected function getSimulationReference($payment) {
+        $simulationReference = $this->getSimulationReferenceFromPayment($payment);
+        $quoteLink = $this->getQuoteLink($payment);
 
         if ($simulationReference) {
             $quoteLink->setSandboxSimulationReference($simulationReference)->save();
@@ -70,7 +70,7 @@ class SandboxSimulation implements ObserverInterface
      * @param $payment
      * @return string
      */
-    protected function _getSimulationReferenceFromPayment($payment) {
+    protected function getSimulationReferenceFromPayment($payment) {
         $simulationReference = null;
 
         $additionalInformation = $payment->getAdditionalInformation();
@@ -85,7 +85,7 @@ class SandboxSimulation implements ObserverInterface
      * @param $payment
      * @return Amazon\Payment\Api\Data\QuoteLinkInterface
      */
-    protected function _getQuoteLink($payment) {
+    protected function getQuoteLink($payment) {
         $quoteId = $payment->getOrder()->getQuoteId();
         $quoteLink = $this->quoteLinkFactory->create();
         $quoteLink->load($quoteId, 'quote_id');
@@ -96,7 +96,7 @@ class SandboxSimulation implements ObserverInterface
     /**
      * @return array
      */
-    protected function _getRequestParameters() {
+    protected function getRequestParameters() {
         $requestParameters = [
             'authorization' => 'seller_authorization_note',
             'capture' => 'seller_capture_note',
@@ -109,10 +109,10 @@ class SandboxSimulation implements ObserverInterface
      * @param string $context
      * @return string
      */
-    protected function _getRequestParameter($context) {
+    protected function getRequestParameter($context) {
         $requestParameter = null;
 
-        $requestParameters = $this->_getRequestParameters();
+        $requestParameters = $this->getRequestParameters();
         if (array_key_exists($context, $requestParameters)) {
             $requestParameter = $requestParameters[$context];
         }
@@ -124,7 +124,7 @@ class SandboxSimulation implements ObserverInterface
      * @param string $simulationReference
      * @return string
      */
-    protected function _getSimulationString($simulationReference) {
+    protected function getSimulationString($simulationReference) {
         $simulationString = null;
 
         $simulationStrings = $this->coreHelper->getSandboxSimulationStrings();
