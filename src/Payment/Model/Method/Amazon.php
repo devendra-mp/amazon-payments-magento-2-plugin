@@ -3,8 +3,15 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Core\Helper\Data as CoreHelper;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
+use Amazon\Payment\Api\OrderInformationManagementInterface;
+use Amazon\Payment\Domain\AmazonAuthorizationResponse;
+use Amazon\Payment\Domain\AmazonAuthorizationStatus;
+use Amazon\Payment\Domain\HardDeclineException;
+use Amazon\Payment\Domain\SoftDeclineException;
+use Amazon\Payment\Domain\UnexpectedStateException;
+use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -12,7 +19,9 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Phrase;
 use Magento\Framework\Registry;
+use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
@@ -56,6 +65,11 @@ class Amazon extends AbstractMethod
      */
     protected $quoteLinkFactory;
 
+    /**
+     * @var OrderInformationManagementInterface
+     */
+    protected $orderInformationManagement;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -67,6 +81,7 @@ class Amazon extends AbstractMethod
         ClientFactoryInterface $clientFactory,
         CoreHelper $coreHelper,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
+        OrderInformationManagementInterface $orderInformationManagement,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -84,9 +99,10 @@ class Amazon extends AbstractMethod
             $data
         );
 
-        $this->clientFactory       = $clientFactory;
-        $this->coreHelper          = $coreHelper;
-        $this->quoteLinkFactory    = $quoteLinkFactory;
+        $this->clientFactory              = $clientFactory;
+        $this->coreHelper                 = $coreHelper;
+        $this->quoteLinkFactory           = $quoteLinkFactory;
+        $this->orderInformationManagement = $orderInformationManagement;
     }
 
     /**
@@ -126,24 +142,79 @@ class Amazon extends AbstractMethod
         ];
 
         $transport = new DataObject($data);
-        $this->_eventManager->dispatch('amazon_payment_authorize_before', ['context' => 'authorization', 'payment' => $payment, 'transport' => $transport]);
+        $this->_eventManager->dispatch(
+            'amazon_payment_authorize_before',
+            ['context' => 'authorization', 'payment' => $payment, 'transport' => $transport]
+        );
         $data = $transport->getData();
 
         $client = $this->clientFactory->create();
-        /**
-         * @var ResponseParser $response
-         */
-        $response = $client->authorize($data);
-        $responseData = $response->toArray();
 
-        if ($capture) {
-            $transactionId = $responseData['AuthorizeResult']['AuthorizationDetails']['IdList']['member'];
-        } else {
-            $transactionId = $responseData['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
-            $payment->setIsTransactionClosed(false);
+        try {
+            $response = new AmazonAuthorizationResponse($client->authorize($data));
+
+            $this->validateAuthorizationResponse($response);
+
+            if ($capture) {
+                $transactionId = $response->getCaptureTransactionId();
+            } else {
+                $transactionId = $response->getAuthorizeTransactionId();
+                $payment->setIsTransactionClosed(false);
+            }
+
+            $payment->setTransactionId($transactionId);
+        } catch (SoftDeclineException $e) {
+            $this->processSoftDecline($payment, $amazonOrderReferenceId);
+        } catch (Exception $e) {
+            $this->processHardDecline($payment, $amazonOrderReferenceId);
+        }
+    }
+
+    protected function validateAuthorizationResponse(AmazonAuthorizationResponse $response)
+    {
+        $status = $response->getStatus();
+
+        switch ($status->getState()) {
+            case AmazonAuthorizationStatus::STATE_OPEN:
+            case AmazonAuthorizationStatus::STATE_PENDING:
+                return true;
+            case AmazonAuthorizationStatus::STATE_DECLINED:
+                switch ($status->getReasonCode()) {
+                    case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
+                    case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
+                    case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
+                        throw new HardDeclineException();
+                    case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
+                        throw new SoftDeclineException();
+                }
         }
 
-        $payment->setTransactionId($transactionId);
+        throw new UnexpectedStateException();
+    }
+
+    protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
+    {
+        $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
+        $this->deleteAmazonOrderReferenceId($payment);
+
+        throw new WebapiException(
+            new Phrase(
+                'Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'
+            ),
+            AmazonAuthorizationStatus::CODE_HARD_DECLINE,
+            WebapiException::HTTP_FORBIDDEN
+        );
+    }
+
+    protected function processSoftDecline(InfoInterface $payment, $amazonOrderReferenceId)
+    {
+        throw new WebapiException(
+            new Phrase(
+                'There has been a problem with the selected payment method on your Amazon account, please choose another one.'
+            ),
+            AmazonAuthorizationStatus::CODE_SOFT_DECLINE,
+            WebapiException::HTTP_FORBIDDEN
+        );
     }
 
     protected function _capture(InfoInterface $payment, $amount)
@@ -160,7 +231,9 @@ class Amazon extends AbstractMethod
         ];
 
         $transport = new DataObject($data);
-        $this->_eventManager->dispatch('amazon_payment_capture_before', ['context' => 'capture', 'payment' => $payment, 'transport' => $transport]);
+        $this->_eventManager->dispatch(
+            'amazon_payment_capture_before', ['context' => 'capture', 'payment' => $payment, 'transport' => $transport]
+        );
         $data = $transport->getData();
 
         $client = $this->clientFactory->create();
@@ -182,10 +255,20 @@ class Amazon extends AbstractMethod
 
     protected function getAmazonOrderReferenceId(InfoInterface $payment)
     {
-        $quoteId = $payment->getOrder()->getQuoteId();
-        $quote   = $this->quoteLinkFactory->create();
-        $quote->load($quoteId, 'quote_id');
+        $this->getQuoteLink($payment)->getAmazonOrderReferenceId();
+    }
 
-        return $quote->getAmazonOrderReferenceId();
+    protected function deleteAmazonOrderReferenceId(InfoInterface $payment)
+    {
+        $this->getQuoteLink($payment)->delete();
+    }
+
+    protected function getQuoteLink(InfoInterface $payment)
+    {
+        $quoteId   = $payment->getOrder()->getQuoteId();
+        $quoteLink = $this->quoteLinkFactory->create();
+        $quoteLink->load($quoteId, 'quote_id');
+
+        return $quoteLink;
     }
 }

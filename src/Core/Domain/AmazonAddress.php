@@ -2,8 +2,6 @@
 
 namespace Amazon\Core\Domain;
 
-use PayWithAmazon\ResponseInterface;
-
 class AmazonAddress
 {
     /**
@@ -41,6 +39,11 @@ class AmazonAddress
      */
     protected $telephone;
 
+    /**
+     * AmazonAddress constructor.
+     *
+     * @param array $address
+     */
     public function __construct(array $address)
     {
         $this->name = new AmazonName($address['Name']);

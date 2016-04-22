@@ -2,6 +2,8 @@
 
 namespace Amazon\Login\Api\Data;
 
+use Exception;
+
 interface CustomerLinkInterface
 {
     /**
@@ -40,6 +42,16 @@ interface CustomerLinkInterface
      * Save customer link
      *
      * @return $this
+     * @throws Exception
      */
     public function save();
+
+    /**
+     * Load customer link data
+     *
+     * @param integer $modelId
+     * @param null|string $field
+     * @return $this
+     */
+    public function load($modelId, $field = null);
 }

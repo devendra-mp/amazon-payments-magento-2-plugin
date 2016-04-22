@@ -85,17 +85,31 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function confirmOrderReference($amazonOrderReferenceId)
     {
-        $response = $this->clientFactory->create()->confirmOrderReference(
-            [
-                'amazon_order_reference_id' => $amazonOrderReferenceId
-            ]
-        );
+        try {
+            /**
+             * @var ResponseInterface $response
+             */
+            $response = $this->clientFactory->create()->confirmOrderReference(
+                [
+                    'amazon_order_reference_id' => $amazonOrderReferenceId
+                ]
+            );
 
-        return true;
+            $data = $response->toArray();
+            return (200 == $data['ResponseStatus']);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function closeOrderReference($amazonOrderReferenceId)
     {
         try {
@@ -103,6 +117,28 @@ class OrderInformationManagement implements OrderInformationManagementInterface
              * @var ResponseInterface $response
              */
             $response = $this->clientFactory->create()->closeOrderReference(
+                [
+                    'amazon_order_reference_id' => $amazonOrderReferenceId
+                ]
+            );
+
+            $data = $response->toArray();
+            return (200 == $data['ResponseStatus']);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function cancelOrderReference($amazonOrderReferenceId)
+    {
+        try {
+            /**
+             * @var ResponseInterface $response
+             */
+            $response = $this->clientFactory->create()->cancelOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]

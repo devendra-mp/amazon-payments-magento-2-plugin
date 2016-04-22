@@ -2,6 +2,8 @@
 
 namespace Amazon\Payment\Api\Data;
 
+use Exception;
+
 interface QuoteLinkInterface
 {
     /**
@@ -51,4 +53,29 @@ interface QuoteLinkInterface
      * @return string
      */
     public function getSandboxSimulationReference();
+
+    /**
+     * Save quote link
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function save();
+
+    /**
+     * Delete quote link from database
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function delete();
+
+    /**
+     * Load quote link data
+     *
+     * @param integer $modelId
+     * @param null|string $field
+     * @return $this
+     */
+    public function load($modelId, $field = null);
 }

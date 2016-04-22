@@ -14,6 +14,11 @@ class AmazonName
      */
     protected $lastName;
 
+    /**
+     * AmazonName constructor.
+     *
+     * @param string $name
+     */
     public function __construct($name)
     {
         $nameParts       = explode(' ', trim($name), 2);

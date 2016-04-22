@@ -50,6 +50,12 @@ define(
             isAmazonEnabled: isAmazonEnabled,
             amazonDeclineCode: amazonDeclineCode,
             sandboxSimulationReference: sandboxSimulationReference,
+            amazonlogOut: function() {
+                if(amazonCore.amazonDefined()) {
+                    amazon.Login.logout();
+                }
+                this.isAmazonAccountLoggedIn(false);
+            },
             setOrderReference: function(or) {
                 orderReference = or;
             },

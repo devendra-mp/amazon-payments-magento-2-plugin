@@ -15,6 +15,12 @@ class Data extends AbstractHelper
      */
     protected $moduleList;
 
+    /**
+     * Data constructor.
+     *
+     * @param Context             $context
+     * @param ModuleListInterface $moduleList
+     */
     public function __construct(Context $context, ModuleListInterface $moduleList)
     {
         parent::__construct($context);

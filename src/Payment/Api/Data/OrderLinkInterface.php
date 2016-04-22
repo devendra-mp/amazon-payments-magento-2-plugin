@@ -2,6 +2,8 @@
 
 namespace Amazon\Payment\Api\Data;
 
+use Exception;
+
 interface OrderLinkInterface
 {
     /**
@@ -35,4 +37,21 @@ interface OrderLinkInterface
      * @return integer
      */
     public function getOrderId();
+
+    /**
+     * Save order link
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function save();
+
+    /**
+     * Load order link data
+     *
+     * @param integer $modelId
+     * @param null|string $field
+     * @return $this
+     */
+    public function load($modelId, $field = null);
 }
