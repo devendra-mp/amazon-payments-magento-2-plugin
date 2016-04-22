@@ -8,6 +8,9 @@ use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
+use Amazon\Payment\Domain\HardDeclineException;
+use Amazon\Payment\Domain\SoftDeclineException;
+use Amazon\Payment\Domain\UnexpectedStateException;
 use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -135,7 +138,7 @@ class Amazon extends AbstractMethod
             'authorization_reference_id' => $amazonOrderReferenceId . '-AUTH',
             'capture_now'                => $capture,
             'transaction_timeout'        => 0,
-            'seller_authorization_note'  => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"TransactionTimedOut"}}'
+            'seller_authorization_note'  => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}'
         ];
 
         $client = $this->clientFactory->create();
@@ -153,8 +156,8 @@ class Amazon extends AbstractMethod
             }
 
             $payment->setTransactionId($transactionId);
-        } catch (WebapiException $e) {
-            throw $e;
+        } catch (SoftDeclineException $e) {
+            $this->processSoftDecline($payment, $amazonOrderReferenceId);
         } catch (Exception $e) {
             $this->processHardDecline($payment, $amazonOrderReferenceId);
         }
@@ -170,14 +173,16 @@ class Amazon extends AbstractMethod
                 return true;
             case AmazonAuthorizationStatus::STATE_DECLINED:
                 switch ($status->getReasonCode()) {
+                    case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
+                    case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
+                    case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
+                        throw new HardDeclineException();
                     case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
-                        $this->processSoftDecline();
-                        break;
+                        throw new SoftDeclineException();
                 }
-                break;
         }
 
-        throw new Exception();
+        throw new UnexpectedStateException();
     }
 
     protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
@@ -192,7 +197,7 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function processSoftDecline()
+    protected function processSoftDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
         throw new WebapiException(
             new Phrase('There has been a problem with the selected payment method on your Amazon account, please choose another one.'),
