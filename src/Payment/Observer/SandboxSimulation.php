@@ -1,0 +1,137 @@
+<?php
+
+namespace Amazon\Payment\Observer;
+
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Amazon\Core\Helper\Data;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
+
+class SandboxSimulation implements ObserverInterface
+{
+    /**
+     * @var Data
+     */
+    protected $coreHelper;
+
+    /**
+     * @var QuoteLinkInterfaceFactory
+     */
+    protected $quoteLinkFactory;
+
+    /**
+     * @param Data $coreHelper
+     * @param QuoteLinkInterfaceFactory $quoteLinkFactory
+     */
+    public function __construct(
+        Data $coreHelper,
+        QuoteLinkInterfaceFactory $quoteLinkFactory
+    ) {
+        $this->coreHelper = $coreHelper;
+        $this->quoteLinkFactory = $quoteLinkFactory;
+    }
+
+    public function execute(Observer $observer)
+    {
+        if ($this->coreHelper->isSandboxEnabled()) {
+            $context = $observer->getEvent()->getContext();
+            $payment = $observer->getEvent()->getPayment();
+
+            $simulationReference = $this->_getSimulationReference($payment);
+
+            if (!empty($simulationReference)) {
+                $simulationString = $this->_getSimulationString($simulationReference);
+                if (!empty($simulationString)) {
+                    $requestParameter = $this->_getRequestParameter($context);
+                    $observer->getTransport()->addData([$requestParameter => $simulationString]);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $payment
+     * @return string
+     */
+    protected function _getSimulationReference($payment) {
+        $simulationReference = $this->_getSimulationReferenceFromPayment($payment);
+        $quoteLink = $this->_getQuoteLink($payment);
+
+        if ($simulationReference) {
+            $quoteLink->setSandboxSimulationReference($simulationReference)->save();
+        } else {
+            $simulationReference = $quoteLink->getSandboxSimulationReference();
+        }
+
+        return $simulationReference;
+    }
+
+    /**
+     * @param $payment
+     * @return string
+     */
+    protected function _getSimulationReferenceFromPayment($payment) {
+        $simulationReference = null;
+
+        $additionalInformation = $payment->getAdditionalInformation();
+        if (is_array($additionalInformation) and array_key_exists('sandbox_simulation_reference', $additionalInformation)) {
+            $simulationReference = $additionalInformation['sandbox_simulation_reference'];
+        }
+
+        return $simulationReference;
+    }
+
+    /**
+     * @param $payment
+     * @return Amazon\Payment\Api\Data\QuoteLinkInterface
+     */
+    protected function _getQuoteLink($payment) {
+        $quoteId = $payment->getOrder()->getQuoteId();
+        $quoteLink = $this->quoteLinkFactory->create();
+        $quoteLink->load($quoteId, 'quote_id');
+
+        return $quoteLink;
+    }
+
+    /**
+     * @return array
+     */
+    protected function _getRequestParameters() {
+        $requestParameters = [
+            'authorization' => 'seller_authorization_note',
+            'capture' => 'seller_capture_note',
+        ];
+
+        return $requestParameters;
+    }
+
+    /**
+     * @param string $context
+     * @return string
+     */
+    protected function _getRequestParameter($context) {
+        $requestParameter = null;
+
+        $requestParameters = $this->_getRequestParameters();
+        if (array_key_exists($context, $requestParameters)) {
+            $requestParameter = $requestParameters[$context];
+        }
+
+        return $requestParameter;
+    }
+
+    /**
+     * @param string $simulationReference
+     * @return string
+     */
+    protected function _getSimulationString($simulationReference) {
+        $simulationString = null;
+
+        $simulationStrings = $this->coreHelper->getSandboxSimulationStrings();
+        if (array_key_exists($simulationReference, $simulationStrings)) {
+            $simulationString = $simulationStrings[$simulationReference];
+        }
+
+        return $simulationString;
+    }
+}
