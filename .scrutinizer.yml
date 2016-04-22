@@ -2,7 +2,7 @@ tools:
     external_code_coverage: false
     php_code_coverage:      false
     php_code_sniffer:
-        config: { standard: 'EcgM2' }
+        config: { standard: 'Ecg' }
     php_changetracking: false
     php_sim: false
     php_cs_fixer: true
