@@ -38,8 +38,11 @@ class AmazonAuthorizationResponse
 
         $details = $data['AuthorizeResult']['AuthorizationDetails'];
 
-        $status = $details['AuthorizationStatus'];
-        $this->status = new AmazonAuthorizationStatus($status['State'], $status['ReasonCode']);
+        $status       = $details['AuthorizationStatus'];
+        $this->status = new AmazonAuthorizationStatus(
+            $status['State'],
+            (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
+        );
 
         if (isset($details['IdList']['member'])) {
             $this->captureTransactionId = $details['IdList']['member'];
@@ -72,7 +75,7 @@ class AmazonAuthorizationResponse
 
     /**
      * Get capture transaction id
-     * 
+     *
      * @return null|string
      */
     public function getCaptureTransactionId()
