@@ -52,6 +52,7 @@ define(
             isAmazonEnabled: ko.observable(window.amazonPayment.isPwaEnabled),
             shippingAddress: quote.shippingAddress,
             billingAddress: quote.billingAddress,
+            isPlaceOrderDisabled: amazonStorage.isPlaceOrderDisabled,
             initialize: function () {
                 self = this;
                 this._super();
@@ -68,6 +69,7 @@ define(
                     sellerId: self.options.sellerId,
                     amazonOrderReferenceId: amazonStorage.getOrderReference(),
                     onPaymentSelect: function(orderReference) {
+                        amazonStorage.isPlaceOrderDisabled(true);
                         self.setBillingAddressFromAmazon();
                     },
                     design: {
@@ -107,6 +109,7 @@ define(
                         var addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
 
                         selectBillingAddress(addressData);
+                        amazonStorage.isPlaceOrderDisabled(false);
                     }
                 ).fail(
                     function (response) {

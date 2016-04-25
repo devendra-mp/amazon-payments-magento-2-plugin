@@ -1,11 +1,12 @@
 define([
+    'jquery',
     'underscore',
     'ko',
     'Magento_Checkout/js/view/payment/list',
     'Magento_Checkout/js/model/payment/method-list',
     'Magento_Checkout/js/model/checkout-data-resolver',
     'Amazon_Payment/js/model/storage'
-], function (_, ko, Component, paymentMethods, checkoutDataResolver, amazonStorage) {
+], function ($, _, ko, Component, paymentMethods, checkoutDataResolver, amazonStorage) {
     'use strict';
 
     return Component.extend({
@@ -43,12 +44,17 @@ define([
                     case 4273:
                         amazonStorage.amazonlogOut();
                         this._reloadPaymentMethods();
+                        amazonStorage.amazonDeclineCode(false);
                         break;
                     //soft decline
                     case 7638:
+                        amazonStorage.isPlaceOrderDisabled(true);
                         this._reInitializeAmazonWalletWidget();
+                        this._removeDiscountCodesOption();
+                        amazonStorage.amazonDeclineCode(false);
                         break;
                     default:
+                        amazonStorage.amazonDeclineCode(false);
                         break;
                 }
             }, this);
@@ -67,11 +73,23 @@ define([
             }, this);
         },
         /**
-         * handles soft decline
+         * re-intialises Amazon wallet widget
          * @private
          */
         _reInitializeAmazonWalletWidget: function() {
-            //soft decline
+            var items = this.getRegion('payment-method-items');
+            _.find(items(), function (value) {
+                if (value.index === 'amazon_payment') {
+                    value.renderPaymentWidget();
+                }
+            }, this);
+        },
+        /**
+         * removes discount codes option from payment
+         * @private
+         */
+        _removeDiscountCodesOption: function() {
+            $('.payment-option.discount-code', '#payment').remove();
         }
     });
 });

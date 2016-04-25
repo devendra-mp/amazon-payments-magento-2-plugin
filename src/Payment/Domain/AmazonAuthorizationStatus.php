@@ -13,6 +13,7 @@ class AmazonAuthorizationStatus
     const REASON_PROCESSING_FAILURE = 'ProcessingFailure';
     const REASON_AMAZON_REJECTED = 'AmazonRejected';
     const REASON_TRANSACTION_TIMEOUT = 'TransactionTimedOut';
+    const REASON_MAX_CAPTURES_PROCESSED = 'MaxCapturesProcessed';
 
     const CODE_HARD_DECLINE = 4273;
     const CODE_SOFT_DECLINE = 7638;
@@ -31,9 +32,9 @@ class AmazonAuthorizationStatus
      * AmazonAuthorizationStatus constructor.
      *
      * @param string $state
-     * @param string $reasonCode
+     * @param string|null $reasonCode
      */
-    public function __construct($state, $reasonCode)
+    public function __construct($state, $reasonCode = null)
     {
         $this->state      = $state;
         $this->reasonCode = $reasonCode;
@@ -52,7 +53,7 @@ class AmazonAuthorizationStatus
     /**
      * Get reason code
      *
-     * @return string
+     * @return string|null
      */
     public function getReasonCode()
     {

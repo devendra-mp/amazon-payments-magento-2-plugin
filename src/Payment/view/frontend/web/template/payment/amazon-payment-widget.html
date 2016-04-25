@@ -49,7 +49,7 @@
                         data-bind="
                         click: placeOrder,
                         attr: {title: $t('Place Order')},
-                        css: {disabled: !isPlaceOrderActionAllowed()},
+                        css: {disabled: isPlaceOrderDisabled()},
                         enable: (getCode() == isChecked())
                         "
                         disabled>

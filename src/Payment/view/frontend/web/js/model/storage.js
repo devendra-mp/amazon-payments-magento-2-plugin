@@ -19,7 +19,8 @@ define(
             addressConsentToken = amazonCore.accessToken,
             isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined),
             amazonDeclineCode = ko.observable(false),
-            sandboxSimulationReference = ko.observable('default');
+            sandboxSimulationReference = ko.observable('default'),
+            isPlaceOrderDisabled = ko.observable(false);
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
@@ -50,6 +51,7 @@ define(
             isAmazonEnabled: isAmazonEnabled,
             amazonDeclineCode: amazonDeclineCode,
             sandboxSimulationReference: sandboxSimulationReference,
+            isPlaceOrderDisabled: isPlaceOrderDisabled,
             amazonlogOut: function() {
                 if(amazonCore.amazonDefined()) {
                     amazon.Login.logout();

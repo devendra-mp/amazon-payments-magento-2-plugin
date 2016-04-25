@@ -136,7 +136,7 @@ class Amazon extends AbstractMethod
             'amazon_order_reference_id'  => $amazonOrderReferenceId,
             'authorization_amount'       => $amount,
             'currency_code'              => $this->getCurrencyCode($payment),
-            'authorization_reference_id' => $amazonOrderReferenceId . '-AUTH',
+            'authorization_reference_id' => $amazonOrderReferenceId . '-A' . time(),
             'capture_now'                => $capture,
             'transaction_timeout'        => 0
         ];
@@ -175,8 +175,12 @@ class Amazon extends AbstractMethod
         $status = $response->getStatus();
 
         switch ($status->getState()) {
+            case AmazonAuthorizationStatus::STATE_CLOSED:
+                switch ($status->getReasonCode()) {
+                    case AmazonAuthorizationStatus::REASON_MAX_CAPTURES_PROCESSED:
+                        return true;
+                }
             case AmazonAuthorizationStatus::STATE_OPEN:
-            case AmazonAuthorizationStatus::STATE_PENDING:
                 return true;
             case AmazonAuthorizationStatus::STATE_DECLINED:
                 switch ($status->getReasonCode()) {
@@ -227,7 +231,7 @@ class Amazon extends AbstractMethod
             'amazon_authorization_id' => $authorizationId,
             'capture_amount'          => $amount,
             'currency_code'           => $this->getCurrencyCode($payment),
-            'capture_reference_id'    => $amazonOrderReferenceId . '-CAP'
+            'capture_reference_id'    => $amazonOrderReferenceId . '-C' . time(),
         ];
 
         $transport = new DataObject($data);
