@@ -60,4 +60,20 @@ class QuoteLink extends AbstractModel implements QuoteLinkInterface
     {
         return $this->getData('sandbox_simulation_reference');
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setConfirmed($confirmed)
+    {
+        return $this->setData('confirmed', $confirmed);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isConfirmed()
+    {
+        return (bool) $this->getData('confirmed');
+    }
 }

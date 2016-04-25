@@ -3,11 +3,30 @@
 namespace Amazon\Core\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class Data extends AbstractHelper
 {
+    /**
+     * @var EncryptorInterface
+     */
+    protected $encryptor;
+
+    /**
+     * @param Context $context
+     */
+    public function __construct(
+        Context $context,
+        EncryptorInterface $encryptor
+    )
+    {
+        parent::__construct($context);
+        $this->encryptor = $encryptor;
+    }
+
     /*
      * @return string
      */
@@ -35,10 +54,13 @@ class Data extends AbstractHelper
      */
     public function getSecretKey($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->scopeConfig->getValue(
+        $secretKey = $this->scopeConfig->getValue(
             'payment/amazon_payment/secret_key',
             $scope
         );
+        $secretKey = $this->encryptor->decrypt($secretKey);
+        
+        return $secretKey;
     }
 
     /*
@@ -57,10 +79,13 @@ class Data extends AbstractHelper
      */
     public function getClientSecret($scope = ScopeInterface::SCOPE_STORE)
     {
-        return $this->scopeConfig->getValue(
+        $clientSecret = $this->scopeConfig->getValue(
             'payment/amazon_payment/client_secret',
             $scope
         );
+        $clientSecret = $this->encryptor->decrypt($clientSecret);
+
+        return $clientSecret;
     }
 
     /*

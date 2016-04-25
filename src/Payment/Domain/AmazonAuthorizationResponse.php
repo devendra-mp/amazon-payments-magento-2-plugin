@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-use Amazon\Core\Domain\RemoteServiceUnavailableException;
+use Amazon\Core\Domain\AmazonServiceUnavailableException;
 use Magento\Framework\Phrase;
 use PayWithAmazon\ResponseInterface;
 
@@ -33,7 +33,7 @@ class AmazonAuthorizationResponse
         $data = $reponse->toArray();
 
         if (200 != $data['ResponseStatus']) {
-            throw new RemoteServiceUnavailableException();
+            throw new AmazonServiceUnavailableException();
         }
 
         $details = $data['AuthorizeResult']['AuthorizationDetails'];
