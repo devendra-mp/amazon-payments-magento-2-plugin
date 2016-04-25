@@ -40,7 +40,7 @@ class SandboxSimulation implements ObserverInterface
             $simulationReference = $this->getSimulationReference($payment);
 
             if (!empty($simulationReference)) {
-                $simulationString = $this->getSimulationString($simulationReference);
+                $simulationString = $this->getSimulationString($simulationReference, $context);
                 if (!empty($simulationString)) {
                     $requestParameter = $this->getRequestParameter($context);
                     $observer->getTransport()->addData([$requestParameter => $simulationString]);
@@ -124,10 +124,10 @@ class SandboxSimulation implements ObserverInterface
      * @param string $simulationReference
      * @return string
      */
-    protected function getSimulationString($simulationReference) {
+    protected function getSimulationString($simulationReference, $context = null) {
         $simulationString = null;
 
-        $simulationStrings = $this->coreHelper->getSandboxSimulationStrings();
+        $simulationStrings = $this->coreHelper->getSandboxSimulationStrings($context);
         if (array_key_exists($simulationReference, $simulationStrings)) {
             $simulationString = $simulationStrings[$simulationReference];
         }

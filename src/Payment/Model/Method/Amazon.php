@@ -9,7 +9,11 @@ use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
+use Amazon\Payment\Domain\AmazonCaptureResponse;
+use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Amazon\Payment\Domain\HardDeclineException;
+use Amazon\Payment\Domain\InvalidCaptureException;
+use Amazon\Payment\Domain\InvalidCapturexception;
 use Amazon\Payment\Domain\SoftDeclineException;
 use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
@@ -242,15 +246,30 @@ class Amazon extends AbstractMethod
         $data = $transport->getData();
 
         $client = $this->clientFactory->create();
-        /**
-         * @var ResponseParser $response
-         */
-        $response     = $client->capture($data);
-        $responseData = $response->toArray();
 
-        $transactionId = $responseData['CaptureResult']['CaptureDetails']['AmazonCaptureId'];
+        try {
+            $response = new AmazonCaptureResponse($client->capture($data));
 
-        $payment->setTransactionId($transactionId);
+            $this->validateCaptureResponse($response);
+
+            $payment->setTransactionId($response->getTransactionId());
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    protected function validateCaptureResponse(AmazonCaptureResponse $response)
+    {
+        $status = $response->getStatus();
+
+        switch ($status->getState()) {
+            case AmazonCaptureStatus::STATE_COMPLETED:
+                return true;
+            case AmazonCaptureStatus::STATE_DECLINED:
+                throw new InvalidCaptureException();
+        }
+
+        throw new UnexpectedDataException();
     }
 
     protected function getCurrencyCode(InfoInterface $payment)

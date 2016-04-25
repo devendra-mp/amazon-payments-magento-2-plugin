@@ -2,9 +2,9 @@
 
 namespace Amazon\Core\Helper;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
 
@@ -407,15 +407,25 @@ class Data extends AbstractHelper
     /**
      * @return array
      */
-    public function getSandboxSimulationStrings()
+    public function getSandboxSimulationStrings($context = null)
     {
         $simulationStrings = [
-            'default' => null,
-            'Authorization:Declined:InvalidPaymentMethod' => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod"}}',
-            'Authorization:Declined:AmazonRejected' => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}',
-            'Authorization:Declined:TransactionTimedOut' => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"TransactionTimedOut"}}',
-            'Capture:Declined:AmazonRejected' => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}',
+            'default' => null
         ];
+
+        if ('authorization' == $context) {
+            $simulationStrings['Authorization:Declined:InvalidPaymentMethod']
+                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod"}}';
+            $simulationStrings['Authorization:Declined:AmazonRejected']
+                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}';
+            $simulationStrings['Authorization:Declined:TransactionTimedOut']
+                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"TransactionTimedOut"}}';
+        }
+
+        if ('capture' == $context) {
+            $simulationStrings['Capture:Declined:AmazonRejected']
+                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}';
+        }
 
         return $simulationStrings;
     }

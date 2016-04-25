@@ -128,7 +128,7 @@ class AddressManagement implements AddressManagementInterface
         $data = $response->toArray();
 
         if (200 != $data['ResponseStatus'] || !isset($data['GetOrderReferenceDetailsResult'])) {
-            throw new RemoteServiceUnavailableException();
+            throw new RemoteServiceUnavailableException(new Phrase('Amazon could not process your request.'));
         }
         
         return $data['GetOrderReferenceDetailsResult'];
