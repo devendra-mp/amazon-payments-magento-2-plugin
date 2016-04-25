@@ -3,6 +3,7 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Core\Domain\UnexpectedDataException;
 use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
@@ -10,7 +11,6 @@ use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Amazon\Payment\Domain\HardDeclineException;
 use Amazon\Payment\Domain\SoftDeclineException;
-use Amazon\Payment\Domain\UnexpectedStateException;
 use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -189,7 +189,7 @@ class Amazon extends AbstractMethod
                 }
         }
 
-        throw new UnexpectedStateException();
+        throw new UnexpectedDataException();
     }
 
     protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)

@@ -55,6 +55,23 @@ interface QuoteLinkInterface
     public function getSandboxSimulationReference();
 
     /**
+     * Set quote confirmed with amazon
+     *
+     * @param boolean $confirmed
+     *
+     * @return $this
+     */
+    public function setConfirmed($confirmed);
+
+
+    /**
+     * Get quote confirmed with amazon
+     *
+     * @return boolean
+     */
+    public function isConfirmed();
+
+    /**
      * Save quote link
      *
      * @return $this

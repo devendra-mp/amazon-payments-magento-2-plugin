@@ -77,5 +77,20 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
 
         }
+
+        if (version_compare($context->getVersion(), '1.3.0', '<')) {
+
+            $setup->getConnection()->addColumn(
+                $setup->getTable(QuoteLink::TABLE_NAME),
+                'confirmed',
+                [
+                    'unsigned' => true,
+                    'nullable' => false,
+                    'default' => 0,
+                    'type' => Table::TYPE_SMALLINT,
+                    'comment' => 'Quote confirmed with Amazon'
+                ]
+            );
+        }
     }
 }

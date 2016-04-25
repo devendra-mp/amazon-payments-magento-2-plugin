@@ -4,11 +4,13 @@ namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonAddress;
+use Amazon\Core\Domain\UnexpectedDataException;
 use Amazon\Payment\Api\AddressManagementInterface;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\RemoteServiceUnavailableException;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Quote\Model\Quote;
@@ -64,9 +66,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($shippingAddress);
             }
 
-            $this->throwNotFoundErrorException();
-        } catch (WebapiException $e) {
-            throw $e;
+            throw new UnexpectedDataException();
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -92,9 +92,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($billingAddress);
             }
 
-            $this->throwUnknownErrorException();
-        } catch (WebapiException $e) {
-            throw $e;
+            throw new UnexpectedDataException();
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -129,14 +127,10 @@ class AddressManagement implements AddressManagementInterface
 
         $data = $response->toArray();
 
-        if (200 != $data['ResponseStatus']) {
-            $this->throwUnknownErrorException();
+        if (200 != $data['ResponseStatus'] || !isset($data['GetOrderReferenceDetailsResult'])) {
+            throw new RemoteServiceUnavailableException();
         }
-
-        if (!isset($data['GetOrderReferenceDetailsResult'])) {
-            $this->throwUnknownErrorException();
-        }
-
+        
         return $data['GetOrderReferenceDetailsResult'];
     }
 
@@ -147,9 +141,13 @@ class AddressManagement implements AddressManagementInterface
             ->create();
 
         $quoteLink
-            ->load($quote->getId(), 'quote_id')
-            ->setAmazonOrderReferenceId($amazonOrderReferenceId)
-            ->setQuoteId($quote->getId())
-            ->save();
+            ->load($quote->getId(), 'quote_id');
+
+        if ($quoteLink->getAmazonOrderReferenceId() != $amazonOrderReferenceId) {
+            $quoteLink
+                ->setAmazonOrderReferenceId($amazonOrderReferenceId)
+                ->setQuoteId($quote->getId())
+                ->save();
+        }
     }
 }
