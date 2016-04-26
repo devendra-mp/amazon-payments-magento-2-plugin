@@ -2,14 +2,17 @@
 
 namespace Amazon\Payment\Api;
 
+use Magento\Framework\Exception\ValidatorException;
+
 interface OrderInformationManagementInterface
 {
     /**
      * @param string $amazonOrderReferenceId
+     * @param array $allowedConstraints
      *
-     * @return boolean
+     * @throws ValidatorException
      */
-    public function saveOrderInformation($amazonOrderReferenceId);
+    public function saveOrderInformation($amazonOrderReferenceId, $allowedConstraints = []);
 
     /**
      * @param $amazonOrderReferenceId

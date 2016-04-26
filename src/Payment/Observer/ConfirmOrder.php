@@ -64,11 +64,7 @@ class ConfirmOrder implements ObserverInterface
     protected function saveOrderInformation(QuoteLinkInterface $quoteLink, $amazonOrderReferenceId)
     {
         if ( ! $quoteLink->isConfirmed()) {
-            $saveOrderInformation = $this->orderInformationManagement->saveOrderInformation($amazonOrderReferenceId);
-
-            if ( ! $saveOrderInformation) {
-                throw new AmazonServiceUnavailableException();
-            }
+            $this->orderInformationManagement->saveOrderInformation($amazonOrderReferenceId);
         }
     }
 

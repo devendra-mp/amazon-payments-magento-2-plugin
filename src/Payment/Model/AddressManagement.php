@@ -147,6 +147,7 @@ class AddressManagement implements AddressManagementInterface
             $quoteLink
                 ->setAmazonOrderReferenceId($amazonOrderReferenceId)
                 ->setQuoteId($quote->getId())
+                ->setConfirmed(false)
                 ->save();
         }
     }

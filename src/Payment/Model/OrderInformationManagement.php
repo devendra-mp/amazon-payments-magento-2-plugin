@@ -5,10 +5,14 @@ namespace Amazon\Payment\Model;
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
+use Amazon\Payment\Domain\AmazonSetOrderDetailsResponse;
 use Amazon\Payment\Helper\Data as PaymentHelper;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\AppInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\ValidatorException;
+use Magento\Framework\Phrase;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
 
@@ -49,35 +53,35 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function saveOrderInformation($amazonOrderReferenceId)
+    public function saveOrderInformation($amazonOrderReferenceId, $allowedConstraints = [])
     {
-        try {
-            $quote = $this->session->getQuote();
+        $quote = $this->session->getQuote();
 
-            $this->setReservedOrderId($quote);
+        $this->setReservedOrderId($quote);
 
-            $data = [
-                'amazon_order_reference_id' => $amazonOrderReferenceId,
-                'amount'                    => $quote->getGrandTotal(),
-                'currency_code'             => $quote->getQuoteCurrencyCode(),
-                'seller_order_id'           => $quote->getReservedOrderId(),
-                'store_name'                => $quote->getStore()->getName(),
-                'custom_information'        =>
-                    'Magento Version : ' . AppInterface::VERSION . ' ' .
-                    'Plugin Version : ' . $this->paymentHelper->getModuleVersion()
-                ,
-                'platform_id'               => $this->coreHelper->getMerchantId()
-            ];
+        $data = [
+            'amazon_order_reference_id' => $amazonOrderReferenceId,
+            'amount'                    => $quote->getGrandTotal(),
+            'currency_code'             => $quote->getQuoteCurrencyCode(),
+            'seller_order_id'           => $quote->getReservedOrderId(),
+            'store_name'                => $quote->getStore()->getName(),
+            'custom_information'        =>
+                'Magento Version : ' . AppInterface::VERSION . ' ' .
+                'Plugin Version : ' . $this->paymentHelper->getModuleVersion()
+            ,
+            'platform_id'               => $this->coreHelper->getMerchantId()
+        ];
 
-            /**
-             * @var ResponseInterface $response
-             */
-            $response = $this->clientFactory->create()->setOrderReferenceDetails($data);
+        $response = new AmazonSetOrderDetailsResponse($this->clientFactory->create()->setOrderReferenceDetails($data));
+        $this->validateConstraints($response, $allowedConstraints);
+    }
 
-            $data = $response->toArray();
-            return (200 == $data['ResponseStatus']);
-        } catch (Exception $e) {
-            return false;
+    protected function validateConstraints(AmazonSetOrderDetailsResponse $response, $allowedConstraints)
+    {
+        foreach($response->getConstraints() as $constraint) {
+            if (!in_array($constraint->getId(), $allowedConstraints)) {
+                throw new ValidatorException(new Phrase($constraint->getErrorMessage()));
+            }
         }
     }
 
