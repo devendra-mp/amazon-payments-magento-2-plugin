@@ -112,6 +112,7 @@ define(
                         var amazonAddress = data.shift(),
                             addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
 
+                        amazonStorage.isAmazonShippingAddressSelected(true);
                         selectShippingAddress(addressData);
                     }
                 ).fail(

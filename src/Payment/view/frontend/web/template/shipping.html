@@ -60,8 +60,9 @@
 <!--Shipping method template-->
 <li id="opc-shipping_method"
     class="checkout-shipping-method"
-    data-bind="fadeVisible: visible(), blockLoader: isLoading"
+    data-bind="fadeVisible: visible(), blockLoader: isShippingMethodsLoading"
     role="presentation">
+
     <div class="checkout-shipping-method">
         <div class="step-title" data-bind="i18n: 'Shipping Methods'" data-role="title"></div>
         <!-- ko foreach: getRegion('before-shipping-method-form') -->
@@ -87,7 +88,7 @@
                         <tbody>
 
                         <!--ko foreach: { data: rates(), as: 'method'}-->
-                        <tr class="row" data-bind="click: $parent.selectShippingMethod">
+                        <tr class="row" data-bind="click: $parent.selectShippingMethod, afterRender: $parent.handleShippingMethodsLoader">
                             <td class="col col-method">
                                 <!-- ko ifnot: method.error_message -->
                                 <!-- ko if: $parent.rates().length == 1 -->
