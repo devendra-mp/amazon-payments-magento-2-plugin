@@ -20,7 +20,9 @@ define(
             isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined),
             amazonDeclineCode = ko.observable(false),
             sandboxSimulationReference = ko.observable('default'),
-            isPlaceOrderDisabled = ko.observable(false);
+            isPlaceOrderDisabled = ko.observable(false),
+            isShippingMethodsLoading = ko.observable(true),
+            isAmazonShippingAddressSelected = ko.observable(false);
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
@@ -52,6 +54,8 @@ define(
             amazonDeclineCode: amazonDeclineCode,
             sandboxSimulationReference: sandboxSimulationReference,
             isPlaceOrderDisabled: isPlaceOrderDisabled,
+            isShippingMethodsLoading: isShippingMethodsLoading,
+            isAmazonShippingAddressSelected: isAmazonShippingAddressSelected,
             amazonlogOut: function() {
                 if(amazonCore.amazonDefined()) {
                     amazon.Login.logout();
