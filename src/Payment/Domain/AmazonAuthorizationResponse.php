@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-use Amazon\Core\Domain\AmazonServiceUnavailableException;
+use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use PayWithAmazon\ResponseInterface;
 
 class AmazonAuthorizationResponse

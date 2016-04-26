@@ -2,11 +2,11 @@
 
 namespace Amazon\Payment\Plugin;
 
+use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Closure;
 use Magento\Checkout\Api\Data\ShippingInformationInterface;
 use Magento\Checkout\Api\ShippingInformationManagementInterface;
-use Magento\Framework\Exception\RemoteServiceUnavailableException;
 use Magento\Quote\Api\CartRepositoryInterface;
 
 class ShippingInformationManagement
@@ -43,11 +43,11 @@ class ShippingInformationManagement
         if ($amazonOrderReferenceId) {
             $saveOrderInformation = $this->orderInformationManagement->saveOrderInformation($amazonOrderReferenceId);
 
-            if (!$saveOrderInformation) {
-                throw new RemoteServiceUnavailableException();
+            if ( ! $saveOrderInformation) {
+                throw new AmazonServiceUnavailableException();
             }
         }
-        
+
         return $return;
     }
 }

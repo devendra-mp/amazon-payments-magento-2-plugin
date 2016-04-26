@@ -4,13 +4,13 @@ namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonAddress;
-use Amazon\Core\Domain\UnexpectedDataException;
+use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Api\AddressManagementInterface;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
-use Magento\Framework\Exception\RemoteServiceUnavailableException;
+use Magento\Framework\Exception\ValidatorException;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Quote\Model\Quote;
@@ -66,7 +66,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($shippingAddress);
             }
 
-            throw new UnexpectedDataException();
+            throw new ValidatorException(new Phrase('address not found'));
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -92,7 +92,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($billingAddress);
             }
 
-            throw new UnexpectedDataException();
+            throw new ValidatorException(new Phrase('address not found'));
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -110,7 +110,7 @@ class AddressManagement implements AddressManagementInterface
 
         return [$this->addressHelper->convertToArray($magentoAddress)];
     }
-    
+
     protected function getOrderReferenceDetails($amazonOrderReferenceId, $addressConsentToken)
     {
         $client = $this->clientFactory->create();
@@ -127,10 +127,10 @@ class AddressManagement implements AddressManagementInterface
 
         $data = $response->toArray();
 
-        if (200 != $data['ResponseStatus'] || !isset($data['GetOrderReferenceDetailsResult'])) {
-            throw new RemoteServiceUnavailableException(new Phrase('Amazon could not process your request.'));
+        if (200 != $data['ResponseStatus'] || ! isset($data['GetOrderReferenceDetailsResult'])) {
+            throw new AmazonServiceUnavailableException();
         }
-        
+
         return $data['GetOrderReferenceDetailsResult'];
     }
 

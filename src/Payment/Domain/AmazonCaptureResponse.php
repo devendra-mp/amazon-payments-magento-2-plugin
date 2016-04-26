@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-use Amazon\Core\Domain\AmazonServiceUnavailableException;
+use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use PayWithAmazon\ResponseInterface;
 
 class AmazonCaptureResponse
@@ -31,6 +31,16 @@ class AmazonCaptureResponse
         if (isset($details['AmazonCaptureId'])) {
             $this->transactionId = $details['AmazonCaptureId'];
         }
+    }
+
+    /**
+     * Get status
+     *
+     * @return AmazonAuthorizationStatus
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Core\Domain\UnexpectedDataException;
 use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
@@ -11,16 +10,15 @@ use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
-use Amazon\Payment\Domain\HardDeclineException;
-use Amazon\Payment\Domain\InvalidCaptureException;
-use Amazon\Payment\Domain\InvalidCapturexception;
-use Amazon\Payment\Domain\SoftDeclineException;
+use Amazon\Payment\Exception\HardDeclineException;
+use Amazon\Payment\Exception\SoftDeclineException;
 use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\StateException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Phrase;
@@ -197,7 +195,11 @@ class Amazon extends AbstractMethod
                 }
         }
 
-        throw new UnexpectedDataException();
+        throw new StateException(
+            new Phrase(
+                'Amazon authorize invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode()
+            )
+        );
     }
 
     protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
@@ -247,15 +249,11 @@ class Amazon extends AbstractMethod
 
         $client = $this->clientFactory->create();
 
-        try {
-            $response = new AmazonCaptureResponse($client->capture($data));
+        $response = new AmazonCaptureResponse($client->capture($data));
 
-            $this->validateCaptureResponse($response);
+        $this->validateCaptureResponse($response);
 
-            $payment->setTransactionId($response->getTransactionId());
-        } catch (Exception $e) {
-            throw $e;
-        }
+        $payment->setTransactionId($response->getTransactionId());
     }
 
     protected function validateCaptureResponse(AmazonCaptureResponse $response)
@@ -266,10 +264,14 @@ class Amazon extends AbstractMethod
             case AmazonCaptureStatus::STATE_COMPLETED:
                 return true;
             case AmazonCaptureStatus::STATE_DECLINED:
-                throw new InvalidCaptureException();
+                throw new StateException(new Phrase('Amazon capture declined : ' . $status->getReasonCode()));
         }
 
-        throw new UnexpectedDataException();
+        throw new StateException(
+            new Phrase(
+                'Amazon capture invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode()
+            )
+        );
     }
 
     protected function getCurrencyCode(InfoInterface $payment)
