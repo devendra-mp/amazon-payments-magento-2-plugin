@@ -9,7 +9,7 @@ class Checkout extends Page
 {
     use PageTrait;
 
-    protected $path = '/checkout';
+    protected $path = '/checkout/';
 
     protected $elements
         = [
@@ -20,41 +20,31 @@ class Checkout extends Page
             'go-to-billing'         => ['css' => 'button.continue.primary'],
             'first-shipping-method' => ['css' => 'input[name="shipping_method"]:nth-of-type(1)'],
             'billing-address'       => ['css' => '.amazon-billing-address'],
-            'full-screen-loader'    => ['css' => '.loading-mask']
+            'full-screen-loader'    => ['css' => '.loading-mask'],
+            'shipping-loader'       => ['css' => '.checkout-shipping-method._block-content-loading']
         ];
 
     public function selectFirstAmazonShippingAddress()
     {
         $this->waitForElement('shipping-widget');
-
         $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets0IFrame');
-
         $this->clickElement('first-amazon-address');
-
         $this->getDriver()->switchToIFrame(null);
-
-        $this->waitForAjaxRequestsToComplete();
     }
 
     public function selectFirstAmazonPaymentMethod()
     {
-        $this->waitForCondition('1 === 2', 30000);
-
         $this->waitForElement('payment-widget');
-
         $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets1IFrame');
-
         $this->clickElement('first-amazon-payment');
-
         $this->getDriver()->switchToIFrame(null);
-
-        $this->waitForAjaxRequestsToComplete();
     }
 
     public function selectDefaultShippingMethod()
     {
-        $defaultShippingMethod = $this->getElementWithWait('first-shipping-method');
+        $this->waitUntilElementDisappear('shipping-loader');
 
+        $defaultShippingMethod = $this->getElementWithWait('first-shipping-method');
         if ( ! $defaultShippingMethod->isChecked()) {
             $defaultShippingMethod->click();
         }
@@ -62,14 +52,14 @@ class Checkout extends Page
 
     public function goToBilling()
     {
-        $this->waitForCondition('1 === 2', 30000);
-        $this->waitForAjaxRequestsToComplete();
-        
         $this->clickElement('go-to-billing');
+        $this->waitUntilElementDisappear('full-screen-loader');
     }
 
     public function getBillingAddress()
     {
+        $this->waitUntilElementDisappear('full-screen-loader');
+
         return $this->getElementText('billing-address');
     }
 }
