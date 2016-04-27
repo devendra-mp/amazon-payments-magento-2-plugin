@@ -5,20 +5,15 @@ namespace Amazon\Payment\Domain;
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use PayWithAmazon\ResponseInterface;
 
-class AmazonCaptureResponse
+class AmazonRefundResponse
 {
     /**
-     * @var AmazonCaptureStatus
+     * @var AmazonRefundStatus
      */
     protected $status;
 
     /**
-     * @var string|null
-     */
-    protected $transactionId;
-
-    /**
-     * AmazonCaptureResponse constructor.
+     * AmazonRefundResponse constructor.
      *
      * @param ResponseInterface $reponse
      */
@@ -30,36 +25,22 @@ class AmazonCaptureResponse
             throw new AmazonServiceUnavailableException();
         }
 
-        $details = $data['CaptureResult']['CaptureDetails'];
+        $details = $data['RefundResult']['RefundDetails'];
 
-        $status       = $details['CaptureStatus'];
-        $this->status = new AmazonCaptureStatus(
+        $status       = $details['RefundStatus'];
+        $this->status = new AmazonRefundStatus(
             $status['State'],
             (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
         );
-
-        if (isset($details['AmazonCaptureId'])) {
-            $this->transactionId = $details['AmazonCaptureId'];
-        }
     }
 
     /**
      * Get status
      *
-     * @return AmazonCaptureStatus
+     * @return AmazonRefundStatus
      */
     public function getStatus()
     {
         return $this->status;
-    }
-
-    /**
-     * Get transaction id
-     *
-     * @return string|null
-     */
-    public function getTransactionId()
-    {
-        return $this->transactionId;
     }
 }
