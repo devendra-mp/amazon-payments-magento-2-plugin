@@ -27,7 +27,6 @@ use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
-use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
@@ -129,7 +128,7 @@ class Amazon extends AbstractMethod
         }
     }
 
-    protected function _authorize(PaymentInterface $payment, $amount, $capture = false)
+    protected function _authorize(InfoInterface $payment, $amount, $capture = false)
     {
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
 
@@ -205,7 +204,7 @@ class Amazon extends AbstractMethod
         }
     }
 
-    protected function processHardDecline(PaymentInterface $payment, $amazonOrderReferenceId)
+    protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
         try {
             $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
@@ -231,7 +230,7 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function _capture(PaymentInterface $payment, $amount)
+    protected function _capture(InfoInterface $payment, $amount)
     {
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
         $authorizationId        = $payment->getParentTransactionId();
@@ -276,22 +275,22 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function getCurrencyCode(PaymentInterface $payment)
+    protected function getCurrencyCode(InfoInterface $payment)
     {
         return $payment->getOrder()->getOrderCurrencyCode();
     }
 
-    protected function getAmazonOrderReferenceId(PaymentInterface $payment)
+    protected function getAmazonOrderReferenceId(InfoInterface $payment)
     {
         return $this->getQuoteLink($payment)->getAmazonOrderReferenceId();
     }
 
-    protected function deleteAmazonOrderReferenceId(PaymentInterface $payment)
+    protected function deleteAmazonOrderReferenceId(InfoInterface $payment)
     {
         $this->getQuoteLink($payment)->delete();
     }
 
-    protected function getQuoteLink(PaymentInterface $payment)
+    protected function getQuoteLink(InfoInterface $payment)
     {
         $quoteId   = $payment->getOrder()->getQuoteId();
         $quoteLink = $this->quoteLinkFactory->create();
