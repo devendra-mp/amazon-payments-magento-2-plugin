@@ -8,6 +8,11 @@ use PayWithAmazon\ResponseInterface;
 class AmazonCaptureResponse
 {
     /**
+     * @var AmazonCaptureStatus
+     */
+    protected $status;
+
+    /**
      * @var string|null
      */
     protected $transactionId;
