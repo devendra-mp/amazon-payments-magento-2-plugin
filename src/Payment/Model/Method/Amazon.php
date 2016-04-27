@@ -27,6 +27,7 @@ use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
+use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
@@ -128,7 +129,7 @@ class Amazon extends AbstractMethod
         }
     }
 
-    protected function _authorize(InfoInterface $payment, $amount, $capture = false)
+    protected function _authorize(PaymentInterface $payment, $amount, $capture = false)
     {
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
 
@@ -165,7 +166,7 @@ class Amazon extends AbstractMethod
 
             $payment->setTransactionId($transactionId);
         } catch (SoftDeclineException $e) {
-            $this->processSoftDecline($payment, $amazonOrderReferenceId);
+            $this->processSoftDecline();
         } catch (Exception $e) {
             $this->processHardDecline($payment, $amazonOrderReferenceId);
         }
@@ -184,14 +185,7 @@ class Amazon extends AbstractMethod
             case AmazonAuthorizationStatus::STATE_OPEN:
                 return true;
             case AmazonAuthorizationStatus::STATE_DECLINED:
-                switch ($status->getReasonCode()) {
-                    case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
-                    case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
-                    case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
-                        throw new HardDeclineException();
-                    case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
-                        throw new SoftDeclineException();
-                }
+                $this->throwDeclinedExceptionForStatus($status);
         }
 
         throw new StateException(
@@ -199,11 +193,24 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
+    protected function throwDeclinedExceptionForStatus(AmazonAuthorizationStatus $status)
+    {
+        switch ($status->getReasonCode()) {
+            case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
+            case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
+            case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
+                throw new HardDeclineException();
+            case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
+                throw new SoftDeclineException();
+        }
+    }
+
+    protected function processHardDecline(PaymentInterface $payment, $amazonOrderReferenceId)
     {
         try {
             $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
         } catch (Exception $e) {
+            //ignored as it's likely in a cancelled state already or there is a problem we cannot rectify
         }
         
         $this->deleteAmazonOrderReferenceId($payment);
@@ -215,7 +222,7 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function processSoftDecline(InfoInterface $payment, $amazonOrderReferenceId)
+    protected function processSoftDecline()
     {
         throw new WebapiException(
             __('There has been a problem with the selected payment method on your Amazon account, please choose another one.'),
@@ -224,7 +231,7 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function _capture(InfoInterface $payment, $amount)
+    protected function _capture(PaymentInterface $payment, $amount)
     {
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
         $authorizationId        = $payment->getParentTransactionId();
@@ -269,22 +276,22 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function getCurrencyCode(InfoInterface $payment)
+    protected function getCurrencyCode(PaymentInterface $payment)
     {
         return $payment->getOrder()->getOrderCurrencyCode();
     }
 
-    protected function getAmazonOrderReferenceId(InfoInterface $payment)
+    protected function getAmazonOrderReferenceId(PaymentInterface $payment)
     {
         return $this->getQuoteLink($payment)->getAmazonOrderReferenceId();
     }
 
-    protected function deleteAmazonOrderReferenceId(InfoInterface $payment)
+    protected function deleteAmazonOrderReferenceId(PaymentInterface $payment)
     {
         $this->getQuoteLink($payment)->delete();
     }
 
-    protected function getQuoteLink(InfoInterface $payment)
+    protected function getQuoteLink(PaymentInterface $payment)
     {
         $quoteId   = $payment->getOrder()->getQuoteId();
         $quoteLink = $this->quoteLinkFactory->create();
