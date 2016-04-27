@@ -100,7 +100,11 @@ class AddressManagement implements AddressManagementInterface
 
     protected function throwUnknownErrorException()
     {
-        throw new WebapiException(new Phrase('an unknown error occurred'), 0, WebapiException::HTTP_INTERNAL_ERROR);
+        throw new WebapiException(
+            new Phrase(AmazonServiceUnavailableException::ERROR_MESSAGE),
+            0,
+            WebapiException::HTTP_INTERNAL_ERROR
+        );
     }
 
     protected function convertToMagentoAddress($address)
