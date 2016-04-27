@@ -1,6 +1,6 @@
 <?php
 
-namespace Amazon\Payment\Domain;
+namespace Amazon\Payment\Exception;
 
 use Exception;
 

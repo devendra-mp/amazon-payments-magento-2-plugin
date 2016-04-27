@@ -3,23 +3,24 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Core\Domain\UnexpectedDataException;
 use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
-use Amazon\Payment\Domain\HardDeclineException;
-use Amazon\Payment\Domain\SoftDeclineException;
+use Amazon\Payment\Domain\AmazonCaptureResponse;
+use Amazon\Payment\Domain\AmazonCaptureStatus;
+use Amazon\Payment\Exception\HardDeclineException;
+use Amazon\Payment\Exception\SoftDeclineException;
 use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\StateException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
-use Magento\Framework\Phrase;
 use Magento\Framework\Registry;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Payment\Helper\Data;
@@ -164,7 +165,7 @@ class Amazon extends AbstractMethod
 
             $payment->setTransactionId($transactionId);
         } catch (SoftDeclineException $e) {
-            $this->processSoftDecline($payment, $amazonOrderReferenceId);
+            $this->processSoftDecline();
         } catch (Exception $e) {
             $this->processHardDecline($payment, $amazonOrderReferenceId);
         }
@@ -183,39 +184,47 @@ class Amazon extends AbstractMethod
             case AmazonAuthorizationStatus::STATE_OPEN:
                 return true;
             case AmazonAuthorizationStatus::STATE_DECLINED:
-                switch ($status->getReasonCode()) {
-                    case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
-                    case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
-                    case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
-                        throw new HardDeclineException();
-                    case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
-                        throw new SoftDeclineException();
-                }
+                $this->throwDeclinedExceptionForStatus($status);
         }
 
-        throw new UnexpectedDataException();
+        throw new StateException(
+            __('Amazon authorize invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode())
+        );
+    }
+
+    protected function throwDeclinedExceptionForStatus(AmazonAuthorizationStatus $status)
+    {
+        switch ($status->getReasonCode()) {
+            case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
+            case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
+            case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
+                throw new HardDeclineException();
+            case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
+                throw new SoftDeclineException();
+        }
     }
 
     protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
-        $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
+        try {
+            $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
+        } catch (Exception $e) {
+            //ignored as it's likely in a cancelled state already or there is a problem we cannot rectify
+        }
+        
         $this->deleteAmazonOrderReferenceId($payment);
 
         throw new WebapiException(
-            new Phrase(
-                'Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'
-            ),
+            __('Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'),
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
     }
 
-    protected function processSoftDecline(InfoInterface $payment, $amazonOrderReferenceId)
+    protected function processSoftDecline()
     {
         throw new WebapiException(
-            new Phrase(
-                'There has been a problem with the selected payment method on your Amazon account, please choose another one.'
-            ),
+            __('There has been a problem with the selected payment method on your Amazon account, please choose another one.'),
             AmazonAuthorizationStatus::CODE_SOFT_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
@@ -242,15 +251,28 @@ class Amazon extends AbstractMethod
         $data = $transport->getData();
 
         $client = $this->clientFactory->create();
-        /**
-         * @var ResponseParser $response
-         */
-        $response     = $client->capture($data);
-        $responseData = $response->toArray();
 
-        $transactionId = $responseData['CaptureResult']['CaptureDetails']['AmazonCaptureId'];
+        $response = new AmazonCaptureResponse($client->capture($data));
 
-        $payment->setTransactionId($transactionId);
+        $this->validateCaptureResponse($response);
+
+        $payment->setTransactionId($response->getTransactionId());
+    }
+
+    protected function validateCaptureResponse(AmazonCaptureResponse $response)
+    {
+        $status = $response->getStatus();
+
+        switch ($status->getState()) {
+            case AmazonCaptureStatus::STATE_COMPLETED:
+                return true;
+            case AmazonCaptureStatus::STATE_DECLINED:
+                throw new StateException(__('Amazon capture declined : %1', $status->getReasonCode()));
+        }
+
+        throw new StateException(
+            __('Amazon capture invalid state : %1 with reason %2', [$status->getState() , $status->getReasonCode()])
+        );
     }
 
     protected function getCurrencyCode(InfoInterface $payment)

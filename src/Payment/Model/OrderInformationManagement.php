@@ -3,12 +3,16 @@
 namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
+use Amazon\Payment\Domain\AmazonSetOrderDetailsResponse;
 use Amazon\Payment\Helper\Data as PaymentHelper;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\AppInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\ValidatorException;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
 
@@ -49,7 +53,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function saveOrderInformation($amazonOrderReferenceId)
+    public function saveOrderInformation($amazonOrderReferenceId, $allowedConstraints = [])
     {
         try {
             $quote = $this->session->getQuote();
@@ -69,15 +73,25 @@ class OrderInformationManagement implements OrderInformationManagementInterface
                 'platform_id'               => $this->coreHelper->getMerchantId()
             ];
 
-            /**
-             * @var ResponseInterface $response
-             */
-            $response = $this->clientFactory->create()->setOrderReferenceDetails($data);
+            $response = new AmazonSetOrderDetailsResponse(
+                $this->clientFactory->create()->setOrderReferenceDetails($data)
+            );
 
-            $data = $response->toArray();
-            return (200 == $data['ResponseStatus']);
+            $this->validateConstraints($response, $allowedConstraints);
+
+        } catch (LocalizedException $e) {
+            throw $e;
         } catch (Exception $e) {
-            return false;
+            throw new AmazonServiceUnavailableException();
+        }
+    }
+
+    protected function validateConstraints(AmazonSetOrderDetailsResponse $response, $allowedConstraints)
+    {
+        foreach($response->getConstraints() as $constraint) {
+            if (!in_array($constraint->getId(), $allowedConstraints)) {
+                throw new ValidatorException(__($constraint->getErrorMessage()));
+            }
         }
     }
 
@@ -96,19 +110,18 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     public function confirmOrderReference($amazonOrderReferenceId)
     {
         try {
-            /**
-             * @var ResponseInterface $response
-             */
             $response = $this->clientFactory->create()->confirmOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]
             );
 
-            $data = $response->toArray();
-            return (200 == $data['ResponseStatus']);
+            $this->validateResponse($response);
+
+        } catch (LocalizedException $e) {
+            throw $e;
         } catch (Exception $e) {
-            return false;
+            throw new AmazonServiceUnavailableException();
         }
     }
 
@@ -118,19 +131,18 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     public function closeOrderReference($amazonOrderReferenceId)
     {
         try {
-            /**
-             * @var ResponseInterface $response
-             */
             $response = $this->clientFactory->create()->closeOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]
             );
 
-            $data = $response->toArray();
-            return (200 == $data['ResponseStatus']);
+            $this->validateResponse($response);
+
+        } catch (LocalizedException $e) {
+            throw $e;
         } catch (Exception $e) {
-            return false;
+            throw new AmazonServiceUnavailableException();
         }
     }
 
@@ -140,19 +152,27 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     public function cancelOrderReference($amazonOrderReferenceId)
     {
         try {
-            /**
-             * @var ResponseInterface $response
-             */
             $response = $this->clientFactory->create()->cancelOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]
             );
 
-            $data = $response->toArray();
-            return (200 == $data['ResponseStatus']);
+            $this->validateResponse($response);
+
+        } catch (LocalizedException $e) {
+            throw $e;
         } catch (Exception $e) {
-            return false;
+            throw new AmazonServiceUnavailableException();
+        }
+    }
+
+    protected function validateResponse(ResponseInterface $response)
+    {
+        $data = $response->toArray();
+
+        if (200 != $data['ResponseStatus']) {
+            throw new AmazonServiceUnavailableException();
         }
     }
 }

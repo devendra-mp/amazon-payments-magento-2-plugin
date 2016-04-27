@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-class AmazonAuthorizationStatus
+class AmazonAuthorizationStatus extends AmazonStatus
 {
     const STATE_OPEN = 'Open';
     const STATE_PENDING = 'Pending';
@@ -17,46 +17,4 @@ class AmazonAuthorizationStatus
 
     const CODE_HARD_DECLINE = 4273;
     const CODE_SOFT_DECLINE = 7638;
-
-    /**
-     * @var string
-     */
-    protected $state;
-
-    /**
-     * @var string
-     */
-    protected $reasonCode;
-
-    /**
-     * AmazonAuthorizationStatus constructor.
-     *
-     * @param string $state
-     * @param string|null $reasonCode
-     */
-    public function __construct($state, $reasonCode = null)
-    {
-        $this->state      = $state;
-        $this->reasonCode = $reasonCode;
-    }
-
-    /**
-     * Get state
-     *
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * Get reason code
-     *
-     * @return string|null
-     */
-    public function getReasonCode()
-    {
-        return $this->reasonCode;
-    }
 }

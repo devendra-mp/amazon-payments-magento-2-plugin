@@ -3,10 +3,10 @@
 namespace Amazon\Payment\Plugin;
 
 use Amazon\Payment\Api\OrderInformationManagementInterface;
+use Amazon\Payment\Domain\AmazonConstraint;
 use Closure;
 use Magento\Checkout\Api\Data\ShippingInformationInterface;
 use Magento\Checkout\Api\ShippingInformationManagementInterface;
-use Magento\Framework\Exception\RemoteServiceUnavailableException;
 use Magento\Quote\Api\CartRepositoryInterface;
 
 class ShippingInformationManagement
@@ -41,13 +41,15 @@ class ShippingInformationManagement
         $amazonOrderReferenceId = $quote->getExtensionAttributes()->getAmazonOrderReferenceId();
 
         if ($amazonOrderReferenceId) {
-            $saveOrderInformation = $this->orderInformationManagement->saveOrderInformation($amazonOrderReferenceId);
-
-            if (!$saveOrderInformation) {
-                throw new RemoteServiceUnavailableException();
-            }
+            $this->orderInformationManagement->saveOrderInformation(
+                $amazonOrderReferenceId,
+                [
+                    AmazonConstraint::PAYMENT_PLAN_NOT_SET_ID,
+                    AmazonConstraint::PAYMENT_METHOD_NOT_ALLOWED_ID
+                ]
+            );
         }
-        
+
         return $return;
     }
 }

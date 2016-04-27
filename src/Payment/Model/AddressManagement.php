@@ -4,14 +4,13 @@ namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonAddress;
-use Amazon\Core\Domain\UnexpectedDataException;
+use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Api\AddressManagementInterface;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
-use Magento\Framework\Exception\RemoteServiceUnavailableException;
-use Magento\Framework\Phrase;
+use Magento\Framework\Exception\ValidatorException;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
@@ -66,7 +65,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($shippingAddress);
             }
 
-            throw new UnexpectedDataException();
+            throw new ValidatorException(__('address not found'));
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -92,7 +91,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($billingAddress);
             }
 
-            throw new UnexpectedDataException();
+            throw new ValidatorException(__('address not found'));
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -100,7 +99,11 @@ class AddressManagement implements AddressManagementInterface
 
     protected function throwUnknownErrorException()
     {
-        throw new WebapiException(new Phrase('an unknown error occurred'), 0, WebapiException::HTTP_INTERNAL_ERROR);
+        throw new WebapiException(
+            __(AmazonServiceUnavailableException::ERROR_MESSAGE),
+            0,
+            WebapiException::HTTP_INTERNAL_ERROR
+        );
     }
 
     protected function convertToMagentoAddress($address)
@@ -110,7 +113,7 @@ class AddressManagement implements AddressManagementInterface
 
         return [$this->addressHelper->convertToArray($magentoAddress)];
     }
-    
+
     protected function getOrderReferenceDetails($amazonOrderReferenceId, $addressConsentToken)
     {
         $client = $this->clientFactory->create();
@@ -127,10 +130,10 @@ class AddressManagement implements AddressManagementInterface
 
         $data = $response->toArray();
 
-        if (200 != $data['ResponseStatus'] || !isset($data['GetOrderReferenceDetailsResult'])) {
-            throw new RemoteServiceUnavailableException();
+        if (200 != $data['ResponseStatus'] || ! isset($data['GetOrderReferenceDetailsResult'])) {
+            throw new AmazonServiceUnavailableException();
         }
-        
+
         return $data['GetOrderReferenceDetailsResult'];
     }
 
@@ -147,6 +150,7 @@ class AddressManagement implements AddressManagementInterface
             $quoteLink
                 ->setAmazonOrderReferenceId($amazonOrderReferenceId)
                 ->setQuoteId($quote->getId())
+                ->setConfirmed(false)
                 ->save();
         }
     }

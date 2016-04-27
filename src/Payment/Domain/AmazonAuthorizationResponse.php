@@ -2,8 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-use Amazon\Core\Domain\AmazonServiceUnavailableException;
-use Magento\Framework\Phrase;
+use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use PayWithAmazon\ResponseInterface;
 
 class AmazonAuthorizationResponse
@@ -66,7 +65,7 @@ class AmazonAuthorizationResponse
     /**
      * Get authorize transaction id
      *
-     * @return null|string
+     * @return string|null
      */
     public function getAuthorizeTransactionId()
     {
@@ -76,7 +75,7 @@ class AmazonAuthorizationResponse
     /**
      * Get capture transaction id
      *
-     * @return null|string
+     * @return string|null
      */
     public function getCaptureTransactionId()
     {
