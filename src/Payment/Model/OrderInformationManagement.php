@@ -111,20 +111,13 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     public function confirmOrderReference($amazonOrderReferenceId)
     {
         try {
-            /**
-             * @var ResponseInterface $response
-             */
             $response = $this->clientFactory->create()->confirmOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]
             );
 
-            $data = $response->toArray();
-
-            if (200 != $data['ResponseStatus']) {
-                throw new AmazonServiceUnavailableException();
-            }
+            $this->validateResponse($response);
 
         } catch (LocalizedException $e) {
             throw $e;
@@ -139,20 +132,13 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     public function closeOrderReference($amazonOrderReferenceId)
     {
         try {
-            /**
-             * @var ResponseInterface $response
-             */
             $response = $this->clientFactory->create()->closeOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]
             );
 
-            $data = $response->toArray();
-
-            if (200 != $data['ResponseStatus']) {
-                throw new AmazonServiceUnavailableException();
-            }
+            $this->validateResponse($response);
 
         } catch (LocalizedException $e) {
             throw $e;
@@ -167,24 +153,26 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     public function cancelOrderReference($amazonOrderReferenceId)
     {
         try {
-            /**
-             * @var ResponseInterface $response
-             */
             $response = $this->clientFactory->create()->cancelOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]
             );
 
-            $data = $response->toArray();
+            $this->validateResponse($response);
 
-            if (200 != $data['ResponseStatus']) {
-                throw new AmazonServiceUnavailableException();
-            }
-            
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {
+            throw new AmazonServiceUnavailableException();
+        }
+    }
+
+    protected function validateResponse(ResponseInterface $response)
+    {
+        $data = $response->toArray();
+
+        if (200 != $data['ResponseStatus']) {
             throw new AmazonServiceUnavailableException();
         }
     }
