@@ -4,6 +4,7 @@ namespace Amazon\Payment\Observer;
 
 use Amazon\Payment\Model\Method\Amazon;
 use Amazon\Payment\Model\OrderInformationManagement;
+use Exception;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -34,7 +35,10 @@ class CompleteOrder implements ObserverInterface
             $amazonOrderReferenceId = $order->getExtensionAttributes()->getAmazonOrderReferenceId();
 
             if ($amazonOrderReferenceId && Amazon::PAYMENT_METHOD_CODE == $order->getPayment()->getMethod()) {
-                $this->orderInformationManagement->closeOrderReference($amazonOrderReferenceId);
+                try {
+                    $this->orderInformationManagement->closeOrderReference($amazonOrderReferenceId);
+                } catch (Exception $e) {
+                }
             }
         }
     }

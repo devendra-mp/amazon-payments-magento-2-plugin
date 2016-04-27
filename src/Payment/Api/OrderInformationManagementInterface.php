@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Api;
 
-use Magento\Framework\Exception\ValidatorException;
+use Magento\Framework\Exception\LocalizedException;
 
 interface OrderInformationManagementInterface
 {
@@ -10,28 +10,28 @@ interface OrderInformationManagementInterface
      * @param string $amazonOrderReferenceId
      * @param array $allowedConstraints
      *
-     * @throws ValidatorException
+     * @throws LocalizedException
      */
     public function saveOrderInformation($amazonOrderReferenceId, $allowedConstraints = []);
 
     /**
      * @param $amazonOrderReferenceId
      *
-     * @return boolean
+     * @throws LocalizedException
      */
     public function confirmOrderReference($amazonOrderReferenceId);
 
     /**
      * @param $amazonOrderReferenceId
      *
-     * @return boolean
+     * @throws LocalizedException
      */
     public function closeOrderReference($amazonOrderReferenceId);
 
     /**
      * @param $amazonOrderReferenceId
      *
-     * @return boolean
+     * @throws LocalizedException
      */
     public function cancelOrderReference($amazonOrderReferenceId);
 }

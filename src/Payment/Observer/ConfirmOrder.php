@@ -70,12 +70,7 @@ class ConfirmOrder implements ObserverInterface
 
     protected function confirmOrderReference(QuoteLinkInterface $quoteLink, $amazonOrderReferenceId)
     {
-        $confirmOrderReference = $this->orderInformationManagement->confirmOrderReference($amazonOrderReferenceId);
-
-        if ( ! $confirmOrderReference) {
-            throw new AmazonServiceUnavailableException();
-        }
-
+        $this->orderInformationManagement->confirmOrderReference($amazonOrderReferenceId);
         $quoteLink->setConfirmed(true)->save();
     }
 

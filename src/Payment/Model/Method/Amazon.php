@@ -204,7 +204,11 @@ class Amazon extends AbstractMethod
 
     protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
-        $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
+        try {
+            $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
+        } catch (Exception $e) {
+        }
+        
         $this->deleteAmazonOrderReferenceId($payment);
 
         throw new WebapiException(
