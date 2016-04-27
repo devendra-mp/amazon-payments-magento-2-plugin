@@ -32,18 +32,17 @@ class CompleteOrder implements ObserverInterface
         $complete = Order::STATE_COMPLETE;
 
         if ($order->getState() == $complete && $order->getStoredData()[OrderInterface::STATE] != $complete) {
-            $amazonOrderReferenceId = $order->getExtensionAttributes()->getAmazonOrderReferenceId();
-
-            if ($amazonOrderReferenceId && Amazon::PAYMENT_METHOD_CODE == $order->getPayment()->getMethod()) {
-                $this->closeOrderReference($amazonOrderReferenceId);
-            }
+            $this->closeOrderReference($order);
         }
     }
 
-    protected function closeOrderReference($amazonOrderReferenceId)
+    protected function closeOrderReference(OrderInterface $order)
     {
         try {
-            $this->orderInformationManagement->closeOrderReference($amazonOrderReferenceId);
+            $amazonOrderReferenceId = $order->getExtensionAttributes()->getAmazonOrderReferenceId();
+            if ($amazonOrderReferenceId && Amazon::PAYMENT_METHOD_CODE == $order->getPayment()->getMethod()) {
+                $this->orderInformationManagement->closeOrderReference($amazonOrderReferenceId);
+            }
         } catch (Exception $e) {
         }
     }
