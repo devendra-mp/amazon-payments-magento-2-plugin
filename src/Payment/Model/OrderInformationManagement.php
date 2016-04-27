@@ -13,7 +13,6 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\AppInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\ValidatorException;
-use Magento\Framework\Phrase;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
 
@@ -91,7 +90,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     {
         foreach($response->getConstraints() as $constraint) {
             if (!in_array($constraint->getId(), $allowedConstraints)) {
-                throw new ValidatorException(new Phrase($constraint->getErrorMessage()));
+                throw new ValidatorException(__($constraint->getErrorMessage()));
             }
         }
     }

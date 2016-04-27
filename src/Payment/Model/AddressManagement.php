@@ -11,7 +11,6 @@ use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\ValidatorException;
-use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
@@ -66,7 +65,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($shippingAddress);
             }
 
-            throw new ValidatorException(new Phrase('address not found'));
+            throw new ValidatorException(__('address not found'));
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -92,7 +91,7 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($billingAddress);
             }
 
-            throw new ValidatorException(new Phrase('address not found'));
+            throw new ValidatorException(__('address not found'));
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -101,7 +100,7 @@ class AddressManagement implements AddressManagementInterface
     protected function throwUnknownErrorException()
     {
         throw new WebapiException(
-            new Phrase(AmazonServiceUnavailableException::ERROR_MESSAGE),
+            __(AmazonServiceUnavailableException::ERROR_MESSAGE),
             0,
             WebapiException::HTTP_INTERNAL_ERROR
         );

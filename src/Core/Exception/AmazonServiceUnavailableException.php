@@ -3,7 +3,6 @@
 namespace Amazon\Core\Exception;
 
 use Magento\Framework\Exception\RemoteServiceUnavailableException;
-use Magento\Framework\Phrase;
 
 class AmazonServiceUnavailableException extends RemoteServiceUnavailableException
 {
@@ -11,6 +10,6 @@ class AmazonServiceUnavailableException extends RemoteServiceUnavailableExceptio
 
     public function __construct()
     {
-        parent::__construct(new Phrase(static::ERROR_MESSAGE));
+        parent::__construct(__(static::ERROR_MESSAGE));
     }
 }

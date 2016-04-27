@@ -21,7 +21,6 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Exception\StateException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
-use Magento\Framework\Phrase;
 use Magento\Framework\Registry;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Payment\Helper\Data;
@@ -196,9 +195,7 @@ class Amazon extends AbstractMethod
         }
 
         throw new StateException(
-            new Phrase(
-                'Amazon authorize invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode()
-            )
+            __('Amazon authorize invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode())
         );
     }
 
@@ -212,9 +209,7 @@ class Amazon extends AbstractMethod
         $this->deleteAmazonOrderReferenceId($payment);
 
         throw new WebapiException(
-            new Phrase(
-                'Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'
-            ),
+            __('Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'),
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
@@ -223,9 +218,7 @@ class Amazon extends AbstractMethod
     protected function processSoftDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
         throw new WebapiException(
-            new Phrase(
-                'There has been a problem with the selected payment method on your Amazon account, please choose another one.'
-            ),
+            __('There has been a problem with the selected payment method on your Amazon account, please choose another one.'),
             AmazonAuthorizationStatus::CODE_SOFT_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
@@ -268,13 +261,11 @@ class Amazon extends AbstractMethod
             case AmazonCaptureStatus::STATE_COMPLETED:
                 return true;
             case AmazonCaptureStatus::STATE_DECLINED:
-                throw new StateException(new Phrase('Amazon capture declined : ' . $status->getReasonCode()));
+                throw new StateException(__('Amazon capture declined : ' . $status->getReasonCode()));
         }
 
         throw new StateException(
-            new Phrase(
-                'Amazon capture invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode()
-            )
+            __('Amazon capture invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode())
         );
     }
 
