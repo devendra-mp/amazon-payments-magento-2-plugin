@@ -261,11 +261,11 @@ class Amazon extends AbstractMethod
             case AmazonCaptureStatus::STATE_COMPLETED:
                 return true;
             case AmazonCaptureStatus::STATE_DECLINED:
-                throw new StateException(__('Amazon capture declined : ' . $status->getReasonCode()));
+                throw new StateException(__('Amazon capture declined : %1', $status->getReasonCode()));
         }
 
         throw new StateException(
-            __('Amazon capture invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode())
+            __('Amazon capture invalid state : %1 with reason %2', [$status->getState() , $status->getReasonCode()])
         );
     }
 
