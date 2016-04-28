@@ -146,7 +146,7 @@ class Amazon extends AbstractMethod
             'amazon_capture_id'   => $captureId,
             'refund_reference_id' => $amazonOrderReferenceId . '-R' . time(),
             'refund_amount'       => $amount,
-            'currency_code'       => $this->getCurrencyCode($payment),
+            'currency_code'       => $this->getCurrencyCode($payment)
         ];
 
         $client = $this->clientFactory->create();
@@ -238,7 +238,7 @@ class Amazon extends AbstractMethod
         } catch (Exception $e) {
             //ignored as it's likely in a cancelled state already or there is a problem we cannot rectify
         }
-        
+
         $this->deleteAmazonOrderReferenceId($payment);
 
         throw new WebapiException(
@@ -267,7 +267,7 @@ class Amazon extends AbstractMethod
             'amazon_authorization_id' => $authorizationId,
             'capture_amount'          => $amount,
             'currency_code'           => $this->getCurrencyCode($payment),
-            'capture_reference_id'    => $amazonOrderReferenceId . '-C' . time(),
+            'capture_reference_id'    => $amazonOrderReferenceId . '-C' . time()
         ];
 
         $transport = new DataObject($data);
@@ -298,7 +298,7 @@ class Amazon extends AbstractMethod
         }
 
         throw new StateException(
-            __('Amazon capture invalid state : %1 with reason %2', [$status->getState() , $status->getReasonCode()])
+            __('Amazon capture invalid state : %1 with reason %2', [$status->getState(), $status->getReasonCode()])
         );
     }
 
@@ -312,7 +312,7 @@ class Amazon extends AbstractMethod
         }
 
         throw new StateException(
-            __('Amazon refund invalid state : %1 with reason %2', [$status->getState() , $status->getReasonCode()])
+            __('Amazon refund invalid state : %1 with reason %2', [$status->getState(), $status->getReasonCode()])
         );
     }
 
