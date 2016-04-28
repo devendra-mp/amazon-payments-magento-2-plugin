@@ -146,12 +146,8 @@ class Amazon extends AbstractMethod
             'amazon_capture_id'   => $captureId,
             'refund_reference_id' => $amazonOrderReferenceId . '-R' . time(),
             'refund_amount'       => $amount,
-            'currency_code'       => $this->getCurrencyCode($payment)
+            'currency_code'       => $this->getCurrencyCode($payment),
         ];
-
-        /**
-         * @todo: sandbox simulation
-         */
 
         $client = $this->clientFactory->create();
 
@@ -312,10 +308,7 @@ class Amazon extends AbstractMethod
 
         switch ($status->getState()) {
             case AmazonRefundStatus::STATE_PENDING:
-            case AmazonRefundStatus::STATE_COMPLETED:
                 return true;
-            case AmazonCaptureStatus::STATE_DECLINED:
-                throw new StateException(__('Amazon refund declined : %1', $status->getReasonCode()));
         }
 
         throw new StateException(
