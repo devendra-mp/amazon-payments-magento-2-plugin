@@ -436,11 +436,11 @@ class Data extends AbstractHelper
     public function getSandboxSimulationOptions()
     {
         $simulationlabels = [
-            'default' => 'Default',
-            'Authorization:Declined:InvalidPaymentMethod' => 'Authorization - Declined - InvalidPaymentMethod: Authorization soft decline',
-            'Authorization:Declined:AmazonRejected' => 'Authorization - Declined - AmazonRejected: Authorization hard decline',
-            'Authorization:Declined:TransactionTimedOut' => 'Authorization - Declined - TransactionTimedOut: Authorization time out',
-            'Capture:Declined:AmazonRejected' => 'Capture - Declined - AmazonRejected: Capture declined',
+            'default' => 'No Simulation',
+            'Authorization:Declined:InvalidPaymentMethod' => 'Authorization soft decline',
+            'Authorization:Declined:AmazonRejected' => 'Authorization hard decline',
+            'Authorization:Declined:TransactionTimedOut' => 'Authorization timed out',
+            'Capture:Declined:AmazonRejected' => 'Capture declined',
         ];
 
         return $simulationlabels;
