@@ -63,14 +63,6 @@ define(
              */
             renderAddressWidget: function() {
 
-                /*
-                this.rates.subscribe(function(value) {
-                    if (value.length > 0) {
-                        self.toggleNextStepActivation(true);
-                    }
-                });
-                */
-
                 new OffAmazonPayments.Widgets.AddressBook({
                     sellerId: self.options.sellerId,
                     onOrderReferenceCreate: function(orderReference) {
@@ -88,17 +80,12 @@ define(
                     }
                 }).bind(self.options.addressWidgetDOMId);
             },
-/*
-            toggleNextStepActivation: function(value) {
-                //$('.continue', '#shipping-method-buttons-container').toggleClass('disabled', value);
-            },
-*/
+
             /**
              * Get shipping address from Amazon API
              */
             getShippingAddressFromAmazon: function() {
                 amazonStorage.isShippingMethodsLoading(true);
-                amazonStorage.isAmazonShippingAddressSelected(false);
 
                 var serviceUrl = 'rest/default/V1/amazon-shipping-address/' + amazonStorage.getOrderReference(),
                     payload = {
@@ -113,7 +100,7 @@ define(
                         var amazonAddress = data.shift(),
                             addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
 
-                        amazonStorage.isAmazonShippingAddressSelected(true);
+                        addressData.isAmazonAddress = true;
                         selectShippingAddress(addressData);
                     }
                 ).fail(
