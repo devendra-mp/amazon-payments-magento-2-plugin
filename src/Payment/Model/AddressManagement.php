@@ -10,7 +10,7 @@ use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
-use Magento\Framework\Exception\ValidatorException;
+use Magento\Directory\Model\ResourceModel\Country\CollectionFactory;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
@@ -37,16 +37,23 @@ class AddressManagement implements AddressManagementInterface
      */
     protected $session;
 
+    /**
+     * @var CollectionFactory
+     */
+    protected $countryCollectionFactory;
+
     public function __construct(
         ClientFactoryInterface $clientFactory,
         Address $addressHelper,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
-        Session $session
+        Session $session,
+        CollectionFactory $countryCollectionFactory
     ) {
-        $this->clientFactory    = $clientFactory;
-        $this->addressHelper    = $addressHelper;
-        $this->quoteLinkFactory = $quoteLinkFactory;
-        $this->session          = $session;
+        $this->clientFactory            = $clientFactory;
+        $this->addressHelper            = $addressHelper;
+        $this->quoteLinkFactory         = $quoteLinkFactory;
+        $this->session                  = $session;
+        $this->countryCollectionFactory = $countryCollectionFactory;
     }
 
     /**
@@ -62,10 +69,12 @@ class AddressManagement implements AddressManagementInterface
             if (isset($data['OrderReferenceDetails']['Destination']['PhysicalDestination'])) {
                 $shippingAddress = $data['OrderReferenceDetails']['Destination']['PhysicalDestination'];
 
-                return $this->convertToMagentoAddress($shippingAddress);
+                return $this->convertToMagentoAddress($shippingAddress, true);
             }
 
-            throw new ValidatorException(__('address not found'));
+            throw new Exception();
+        } catch (WebapiException $e) {
+            throw $e;
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -91,7 +100,9 @@ class AddressManagement implements AddressManagementInterface
                 return $this->convertToMagentoAddress($billingAddress);
             }
 
-            throw new ValidatorException(__('address not found'));
+            throw new Exception();
+        } catch (WebapiException $e) {
+            throw $e;
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
         }
@@ -106,10 +117,24 @@ class AddressManagement implements AddressManagementInterface
         );
     }
 
-    protected function convertToMagentoAddress($address)
+    protected function convertToMagentoAddress($address, $verifyCountry = false)
     {
         $amazonAddress  = new AmazonAddress($address);
         $magentoAddress = $this->addressHelper->convertToMagentoEntity($amazonAddress);
+
+        if ($verifyCountry) {
+            $countryCollection = $this->countryCollectionFactory->create();
+
+            $collectionSize = $countryCollection->loadByStore()
+                ->addFieldToFilter('country_id', ['eq' => $magentoAddress->getCountryId()])
+                ->setPageSize(1)
+                ->setCurPage(1)
+                ->getSize();
+
+            if (1 != $collectionSize) {
+                throw new WebapiException(__('the country for your address is not allowed for this store'));
+            }
+        }
 
         return [$this->addressHelper->convertToArray($magentoAddress)];
     }
