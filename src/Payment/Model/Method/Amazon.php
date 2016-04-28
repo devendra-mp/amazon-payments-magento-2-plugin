@@ -307,6 +307,7 @@ class Amazon extends AbstractMethod
         $status = $response->getStatus();
 
         switch ($status->getState()) {
+            case AmazonRefundStatus::STATE_COMPLETED:
             case AmazonRefundStatus::STATE_PENDING:
                 return true;
         }
