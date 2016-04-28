@@ -97,7 +97,8 @@ define(
              * Get shipping address from Amazon API
              */
             getShippingAddressFromAmazon: function() {
-                shippingService.isLoading(true);
+                amazonStorage.isShippingMethodsLoading(true);
+                amazonStorage.isAmazonShippingAddressSelected(false);
 
                 var serviceUrl = 'rest/default/V1/amazon-shipping-address/' + amazonStorage.getOrderReference(),
                     payload = {
@@ -118,10 +119,6 @@ define(
                 ).fail(
                     function (response) {
                         errorProcessor.process(response);
-                    }
-                ).always(
-                    function() {
-                        shippingService.isLoading(false);
                     }
                 );
             }
