@@ -8,7 +8,8 @@ define(
         'Magento_Checkout/js/action/set-shipping-information',
         'Magento_Checkout/js/model/step-navigator',
         'Amazon_Payment/js/model/storage',
-        'Magento_Checkout/js/model/shipping-service'
+        'Magento_Checkout/js/model/shipping-service',
+        'Magento_Checkout/js/model/quote'
     ],
     function(
         $,
@@ -18,7 +19,8 @@ define(
         setShippingInformationAction,
         stepNavigator,
         amazonStorage,
-        shippingService
+        shippingService,
+        quote
     ) {
         'use strict';
         return Component.extend({
@@ -26,13 +28,19 @@ define(
                 template: 'Amazon_Payment/shipping'
             },
             isAmazonLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isShippingMethodsLoading: ko.pureComputed(function() {
+            isLoading: ko.pureComputed(function() {
                 return amazonStorage.isAmazonAccountLoggedIn() ? amazonStorage.isShippingMethodsLoading() : shippingService.isLoading();
             }, this),
 
             initialize: function () {
                 var self = this;
                 this._super();
+
+                quote.shippingMethod.subscribe(function() {
+                    if(typeof quote.shippingAddress().isAmazonAddress !== 'undefined') {
+                        amazonStorage.isShippingMethodsLoading(false);
+                    }
+                });
             },
 
             /**
@@ -52,11 +60,6 @@ define(
                     if (this.validateShippingInformation()) {
                         setShippingInformationAmazon();
                     }
-                }
-            },
-            handleShippingMethodsLoader: function () {
-                if (amazonStorage.isShippingMethodsLoading() && amazonStorage.isAmazonShippingAddressSelected()) {
-                    amazonStorage.isShippingMethodsLoading(false);
                 }
             }
         });
