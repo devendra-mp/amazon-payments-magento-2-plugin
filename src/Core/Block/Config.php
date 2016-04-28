@@ -48,6 +48,7 @@ class Config extends Template
             'redirectUrl' => $this->coreHelper->getRedirectUrl(),
             'loginPostUrl' => $this->url->getLoginPostUrl(),
             'sandboxSimulationOptions' => [],
+            'loginScope' => $this->coreHelper->getLoginScope()
         ];
 
         if ($this->coreHelper->isSandboxEnabled()) {

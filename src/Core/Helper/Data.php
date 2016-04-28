@@ -151,6 +151,28 @@ class Data extends AbstractHelper
         return array_key_exists($paymentRegion, $widgetUrlMap) ? $widgetUrlMap[$paymentRegion]: '';
     }
 
+    /**
+     * @param string $scope
+     *
+     * @return string
+     */
+    public function getLoginScope($scope = ScopeInterface::SCOPE_STORE)
+    {
+        $paymentRegion = $this->getPaymentRegion($scope);
+
+        $scope = [
+            'profile',
+            'payments:widget',
+            'payments:shipping_address',
+        ];
+
+        if (in_array($paymentRegion, ['uk', 'de', 'jp'])) {
+            $scope[] = 'payments:billing_address';
+        }
+
+        return implode(' ', $scope);
+    }
+
     /*
      * @return bool
      */

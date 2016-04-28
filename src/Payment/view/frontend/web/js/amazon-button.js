@@ -39,6 +39,7 @@ define([
                 _this.options.buttonSize = window.amazonPayment.buttonSize;
                 _this.options.redirectUrl = window.amazonPayment.redirectUrl;
                 _this.options.loginPostUrl = window.amazonPayment.loginPostUrl;
+                _this.options.loginScope = window.amazonPayment.loginScope;
             }
         },
         /**
@@ -57,7 +58,7 @@ define([
                 language: _this.options.buttonLanguage,
 
                 authorization: function () {
-                    loginOptions = {scope: "profile payments:widget payments:shipping_address payments:billing_address"};
+                    loginOptions = {scope: _this.options.loginScope};
                     authRequest = amazon.Login.authorize(loginOptions, function(event) {
                         var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
                         if (sections) {
