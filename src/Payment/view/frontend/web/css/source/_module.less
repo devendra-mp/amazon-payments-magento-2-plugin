@@ -2,7 +2,12 @@
 
     .centered-button {
         text-align: center;
-        display: inline-block;
+    }
+
+    .amazon-button-wrapper {
+        .amazon-button-container {
+            display: inline-table;
+        }
     }
 
     .checkout-payment-method {
@@ -62,6 +67,13 @@
         .amazon-address {
             margin-bottom: 20px;
         }
+    }
+}
+
+
+@media all and (max-width: @screen__m) {
+    .centered-mobile {
+        text-align: center;
     }
 }
 
