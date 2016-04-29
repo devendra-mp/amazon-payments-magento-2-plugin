@@ -62,7 +62,6 @@ define(
              * render Amazon address Widget
              */
             renderAddressWidget: function() {
-
                 new OffAmazonPayments.Widgets.AddressBook({
                     sellerId: self.options.sellerId,
                     onOrderReferenceCreate: function(orderReference) {
@@ -86,7 +85,7 @@ define(
              */
             getShippingAddressFromAmazon: function() {
                 amazonStorage.isShippingMethodsLoading(true);
-
+                
                 var serviceUrl = 'rest/default/V1/amazon-shipping-address/' + amazonStorage.getOrderReference(),
                     payload = {
                         addressConsentToken: amazonStorage.getAddressConsentToken()
@@ -106,6 +105,9 @@ define(
                 ).fail(
                     function (response) {
                         errorProcessor.process(response);
+                        //remove shipping loader and set shipping rates to 0 on a fail
+                        shippingService.setShippingRates([]);
+                        amazonStorage.isShippingMethodsLoading(false);
                     }
                 );
             }

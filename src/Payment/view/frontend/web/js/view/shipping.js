@@ -38,7 +38,8 @@ define(
 
                 quote.shippingMethod.subscribe(function() {
                     if(typeof quote.shippingAddress().isAmazonAddress !== 'undefined') {
-                        amazonStorage.isShippingMethodsLoading(false);
+                        amazonStorage.isShippingMethodsLoading(false); //remove loader when shippingMethod is set
+                        delete quote.shippingAddress().isAmazonAddress; //delete key now it's no longer needed
                     }
                 });
             },
