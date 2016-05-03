@@ -1,5 +1,16 @@
 & when (@media-common = true) {
 
+    /** mini cart styling **/
+    .amazon-minicart-container {
+        width: 100%;
+        display: block;
+        text-align: center;
+        .amazon-button-container {
+            display: inline-block;
+            margin: 12px 0 4px 0;
+        }
+    }
+
     .centered-button {
         text-align: center;
         display: inline-block;
@@ -61,6 +72,14 @@
         margin-top: 20px;
         .amazon-address {
             margin-bottom: 20px;
+        }
+    }
+}
+
+@media all and (max-width: @screen__m) {
+    .amazon-minicart-container {
+        .amazon-button-container {
+            width: auto;
         }
     }
 }

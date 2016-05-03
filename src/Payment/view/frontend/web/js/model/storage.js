@@ -2,13 +2,11 @@ define(
     [
         'jquery',
         'ko',
-        'Magento_Customer/js/model/customer',
         'amazonCore'
     ],
     function(
         $,
         ko,
-        customer,
         amazonCore
     ) {
         'use strict';
