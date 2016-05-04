@@ -7,10 +7,13 @@ use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
+use Amazon\Payment\Domain\AmazonAuthorizationResponseFactory;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Amazon\Payment\Domain\AmazonCaptureResponse;
+use Amazon\Payment\Domain\AmazonCaptureResponseFactory;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Amazon\Payment\Domain\AmazonRefundResponse;
+use Amazon\Payment\Domain\AmazonRefundResponseFactory;
 use Amazon\Payment\Domain\AmazonRefundStatus;
 use Amazon\Payment\Exception\HardDeclineException;
 use Amazon\Payment\Exception\SoftDeclineException;
@@ -29,6 +32,7 @@ use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
@@ -78,6 +82,26 @@ class Amazon extends AbstractMethod
      */
     protected $orderInformationManagement;
 
+    /**
+     * @var CartRepositoryInterface
+     */
+    protected $cartRepository;
+
+    /**
+     * @var AmazonAuthorizationResponseFactory
+     */
+    protected $amazonAuthorizationResponseFactory;
+
+    /**
+     * @var AmazonRefundResponseFactory
+     */
+    protected $amazonRefundResponseFactory;
+
+    /**
+     * @var AmazonCaptureResponseFactory
+     */
+    protected $amazonCaptureResponseFactory;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -90,6 +114,10 @@ class Amazon extends AbstractMethod
         CoreHelper $coreHelper,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
         OrderInformationManagementInterface $orderInformationManagement,
+        CartRepositoryInterface $cartRepository,
+        AmazonAuthorizationResponseFactory $amazonAuthorizationResponseFactory,
+        AmazonCaptureResponseFactory $amazonCaptureResponseFactory,
+        AmazonRefundResponseFactory $amazonRefundResponseFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -107,10 +135,14 @@ class Amazon extends AbstractMethod
             $data
         );
 
-        $this->clientFactory              = $clientFactory;
-        $this->coreHelper                 = $coreHelper;
-        $this->quoteLinkFactory           = $quoteLinkFactory;
-        $this->orderInformationManagement = $orderInformationManagement;
+        $this->clientFactory                      = $clientFactory;
+        $this->coreHelper                         = $coreHelper;
+        $this->quoteLinkFactory                   = $quoteLinkFactory;
+        $this->orderInformationManagement         = $orderInformationManagement;
+        $this->cartRepository                     = $cartRepository;
+        $this->amazonAuthorizationResponseFactory = $amazonAuthorizationResponseFactory;
+        $this->amazonCaptureResponseFactory       = $amazonCaptureResponseFactory;
+        $this->amazonRefundResponseFactory        = $amazonRefundResponseFactory;
     }
 
     /**
@@ -151,7 +183,8 @@ class Amazon extends AbstractMethod
 
         $client = $this->clientFactory->create();
 
-        $response = new AmazonRefundResponse($client->refund($data));
+        $responseParser = $client->refund($data);
+        $response       = $this->amazonRefundResponseFactory->create(['response' => $responseParser]);
         $this->validateRefundResponse($response);
     }
 
@@ -179,7 +212,8 @@ class Amazon extends AbstractMethod
         $client = $this->clientFactory->create();
 
         try {
-            $response = new AmazonAuthorizationResponse($client->authorize($data));
+            $responseParser = $client->authorize($data);
+            $response       = $this->amazonAuthorizationResponseFactory->create(['response' => $responseParser]);
 
             $this->validateAuthorizationResponse($response);
 
@@ -240,6 +274,7 @@ class Amazon extends AbstractMethod
         }
 
         $this->deleteAmazonOrderReferenceId($payment);
+        $this->reserveNewOrderId($payment);
 
         throw new WebapiException(
             __('Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'),
@@ -279,7 +314,8 @@ class Amazon extends AbstractMethod
 
         $client = $this->clientFactory->create();
 
-        $response = new AmazonCaptureResponse($client->capture($data));
+        $responseParser = $client->capture($data);
+        $response       = $this->amazonCaptureResponseFactory->create(['response' => $responseParser]);
 
         $this->validateCaptureResponse($response);
 
@@ -330,6 +366,20 @@ class Amazon extends AbstractMethod
     protected function deleteAmazonOrderReferenceId(InfoInterface $payment)
     {
         $this->getQuoteLink($payment)->delete();
+    }
+
+    protected function reserveNewOrderId(InfoInterface $payment)
+    {
+        $this->getQuote($payment)
+            ->setReservedOrderId(null)
+            ->reserveOrderId()
+            ->save();
+    }
+
+    protected function getQuote(InfoInterface $payment)
+    {
+        $quoteId = $payment->getOrder()->getQuoteId();
+        return $this->cartRepository->get($quoteId);
     }
 
     protected function getQuoteLink(InfoInterface $payment)

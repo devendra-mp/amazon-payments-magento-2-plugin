@@ -25,11 +25,11 @@ class AmazonAuthorizationResponse
     /**
      * AmazonAuthorizationResponse constructor.
      *
-     * @param ResponseInterface $reponse
+     * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $reponse)
+    public function __construct(ResponseInterface $response)
     {
-        $data = $reponse->toArray();
+        $data = $response->toArray();
 
         if (200 != $data['ResponseStatus']) {
             throw new AmazonServiceUnavailableException();
