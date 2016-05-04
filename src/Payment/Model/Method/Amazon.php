@@ -205,7 +205,11 @@ class Amazon extends AbstractMethod
         $transport = new DataObject($data);
         $this->_eventManager->dispatch(
             'amazon_payment_authorize_before',
-            ['context' => 'authorization', 'payment' => $payment, 'transport' => $transport]
+            [
+                'context'   => ($capture) ? 'authorization_capture' : 'authorization',
+                'payment'   => $payment,
+                'transport' => $transport
+            ]
         );
         $data = $transport->getData();
 
