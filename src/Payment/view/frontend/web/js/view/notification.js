@@ -24,6 +24,7 @@ define(
             },
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
             chargeOnOrder: ko.observable(window.amazonPayment.chargeOnOrder),
+            isEuPaymentRegion: ko.observable(window.amazonPayment.isEuPaymentRegion),
             initialize: function () {
                 self = this;
                 this._super();

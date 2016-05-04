@@ -48,7 +48,8 @@ class Config extends Template
             'redirectUrl' => $this->coreHelper->getRedirectUrl(),
             'loginPostUrl' => $this->url->getLoginPostUrl(),
             'sandboxSimulationOptions' => [],
-            'loginScope' => $this->coreHelper->getLoginScope()
+            'loginScope' => $this->coreHelper->getLoginScope(),
+            'isEuPaymentRegion' => $this->coreHelper->isEuPaymentRegion()
         ];
 
         if ($this->coreHelper->isSandboxEnabled()) {

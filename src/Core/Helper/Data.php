@@ -173,6 +173,18 @@ class Data extends AbstractHelper
         return implode(' ', $scope);
     }
 
+    /**
+     * @param string $scope
+     *
+     * @return boolean
+     */
+    public function isEuPaymentRegion($scope = ScopeInterface::SCOPE_STORE)
+    {
+        $paymentRegion = $this->getPaymentRegion($scope);
+
+        return (in_array($paymentRegion, ['uk', 'de']));
+    }
+
     /*
      * @return bool
      */
