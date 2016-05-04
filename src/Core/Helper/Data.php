@@ -435,7 +435,7 @@ class Data extends AbstractHelper
             'default' => null
         ];
 
-        if ('authorization' == $context) {
+        if (in_array($context, ['authorization', 'authorization_capture'])) {
             $simulationStrings['Authorization:Declined:InvalidPaymentMethod']
                 = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod"}}';
             $simulationStrings['Authorization:Declined:AmazonRejected']
@@ -444,7 +444,7 @@ class Data extends AbstractHelper
                 = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"TransactionTimedOut"}}';
         }
 
-        if ('capture' == $context) {
+        if (in_array($context, ['capture', 'authorization_capture'])) {
             $simulationStrings['Capture:Declined:AmazonRejected']
                 = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}';
         }

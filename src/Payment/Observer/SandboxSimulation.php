@@ -99,6 +99,7 @@ class SandboxSimulation implements ObserverInterface
     protected function getRequestParameters() {
         $requestParameters = [
             'authorization' => 'seller_authorization_note',
+            'authorization_capture' => 'seller_authorization_note',
             'capture' => 'seller_capture_note',
         ];
 
