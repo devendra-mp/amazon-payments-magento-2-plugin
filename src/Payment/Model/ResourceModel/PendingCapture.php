@@ -13,4 +13,15 @@ class PendingCapture extends AbstractDb
     {
         $this->_init(static::TABLE_NAME, PendingCaptureInterface::ID);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function _getLoadSelect($field, $value, $object)
+    {
+        $select = parent::_getLoadSelect($field, $value, $object);
+        $select->forUpdate($object->getLockOnLoad());
+
+        return $select;
+    }
 }

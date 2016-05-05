@@ -19,6 +19,11 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
     protected $dateFactory;
 
     /**
+     * @var boolean
+     */
+    protected $lockOnLoad = false;
+
+    /**
      * PendingCapture constructor.
      *
      * @param Context               $context
@@ -97,5 +102,23 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
         }
 
         return parent::beforeSave();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLockOnLoad($lockOnLoad)
+    {
+        $this->lockOnLoad = $lockOnLoad;
+        
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLockOnLoad()
+    {
+        return $this->lockOnLoad;
     }
 }

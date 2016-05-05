@@ -2,6 +2,7 @@
 
 namespace Amazon\Payment\Api\Data;
 
+use Amazon\Payment\Model\ResourceModel\PendingCapture as PendingCaptureResourceModel;
 use Exception;
 
 interface PendingCaptureInterface
@@ -57,4 +58,28 @@ interface PendingCaptureInterface
      * @return $this
      */
     public function load($modelId, $field = null);
+
+    /**
+     * Set whether to lock db record on load
+     *
+     * @param boolean $lockOnLoad
+     *
+     * @return $this
+     */
+    public function setLockOnLoad($lockOnLoad);
+
+    /**
+     * Get whether to lock db record on load
+     *
+     * @return boolean
+     */
+    public function getLockOnLoad();
+
+
+    /**
+     * Retrieve model resource
+     *
+     * @return PendingCaptureResourceModel
+     */
+    public function getResource();
 }
