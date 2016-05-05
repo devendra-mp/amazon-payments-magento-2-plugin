@@ -4,6 +4,7 @@
     <preference for="Amazon\Payment\Api\AddressManagementInterface" type="Amazon\Payment\Model\AddressManagement" />
     <preference for="Amazon\Payment\Api\Data\QuoteLinkInterface" type="Amazon\Payment\Model\QuoteLink" />
     <preference for="Amazon\Payment\Api\Data\OrderLinkInterface" type="Amazon\Payment\Model\OrderLink" />
+    <preference for="Amazon\Payment\Api\Data\PendingCaptureInterface" type="Amazon\Payment\Model\PendingCapture" />
     <type name="Magento\Quote\Api\CartRepositoryInterface">
         <plugin name="amazon_payment_quote_repository" type="Amazon\Payment\Plugin\QuoteRepository" sortOrder="1" />
     </type>

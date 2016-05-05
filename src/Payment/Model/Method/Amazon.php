@@ -4,6 +4,8 @@ namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Helper\Data as CoreHelper;
+use Amazon\Payment\Api\Data\PendingCaptureInterface;
+use Amazon\Payment\Api\Data\PendingCaptureInterfaceFactory;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
@@ -15,6 +17,7 @@ use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Amazon\Payment\Domain\AmazonRefundResponse;
 use Amazon\Payment\Domain\AmazonRefundResponseFactory;
 use Amazon\Payment\Domain\AmazonRefundStatus;
+use Amazon\Payment\Exception\CapturePendingException;
 use Amazon\Payment\Exception\HardDeclineException;
 use Amazon\Payment\Exception\SoftDeclineException;
 use Exception;
@@ -33,6 +36,7 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
@@ -103,6 +107,11 @@ class Amazon extends AbstractMethod
      */
     protected $amazonCaptureResponseFactory;
 
+    /**
+     * @var PendingCaptureInterfaceFactory
+     */
+    protected $pendingCaptureFactory;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -119,6 +128,7 @@ class Amazon extends AbstractMethod
         AmazonAuthorizationResponseFactory $amazonAuthorizationResponseFactory,
         AmazonCaptureResponseFactory $amazonCaptureResponseFactory,
         AmazonRefundResponseFactory $amazonRefundResponseFactory,
+        PendingCaptureInterfaceFactory $pendingCaptureFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -144,6 +154,7 @@ class Amazon extends AbstractMethod
         $this->amazonAuthorizationResponseFactory = $amazonAuthorizationResponseFactory;
         $this->amazonCaptureResponseFactory       = $amazonCaptureResponseFactory;
         $this->amazonRefundResponseFactory        = $amazonRefundResponseFactory;
+        $this->pendingCaptureFactory              = $pendingCaptureFactory;
     }
 
     /**
@@ -324,12 +335,17 @@ class Amazon extends AbstractMethod
 
         $client = $this->clientFactory->create($storeId);
 
-        $responseParser = $client->capture($data);
-        $response       = $this->amazonCaptureResponseFactory->create(['response' => $responseParser]);
+        try {
+            $responseParser = $client->capture($data);
+            $response       = $this->amazonCaptureResponseFactory->create(['response' => $responseParser]);
 
-        $this->validateCaptureResponse($response);
+            $this->validateCaptureResponse($response);
 
-        $payment->setTransactionId($response->getTransactionId());
+            $payment->setTransactionId($response->getTransactionId());
+        } catch (CapturePendingException $e) {
+            $this->queuePendingCapture($payment);
+            throw new StateException(__('Amazon capture is pending and has been queued'));
+        }
     }
 
     protected function validateCaptureResponse(AmazonCaptureResponse $response)
@@ -339,6 +355,8 @@ class Amazon extends AbstractMethod
         switch ($status->getState()) {
             case AmazonCaptureStatus::STATE_COMPLETED:
                 return true;
+            case AmazonCaptureStatus::STATE_PENDING:
+                throw new CapturePendingException();
             case AmazonCaptureStatus::STATE_DECLINED:
                 throw new StateException(__('Amazon capture declined : %1', $status->getReasonCode()));
         }
@@ -346,6 +364,19 @@ class Amazon extends AbstractMethod
         throw new StateException(
             __('Amazon capture invalid state : %1 with reason %2', [$status->getState(), $status->getReasonCode()])
         );
+    }
+
+    protected function queuePendingCapture(InfoInterface $payment)
+    {
+        $authorizationId = $payment->getParentTransactionId();
+        $pendingCapture  = $this->pendingCaptureFactory->create();
+        $pendingCapture->load($authorizationId, PendingCaptureInterface::AUTHORIZATION_ID);
+
+        if (!$pendingCapture->getAuthorizationId()) {
+            $pendingCapture
+                ->setAuthorizationId($authorizationId)
+                ->save();
+        }
     }
 
     protected function validateRefundResponse(AmazonRefundResponse $response)
