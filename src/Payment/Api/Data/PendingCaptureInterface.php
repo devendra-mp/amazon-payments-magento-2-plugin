@@ -9,7 +9,6 @@ interface PendingCaptureInterface
 {
     const ID = 'entity_id';
     const CAPTURE_ID = 'capture_id';
-    const AUTHORIZATION_ID = 'authorization_id';
     const CREATED_AT = 'created_at';
 
     /**
@@ -18,22 +17,6 @@ interface PendingCaptureInterface
      * @return integer
      */
     public function getId();
-
-    /**
-     * Get authorization id
-     *
-     * @return string
-     */
-    public function getAuthorizationId();
-
-    /**
-     * Set authorization id
-     *
-     * @param string $authorizationId
-     *
-     * @return $this
-     */
-    public function setAuthorizationId($authorizationId);
 
     /**
      * Get capture id

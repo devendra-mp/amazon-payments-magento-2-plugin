@@ -342,7 +342,7 @@ class Amazon extends AbstractMethod
         } catch (CapturePendingException $e) {
             $payment->setIsTransactionPending(true);
             $payment->setIsTransactionClosed(false);
-            $this->queuePendingCapture($payment, $response);
+            $this->queuePendingCapture($response);
         } finally {
             $payment->setTransactionId($response->getTransactionId());
         }
@@ -366,14 +366,10 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function queuePendingCapture(InfoInterface $payment, AmazonCaptureResponse $response)
+    protected function queuePendingCapture(AmazonCaptureResponse $response)
     {
-        $authorizationId = $payment->getParentTransactionId();
-        $captureId       = $response->getTransactionId();
-
         $this->pendingCaptureFactory->create()
-            ->setAuthorizationId($authorizationId)
-            ->setCaptureId($captureId)
+            ->setCaptureId($response->getTransactionId())
             ->save();
     }
 

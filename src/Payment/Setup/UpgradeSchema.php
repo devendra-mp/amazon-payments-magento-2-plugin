@@ -118,27 +118,12 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     ]
                 )
                 ->addColumn(
-                    PendingCaptureInterface::AUTHORIZATION_ID,
-                    Table::TYPE_TEXT,
-                    255,
-                    [
-                        'nullable' => false
-                    ]
-                )
-                ->addColumn(
                     PendingCaptureInterface::CREATED_AT,
                     Table::TYPE_DATETIME,
                     null,
                     [
                         'nullable' => false
                     ]
-                )
-                ->addIndex(
-                    $setup->getIdxName(
-                        PendingCapture::TABLE_NAME, [PendingCaptureInterface::AUTHORIZATION_ID], AdapterInterface::INDEX_TYPE_UNIQUE
-                    ),
-                    [PendingCaptureInterface::AUTHORIZATION_ID],
-                    ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
                 )
                 ->addIndex(
                     $setup->getIdxName(

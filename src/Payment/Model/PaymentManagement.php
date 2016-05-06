@@ -11,6 +11,10 @@ use Amazon\Payment\Domain\AmazonCaptureDetailsResponse;
 use Amazon\Payment\Domain\AmazonCaptureDetailsResponseFactory;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Exception;
+use Magento\Sales\Api\Data\InvoiceInterface;
+use Magento\Sales\Api\Data\InvoiceInterfaceFactory;
+use Magento\Sales\Api\Data\TransactionInterface;
+use Magento\Sales\Api\Data\TransactionInterfaceFactory;
 
 class PaymentManagement implements PaymentManagementInterface
 {
@@ -34,16 +38,30 @@ class PaymentManagement implements PaymentManagementInterface
      */
     protected $amazonCaptureDetailsResponseFactory;
 
+    /**
+     * @var TransactionInterfaceFactory
+     */
+    protected $transactionFactory;
+
+    /**
+     * @var InvoiceInterfaceFactory
+     */
+    protected $invoiceFactory;
+
     public function __construct(
         PendingCaptureInterfaceFactory $pendingCaptureFactory,
         ClientFactoryInterface $clientFactory,
         CoreHelper $coreHelper,
-        AmazonCaptureDetailsResponseFactory $amazonCaptureDetailsResponseFactory
+        AmazonCaptureDetailsResponseFactory $amazonCaptureDetailsResponseFactory,
+        TransactionInterfaceFactory $transactionFactory,
+        InvoiceInterfaceFactory $invoiceFactory
     ) {
         $this->clientFactory                       = $clientFactory;
         $this->pendingCaptureFactory               = $pendingCaptureFactory;
         $this->coreHelper                          = $coreHelper;
         $this->amazonCaptureDetailsResponseFactory = $amazonCaptureDetailsResponseFactory;
+        $this->transactionFactory                  = $transactionFactory;
+        $this->invoiceFactory                      = $invoiceFactory;
     }
 
     /**
@@ -91,11 +109,33 @@ class PaymentManagement implements PaymentManagementInterface
 
     protected function completePendingCapture(PendingCaptureInterface $pendingCapture)
     {
-        //$pendingCapture->delete();
+        $invoice = $this->getInvoice($pendingCapture->getCaptureId())->pay();
+        $this->applyPendingCaptureUpdate($invoice, $pendingCapture);
     }
 
     protected function declinePendingCapture(PendingCaptureInterface $pendingCapture)
     {
-        //$pendingCapture->delete();
+        $invoice = $this->getInvoice($pendingCapture->getCaptureId())->cancel();
+        $this->applyPendingCaptureUpdate($invoice, $pendingCapture);
+    }
+
+    protected function applyPendingCaptureUpdate($invoice, $pendingCapture)
+    {
+        $this->getTransaction($pendingCapture->getCaptureId())->setIsClosed(1)->save();
+        $invoice->save();
+        $invoice->getOrder()->save();
+        $pendingCapture->delete();
+    }
+
+    protected function getTransaction($transactionId)
+    {
+        return $this->transactionFactory->create()
+            ->load($transactionId, TransactionInterface::TXN_ID);
+    }
+
+    protected function getInvoice($transactionId)
+    {
+        return $this->invoiceFactory->create()
+            ->load($transactionId, InvoiceInterface::TRANSACTION_ID);
     }
 }

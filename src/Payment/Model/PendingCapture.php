@@ -75,23 +75,7 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
     {
         return $this->setData(PendingCaptureInterface::CAPTURE_ID, $captureId);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setAuthorizationId($authorizationId)
-    {
-        return $this->setData(PendingCaptureInterface::AUTHORIZATION_ID, $authorizationId);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getAuthorizationId()
-    {
-        return $this->getData(PendingCaptureInterface::AUTHORIZATION_ID);
-    }
-
+    
     /**
      * {@inheritDoc}
      */
