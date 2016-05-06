@@ -339,11 +339,12 @@ class Amazon extends AbstractMethod
             $response       = $this->amazonCaptureResponseFactory->create(['response' => $responseParser]);
 
             $this->validateCaptureResponse($response);
-
-            $payment->setTransactionId($response->getTransactionId());
         } catch (CapturePendingException $e) {
+            $payment->setIsTransactionPending(true);
+            $payment->setIsTransactionClosed(false);
             $this->queuePendingCapture($payment, $response);
-            throw new StateException(__('Amazon capture is pending and has been queued'));
+        } finally {
+            $payment->setTransactionId($response->getTransactionId());
         }
     }
 
