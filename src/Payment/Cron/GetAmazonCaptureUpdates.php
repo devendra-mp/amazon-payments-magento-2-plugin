@@ -40,9 +40,9 @@ class GetAmazonCaptureUpdates
             ->setPageSize($this->limit)
             ->setCurPage(1);
 
-        $pendingAuthorizationIds = $collection->getIdGenerator();
-        foreach($pendingAuthorizationIds as $authorizationId) {
-            $this->paymentManagement->capturePendingAuthorization($authorizationId);
+        $pendingCaptureIds = $collection->getIdGenerator();
+        foreach($pendingCaptureIds as $pendingCaptureId) {
+            $this->paymentManagement->updateCapture($pendingCaptureId);
         }
     }
 }

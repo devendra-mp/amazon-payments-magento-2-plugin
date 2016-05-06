@@ -2,6 +2,7 @@
 
 namespace Amazon\Payment\Model\ResourceModel\PendingCapture;
 
+use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Amazon\Payment\Model\PendingCapture as PendingCaptureModel;
@@ -22,7 +23,7 @@ class Collection extends AbstractCollection
         $statement = $select->getConnection()->query($select, $this->_bindParams);
 
         while ($row = $statement->fetch()) {
-            yield $row['authorization_id'];
+            yield $row[PendingCaptureInterface::ID];
         }
     }
 }

@@ -8,8 +8,16 @@ use Exception;
 interface PendingCaptureInterface
 {
     const ID = 'entity_id';
+    const CAPTURE_ID = 'capture_id';
     const AUTHORIZATION_ID = 'authorization_id';
     const CREATED_AT = 'created_at';
+
+    /**
+     * Get pending capture id
+     *
+     * @return integer
+     */
+    public function getId();
 
     /**
      * Get authorization id
@@ -26,6 +34,22 @@ interface PendingCaptureInterface
      * @return $this
      */
     public function setAuthorizationId($authorizationId);
+
+    /**
+     * Get capture id
+     *
+     * @return string
+     */
+    public function getCaptureId();
+
+    /**
+     * Set capture id
+     *
+     * @param string $captureId
+     *
+     * @return $this
+     */
+    public function setCaptureId($captureId);
 
     /**
      * Get created at

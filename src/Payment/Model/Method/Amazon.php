@@ -4,7 +4,6 @@ namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Helper\Data as CoreHelper;
-use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Api\Data\PendingCaptureInterfaceFactory;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
@@ -343,7 +342,7 @@ class Amazon extends AbstractMethod
 
             $payment->setTransactionId($response->getTransactionId());
         } catch (CapturePendingException $e) {
-            $this->queuePendingCapture($payment);
+            $this->queuePendingCapture($payment, $response);
             throw new StateException(__('Amazon capture is pending and has been queued'));
         }
     }
@@ -366,17 +365,15 @@ class Amazon extends AbstractMethod
         );
     }
 
-    protected function queuePendingCapture(InfoInterface $payment)
+    protected function queuePendingCapture(InfoInterface $payment, AmazonCaptureResponse $response)
     {
         $authorizationId = $payment->getParentTransactionId();
-        $pendingCapture  = $this->pendingCaptureFactory->create();
-        $pendingCapture->load($authorizationId, PendingCaptureInterface::AUTHORIZATION_ID);
+        $captureId       = $response->getTransactionId();
 
-        if (!$pendingCapture->getAuthorizationId()) {
-            $pendingCapture
-                ->setAuthorizationId($authorizationId)
-                ->save();
-        }
+        $this->pendingCaptureFactory->create()
+            ->setAuthorizationId($authorizationId)
+            ->setCaptureId($captureId)
+            ->save();
     }
 
     protected function validateRefundResponse(AmazonRefundResponse $response)

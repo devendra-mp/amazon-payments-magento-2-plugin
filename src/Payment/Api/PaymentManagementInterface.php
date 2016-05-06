@@ -5,9 +5,11 @@ namespace Amazon\Payment\Api;
 interface PaymentManagementInterface
 {
     /**
-     * @param string $authorizationId
+     * Update capture
+     *
+     * @param integer $pendingCaptureId
      *
      * @return void
      */
-    public function capturePendingAuthorization($authorizationId);
+    public function updateCapture($pendingCaptureId);
 }
