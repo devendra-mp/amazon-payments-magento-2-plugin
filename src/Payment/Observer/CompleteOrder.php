@@ -41,7 +41,7 @@ class CompleteOrder implements ObserverInterface
         try {
             $amazonOrderReferenceId = $order->getExtensionAttributes()->getAmazonOrderReferenceId();
             if ($amazonOrderReferenceId && Amazon::PAYMENT_METHOD_CODE == $order->getPayment()->getMethod()) {
-                $this->orderInformationManagement->closeOrderReference($amazonOrderReferenceId);
+                $this->orderInformationManagement->closeOrderReference($amazonOrderReferenceId, $order->getStoreId());
             }
         } catch (Exception $e) {
             //ignored as either it's in a closed state already or it will be auto closed by amazon

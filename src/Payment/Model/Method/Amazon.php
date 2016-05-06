@@ -36,6 +36,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Store\Model\ScopeInterface;
 use PayWithAmazon\ResponseParser;
 
 class Amazon extends AbstractMethod
@@ -172,16 +173,17 @@ class Amazon extends AbstractMethod
     {
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
         $captureId              = $payment->getParentTransactionId();
+        $storeId                = $payment->getOrder()->getStoreId();
 
         $data = [
-            'merchant_id'         => $this->coreHelper->getMerchantId(),
+            'merchant_id'         => $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId),
             'amazon_capture_id'   => $captureId,
             'refund_reference_id' => $amazonOrderReferenceId . '-R' . time(),
             'refund_amount'       => $amount,
             'currency_code'       => $this->getCurrencyCode($payment)
         ];
 
-        $client = $this->clientFactory->create();
+        $client = $this->clientFactory->create($storeId);
 
         $responseParser = $client->refund($data);
         $response       = $this->amazonRefundResponseFactory->create(['response' => $responseParser]);
@@ -191,9 +193,10 @@ class Amazon extends AbstractMethod
     protected function _authorize(InfoInterface $payment, $amount, $capture = false)
     {
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
+        $storeId                = $payment->getOrder()->getStoreId();
 
         $data = [
-            'merchant_id'                => $this->coreHelper->getMerchantId(),
+            'merchant_id'                => $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId),
             'amazon_order_reference_id'  => $amazonOrderReferenceId,
             'authorization_amount'       => $amount,
             'currency_code'              => $this->getCurrencyCode($payment),
@@ -213,7 +216,7 @@ class Amazon extends AbstractMethod
         );
         $data = $transport->getData();
 
-        $client = $this->clientFactory->create();
+        $client = $this->clientFactory->create($storeId);
 
         try {
             $responseParser = $client->authorize($data);
@@ -271,8 +274,10 @@ class Amazon extends AbstractMethod
 
     protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
+        $storeId = $payment->getOrder()->getStoreId();
+
         try {
-            $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId);
+            $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId, $storeId);
         } catch (Exception $e) {
             //ignored as it's likely in a cancelled state already or there is a problem we cannot rectify
         }
@@ -300,9 +305,10 @@ class Amazon extends AbstractMethod
     {
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
         $authorizationId        = $payment->getParentTransactionId();
+        $storeId                = $payment->getOrder()->getStoreId();
 
         $data = [
-            'merchant_id'             => $this->coreHelper->getMerchantId(),
+            'merchant_id'             => $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId),
             'amazon_authorization_id' => $authorizationId,
             'capture_amount'          => $amount,
             'currency_code'           => $this->getCurrencyCode($payment),
@@ -316,7 +322,7 @@ class Amazon extends AbstractMethod
         );
         $data = $transport->getData();
 
-        $client = $this->clientFactory->create();
+        $client = $this->clientFactory->create($storeId);
 
         $responseParser = $client->capture($data);
         $response       = $this->amazonCaptureResponseFactory->create(['response' => $responseParser]);

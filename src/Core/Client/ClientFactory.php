@@ -5,6 +5,7 @@ namespace Amazon\Core\Client;
 use Amazon\Core\Helper\Data;
 use Amazon\Core\Model\EnvironmentChecker;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class ClientFactory implements ClientFactoryInterface
 {
@@ -50,15 +51,15 @@ class ClientFactory implements ClientFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function create()
+    public function create($storeId = null)
     {
         $config = [
-            'secret_key'  => $this->coreHelper->getSecretKey(),
-            'access_key'  => $this->coreHelper->getAccessKey(),
-            'merchant_id' => $this->coreHelper->getMerchantId(),
-            'region'      => $this->coreHelper->getRegion(),
-            'sandbox'     => $this->coreHelper->isSandboxEnabled(),
-            'client_id'   => $this->coreHelper->getClientId()
+            'secret_key'  => $this->coreHelper->getSecretKey(ScopeInterface::SCOPE_STORE, $storeId),
+            'access_key'  => $this->coreHelper->getAccessKey(ScopeInterface::SCOPE_STORE, $storeId),
+            'merchant_id' => $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId),
+            'region'      => $this->coreHelper->getRegion(ScopeInterface::SCOPE_STORE, $storeId),
+            'sandbox'     => $this->coreHelper->isSandboxEnabled(ScopeInterface::SCOPE_STORE, $storeId),
+            'client_id'   => $this->coreHelper->getClientId(ScopeInterface::SCOPE_STORE, $storeId)
         ];
 
         if ($this->environmentChecker->isTestMode()) {

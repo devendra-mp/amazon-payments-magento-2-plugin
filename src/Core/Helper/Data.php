@@ -30,33 +30,36 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getMerchantId($scope = ScopeInterface::SCOPE_STORE)
+    public function getMerchantId($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/merchant_id',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getAccessKey($scope = ScopeInterface::SCOPE_STORE)
+    public function getAccessKey($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/access_key',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getSecretKey($scope = ScopeInterface::SCOPE_STORE)
+    public function getSecretKey($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         $secretKey = $this->scopeConfig->getValue(
             'payment/amazon_payment/secret_key',
-            $scope
+            $scope,
+            $scopeCode
         );
         $secretKey = $this->encryptor->decrypt($secretKey);
         
@@ -66,22 +69,24 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getClientId($scope = ScopeInterface::SCOPE_STORE)
+    public function getClientId($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/client_id',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getClientSecret($scope = ScopeInterface::SCOPE_STORE)
+    public function getClientSecret($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         $clientSecret = $this->scopeConfig->getValue(
             'payment/amazon_payment/client_secret',
-            $scope
+            $scope,
+            $scopeCode
         );
         $clientSecret = $this->encryptor->decrypt($clientSecret);
 
@@ -91,28 +96,29 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getPaymentRegion($scope = ScopeInterface::SCOPE_STORE)
+    public function getPaymentRegion($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/payment_region',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getRegion($scope = ScopeInterface::SCOPE_STORE)
+    public function getRegion($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return $this->getPaymentRegion($scope);
+        return $this->getPaymentRegion($scope, $scopeCode);
     }
 
     /*
      * @return string
      */
-    public function getCurrencyCode($scope = ScopeInterface::SCOPE_STORE)
+    public function getCurrencyCode($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        $paymentRegion = $this->getPaymentRegion($scope);
+        $paymentRegion = $this->getPaymentRegion($scope, $scopeCode);
 
         $currencyCodeMap = [
             'de' => 'EUR',
@@ -127,10 +133,10 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getWidgetUrl($scope = ScopeInterface::SCOPE_STORE)
+    public function getWidgetUrl($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        $paymentRegion = $this->getPaymentRegion($scope);
-        $sandboxEnabled = $this->isSandboxEnabled($scope);
+        $paymentRegion = $this->getPaymentRegion($scope, $scopeCode);
+        $sandboxEnabled = $this->isSandboxEnabled($scope, $scopeCode);
 
         $widgetUrlMap = [
             'de' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/lpa/js/Widgets.js',
@@ -156,9 +162,9 @@ class Data extends AbstractHelper
      *
      * @return string
      */
-    public function getLoginScope($scope = ScopeInterface::SCOPE_STORE)
+    public function getLoginScope($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        $paymentRegion = $this->getPaymentRegion($scope);
+        $paymentRegion = $this->getPaymentRegion($scope, $scopeCode);
 
         $scope = [
             'profile',
@@ -176,34 +182,37 @@ class Data extends AbstractHelper
     /*
      * @return bool
      */
-    public function isSandboxEnabled($scope = ScopeInterface::SCOPE_STORE)
+    public function isSandboxEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/sandbox',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return bool
      */
-    public function isPwaEnabled($scope = ScopeInterface::SCOPE_STORE)
+    public function isPwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/pwa_enabled',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return bool
      */
-    public function isLwaEnabled($scope = ScopeInterface::SCOPE_STORE)
+    public function isLwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         $pwaEnabled = $this->isPwaEnabled($scope);
         $lwaEnabled = (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/lwa_enabled',
-            $scope
+            $scope,
+            $scopeCode
         );
 
         return $pwaEnabled && $lwaEnabled;
@@ -212,75 +221,81 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getPaymentAction($scope = ScopeInterface::SCOPE_STORE)
+    public function getPaymentAction($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/payment_action',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getAuthorizationMode($scope = ScopeInterface::SCOPE_STORE)
+    public function getAuthorizationMode($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/authorization_mode',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getUpdateMechanism($scope = ScopeInterface::SCOPE_STORE)
+    public function getUpdateMechanism($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/update_mechanism',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getDisplayLanguage($scope = ScopeInterface::SCOPE_STORE)
+    public function getDisplayLanguage($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/display_language',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getAuthenticationExperience($scope = ScopeInterface::SCOPE_STORE)
+    public function getAuthenticationExperience($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/authentication_experience',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getButtonType($scope = ScopeInterface::SCOPE_STORE)
+    public function getButtonType($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/button_type',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getButtonTypePwa($scope = ScopeInterface::SCOPE_STORE)
+    public function getButtonTypePwa($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        $buttonType = $this->getButtonType($scope);
+        $buttonType = $this->getButtonType($scope, $scopeCode);
 
         $buttonTypeMap = [
             'full' => 'PwA',
@@ -294,9 +309,9 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getButtonTypeLwa($scope = ScopeInterface::SCOPE_STORE)
+    public function getButtonTypeLwa($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        $buttonType = $this->getButtonType($scope);
+        $buttonType = $this->getButtonType($scope, $scopeCode);
 
         $buttonTypeMap = [
             'full' => 'LwA',
@@ -310,55 +325,60 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getButtonColor($scope = ScopeInterface::SCOPE_STORE)
+    public function getButtonColor($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/button_color',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getButtonSize($scope = ScopeInterface::SCOPE_STORE)
+    public function getButtonSize($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/button_size',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getNewOrderStatus($scope = ScopeInterface::SCOPE_STORE)
+    public function getNewOrderStatus($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/new_order_status',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getAuthorizedOrderStatus($scope = ScopeInterface::SCOPE_STORE)
+    public function getAuthorizedOrderStatus($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/authorized_order_status',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getCapturedOrderStatus($scope = ScopeInterface::SCOPE_STORE)
+    public function getCapturedOrderStatus($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/captured_order_status',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
@@ -366,55 +386,60 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getEmailStoreName($scope = ScopeInterface::SCOPE_STORE)
+    public function getEmailStoreName($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/email_store_name',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getAdditionalAccessScope($scope = ScopeInterface::SCOPE_STORE)
+    public function getAdditionalAccessScope($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/additional_access_scope',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return bool
      */
-    public function isExcludePackingStations($scope = ScopeInterface::SCOPE_STORE)
+    public function isExcludePackingStations($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/exclude_packing_stations',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return bool
      */
-    public function isLoggingEnabled($scope = ScopeInterface::SCOPE_STORE)
+    public function isLoggingEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/logging',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
     /*
      * @return string
      */
-    public function getRestrictedIps($scope = ScopeInterface::SCOPE_STORE)
+    public function getRestrictedIps($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
             'payment/amazon_payment/restricted_ips',
-            $scope
+            $scope,
+            $scopeCode
         );
     }
 
