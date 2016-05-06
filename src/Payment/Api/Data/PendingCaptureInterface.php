@@ -75,6 +75,14 @@ interface PendingCaptureInterface
     public function save();
 
     /**
+     * Delete pending capture
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function delete();
+
+    /**
      * Load pending capture data
      *
      * @param integer $modelId
