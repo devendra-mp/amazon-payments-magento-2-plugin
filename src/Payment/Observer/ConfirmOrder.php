@@ -2,7 +2,6 @@
 
 namespace Amazon\Payment\Observer;
 
-use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Api\Data\QuoteLinkInterface;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Model\Method\Amazon;
@@ -49,6 +48,7 @@ class ConfirmOrder implements ObserverInterface
     {
         $order                  = $observer->getOrder();
         $quoteId                = $order->getQuoteId();
+        $storeId                = $order->getStoreId();
         $quoteLink              = $this->getQuoteLink($quoteId);
         $amazonOrderReferenceId = $quoteLink->getAmazonOrderReferenceId();
 
@@ -56,7 +56,7 @@ class ConfirmOrder implements ObserverInterface
             $payment = $this->paymentMethodManagement->get($quoteId);
             if (Amazon::PAYMENT_METHOD_CODE == $payment->getMethod()) {
                 $this->saveOrderInformation($quoteLink, $amazonOrderReferenceId);
-                $this->confirmOrderReference($quoteLink, $amazonOrderReferenceId);
+                $this->confirmOrderReference($quoteLink, $amazonOrderReferenceId, $storeId);
             }
         }
     }
@@ -68,9 +68,9 @@ class ConfirmOrder implements ObserverInterface
         }
     }
 
-    protected function confirmOrderReference(QuoteLinkInterface $quoteLink, $amazonOrderReferenceId)
+    protected function confirmOrderReference(QuoteLinkInterface $quoteLink, $amazonOrderReferenceId, $storeId)
     {
-        $this->orderInformationManagement->confirmOrderReference($amazonOrderReferenceId);
+        $this->orderInformationManagement->confirmOrderReference($amazonOrderReferenceId, $storeId);
         $quoteLink->setConfirmed(true)->save();
     }
 

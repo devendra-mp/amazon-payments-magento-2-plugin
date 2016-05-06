@@ -14,6 +14,7 @@ use Magento\Framework\AppInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\ValidatorException;
 use Magento\Quote\Model\Quote;
+use Magento\Store\Model\ScopeInterface;
 use PayWithAmazon\ResponseInterface;
 
 class OrderInformationManagement implements OrderInformationManagementInterface
@@ -56,7 +57,8 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     public function saveOrderInformation($amazonOrderReferenceId, $allowedConstraints = [])
     {
         try {
-            $quote = $this->session->getQuote();
+            $quote   = $this->session->getQuote();
+            $storeId = $quote->getStoreId();
 
             $this->setReservedOrderId($quote);
 
@@ -70,11 +72,11 @@ class OrderInformationManagement implements OrderInformationManagementInterface
                     'Magento Version : ' . AppInterface::VERSION . ' ' .
                     'Plugin Version : ' . $this->paymentHelper->getModuleVersion()
                 ,
-                'platform_id'               => $this->coreHelper->getMerchantId()
+                'platform_id'               => $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId)
             ];
 
             $response = new AmazonSetOrderDetailsResponse(
-                $this->clientFactory->create()->setOrderReferenceDetails($data)
+                $this->clientFactory->create($storeId)->setOrderReferenceDetails($data)
             );
 
             $this->validateConstraints($response, $allowedConstraints);
@@ -107,10 +109,10 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function confirmOrderReference($amazonOrderReferenceId)
+    public function confirmOrderReference($amazonOrderReferenceId, $storeId = null)
     {
         try {
-            $response = $this->clientFactory->create()->confirmOrderReference(
+            $response = $this->clientFactory->create($storeId)->confirmOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]
@@ -128,10 +130,10 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function closeOrderReference($amazonOrderReferenceId)
+    public function closeOrderReference($amazonOrderReferenceId, $storeId = null)
     {
         try {
-            $response = $this->clientFactory->create()->closeOrderReference(
+            $response = $this->clientFactory->create($storeId)->closeOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]
@@ -149,10 +151,10 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function cancelOrderReference($amazonOrderReferenceId)
+    public function cancelOrderReference($amazonOrderReferenceId, $storeId = null)
     {
         try {
-            $response = $this->clientFactory->create()->cancelOrderReference(
+            $response = $this->clientFactory->create($storeId)->cancelOrderReference(
                 [
                     'amazon_order_reference_id' => $amazonOrderReferenceId
                 ]

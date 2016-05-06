@@ -15,23 +15,26 @@ interface OrderInformationManagementInterface
     public function saveOrderInformation($amazonOrderReferenceId, $allowedConstraints = []);
 
     /**
-     * @param $amazonOrderReferenceId
+     * @param string $amazonOrderReferenceId
+     * @param null|integer $storeId
      *
      * @throws LocalizedException
      */
-    public function confirmOrderReference($amazonOrderReferenceId);
+    public function confirmOrderReference($amazonOrderReferenceId, $storeId = null);
 
     /**
-     * @param $amazonOrderReferenceId
+     * @param string $amazonOrderReferenceId
+     * @param null|integer $storeId
      *
      * @throws LocalizedException
      */
-    public function closeOrderReference($amazonOrderReferenceId);
+    public function closeOrderReference($amazonOrderReferenceId, $storeId = null);
 
     /**
-     * @param $amazonOrderReferenceId
+     * @param string $amazonOrderReferenceId
+     * @param null|integer $storeId
      *
      * @throws LocalizedException
      */
-    public function cancelOrderReference($amazonOrderReferenceId);
+    public function cancelOrderReference($amazonOrderReferenceId, $storeId = null);
 }
