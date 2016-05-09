@@ -9,6 +9,7 @@ use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonSetOrderDetailsResponse;
 use Amazon\Payment\Domain\AmazonSetOrderDetailsResponseFactory;
 use Amazon\Payment\Helper\Data as PaymentHelper;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\AppInterface;
@@ -45,18 +46,33 @@ class OrderInformationManagement implements OrderInformationManagementInterface
      */
     protected $amazonSetOrderDetailsResponseFactory;
 
+    /*
+     * @var QuoteLinkInterfaceFactory
+     */
+    protected $quoteLinkFactory;
+
+    /**
+     * @param Session $session
+     * @param ClientFactoryInterface $clientFactory
+     * @param PaymentHelper $paymentHelper
+     * @param CoreHelper $coreHelper
+     * @param AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory
+     * @param QuoteLinkInterfaceFactory $quoteLinkFactory
+     */
     public function __construct(
         Session $session,
         ClientFactoryInterface $clientFactory,
         PaymentHelper $paymentHelper,
         CoreHelper $coreHelper,
-        AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory
+        AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory,
+        QuoteLinkInterfaceFactory $quoteLinkFactory
     ) {
         $this->session                              = $session;
         $this->clientFactory                        = $clientFactory;
         $this->paymentHelper                        = $paymentHelper;
         $this->coreHelper                           = $coreHelper;
         $this->amazonSetOrderDetailsResponseFactory = $amazonSetOrderDetailsResponseFactory;
+        $this->quoteLinkFactory                     = $quoteLinkFactory;
     }
 
     /**
@@ -184,6 +200,22 @@ class OrderInformationManagement implements OrderInformationManagementInterface
 
         if (200 != $data['ResponseStatus']) {
             throw new AmazonServiceUnavailableException();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeOrderReference()
+    {
+        $quote = $this->session->getQuote();
+
+        if (!empty($reservedOrderId = $quote->getReservedOrderId())) {
+            $quoteLink = $this->quoteLinkFactory->create()->load($reservedOrderId);
+
+            if ($quoteLink->getId()) {
+                $quoteLink->delete();
+            }
         }
     }
 }
