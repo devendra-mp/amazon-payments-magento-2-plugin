@@ -9,7 +9,6 @@ use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponseFactory;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
-use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureResponseFactory;
 use Amazon\Payment\Domain\AmazonRefundResponseFactory;
 use Amazon\Payment\Domain\Validator\AmazonAuthorization;
