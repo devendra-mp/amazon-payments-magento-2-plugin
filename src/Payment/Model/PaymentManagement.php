@@ -63,6 +63,18 @@ class PaymentManagement implements PaymentManagementInterface
      */
     protected $urlBuilder;
 
+    /**
+     * PaymentManagement constructor.
+     *
+     * @param PendingCaptureInterfaceFactory      $pendingCaptureFactory
+     * @param ClientFactoryInterface              $clientFactory
+     * @param CoreHelper                          $coreHelper
+     * @param AmazonCaptureDetailsResponseFactory $amazonCaptureDetailsResponseFactory
+     * @param TransactionInterfaceFactory         $transactionFactory
+     * @param InvoiceInterfaceFactory             $invoiceFactory
+     * @param NotifierInterface                   $notifier
+     * @param UrlInterface                        $urlBuilder
+     */
     public function __construct(
         PendingCaptureInterfaceFactory $pendingCaptureFactory,
         ClientFactoryInterface $clientFactory,
@@ -110,6 +122,9 @@ class PaymentManagement implements PaymentManagementInterface
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function queuePendingCapture(AmazonCaptureResponse $response)
     {
         $this->pendingCaptureFactory->create()

@@ -9,6 +9,15 @@ use Magento\Framework\Exception\StateException;
 
 class AmazonCapture
 {
+    /**
+     * Validate AmazonCaptureResponse
+     *
+     * @param AmazonCaptureResponse $response
+     *
+     * @return bool
+     * @throws CapturePendingException
+     * @throws StateException
+     */
     public function validate(AmazonCaptureResponse $response)
     {
         $status = $response->getStatus();

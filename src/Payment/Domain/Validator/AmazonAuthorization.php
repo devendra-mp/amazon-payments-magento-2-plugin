@@ -10,6 +10,16 @@ use Magento\Framework\Exception\StateException;
 
 class AmazonAuthorization
 {
+    /**
+     * Validate AmazonAuthorizationResponse
+     *
+     * @param AmazonAuthorizationResponse $response
+     *
+     * @return bool
+     * @throws HardDeclineException
+     * @throws SoftDeclineException
+     * @throws StateException
+     */
     public function validate(AmazonAuthorizationResponse $response)
     {
         $status = $response->getStatus();

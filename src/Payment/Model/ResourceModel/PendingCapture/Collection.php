@@ -3,6 +3,7 @@
 namespace Amazon\Payment\Model\ResourceModel\PendingCapture;
 
 use Amazon\Payment\Api\Data\PendingCaptureInterface;
+use Generator;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Amazon\Payment\Model\PendingCapture as PendingCaptureModel;
@@ -15,6 +16,11 @@ class Collection extends AbstractCollection
         $this->_init(PendingCaptureModel::class, PendingCaptureResourceModel::class);
     }
 
+    /**
+     * Get ID generator
+     *
+     * @return Generator
+     */
     public function getIdGenerator()
     {
         $this->_renderFilters()->_renderOrders()->_renderLimit();

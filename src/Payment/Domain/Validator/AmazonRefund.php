@@ -8,6 +8,14 @@ use Magento\Framework\Exception\StateException;
 
 class AmazonRefund
 {
+    /**
+     * Validate AmazonRefundResponse
+     *
+     * @param AmazonRefundResponse $response
+     *
+     * @return bool
+     * @throws StateException
+     */
     public function validate(AmazonRefundResponse $response)
     {
         $status = $response->getStatus();
