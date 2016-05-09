@@ -12,8 +12,11 @@ use Amazon\Payment\Domain\AmazonCaptureDetailsResponseFactory;
 use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Exception;
+use Magento\Backend\Model\UrlInterface;
+use Magento\Framework\Notification\NotifierInterface;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\InvoiceInterfaceFactory;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\Data\TransactionInterfaceFactory;
 use Magento\Sales\Model\Order;
@@ -50,13 +53,25 @@ class PaymentManagement implements PaymentManagementInterface
      */
     protected $invoiceFactory;
 
+    /**
+     * @var NotifierInterface
+     */
+    protected $notifier;
+
+    /**
+     * @var UrlInterface
+     */
+    protected $urlBuilder;
+
     public function __construct(
         PendingCaptureInterfaceFactory $pendingCaptureFactory,
         ClientFactoryInterface $clientFactory,
         CoreHelper $coreHelper,
         AmazonCaptureDetailsResponseFactory $amazonCaptureDetailsResponseFactory,
         TransactionInterfaceFactory $transactionFactory,
-        InvoiceInterfaceFactory $invoiceFactory
+        InvoiceInterfaceFactory $invoiceFactory,
+        NotifierInterface $notifier,
+        UrlInterface $urlBuilder
     ) {
         $this->clientFactory                       = $clientFactory;
         $this->pendingCaptureFactory               = $pendingCaptureFactory;
@@ -64,6 +79,8 @@ class PaymentManagement implements PaymentManagementInterface
         $this->amazonCaptureDetailsResponseFactory = $amazonCaptureDetailsResponseFactory;
         $this->transactionFactory                  = $transactionFactory;
         $this->invoiceFactory                      = $invoiceFactory;
+        $this->notifier                            = $notifier;
+        $this->urlBuilder                          = $urlBuilder;
     }
 
     /**
@@ -127,9 +144,14 @@ class PaymentManagement implements PaymentManagementInterface
         $message         = __('Captured amount of %1 online', $formattedAmount);
 
         $invoice->pay();
+
+        $order->addRelatedObject($invoice);
         $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
         $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
-        $this->applyPendingCaptureUpdate($invoice, $pendingCapture);
+        $order->save();
+
+        $this->getTransaction($transactionId)->setIsClosed(1)->save();
+        $pendingCapture->delete();
     }
 
     protected function declinePendingCapture(PendingCaptureInterface $pendingCapture)
@@ -142,16 +164,22 @@ class PaymentManagement implements PaymentManagementInterface
         $message         = __('Declined amount of %1 online', $formattedAmount);
 
         $invoice->cancel();
-        $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
-        $this->applyPendingCaptureUpdate($invoice, $pendingCapture);
-    }
 
-    protected function applyPendingCaptureUpdate($invoice, $pendingCapture)
-    {
-        $this->getTransaction($pendingCapture->getCaptureId())->setIsClosed(1)->save();
-        $invoice->save();
-        $invoice->getOrder()->save();
+        $order->addRelatedObject($invoice);
+        $order->registerCancellation('', false);
+        $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
+        $order->save();
+
+        $this->getTransaction($transactionId)->setIsClosed(1)->save();
         $pendingCapture->delete();
+
+        $orderUrl = $this->urlBuilder->getUrl('sales/order/view', ['order_id' => $order->getId()]);
+
+        $this->notifier->addNotice(
+            __('Capture declined'),
+            __('Capture declined for Order <a href="%2">#%1</a>', $order->getIncrementId(), $orderUrl),
+            $orderUrl
+        );
     }
 
     protected function getTransaction($transactionId)
