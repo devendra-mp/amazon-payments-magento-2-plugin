@@ -16,6 +16,7 @@ use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\InvoiceInterfaceFactory;
 use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\Data\TransactionInterfaceFactory;
+use Magento\Sales\Model\Order;
 
 class PaymentManagement implements PaymentManagementInterface
 {
@@ -118,6 +119,9 @@ class PaymentManagement implements PaymentManagementInterface
     protected function completePendingCapture(PendingCaptureInterface $pendingCapture)
     {
         $invoice = $this->getInvoice($pendingCapture->getCaptureId())->pay();
+        $state = Order::STATE_PROCESSING;
+        $order = $invoice->getOrder();
+        $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
         $this->applyPendingCaptureUpdate($invoice, $pendingCapture);
     }
 
