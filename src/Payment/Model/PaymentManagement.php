@@ -118,16 +118,31 @@ class PaymentManagement implements PaymentManagementInterface
 
     protected function completePendingCapture(PendingCaptureInterface $pendingCapture)
     {
-        $invoice = $this->getInvoice($pendingCapture->getCaptureId())->pay();
-        $state = Order::STATE_PROCESSING;
-        $order = $invoice->getOrder();
+        $transactionId   = $pendingCapture->getCaptureId();
+        $state           = Order::STATE_PROCESSING;
+        $transaction     = $this->getTransaction($transactionId);
+        $invoice         = $this->getInvoice($transactionId);
+        $order           = $invoice->getOrder();
+        $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
+        $message         = __('Captured amount of %1 online', $formattedAmount);
+
+        $invoice->pay();
         $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
+        $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
         $this->applyPendingCaptureUpdate($invoice, $pendingCapture);
     }
 
     protected function declinePendingCapture(PendingCaptureInterface $pendingCapture)
     {
-        $invoice = $this->getInvoice($pendingCapture->getCaptureId())->cancel();
+        $transactionId   = $pendingCapture->getCaptureId();
+        $transaction     = $this->getTransaction($transactionId);
+        $invoice         = $this->getInvoice($transactionId);
+        $order           = $invoice->getOrder();
+        $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
+        $message         = __('Declined amount of %1 online', $formattedAmount);
+
+        $invoice->cancel();
+        $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
         $this->applyPendingCaptureUpdate($invoice, $pendingCapture);
     }
 
