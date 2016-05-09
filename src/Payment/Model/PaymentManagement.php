@@ -9,6 +9,7 @@ use Amazon\Payment\Api\Data\PendingCaptureInterfaceFactory;
 use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Domain\AmazonCaptureDetailsResponse;
 use Amazon\Payment\Domain\AmazonCaptureDetailsResponseFactory;
+use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Exception;
 use Magento\Sales\Api\Data\InvoiceInterface;
@@ -89,6 +90,13 @@ class PaymentManagement implements PaymentManagementInterface
         } catch (Exception $e) {
             $pendingCapture->getResource()->rollBack();
         }
+    }
+
+    public function queuePendingCapture(AmazonCaptureResponse $response)
+    {
+        $this->pendingCaptureFactory->create()
+            ->setCaptureId($response->getTransactionId())
+            ->save();
     }
 
     protected function processUpdateCaptureResponse(

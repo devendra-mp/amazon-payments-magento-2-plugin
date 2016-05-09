@@ -2,6 +2,8 @@
 
 namespace Amazon\Payment\Api;
 
+use Amazon\Payment\Domain\AmazonCaptureResponse;
+
 interface PaymentManagementInterface
 {
     /**
@@ -12,4 +14,13 @@ interface PaymentManagementInterface
      * @return void
      */
     public function updateCapture($pendingCaptureId);
+
+    /**
+     * Queue pending capture
+     *
+     * @param AmazonCaptureResponse $response
+     *
+     * @return void
+     */
+    public function queuePendingCapture(AmazonCaptureResponse $response);
 }
