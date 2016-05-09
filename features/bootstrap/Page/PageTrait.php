@@ -1,73 +1,67 @@
 <?php
 
-namespace Helpers;
+namespace Page;
 
-trait PageObjectHelperMethods
+use Behat\Mink\Driver\DriverInterface;
+use SensioLabs\Behat\PageObjectExtension\PageObject\Element;
+
+trait PageTrait
 {
-    function openPage($params = [])
+    /**
+     * @return DriverInterface
+     */
+    abstract protected function getDriver();
+
+    /**
+     * @param string $name
+     *
+     * @return Element
+     */
+    abstract public function getElement($name);
+
+    public function waitForCondition($condition, $maxWait = 120000)
     {
-        $this->open($params);
-        $this->waitForPageLoad();
+        $this->getDriver()->wait($maxWait, $condition);
     }
 
-    function acceptAlert()
-    {
-        $this->getDriver()->getWebDriverSession()->accept_alert();
-    }
-
-    function waitForCondition($condition, $maxWait = 120000)
-    {
-        $this->getSession()->wait($maxWait, $condition);
-    }
-
-    function waitForPageLoad($maxWait = 120000)
+    public function waitForPageLoad($maxWait = 120000)
     {
         $this->waitForCondition('(document.readyState == "complete") && (typeof window.jQuery == "function") && (jQuery.active == 0)', $maxWait);
     }
 
-    function waitForElement($elementName, $maxWait = 120000)
+    public function waitForElement($elementName, $maxWait = 120000)
     {
         $visibilityCheck = $this->getElementVisibilyCheck($elementName);
         $this->waitForCondition("(typeof window.jQuery == 'function') && $visibilityCheck", $maxWait);
     }
 
-    function waitUntilElementDisappear($elementName, $maxWait = 120000)
+    public function waitUntilElementDisappear($elementName, $maxWait = 120000)
     {
         $visibilityCheck = $this->getElementVisibilyCheck($elementName);
         $this->waitForCondition("(typeof window.jQuery == 'function') && !$visibilityCheck", $maxWait);
     }
 
-    function waitTime($waitTime)
-    {
-        $this->getSession()->wait($waitTime);
-    }
-
-    function scrollToBottom()
-    {
-        $this->getSession()->executeScript('window.scrollTo(0,document.body.scrollHeight);');
-    }
-
-    function clickElement($elementName)
+    public function clickElement($elementName)
     {
         $this->getElementWithWait($elementName)->click();
     }
 
-    function getElementValue($elementName)
+    public function getElementValue($elementName)
     {
         return $this->getElementWithWait($elementName)->getValue();
     }
 
-    function setElementValue($elementName, $value)
+    public function setElementValue($elementName, $value)
     {
         $this->getElementWithWait($elementName)->setValue($value);
     }
 
-    function getElementText($elementName)
+    public function getElementText($elementName)
     {
         return $this->getElementWithWait($elementName)->getText();
     }
 
-    public function getElementWithWait($elementName, $waitTime = 2500)
+    public function getElementWithWait($elementName, $waitTime = 120000)
     {
         $this->waitForElement($elementName, $waitTime);
         return $this->getElement($elementName);
@@ -94,5 +88,10 @@ trait PageObjectHelperMethods
     {
         $xpath = $this->getElement($elementName)->getXpath();
         return $this->getDriver()->isVisible($xpath);
+    }
+
+    public function waitForAjaxRequestsToComplete($maxWait = 120000)
+    {
+        $this->getDriver()->wait($maxWait, 'jQuery.active == 0');
     }
 }

@@ -7,6 +7,7 @@ use Context\Data\FixtureContext;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Math\Random;
 
 class Customer extends BaseFixture
@@ -59,6 +60,16 @@ class Customer extends BaseFixture
     {
         $repository = ($ignoreRegistry) ? $this->createRepository() : $this->repository;
         return $repository->get($email);
+    }
+
+    public function track($email)
+    {
+        try {
+            $customer = $this->repository->get($email);
+            FixtureContext::trackFixture($customer, $this->repository);
+        } catch (NoSuchEntityException $e) {
+            //entity not created no need to track for deletion
+        }
     }
 
     public function getDefaultPassword()
