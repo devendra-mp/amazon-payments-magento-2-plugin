@@ -12,7 +12,7 @@ class GetAmazonCaptureUpdates
     /**
      * @var int
      */
-    protected $limit = 1000;
+    protected $limit = 100;
 
     /**
      * @var CollectionFactory
