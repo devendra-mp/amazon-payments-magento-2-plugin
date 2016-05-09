@@ -27,8 +27,10 @@ class AmazonAuthorizationResponse
      *
      * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $response)
-    {
+    public function __construct(
+        ResponseInterface $response,
+        AmazonAuthorizationStatusFactory $amazonAuthorizationStatusFactory
+    ) {
         $data = $response->toArray();
 
         if (200 != $data['ResponseStatus']) {
@@ -38,10 +40,10 @@ class AmazonAuthorizationResponse
         $details = $data['AuthorizeResult']['AuthorizationDetails'];
 
         $status       = $details['AuthorizationStatus'];
-        $this->status = new AmazonAuthorizationStatus(
-            $status['State'],
-            (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
-        );
+        $this->status = $amazonAuthorizationStatusFactory->create([
+            'state'      => $status['State'],
+            'reasonCode' => (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
+        ]);
 
         if (isset($details['IdList']['member'])) {
             $this->captureTransactionId = $details['IdList']['member'];

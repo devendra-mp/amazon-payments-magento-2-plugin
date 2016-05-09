@@ -11,8 +11,8 @@ class AmazonSetOrderDetailsResponse
      * @var AmazonConstraint[]
      */
     protected $constraints;
-    
-    public function __construct(ResponseInterface $response)
+
+    public function __construct(ResponseInterface $response, AmazonConstraintFactory $amazonConstraintFactory)
     {
         $data = $response->toArray();
 
@@ -25,8 +25,11 @@ class AmazonSetOrderDetailsResponse
         $this->constraints = [];
 
         if (isset($details['Constraints'])) {
-            foreach($details['Constraints'] as $constraint) {
-                $this->constraints[] = new AmazonConstraint($constraint['ConstraintID'], $constraint['Description']);
+            foreach ($details['Constraints'] as $constraint) {
+                $this->constraints[] = $amazonConstraintFactory->create([
+                    'id'          => $constraint['ConstraintID'],
+                    'description' => $constraint['Description']
+                ]);
             }
         }
     }

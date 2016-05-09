@@ -22,7 +22,7 @@ abstract class AbstractAmazonCaptureResponse
      *
      * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $response)
+    public function __construct(ResponseInterface $response, AmazonCaptureStatusFactory $amazonCaptureStatusFactory)
     {
         $data = $response->toArray();
 
@@ -33,10 +33,10 @@ abstract class AbstractAmazonCaptureResponse
         $details = $data[$this->getResultKey()]['CaptureDetails'];
 
         $status       = $details['CaptureStatus'];
-        $this->status = new AmazonCaptureStatus(
-            $status['State'],
-            (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
-        );
+        $this->status = $amazonCaptureStatusFactory->create([
+            'state'      => $status['State'],
+            'reasonCode' => (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
+        ]);
 
         if (isset($details['AmazonCaptureId'])) {
             $this->transactionId = $details['AmazonCaptureId'];

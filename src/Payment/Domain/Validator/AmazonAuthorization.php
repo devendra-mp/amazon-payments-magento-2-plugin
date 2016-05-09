@@ -37,7 +37,7 @@ class AmazonAuthorization
         }
 
         throw new StateException(
-            __('Amazon authorize invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode())
+            __('Amazon authorize invalid state : %1 with reason %2', $status->getState(), $status->getReasonCode())
         );
     }
 
