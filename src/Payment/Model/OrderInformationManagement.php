@@ -210,8 +210,8 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     {
         $quote = $this->session->getQuote();
 
-        if (!empty($reservedOrderId = $quote->getReservedOrderId())) {
-            $quoteLink = $this->quoteLinkFactory->create()->load($reservedOrderId);
+        if (!empty($quoteId = $quote->getId())) {
+            $quoteLink = $this->quoteLinkFactory->create()->load($quoteId);
 
             if ($quoteLink->getId()) {
                 $quoteLink->delete();
