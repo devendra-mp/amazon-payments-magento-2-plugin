@@ -7,6 +7,11 @@ use Exception;
 interface QuoteLinkInterface
 {
     /**
+     * @return mixed
+     */
+    public function getId();
+
+    /**
      * Set amazon order reference id
      *
      * @param string $amazonOrderReferenceId
