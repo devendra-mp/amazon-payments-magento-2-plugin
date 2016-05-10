@@ -329,7 +329,9 @@ class Amazon extends AbstractMethod
             $payment->setIsTransactionClosed(false);
             $this->paymentManagement->queuePendingCapture($response);
         } finally {
-            $payment->setTransactionId($response->getTransactionId());
+            if (isset($response)) {
+                $payment->setTransactionId($response->getTransactionId());
+            }
         }
     }
     
