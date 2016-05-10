@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-class AmazonRefundStatus extends AmazonStatus
+class AmazonRefundStatus extends AbstractAmazonStatus
 {
     const STATE_PENDING = 'Pending';
     const STATE_COMPLETED = 'Completed';

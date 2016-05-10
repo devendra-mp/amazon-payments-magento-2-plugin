@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-abstract class AmazonStatus
+abstract class AbstractAmazonStatus
 {
     /**
      * @var string

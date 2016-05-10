@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-class AmazonCaptureStatus extends AmazonStatus
+class AmazonCaptureStatus extends AbstractAmazonStatus
 {
     const STATE_COMPLETED = 'Completed';
     const STATE_PENDING = 'Pending';
