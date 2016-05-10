@@ -7,7 +7,8 @@ define(
         'uiComponent',
         'Amazon_Payment/js/model/storage',
         'mage/storage',
-        'Magento_Checkout/js/model/error-processor'
+        'Magento_Checkout/js/model/error-processor',
+        'Magento_Checkout/js/model/url-builder'
     ],
     function(
         $,
@@ -16,7 +17,8 @@ define(
         Component,
         amazonStorage,
         storage,
-        errorProcessor
+        errorProcessor,
+        urlBuilder
     ) {
         'use strict';
 
@@ -33,7 +35,7 @@ define(
                 this._super();
             },
             revertCheckout: function() {
-                var serviceUrl = 'rest/default/V1/amazon/order-ref';
+                var serviceUrl = urlBuilder.createUrl('/amazon/order-ref', {});
                 storage.delete(
                     serviceUrl
                 ).done(
