@@ -22,7 +22,6 @@ use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
-use Magento\Framework\Exception\StateException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
@@ -32,12 +31,8 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Sales\Api\TransactionRepositoryInterface;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
-use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\ScopeInterface;
-use PayWithAmazon\ResponseParser;
 
 class Amazon extends AbstractMethod
 {
