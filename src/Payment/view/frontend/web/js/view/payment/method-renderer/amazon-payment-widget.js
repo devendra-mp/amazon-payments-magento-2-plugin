@@ -14,7 +14,8 @@ define(
         'Magento_Checkout/js/model/error-processor',
         'Magento_Checkout/js/model/address-converter',
         'Magento_Checkout/js/action/select-billing-address',
-        'Magento_Checkout/js/model/payment/additional-validators'
+        'Magento_Checkout/js/model/payment/additional-validators',
+        'Magento_Checkout/js/model/url-builder'
     ],
     function(
         $,
@@ -31,7 +32,8 @@ define(
         errorProcessor,
         addressConverter,
         selectBillingAddress,
-        additionalValidators
+        additionalValidators,
+        urlBuilder
     ) {
         'use strict';
 
@@ -93,7 +95,7 @@ define(
                 return (countryData()[countryId] != undefined);
             },
             setBillingAddressFromAmazon: function() {
-                var serviceUrl = 'rest/default/V1/amazon-billing-address/' + amazonStorage.getOrderReference(),
+                var serviceUrl = urlBuilder.createUrl('/amazon-billing-address/:amazonOrderReference', {amazonOrderReference: amazonStorage.getOrderReference()}),
                     payload = {
                         addressConsentToken : amazonStorage.getAddressConsentToken()
                     };
