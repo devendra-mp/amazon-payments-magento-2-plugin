@@ -6,16 +6,15 @@ use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
-use Amazon\Payment\Domain\AmazonAuthorizationResponse;
+use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationResponseFactory;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
-use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureResponseFactory;
-use Amazon\Payment\Domain\AmazonCaptureStatus;
-use Amazon\Payment\Domain\AmazonRefundResponse;
 use Amazon\Payment\Domain\AmazonRefundResponseFactory;
-use Amazon\Payment\Domain\AmazonRefundStatus;
-use Amazon\Payment\Exception\HardDeclineException;
+use Amazon\Payment\Domain\Validator\AmazonAuthorization;
+use Amazon\Payment\Domain\Validator\AmazonCapture;
+use Amazon\Payment\Domain\Validator\AmazonRefund;
+use Amazon\Payment\Exception\CapturePendingException;
 use Amazon\Payment\Exception\SoftDeclineException;
 use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
@@ -23,7 +22,6 @@ use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
-use Magento\Framework\Exception\StateException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
@@ -33,11 +31,8 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
-use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\ScopeInterface;
-use PayWithAmazon\ResponseParser;
 
 class Amazon extends AbstractMethod
 {
@@ -103,6 +98,26 @@ class Amazon extends AbstractMethod
      */
     protected $amazonCaptureResponseFactory;
 
+    /**
+     * @var AmazonAuthorization
+     */
+    protected $amazonAuthorizationValidator;
+
+    /**
+     * @var AmazonCapture
+     */
+    protected $amazonCaptureValidator;
+
+    /**
+     * @var AmazonRefund
+     */
+    protected $amazonRefundValidator;
+
+    /**
+     * @var PaymentManagementInterface
+     */
+    protected $paymentManagement;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -119,6 +134,10 @@ class Amazon extends AbstractMethod
         AmazonAuthorizationResponseFactory $amazonAuthorizationResponseFactory,
         AmazonCaptureResponseFactory $amazonCaptureResponseFactory,
         AmazonRefundResponseFactory $amazonRefundResponseFactory,
+        AmazonAuthorization $amazonAuthorizationValidator,
+        AmazonCapture $amazonCaptureValidator,
+        AmazonRefund $amazonRefundValidator,
+        PaymentManagementInterface $paymentManagement,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -144,6 +163,10 @@ class Amazon extends AbstractMethod
         $this->amazonAuthorizationResponseFactory = $amazonAuthorizationResponseFactory;
         $this->amazonCaptureResponseFactory       = $amazonCaptureResponseFactory;
         $this->amazonRefundResponseFactory        = $amazonRefundResponseFactory;
+        $this->amazonAuthorizationValidator       = $amazonAuthorizationValidator;
+        $this->amazonCaptureValidator             = $amazonCaptureValidator;
+        $this->amazonRefundValidator              = $amazonRefundValidator;
+        $this->paymentManagement                  = $paymentManagement;
     }
 
     /**
@@ -187,7 +210,7 @@ class Amazon extends AbstractMethod
 
         $responseParser = $client->refund($data);
         $response       = $this->amazonRefundResponseFactory->create(['response' => $responseParser]);
-        $this->validateRefundResponse($response);
+        $this->amazonRefundValidator->validate($response);
     }
 
     protected function _authorize(InfoInterface $payment, $amount, $capture = false)
@@ -222,7 +245,7 @@ class Amazon extends AbstractMethod
             $responseParser = $client->authorize($data);
             $response       = $this->amazonAuthorizationResponseFactory->create(['response' => $responseParser]);
 
-            $this->validateAuthorizationResponse($response);
+            $this->amazonAuthorizationValidator->validate($response);
 
             if ($capture) {
                 $transactionId = $response->getCaptureTransactionId();
@@ -236,39 +259,6 @@ class Amazon extends AbstractMethod
             $this->processSoftDecline();
         } catch (Exception $e) {
             $this->processHardDecline($payment, $amazonOrderReferenceId);
-        }
-    }
-
-    protected function validateAuthorizationResponse(AmazonAuthorizationResponse $response)
-    {
-        $status = $response->getStatus();
-
-        switch ($status->getState()) {
-            case AmazonAuthorizationStatus::STATE_CLOSED:
-                switch ($status->getReasonCode()) {
-                    case AmazonAuthorizationStatus::REASON_MAX_CAPTURES_PROCESSED:
-                        return true;
-                }
-            case AmazonAuthorizationStatus::STATE_OPEN:
-                return true;
-            case AmazonAuthorizationStatus::STATE_DECLINED:
-                $this->throwDeclinedExceptionForStatus($status);
-        }
-
-        throw new StateException(
-            __('Amazon authorize invalid state : ' . $status->getState() . ' with reason ' . $status->getReasonCode())
-        );
-    }
-
-    protected function throwDeclinedExceptionForStatus(AmazonAuthorizationStatus $status)
-    {
-        switch ($status->getReasonCode()) {
-            case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
-            case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
-            case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
-                throw new HardDeclineException();
-            case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
-                throw new SoftDeclineException();
         }
     }
 
@@ -324,45 +314,22 @@ class Amazon extends AbstractMethod
 
         $client = $this->clientFactory->create($storeId);
 
-        $responseParser = $client->capture($data);
-        $response       = $this->amazonCaptureResponseFactory->create(['response' => $responseParser]);
+        try {
+            $responseParser = $client->capture($data);
+            $response       = $this->amazonCaptureResponseFactory->create(['response' => $responseParser]);
 
-        $this->validateCaptureResponse($response);
-
-        $payment->setTransactionId($response->getTransactionId());
-    }
-
-    protected function validateCaptureResponse(AmazonCaptureResponse $response)
-    {
-        $status = $response->getStatus();
-
-        switch ($status->getState()) {
-            case AmazonCaptureStatus::STATE_COMPLETED:
-                return true;
-            case AmazonCaptureStatus::STATE_DECLINED:
-                throw new StateException(__('Amazon capture declined : %1', $status->getReasonCode()));
+            $this->amazonCaptureValidator->validate($response);
+        } catch (CapturePendingException $e) {
+            $payment->setIsTransactionPending(true);
+            $payment->setIsTransactionClosed(false);
+            $this->paymentManagement->queuePendingCapture($response);
+        } finally {
+            if (isset($response)) {
+                $payment->setTransactionId($response->getTransactionId());
+            }
         }
-
-        throw new StateException(
-            __('Amazon capture invalid state : %1 with reason %2', [$status->getState(), $status->getReasonCode()])
-        );
     }
-
-    protected function validateRefundResponse(AmazonRefundResponse $response)
-    {
-        $status = $response->getStatus();
-
-        switch ($status->getState()) {
-            case AmazonRefundStatus::STATE_COMPLETED:
-            case AmazonRefundStatus::STATE_PENDING:
-                return true;
-        }
-
-        throw new StateException(
-            __('Amazon refund invalid state : %1 with reason %2', [$status->getState(), $status->getReasonCode()])
-        );
-    }
-
+    
     protected function getCurrencyCode(InfoInterface $payment)
     {
         return $payment->getOrder()->getOrderCurrencyCode();

@@ -2,7 +2,9 @@
 
 namespace Amazon\Payment\Setup;
 
+use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Model\ResourceModel\OrderLink;
+use Amazon\Payment\Model\ResourceModel\PendingCapture;
 use Amazon\Payment\Model\ResourceModel\QuoteLink;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
@@ -91,6 +93,47 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'comment' => 'Quote confirmed with Amazon'
                 ]
             );
+        }
+
+        if (version_compare($context->getVersion(), '1.4.0', '<')) {
+            $table = $setup->getConnection()->newTable(PendingCapture::TABLE_NAME);
+
+            $table
+                ->addColumn(
+                    PendingCaptureInterface::ID,
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'primary'  => true
+                    ]
+                )
+                ->addColumn(
+                    PendingCaptureInterface::CAPTURE_ID,
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => false
+                    ]
+                )
+                ->addColumn(
+                    PendingCaptureInterface::CREATED_AT,
+                    Table::TYPE_DATETIME,
+                    null,
+                    [
+                        'nullable' => false
+                    ]
+                )
+                ->addIndex(
+                    $setup->getIdxName(
+                        PendingCapture::TABLE_NAME, [PendingCaptureInterface::CAPTURE_ID], AdapterInterface::INDEX_TYPE_UNIQUE
+                    ),
+                    [PendingCaptureInterface::CAPTURE_ID],
+                    ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
+                );
+
+            $setup->getConnection()->createTable($table);
         }
     }
 }

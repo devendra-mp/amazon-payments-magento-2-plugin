@@ -2,7 +2,7 @@
 
 namespace Amazon\Payment\Domain;
 
-class AmazonAuthorizationStatus extends AmazonStatus
+class AmazonAuthorizationStatus extends AbstractAmazonStatus
 {
     const STATE_OPEN = 'Open';
     const STATE_PENDING = 'Pending';

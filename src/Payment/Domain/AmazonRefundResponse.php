@@ -17,7 +17,7 @@ class AmazonRefundResponse
      *
      * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $response)
+    public function __construct(ResponseInterface $response, AmazonRefundStatusFactory $amazonRefundStatusFactory)
     {
         $data = $response->toArray();
 
@@ -28,10 +28,10 @@ class AmazonRefundResponse
         $details = $data['RefundResult']['RefundDetails'];
 
         $status       = $details['RefundStatus'];
-        $this->status = new AmazonRefundStatus(
-            $status['State'],
-            (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
-        );
+        $this->status = $amazonRefundStatusFactory->create([
+            'state'      => $status['State'],
+            'reasonCode' => (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
+        ]);
     }
 
     /**

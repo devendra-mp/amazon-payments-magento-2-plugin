@@ -7,6 +7,7 @@ use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonSetOrderDetailsResponse;
+use Amazon\Payment\Domain\AmazonSetOrderDetailsResponseFactory;
 use Amazon\Payment\Helper\Data as PaymentHelper;
 use Exception;
 use Magento\Checkout\Model\Session;
@@ -39,16 +40,23 @@ class OrderInformationManagement implements OrderInformationManagementInterface
      */
     protected $coreHelper;
 
+    /**
+     * @var AmazonSetOrderDetailsResponseFactory
+     */
+    protected $amazonSetOrderDetailsResponseFactory;
+
     public function __construct(
         Session $session,
         ClientFactoryInterface $clientFactory,
         PaymentHelper $paymentHelper,
-        CoreHelper $coreHelper
+        CoreHelper $coreHelper,
+        AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory
     ) {
-        $this->session       = $session;
-        $this->clientFactory = $clientFactory;
-        $this->paymentHelper = $paymentHelper;
-        $this->coreHelper    = $coreHelper;
+        $this->session                              = $session;
+        $this->clientFactory                        = $clientFactory;
+        $this->paymentHelper                        = $paymentHelper;
+        $this->coreHelper                           = $coreHelper;
+        $this->amazonSetOrderDetailsResponseFactory = $amazonSetOrderDetailsResponseFactory;
     }
 
     /**
@@ -75,9 +83,10 @@ class OrderInformationManagement implements OrderInformationManagementInterface
                 'platform_id'               => $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId)
             ];
 
-            $response = new AmazonSetOrderDetailsResponse(
-                $this->clientFactory->create($storeId)->setOrderReferenceDetails($data)
-            );
+            $responseParser = $this->clientFactory->create($storeId)->setOrderReferenceDetails($data);
+            $response       = $this->amazonSetOrderDetailsResponseFactory->create([
+                'response' => $responseParser
+            ]);
 
             $this->validateConstraints($response, $allowedConstraints);
 
