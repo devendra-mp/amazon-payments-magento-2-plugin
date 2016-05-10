@@ -15,7 +15,8 @@ define(
         'Magento_Checkout/js/model/address-converter',
         'mage/storage',
         'Magento_Checkout/js/model/full-screen-loader',
-        'Magento_Checkout/js/model/error-processor'
+        'Magento_Checkout/js/model/error-processor',
+        'Magento_Checkout/js/model/url-builder'
     ],
     function(
         $,
@@ -31,7 +32,8 @@ define(
         addressConverter,
         storage,
         fullScreenLoader,
-        errorProcessor
+        errorProcessor,
+        urlBuilder
     ) {
         'use strict';
         var self;
@@ -85,8 +87,7 @@ define(
              */
             getShippingAddressFromAmazon: function() {
                 amazonStorage.isShippingMethodsLoading(true);
-                
-                var serviceUrl = 'rest/default/V1/amazon-shipping-address/' + amazonStorage.getOrderReference(),
+                var serviceUrl = urlBuilder.createUrl('/amazon-shipping-address/:amazonOrderReference', {amazonOrderReference: amazonStorage.getOrderReference()}),
                     payload = {
                         addressConsentToken: amazonStorage.getAddressConsentToken()
                     };
