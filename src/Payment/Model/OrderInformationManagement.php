@@ -5,11 +5,11 @@ namespace Amazon\Payment\Model;
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Core\Helper\Data as CoreHelper;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Domain\AmazonSetOrderDetailsResponse;
 use Amazon\Payment\Domain\AmazonSetOrderDetailsResponseFactory;
 use Amazon\Payment\Helper\Data as PaymentHelper;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\AppInterface;
@@ -210,8 +210,8 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     {
         $quote = $this->session->getQuote();
 
-        if (!empty($quoteId = $quote->getId())) {
-            $quoteLink = $this->quoteLinkFactory->create()->load($quoteId);
+        if ($quote->getId()) {
+            $quoteLink = $this->quoteLinkFactory->create()->load($quote->getId(), 'quote_id');
 
             if ($quoteLink->getId()) {
                 $quoteLink->delete();

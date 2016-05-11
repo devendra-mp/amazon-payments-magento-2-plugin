@@ -21,7 +21,9 @@ class Checkout extends Page
             'first-shipping-method' => ['css' => 'input[name="shipping_method"]:nth-of-type(1)'],
             'billing-address'       => ['css' => '.amazon-billing-address'],
             'full-screen-loader'    => ['css' => '.loading-mask'],
-            'shipping-loader'       => ['css' => '.checkout-shipping-method._block-content-loading']
+            'shipping-loader'       => ['css' => '.checkout-shipping-method._block-content-loading'],
+            'revert-checkout'       => ['css' => '.revert-checkout'],
+            'shipping-form'         => ['css' => '#co-shipping-form']
         ];
 
     public function selectFirstAmazonShippingAddress()
@@ -61,5 +63,20 @@ class Checkout extends Page
         $this->waitUntilElementDisappear('full-screen-loader');
 
         return $this->getElementText('billing-address');
+    }
+
+    public function revertToStandardCheckout()
+    {
+        $this->clickElement('revert-checkout');
+    }
+
+    public function hasStandardShippingForm()
+    {
+        try {
+            $element = $this->getElementWithWait('shipping-form');
+            return $element->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }
