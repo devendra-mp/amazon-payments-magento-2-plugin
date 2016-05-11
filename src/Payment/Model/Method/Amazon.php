@@ -59,6 +59,16 @@ class Amazon extends AbstractMethod
     protected $_canRefund = true;
 
     /**
+     * {@inheritDoc}
+     */
+    protected $_canRefundInvoicePartial = true;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected $_canUseInternal = false;
+
+    /**
      * @var ClientFactoryInterface
      */
     protected $clientFactory;
