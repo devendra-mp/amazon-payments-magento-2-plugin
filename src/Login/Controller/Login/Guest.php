@@ -5,11 +5,9 @@ namespace Amazon\Login\Controller\Login;
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Core\Domain\AmazonCustomerFactory;
-use Magento\Customer\Model\Account\Redirect;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Magento\Customer\Model\SessionFactory;
 
@@ -26,11 +24,6 @@ class Guest extends Action
     protected $clientFactory;
 
     /**
-     * @var Redirect
-     */
-    protected $accountRedirect;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -44,7 +37,6 @@ class Guest extends Action
      * @param Context $context
      * @param AmazonCustomerFactory $amazonCustomerFactory
      * @param ClientFactoryInterface $clientFactory
-     * @param Redirect $accountRedirect
      * @param LoggerInterface $logger
      * @param SessionFactory $customerSessionFactory
      */
@@ -52,14 +44,12 @@ class Guest extends Action
         Context $context,
         AmazonCustomerFactory $amazonCustomerFactory,
         ClientFactoryInterface $clientFactory,
-        Redirect $accountRedirect,
         LoggerInterface $logger,
         SessionFactory $customerSessionFactory
     ) {
         parent::__construct($context);
         $this->amazonCustomerFactory = $amazonCustomerFactory;
         $this->clientFactory = $clientFactory;
-        $this->accountRedirect = $accountRedirect;
         $this->logger = $logger;
         $this->customerSessionFactory = $customerSessionFactory;
     }
@@ -89,7 +79,7 @@ class Guest extends Action
             $this->messageManager->addError(__('Error processing Amazon Login'));
         }
 
-        return $this->accountRedirect->getRedirect();
+        return $this->resultRedirectFactory->create()->setPath('checkout/cart');
     }
 
     /**
