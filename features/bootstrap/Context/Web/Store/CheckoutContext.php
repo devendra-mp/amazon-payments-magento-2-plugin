@@ -65,4 +65,21 @@ class CheckoutContext implements SnippetAcceptingContext
         $billingAddress = $this->checkoutPage->getBillingAddress();
         PHPUnit_Framework_Assert::stringContains($billingAddress, 'Amber Kelly 87 Terrick Rd EILEAN DARACH, IV23 2TW United Kingdom');
     }
+
+    /**
+     * @When I revert to standard checkout
+     */
+    public function iRevertToStandardCheckout()
+    {
+        $this->checkoutPage->revertToStandardCheckout();
+    }
+
+    /**
+     * @Then the standard shipping form should be displayed
+     */
+    public function theStandardShippingFormShouldBeDisplayed()
+    {
+        $hasShippingForm = $this->checkoutPage->hasStandardShippingForm();
+        PHPUnit_Framework_Assert::isTrue($hasShippingForm);
+    }
 }

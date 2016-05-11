@@ -34,6 +34,27 @@ class QuoteRepository
         return $cart;
     }
 
+    public function afterGetForCustomer(CartRepositoryInterface $cartRepository, CartInterface $cart)
+    {
+        $this->setAmazonOrderReferenceIdExtensionAttribute($cart);
+
+        return $cart;
+    }
+
+    public function afterGetActive(CartRepositoryInterface $cartRepository, CartInterface $cart)
+    {
+        $this->setAmazonOrderReferenceIdExtensionAttribute($cart);
+
+        return $cart;
+    }
+
+    public function afterGetActiveForCustomer(CartRepositoryInterface $cartRepository, CartInterface $cart)
+    {
+        $this->setAmazonOrderReferenceIdExtensionAttribute($cart);
+
+        return $cart;
+    }
+
     protected function setAmazonOrderReferenceIdExtensionAttribute(CartInterface $cart)
     {
         $cartExtension = ($cart->getExtensionAttributes()) ?: $this->cartExtensionFactory->create();

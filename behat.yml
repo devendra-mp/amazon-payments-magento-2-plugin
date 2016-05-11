@@ -8,6 +8,7 @@ default:
         - Context\Data\FixtureContext
         - Context\Data\CustomerContext
         - Context\Data\ProductContext
+        - Context\Data\BasketContext
         - Context\Web\Store\LoginContext
         - Context\Web\Store\BasketContext
         - Context\Web\Store\CheckoutContext
