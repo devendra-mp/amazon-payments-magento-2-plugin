@@ -4,6 +4,7 @@ namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonAddress;
+use Amazon\Core\Domain\AmazonAddressFactory;
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Api\AddressManagementInterface;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
@@ -42,22 +43,37 @@ class AddressManagement implements AddressManagementInterface
      */
     protected $countryCollectionFactory;
 
+    /**
+     * @var AmazonAddressFactory
+     */
+    private $amazonAddressFactory;
+
+    /**
+     * @param ClientFactoryInterface $clientFactory
+     * @param Address $addressHelper
+     * @param QuoteLinkInterfaceFactory $quoteLinkFactory
+     * @param Session $session
+     * @param CollectionFactory $countryCollectionFactory
+     * @param AmazonAddressFactory $amazonAddressFactory
+     */
     public function __construct(
         ClientFactoryInterface $clientFactory,
         Address $addressHelper,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
         Session $session,
-        CollectionFactory $countryCollectionFactory
+        CollectionFactory $countryCollectionFactory,
+        AmazonAddressFactory $amazonAddressFactory
     ) {
         $this->clientFactory            = $clientFactory;
         $this->addressHelper            = $addressHelper;
         $this->quoteLinkFactory         = $quoteLinkFactory;
         $this->session                  = $session;
         $this->countryCollectionFactory = $countryCollectionFactory;
+        $this->amazonAddressFactory     = $amazonAddressFactory;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getShippingAddress($amazonOrderReferenceId, $addressConsentToken)
     {
@@ -81,7 +97,7 @@ class AddressManagement implements AddressManagementInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getBillingAddress($amazonOrderReferenceId, $addressConsentToken)
     {
@@ -117,9 +133,9 @@ class AddressManagement implements AddressManagementInterface
         );
     }
 
-    protected function convertToMagentoAddress($address, $verifyCountry = false)
+    protected function convertToMagentoAddress(array $address, $verifyCountry = false)
     {
-        $amazonAddress  = new AmazonAddress($address);
+        $amazonAddress  = $this->amazonAddressFactory->create(['address' => $address]);
         $magentoAddress = $this->addressHelper->convertToMagentoEntity($amazonAddress);
 
         if ($verifyCountry) {
@@ -165,11 +181,7 @@ class AddressManagement implements AddressManagementInterface
     protected function updateQuoteLink($amazonOrderReferenceId)
     {
         $quote     = $this->session->getQuote();
-        $quoteLink = $this->quoteLinkFactory
-            ->create();
-
-        $quoteLink
-            ->load($quote->getId(), 'quote_id');
+        $quoteLink = $this->quoteLinkFactory->create()->load($quote->getId(), 'quote_id');
 
         if ($quoteLink->getAmazonOrderReferenceId() != $amazonOrderReferenceId) {
             $quoteLink

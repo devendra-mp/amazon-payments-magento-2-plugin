@@ -69,6 +69,7 @@ class Data extends AbstractHelper
             $scope,
             $scopeCode
         );
+        // TODO - use an encryption backend model in config.xml
         $secretKey = $this->encryptor->decrypt($secretKey);
 
         return $secretKey;
