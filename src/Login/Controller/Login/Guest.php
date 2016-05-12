@@ -9,7 +9,6 @@ use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Psr\Log\LoggerInterface;
-use Magento\Customer\Model\SessionFactory;
 
 class Guest extends Action
 {
@@ -29,29 +28,29 @@ class Guest extends Action
     protected $logger;
 
     /**
-     * @var SessionFactory
+     * @var Session
      */
-    protected $customerSessionFactory;
+    protected $customerSession;
 
     /**
      * @param Context $context
      * @param AmazonCustomerFactory $amazonCustomerFactory
      * @param ClientFactoryInterface $clientFactory
      * @param LoggerInterface $logger
-     * @param SessionFactory $customerSessionFactory
+     * @param Session $customerSession
      */
     public function __construct(
         Context $context,
         AmazonCustomerFactory $amazonCustomerFactory,
         ClientFactoryInterface $clientFactory,
         LoggerInterface $logger,
-        SessionFactory $customerSessionFactory
+        Session $customerSession
     ) {
         parent::__construct($context);
         $this->amazonCustomerFactory = $amazonCustomerFactory;
         $this->clientFactory = $clientFactory;
         $this->logger = $logger;
-        $this->customerSessionFactory = $customerSessionFactory;
+        $this->customerSession = $customerSession;
     }
 
     /**
@@ -88,6 +87,6 @@ class Guest extends Action
      */
     protected function storeUserInfoToSession(AmazonCustomer $amazonCustomer)
     {
-        $this->customerSessionFactory->create()->setAmazonCustomer($amazonCustomer);
+        $this->customerSession->setAmazonCustomer($amazonCustomer);
     }
 }
