@@ -2,9 +2,9 @@
 
 namespace Amazon\Login\Block;
 
+use Amazon\Core\Helper\Data;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Amazon\Core\Helper\Data;
 
 class Login extends Template
 {
@@ -13,7 +13,8 @@ class Login extends Template
      */
     protected $coreHelper;
 
-    public function __construct(Context $context, Data $coreHelper) {
+    public function __construct(Context $context, Data $coreHelper)
+    {
         $this->coreHelper = $coreHelper;
         parent::__construct($context);
     }
@@ -23,6 +24,15 @@ class Login extends Template
      */
     public function isLwaEnabled()
     {
-        return $this->coreHelper->isLwaEnabled();
+        return (
+            $this->coreHelper->isLwaEnabled()
+            && $this->coreHelper->isPwaEnabled()
+            && $this->coreHelper->getCurrencyCode() == $this->getCurrentCurrencyCode()
+        );
+    }
+
+    protected function getCurrentCurrencyCode()
+    {
+        return $this->_storeManager->getStore()->getCurrentCurrency()->getCode();
     }
 }
