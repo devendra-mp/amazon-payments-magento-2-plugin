@@ -33,8 +33,9 @@ class ClientFactory implements ClientFactoryInterface
      * ClientFactory constructor.
      *
      * @param ObjectManagerInterface $objectManager
-     * @param Data                   $coreHelper
-     * @param string                 $instanceName
+     * @param Data $coreHelper
+     * @param EnvironmentChecker $environmentChecker
+     * @param string $instanceName
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -61,7 +62,7 @@ class ClientFactory implements ClientFactoryInterface
             'sandbox'     => $this->coreHelper->isSandboxEnabled(ScopeInterface::SCOPE_STORE, $storeId),
             'client_id'   => $this->coreHelper->getClientId(ScopeInterface::SCOPE_STORE, $storeId)
         ];
-        
+
         return $this->objectManager->create($this->instanceName, ['config' => $config]);
     }
 }

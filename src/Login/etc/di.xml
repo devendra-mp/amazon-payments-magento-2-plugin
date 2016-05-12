@@ -24,4 +24,9 @@
     <type name="Magento\Checkout\Controller\Cart\Index">
         <plugin name="amazon_login_cart_controller" type="Amazon\Login\Plugin\CartController" sortOrder="1" />
     </type>
+    <type name="Amazon\Login\Controller\Login\Guest">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 </config>

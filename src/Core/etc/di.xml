@@ -4,7 +4,7 @@
     <preference for="PayWithAmazon\ClientInterface" type="PayWithAmazon\Client" />
     <type name="PayWithAmazon\ClientInterface">
         <arguments>
-            <argument name="config" xsi:type="array"></argument>
+            <argument name="config" xsi:type="array" />
         </arguments>
     </type>
 </config>

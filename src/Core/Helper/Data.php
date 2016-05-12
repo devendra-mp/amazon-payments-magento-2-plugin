@@ -62,7 +62,7 @@ class Data extends AbstractHelper
             $scopeCode
         );
         $secretKey = $this->encryptor->decrypt($secretKey);
-        
+
         return $secretKey;
     }
 
@@ -460,7 +460,8 @@ class Data extends AbstractHelper
      */
     public function getRedirectUrl()
     {
-        return $this->_getUrl('amazon/login/authorize', ['_secure' => true]);
+        $urlPath = $this->isLwaEnabled() ? 'amazon/login/authorize' : 'amazon/login/guest';
+        return $this->_getUrl($urlPath, ['_secure' => true]);
     }
 
     /**
