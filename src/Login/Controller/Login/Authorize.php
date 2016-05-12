@@ -10,12 +10,13 @@ use Amazon\Login\Api\Customer\CompositeMatcherInterface;
 use Amazon\Login\Api\CustomerManagerInterface;
 use Amazon\Login\Domain\ValidationCredentials;
 use Amazon\Login\Helper\Session;
-use Exception;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Exception\NotFoundException;
+use Magento\Framework\Exception\ValidatorException;
 use Psr\Log\LoggerInterface;
+use Zend_Validate;
 
 class Authorize extends Action
 {
@@ -57,18 +58,18 @@ class Authorize extends Action
     /**
      * @var AmazonCoreHelper
      */
-    private $amazonCoreHelper;
+    protected $amazonCoreHelper;
 
     /**
-     * @param Context $context
-     * @param ClientFactoryInterface $clientFactory
+     * @param Context                   $context
+     * @param ClientFactoryInterface    $clientFactory
      * @param CompositeMatcherInterface $matcher
-     * @param CustomerManagerInterface $customerManager
-     * @param Session $session
-     * @param AccountRedirect $accountRedirect
-     * @param AmazonCustomerFactory $amazonCustomerFactory
-     * @param LoggerInterface $logger
-     * @param AmazonCoreHelper $amazonCoreHelper
+     * @param CustomerManagerInterface  $customerManager
+     * @param Session                   $session
+     * @param AccountRedirect           $accountRedirect
+     * @param AmazonCustomerFactory     $amazonCustomerFactory
+     * @param LoggerInterface           $logger
+     * @param AmazonCoreHelper          $amazonCoreHelper
      */
     public function __construct(
         Context $context,
@@ -83,19 +84,19 @@ class Authorize extends Action
     ) {
         parent::__construct($context);
 
-        $this->clientFactory   = $clientFactory;
-        $this->matcher         = $matcher;
-        $this->customerManager = $customerManager;
-        $this->session         = $session;
-        $this->accountRedirect = $accountRedirect;
+        $this->clientFactory         = $clientFactory;
+        $this->matcher               = $matcher;
+        $this->customerManager       = $customerManager;
+        $this->session               = $session;
+        $this->accountRedirect       = $accountRedirect;
         $this->amazonCustomerFactory = $amazonCustomerFactory;
-        $this->logger = $logger;
-        $this->amazonCoreHelper = $amazonCoreHelper;
+        $this->logger                = $logger;
+        $this->amazonCoreHelper      = $amazonCoreHelper;
     }
 
     public function execute()
     {
-        if (!$this->amazonCoreHelper->isLwaEnabled()) {
+        if ( ! $this->amazonCoreHelper->isLwaEnabled()) {
             throw new NotFoundException(__('Action is not available'));
         }
 
@@ -119,7 +120,9 @@ class Authorize extends Action
                 }
             }
 
-        } catch (Exception $e) {
+        } catch (ValidatorException $e) {
+            $this->messageManager->addError($e->getMessage());
+        } catch (\Exception $e) {
             $this->logger->error($e);
             $this->messageManager->addError(__('Error processing Amazon Login'));
         }
@@ -136,7 +139,7 @@ class Authorize extends Action
         }
 
         if ($amazonCustomer->getId() != $customerData->getExtensionAttributes()->getAmazonId()) {
-            if (!$this->session->isLoggedIn()) {
+            if ( ! $this->session->isLoggedIn()) {
                 return new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
             }
 
@@ -148,6 +151,10 @@ class Authorize extends Action
 
     protected function createCustomer(AmazonCustomer $amazonCustomer)
     {
+        if ( ! Zend_Validate::is($amazonCustomer->getEmail(), 'EmailAddress')) {
+            throw new ValidatorException(__('the email address for your Amazon account is invalid'));
+        }
+
         $customerData = $this->customerManager->create($amazonCustomer);
         $this->customerManager->updateLink($customerData->getId(), $amazonCustomer->getId());
 
