@@ -2,6 +2,7 @@
 
 namespace Amazon\Login\Helper;
 
+use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Login\Domain\ValidationCredentials;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Session as CustomerSession;
@@ -20,9 +21,7 @@ class Session
     protected $eventManager;
 
     /**
-     * Session constructor.
-     *
-     * @param CustomerSession       $session
+     * @param CustomerSession $session
      * @param EventManagerInterface $eventManager
      */
     public function __construct(
@@ -98,5 +97,37 @@ class Session
     public function isLoggedIn()
     {
         return $this->session->isLoggedIn();
+    }
+
+    /**
+     * @param AmazonCustomer $amazonCustomer
+     * @return void
+     */
+    public function setAmazonCustomer(AmazonCustomer $amazonCustomer)
+    {
+        $this->session->setAmazonCustomer($amazonCustomer);
+    }
+
+    /**
+     * @return void
+     */
+    public function clearAmazonCustomer()
+    {
+        $this->session->unsAmazonCustomer();
+    }
+
+    /**
+     * @return AmazonCustomer|null
+     */
+    public function getAmazonCustomer()
+    {
+        $amazonCustomer = $this->session->getAmazonCustomer();
+
+        if ($amazonCustomer && (!$amazonCustomer instanceof AmazonCustomer)) {
+            $this->clearAmazonCustomer();
+            $amazonCustomer = null;
+        }
+
+        return $amazonCustomer;
     }
 }

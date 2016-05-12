@@ -113,6 +113,7 @@ class Authorize extends Action
 
                 if ($processed instanceof ValidationCredentials) {
                     $this->session->setValidationCredentials($processed);
+                    $this->session->setAmazonCustomer($amazonCustomer);
                     return $this->_redirect($this->_url->getRouteUrl('*/*/validate'));
                 } else {
                     $this->session->login($processed);
