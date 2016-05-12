@@ -7,6 +7,7 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Data extends AbstractHelper
 {
@@ -16,15 +17,22 @@ class Data extends AbstractHelper
     protected $encryptor;
 
     /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * @param Context $context
      */
     public function __construct(
         Context $context,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        StoreManagerInterface $storeManager
     )
     {
         parent::__construct($context);
         $this->encryptor = $encryptor;
+        $this->storeManager = $storeManager;
     }
 
     /*
@@ -220,14 +228,11 @@ class Data extends AbstractHelper
      */
     public function isLwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        $pwaEnabled = $this->isPwaEnabled($scope);
-        $lwaEnabled = (bool)$this->scopeConfig->getValue(
+        return (bool)$this->scopeConfig->getValue(
             'payment/amazon_payment/lwa_enabled',
             $scope,
             $scopeCode
         );
-
-        return $pwaEnabled && $lwaEnabled;
     }
 
     /*
@@ -504,5 +509,25 @@ class Data extends AbstractHelper
         ];
 
         return $simulationlabels;
+    }
+
+    public function isPaymentButtonEnabled()
+    {
+        return ($this->isPwaEnabled() && $this->isCurrentCurrencySupportedByAmazon());
+    }
+
+    public function isLoginButtonEnabled()
+    {
+        return ($this->isLwaEnabled() && $this->isPwaEnabled() && $this->isCurrentCurrencySupportedByAmazon());
+    }
+
+    public function isCurrentCurrencySupportedByAmazon()
+    {
+        return $this->getCurrentCurrencyCode() == $this->getCurrencyCode();
+    }
+
+    protected function getCurrentCurrencyCode()
+    {
+        return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
     }
 }

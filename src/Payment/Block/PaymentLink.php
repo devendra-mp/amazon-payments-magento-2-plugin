@@ -1,12 +1,12 @@
 <?php
 
-namespace Amazon\Login\Block;
+namespace Amazon\Payment\Block;
 
 use Amazon\Core\Helper\Data;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 
-class Login extends Template
+class PaymentLink extends Template
 {
     /**
      * @var Data
@@ -21,7 +21,7 @@ class Login extends Template
 
     protected function _toHtml()
     {
-        if (!$this->coreHelper->isLoginButtonEnabled()) {
+        if (!$this->coreHelper->isPaymentButtonEnabled()) {
             return '';
         }
 
