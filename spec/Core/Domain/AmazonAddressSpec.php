@@ -1,0 +1,58 @@
+<?php
+
+namespace spec\Amazon\Core\Domain;
+
+use Amazon\Core\Domain\AmazonName;
+use Amazon\Core\Domain\AmazonNameFactory;
+use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
+
+class AmazonAddressSpec extends ObjectBehavior
+{
+    function let(AmazonNameFactory $nameFactory)
+    {
+        $fullName = 'Firstname Lastname';
+        $nameFactory->create(Argument::type('array'))
+                    ->willReturn(new AmazonName($fullName));
+
+        $addressData = [
+            'Name' => $fullName,
+            'City' => 'city',
+            'PostalCode' => 'PO4 CODE',
+            'CountryCode' => 'GB',
+            'AddressLine0' => 'address 0',
+            'AddressLine1' => 'address 1',
+            'AddressLine2' => 'address 2',
+            'AddressLine3' => 'address 3',
+            'Phone' => '123456',
+            'StateOrRegion' => 'Caledonia',
+        ];
+        $this->beConstructedWith($addressData, $nameFactory);
+    }
+
+    function it_maps_input_correctly()
+    {
+        $this->getTelephone()->shouldReturn('123456');
+        $this->getCountryCode()->shouldReturn('GB');
+        $this->getPostCode()->shouldReturn('PO4 CODE');
+        $this->getState()->shouldReturn('Caledonia');
+    }
+
+    function it_returns_address_lines()
+    {
+        $this->getLine(0)->shouldReturn('address 0');
+        $this->getLine(1)->shouldReturn('address 1');
+        $this->getLine(2)->shouldReturn('address 2');
+        $this->getLine(3)->shouldReturn('address 3');
+        $this->getLine(4)->shouldReturn(null);
+        $this->getLine(40)->shouldReturn(null);
+
+        $this->getLines()->shouldReturn(['address 0', 'address 1', 'address 2', 'address 3']);
+    }
+
+    function it_returns_names()
+    {
+        $this->getFirstName()->shouldReturn('Firstname');
+        $this->getLastName()->shouldReturn('Lastname');
+    }
+}

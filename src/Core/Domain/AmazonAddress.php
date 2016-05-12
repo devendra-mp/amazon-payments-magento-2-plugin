@@ -40,13 +40,17 @@ class AmazonAddress
     protected $telephone;
 
     /**
-     * AmazonAddress constructor.
-     *
-     * @param array $address
+     * @var string
      */
-    public function __construct(array $address)
+    protected $company = '';
+
+    /**
+     * @param array $address
+     * @param AmazonNameFactory $addressNameFactory
+     */
+    public function __construct(array $address, AmazonNameFactory $addressNameFactory)
     {
-        $this->name = new AmazonName($address['Name']);
+        $this->name = $addressNameFactory->create(['name' => $address['Name']]);
 
         $this->lines = [];
 
@@ -54,7 +58,7 @@ class AmazonAddress
             $key = 'AddressLine' . $i;
 
             if (isset($address[$key])) {
-                $this->lines[] = $address[$key];
+                $this->lines[$i] = $address[$key];
             }
         }
 
@@ -100,6 +104,18 @@ class AmazonAddress
     }
 
     /**
+     * @param int $lineNumber
+     * @return null|string
+     */
+    public function getLine($lineNumber)
+    {
+        if (isset($this->lines[$lineNumber])) {
+            return $this->lines[$lineNumber];
+        }
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getCity()
@@ -137,5 +153,13 @@ class AmazonAddress
     public function getTelephone()
     {
         return $this->telephone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 }

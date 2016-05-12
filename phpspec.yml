@@ -1,3 +1,5 @@
+bootstrap: 'spec/bootstrap.php'
+formatter.name: pretty
 extensions:
     - Nagno\Phpspec\BootstrapMagento2\Bootstrap
 suites:

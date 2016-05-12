@@ -6,14 +6,30 @@ use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Model\ResourceModel\OrderLink;
 use Amazon\Payment\Model\ResourceModel\PendingCapture;
 use Amazon\Payment\Model\ResourceModel\QuoteLink;
+use Magento\Eav\Setup\EavSetup;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
 
 class UpgradeSchema implements UpgradeSchemaInterface
 {
+    /**
+     * @var EavSetup
+     */
+    private $eavSetup;
+
+    /**
+     * @param EavSetup $eavSetup
+     */
+    public function __construct(EavSetup $eavSetup)
+    {
+        $this->eavSetup = $eavSetup;
+    }
+
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         if (version_compare($context->getVersion(), '1.1.0', '<')) {
@@ -134,6 +150,27 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 );
 
             $setup->getConnection()->createTable($table);
+        }
+
+        if (version_compare($context->getVersion(), '1.5.0', '<')) {
+            $this->upgradeAddressStreetMultiline();
+        }
+    }
+
+    /**
+     * @throws LocalizedException
+     * @return void
+     */
+    private function upgradeAddressStreetMultiline()
+    {
+        $row = $this->eavSetup->getAttribute('customer_address', 'street', 'multiline_count');
+
+        if ($row === false || !is_numeric($row)) {
+            throw new LocalizedException(__('Could not find the "multiline_count" config of the "street" Customer address attribute.'));
+        }
+
+        if ($row < 3) {
+            $this->eavSetup->updateAttribute('customer_address', 'street', 'multiline_count', 3);
         }
     }
 }
