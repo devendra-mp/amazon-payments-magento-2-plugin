@@ -84,6 +84,8 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             $quote   = $this->session->getQuote();
             $storeId = $quote->getStoreId();
 
+            $this->validateCurrency($quote->getQuoteCurrencyCode());
+
             $this->setReservedOrderId($quote);
 
             $data = [
@@ -110,6 +112,13 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             throw $e;
         } catch (Exception $e) {
             throw new AmazonServiceUnavailableException();
+        }
+    }
+
+    protected function validateCurrency($code)
+    {
+        if ($this->coreHelper->getCurrencyCode() !== $code) {
+            throw new LocalizedException(__('The currency selected is not supported by Amazon payments'));
         }
     }
 
