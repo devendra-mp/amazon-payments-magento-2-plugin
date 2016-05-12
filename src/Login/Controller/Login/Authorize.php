@@ -5,7 +5,7 @@ namespace Amazon\Login\Controller\Login;
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Core\Domain\AmazonCustomerFactory;
-use Amazon\Core\Helper\Data;
+use Amazon\Core\Helper\Data as AmazonCoreHelper;
 use Amazon\Login\Api\Customer\CompositeMatcherInterface;
 use Amazon\Login\Api\CustomerManagerInterface;
 use Amazon\Login\Domain\ValidationCredentials;
@@ -14,6 +14,7 @@ use Exception;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\NotFoundException;
 use Psr\Log\LoggerInterface;
 
 class Authorize extends Action
@@ -54,6 +55,11 @@ class Authorize extends Action
     protected $logger;
 
     /**
+     * @var AmazonCoreHelper
+     */
+    private $amazonCoreHelper;
+
+    /**
      * @param Context $context
      * @param ClientFactoryInterface $clientFactory
      * @param CompositeMatcherInterface $matcher
@@ -62,6 +68,7 @@ class Authorize extends Action
      * @param AccountRedirect $accountRedirect
      * @param AmazonCustomerFactory $amazonCustomerFactory
      * @param LoggerInterface $logger
+     * @param AmazonCoreHelper $amazonCoreHelper
      */
     public function __construct(
         Context $context,
@@ -71,7 +78,8 @@ class Authorize extends Action
         Session $session,
         AccountRedirect $accountRedirect,
         AmazonCustomerFactory $amazonCustomerFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        AmazonCoreHelper $amazonCoreHelper
     ) {
         parent::__construct($context);
 
@@ -82,10 +90,15 @@ class Authorize extends Action
         $this->accountRedirect = $accountRedirect;
         $this->amazonCustomerFactory = $amazonCustomerFactory;
         $this->logger = $logger;
+        $this->amazonCoreHelper = $amazonCoreHelper;
     }
 
     public function execute()
     {
+        if (!$this->amazonCoreHelper->isLwaEnabled()) {
+            throw new NotFoundException(__('Action is not available'));
+        }
+
         try {
             $userInfo = $this->clientFactory->create()->getUserInfo($this->getRequest()->getParam('access_token'));
 

@@ -5,9 +5,11 @@ namespace Amazon\Login\Controller\Login;
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Core\Domain\AmazonCustomerFactory;
+use Amazon\Core\Helper\Data as AmazonCoreHelper;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\NotFoundException;
 use Psr\Log\LoggerInterface;
 
 class Guest extends Action
@@ -33,24 +35,32 @@ class Guest extends Action
     protected $customerSession;
 
     /**
+     * @var AmazonCoreHelper
+     */
+    protected $amazonCoreHelper;
+
+    /**
      * @param Context $context
      * @param AmazonCustomerFactory $amazonCustomerFactory
      * @param ClientFactoryInterface $clientFactory
      * @param LoggerInterface $logger
      * @param Session $customerSession
+     * @param AmazonCoreHelper $amazonCoreHelper
      */
     public function __construct(
         Context $context,
         AmazonCustomerFactory $amazonCustomerFactory,
         ClientFactoryInterface $clientFactory,
         LoggerInterface $logger,
-        Session $customerSession
+        Session $customerSession,
+        AmazonCoreHelper $amazonCoreHelper
     ) {
         parent::__construct($context);
         $this->amazonCustomerFactory = $amazonCustomerFactory;
         $this->clientFactory = $clientFactory;
         $this->logger = $logger;
         $this->customerSession = $customerSession;
+        $this->amazonCoreHelper = $amazonCoreHelper;
     }
 
     /**
@@ -58,6 +68,10 @@ class Guest extends Action
      */
     public function execute()
     {
+        if ($this->amazonCoreHelper->isLwaEnabled()) {
+            throw new NotFoundException(__('Action is not available'));
+        }
+
         try {
             $userInfo = $this->clientFactory
                              ->create()
