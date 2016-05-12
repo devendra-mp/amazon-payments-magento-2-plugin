@@ -34,7 +34,7 @@ class Config extends Template
             'widgetUrl'                => $this->coreHelper->getWidgetUrl(),
             'merchantId'               => $this->coreHelper->getMerchantId(),
             'clientId'                 => $this->coreHelper->getClientId(),
-            'isPwaEnabled'             => $this->coreHelper->isPwaEnabled(),
+            'isPwaEnabled'             => $this->isPwaEnabled(),
             'isLwaEnabled'             => $this->isLwaEnabled(),
             'isSandboxEnabled'         => $this->coreHelper->isSandboxEnabled(),
             'chargeOnOrder'            => $this->sanitizePaymentAction(),
@@ -72,7 +72,9 @@ class Config extends Template
      */
     public function isPwaEnabled()
     {
-        return $this->coreHelper->isPwaEnabled();
+        return (
+            $this->coreHelper->isPwaEnabled() && $this->coreHelper->getCurrencyCode() == $this->getCurrentCurrencyCode()
+        );
     }
 
     /**
@@ -80,7 +82,7 @@ class Config extends Template
      */
     public function isLwaEnabled()
     {
-        return ($this->coreHelper->isPwaEnabled() && $this->coreHelper->isLwaEnabled());
+        return ($this->isPwaEnabled() && $this->coreHelper->isLwaEnabled());
     }
 
     /**
@@ -107,5 +109,10 @@ class Config extends Template
         }
 
         return $output;
+    }
+
+    protected function getCurrentCurrencyCode()
+    {
+        return $this->_storeManager->getStore()->getCurrentCurrency()->getCode();
     }
 }
