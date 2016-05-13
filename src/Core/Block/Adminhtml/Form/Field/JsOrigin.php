@@ -10,7 +10,7 @@ use Zend\Uri\UriFactory;
 
 class JsOrigin extends BaseField
 {
-    public function _renderValue(AbstractElement $element)
+    protected function _renderValue(AbstractElement $element)
     {
         $value = '';
         $store = $this->_storeManager->getStore();
@@ -25,7 +25,7 @@ class JsOrigin extends BaseField
         return '<td class="value">' . $value . '</td>';
     }
 
-    public function _renderInheritCheckbox(AbstractElement $element)
+    protected function _renderInheritCheckbox(AbstractElement $element)
     {
         return '<td class="use-default"></td>';
     }
