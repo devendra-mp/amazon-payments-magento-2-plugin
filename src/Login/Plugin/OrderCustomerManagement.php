@@ -4,6 +4,7 @@ namespace Amazon\Login\Plugin;
 
 use Amazon\Login\Api\CustomerManagerInterface;
 use Amazon\Login\Helper\Session as LoginSessionHelper;
+use Amazon\Payment\Model\Method\Amazon as AmazonPaymentMethod;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Sales\Api\OrderCustomerManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -50,7 +51,8 @@ class OrderCustomerManagement
     {
         /** @var \Magento\Customer\Api\Data\CustomerInterface $customerData */
         $customerData = $proceed($orderId);
-        $isAmazonPayment = $this->orderRepository->get($orderId)->getPayment()->getMethod() === 'amazon_payment';
+        $paymentMethodName = $this->orderRepository->get($orderId)->getPayment()->getMethod();
+        $isAmazonPayment = $paymentMethodName === AmazonPaymentMethod::PAYMENT_METHOD_CODE;
         $amazonCustomer = $this->loginSessionHelper->getAmazonCustomer();
 
         if ($isAmazonPayment && $amazonCustomer) {
