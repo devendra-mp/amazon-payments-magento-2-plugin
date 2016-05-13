@@ -34,4 +34,7 @@
             <argument name="session" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
         </arguments>
     </type>
+    <type name="Magento\Sales\Api\OrderCustomerManagementInterface">
+        <plugin name="amazon_login_order_customer_service" type="Amazon\Login\Plugin\OrderCustomerManagement" sortOrder="1" />
+    </type>
 </config>
