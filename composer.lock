@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2dd529270e9ed35bc8cd6eb5128b6ec2",
-    "content-hash": "3fdc40b7521749dd699161e94fb59729",
+    "hash": "117233299a990155f18570bf5a646ee0",
+    "content-hash": "b63d84864c1be00b3bffb1fdc92fb6d6",
     "packages": [
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/amzn/login-and-pay-with-amazon-sdk-php.git",
-                "reference": "c15bfee837f4fab2b489b289405806912a91318c"
+                "reference": "eb33f0fa824aa16ba84cbcc5a32600b7c0e460bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amzn/login-and-pay-with-amazon-sdk-php/zipball/c15bfee837f4fab2b489b289405806912a91318c",
-                "reference": "c15bfee837f4fab2b489b289405806912a91318c",
+                "url": "https://api.github.com/repos/amzn/login-and-pay-with-amazon-sdk-php/zipball/eb33f0fa824aa16ba84cbcc5a32600b7c0e460bd",
+                "reference": "eb33f0fa824aa16ba84cbcc5a32600b7c0e460bd",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 "payment",
                 "payments"
             ],
-            "time": "2016-03-04 13:56:22"
+            "time": "2016-05-12 22:41:53"
         },
         {
             "name": "magento/framework",
