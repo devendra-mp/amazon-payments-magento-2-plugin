@@ -16,7 +16,7 @@ use Amazon\Payment\Domain\Validator\AmazonAuthorization;
 use Amazon\Payment\Domain\Validator\AmazonCapture;
 use Amazon\Payment\Domain\Validator\AmazonPreCapture;
 use Amazon\Payment\Domain\Validator\AmazonRefund;
-use Amazon\Payment\Exception\AuthorizationTimeoutException;
+use Amazon\Payment\Exception\AuthorizationExpiredException;
 use Amazon\Payment\Exception\CapturePendingException;
 use Amazon\Payment\Exception\SoftDeclineException;
 use Exception;
@@ -396,7 +396,7 @@ class Amazon extends AbstractMethod
             $this->amazonPreCaptureValidator->validate($response);
 
             return true;
-        } catch (AuthorizationTimeoutException $e) {
+        } catch (AuthorizationExpiredException $e) {
             $this->reauthorizeAndCapture($payment, $amount, $amazonOrderReferenceId, $authorizationId, $storeId);
         }
 

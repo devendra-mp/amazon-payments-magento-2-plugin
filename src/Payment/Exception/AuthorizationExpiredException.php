@@ -4,7 +4,7 @@ namespace Amazon\Payment\Exception;
 
 use Exception;
 
-class AuthorizationTimeoutException extends Exception
+class AuthorizationExpiredException extends Exception
 {
 
 }
