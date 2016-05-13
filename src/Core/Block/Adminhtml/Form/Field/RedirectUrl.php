@@ -2,30 +2,29 @@
 
 namespace Amazon\Core\Block\Adminhtml\Form\Field;
 
-use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Config\Block\System\Config\Form\Field as BaseField;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\Store;
+use Magento\Framework\UrlInterface;
 
-class RedirectUrl extends RenderConfig
+class RedirectUrl extends BaseField
 {
     public function _renderValue(AbstractElement $element)
     {
         $values = [];
+        $store = $this->_storeManager->getStore();
 
-        $baseUrl = $this->_scopeConfig->getValue(
-            Store::XML_PATH_SECURE_BASE_URL,
-            ScopeInterface::SCOPE_STORE,
-            $this->_storeManager->getStore()->getId()
-        );
+        $baseUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_WEB, true);
 
         if ($baseUrl) {
-            $host     = parse_url($baseUrl, PHP_URL_HOST);
-            $path     = parse_url($baseUrl, PHP_URL_PATH);
-            $values[] = 'https://' . $host . $path . 'amazon/login/authorize';
-            $values[] = 'https://' . $host . $path . 'amazon/login/guest';
+            $values[] = $baseUrl . 'amazon/login/authorize';
+            $values[] = $baseUrl . 'amazon/login/guest';
         }
 
         return '<td class="value">' . implode('<br>', $values) . '</td>';
+    }
+
+    public function _renderInheritCheckbox(AbstractElement $element)
+    {
+        return '<td class="use-default"></td>';
     }
 }

@@ -2,28 +2,31 @@
 
 namespace Amazon\Core\Block\Adminhtml\Form\Field;
 
-use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Backend\Block\Template\Context;
+use Magento\Config\Block\System\Config\Form\Field as BaseField;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\Store;
+use Magento\Framework\UrlInterface;
+use Zend\Uri\UriFactory;
 
-class JsOrigin extends RenderConfig
+class JsOrigin extends BaseField
 {
     public function _renderValue(AbstractElement $element)
     {
         $value = '';
+        $store = $this->_storeManager->getStore();
 
-        $baseUrl = $this->_scopeConfig->getValue(
-            Store::XML_PATH_SECURE_BASE_URL,
-            ScopeInterface::SCOPE_STORE,
-            $this->_storeManager->getStore()->getId()
-        );
+        $baseUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_WEB, true);
 
         if ($baseUrl) {
-            $host  = parse_url($baseUrl, PHP_URL_HOST);
-            $value = 'https://' . $host;
+            $uri   = UriFactory::factory($baseUrl);
+            $value = $uri->getScheme() . '://' . $uri->getHost();
         }
 
         return '<td class="value">' . $value . '</td>';
+    }
+
+    public function _renderInheritCheckbox(AbstractElement $element)
+    {
+        return '<td class="use-default"></td>';
     }
 }
