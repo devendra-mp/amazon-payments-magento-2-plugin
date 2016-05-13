@@ -2,9 +2,9 @@
 
 namespace Amazon\Payment\Domain;
 
-class AmazonAuthorizationResponse extends AbstractAmazonAuthorizationResponse
+class AmazonAuthorizationDetailsResponse extends AbstractAmazonAuthorizationResponse
 {
-    protected $resultKey = 'AuthorizeResult';
+    protected $resultKey = 'AuthorizeDetailsResult';
 
     /**
      * {@inheritDoc}

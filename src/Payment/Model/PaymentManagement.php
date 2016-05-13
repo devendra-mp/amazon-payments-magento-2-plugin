@@ -96,7 +96,7 @@ class PaymentManagement implements PaymentManagementInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function updateCapture($pendingCaptureId)
     {
@@ -123,13 +123,21 @@ class PaymentManagement implements PaymentManagementInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function queuePendingCapture(AmazonCaptureResponse $response)
     {
         $this->pendingCaptureFactory->create()
             ->setCaptureId($response->getTransactionId())
             ->save();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function closeTransaction($transactionId)
+    {
+        $this->getTransaction($transactionId)->setIsClosed(1)->save();
     }
 
     protected function processUpdateCaptureResponse(
@@ -165,7 +173,7 @@ class PaymentManagement implements PaymentManagementInterface
         $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
         $order->save();
 
-        $this->getTransaction($transactionId)->setIsClosed(1)->save();
+        $this->closeTransaction($transactionId);
         $pendingCapture->delete();
     }
 
@@ -185,7 +193,7 @@ class PaymentManagement implements PaymentManagementInterface
         $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
         $order->save();
 
-        $this->getTransaction($transactionId)->setIsClosed(1)->save();
+        $this->closeTransaction($transactionId);
         $pendingCapture->delete();
 
         $orderUrl = $this->urlBuilder->getUrl('sales/order/view', ['order_id' => $order->getId()]);

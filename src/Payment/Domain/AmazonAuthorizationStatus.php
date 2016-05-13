@@ -14,6 +14,7 @@ class AmazonAuthorizationStatus extends AbstractAmazonStatus
     const REASON_AMAZON_REJECTED = 'AmazonRejected';
     const REASON_TRANSACTION_TIMEOUT = 'TransactionTimedOut';
     const REASON_MAX_CAPTURES_PROCESSED = 'MaxCapturesProcessed';
+    const REASON_SELLER_CLOSED = 'SellerClosed';
 
     const CODE_HARD_DECLINE = 4273;
     const CODE_SOFT_DECLINE = 7638;
