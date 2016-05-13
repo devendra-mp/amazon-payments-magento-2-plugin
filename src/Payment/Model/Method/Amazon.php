@@ -201,7 +201,7 @@ class Amazon extends AbstractMethod
      */
     public function authorize(InfoInterface $payment, $amount)
     {
-        $this->_authorize($payment, $amount, false);
+        $this->authorizeInStore($payment, $amount, false);
     }
 
     /**
@@ -305,7 +305,6 @@ class Amazon extends AbstractMethod
 
         $payment->setTransactionId($transactionId);
     }
-
 
     protected function processHardDecline(InfoInterface $payment, $amazonOrderReferenceId)
     {
