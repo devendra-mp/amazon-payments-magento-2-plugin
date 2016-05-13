@@ -46,6 +46,14 @@
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                             <config_path>payment/amazon_payment/sandbox</config_path>
                         </field>
+                        <field id="js_origin" translate="label" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Javascript Origin</label>
+                            <frontend_model>Amazon\Core\Block\Adminhtml\Form\Field\JsOrigin</frontend_model>
+                        </field>
+                        <field id="redirect_url" translate="label" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Redirect URL</label>
+                            <frontend_model>Amazon\Core\Block\Adminhtml\Form\Field\RedirectUrl</frontend_model>
+                        </field>
                     </group>
                     <group id="options" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Options</label>
