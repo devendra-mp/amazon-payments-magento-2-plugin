@@ -1,5 +1,7 @@
 <!-- ko if: (isAmazonAccountLoggedIn) -->
-    <!-- ko if: (chargeOnOrder && isEuPaymentRegion) -->
-        <div class="message warning"><span data-bind="text: message"></span></div>
+    <!-- ko if: (chargeOnOrder) -->
+        <!-- ko if: (isEuPaymentRegion) -->
+            <div class="message warning"><span data-bind="text: message"></span></div>
+        <!-- /ko -->
     <!-- /ko -->
 <!-- /ko -->
