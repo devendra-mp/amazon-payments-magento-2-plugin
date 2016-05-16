@@ -44,6 +44,11 @@ class Amazon extends AbstractMethod
     /**
      * {@inheritdoc}
      */
+    protected $_isGateway = true;
+
+    /**
+     * {@inheritdoc}
+     */
     protected $_code = self::PAYMENT_METHOD_CODE;
 
     /**
