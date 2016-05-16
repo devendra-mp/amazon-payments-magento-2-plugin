@@ -11,7 +11,7 @@ class RedirectUrl extends BaseField
     protected function _renderValue(AbstractElement $element)
     {
         $values = [];
-        $store = $this->_storeManager->getStore();
+        $store = $this->_storeManager->getStore($this->getRequest()->getParam('store', 0));
 
         $baseUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_WEB, true);
 
