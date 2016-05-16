@@ -82,4 +82,11 @@ class CheckoutContext implements SnippetAcceptingContext
         $hasShippingForm = $this->checkoutPage->hasStandardShippingForm();
         PHPUnit_Framework_Assert::isTrue($hasShippingForm);
     }
+
+    /**
+     * @Then I do not see a pay with amazon button
+     */
+    public function iDoNotSeeAPayWithAmazonButton()
+    {
+    }
 }

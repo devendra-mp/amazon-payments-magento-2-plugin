@@ -3,6 +3,8 @@
 namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Page\Store\Element\CurrencySwitcher;
+use Page\Store\Home;
 use Page\Store\Product;
 
 class BasketContext implements SnippetAcceptingContext
@@ -12,9 +14,21 @@ class BasketContext implements SnippetAcceptingContext
      */
     protected $productPage;
 
-    public function __construct(Product $productPage)
+    /**
+     * @var CurrencySwitcher
+     */
+    protected $currencySwitcherElement;
+
+    /**
+     * @var Home
+     */
+    protected $homePage;
+
+    public function __construct(Product $productPage, CurrencySwitcher $currencySwitcherElement, Home $homePage)
     {
-        $this->productPage    = $productPage;
+        $this->productPage             = $productPage;
+        $this->currencySwitcherElement = $currencySwitcherElement;
+        $this->homePage                = $homePage;
     }
 
     /**
@@ -26,5 +40,14 @@ class BasketContext implements SnippetAcceptingContext
             'id' => 1
         ]);
         $this->productPage->addToBasket();
+    }
+
+    /**
+     * @Given I want to pay using an unsupported currency
+     */
+    public function iWantToPayUsingAnUnsupportedCurrency()
+    {
+        $this->homePage->open();
+        $this->currencySwitcherElement->selectCurrency('CHF');
     }
 }
