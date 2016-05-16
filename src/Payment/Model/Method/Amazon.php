@@ -266,7 +266,6 @@ class Amazon extends AbstractMethod
         $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, true);
     }
 
-
     protected function _authorize(InfoInterface $payment, $amount, $amazonOrderReferenceId, $storeId, $capture = false)
     {
         $data = [

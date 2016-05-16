@@ -2,10 +2,10 @@
 
 namespace Amazon\Payment\Observer;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
 use Amazon\Core\Helper\Data;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
 
 class SandboxSimulation implements ObserverInterface
 {
@@ -39,9 +39,9 @@ class SandboxSimulation implements ObserverInterface
 
             $simulationReference = $this->getSimulationReference($payment);
 
-            if (!empty($simulationReference)) {
+            if ( ! empty($simulationReference)) {
                 $simulationString = $this->getSimulationString($simulationReference, $context);
-                if (!empty($simulationString)) {
+                if ( ! empty($simulationString)) {
                     $requestParameter = $this->getRequestParameter($context);
                     $observer->getTransport()->addData([$requestParameter => $simulationString]);
                 }

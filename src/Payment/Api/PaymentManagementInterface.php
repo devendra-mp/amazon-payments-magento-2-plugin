@@ -24,7 +24,6 @@ interface PaymentManagementInterface
      */
     public function queuePendingCapture(AmazonCaptureResponse $response);
 
-
     /**
      * Close transaction
      *

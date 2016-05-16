@@ -75,7 +75,7 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
     {
         return $this->setData(PendingCaptureInterface::CAPTURE_ID, $captureId);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -89,7 +89,7 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
      */
     public function getCreatedAt()
     {
-        return $this->getData(PendingCaptureInterface::AUTHORIZATION_ID);
+        return $this->getData(PendingCaptureInterface::CREATED_AT);
     }
 
     /**
@@ -97,7 +97,7 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
      */
     public function beforeSave()
     {
-        if (!$this->getId()) {
+        if ( ! $this->getId()) {
             $this->setCreatedAt($this->dateFactory->create()->gmtDate());
         }
 
@@ -110,7 +110,7 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
     public function setLockOnLoad($lockOnLoad)
     {
         $this->lockOnLoad = $lockOnLoad;
-        
+
         return $this;
     }
 

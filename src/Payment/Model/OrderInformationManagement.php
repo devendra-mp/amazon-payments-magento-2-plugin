@@ -52,12 +52,12 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     protected $quoteLinkFactory;
 
     /**
-     * @param Session $session
-     * @param ClientFactoryInterface $clientFactory
-     * @param PaymentHelper $paymentHelper
-     * @param CoreHelper $coreHelper
+     * @param Session                              $session
+     * @param ClientFactoryInterface               $clientFactory
+     * @param PaymentHelper                        $paymentHelper
+     * @param CoreHelper                           $coreHelper
      * @param AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory
-     * @param QuoteLinkInterfaceFactory $quoteLinkFactory
+     * @param QuoteLinkInterfaceFactory            $quoteLinkFactory
      */
     public function __construct(
         Session $session,
@@ -124,8 +124,8 @@ class OrderInformationManagement implements OrderInformationManagementInterface
 
     protected function validateConstraints(AmazonSetOrderDetailsResponse $response, $allowedConstraints)
     {
-        foreach($response->getConstraints() as $constraint) {
-            if (!in_array($constraint->getId(), $allowedConstraints)) {
+        foreach ($response->getConstraints() as $constraint) {
+            if ( ! in_array($constraint->getId(), $allowedConstraints)) {
                 throw new ValidatorException(__($constraint->getErrorMessage()));
             }
         }
