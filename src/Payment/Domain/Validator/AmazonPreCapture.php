@@ -4,7 +4,7 @@ namespace Amazon\Payment\Domain\Validator;
 
 use Amazon\Payment\Domain\AmazonAuthorizationDetailsResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
-use Amazon\Payment\Exception\AuthorizationTimeoutException;
+use Amazon\Payment\Exception\AuthorizationExpiredException;
 
 class AmazonPreCapture
 {
