@@ -132,7 +132,7 @@ class Data extends AbstractHelper
             'de' => 'EUR',
             'uk' => 'GBP',
             'us' => 'USD',
-            'jp' => 'YEN',
+            'jp' => 'JPY'
         ];
 
         return array_key_exists($paymentRegion, $currencyCodeMap) ? $currencyCodeMap[$paymentRegion]: '';
