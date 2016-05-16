@@ -8,7 +8,7 @@
     "magento/module-checkout": "100.0.*",
     "magento/module-payment": "100.0.*",
     "magento/module-eav": "100.0.*",
-    "amzn/login-and-pay-with-amazon-sdk-php": "dev-master"
+    "amzn/login-and-pay-with-amazon-sdk-php": "^2.0.2"
   },
   "require-dev": {
     "phpunit/phpunit": "4.1.0",

@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "117233299a990155f18570bf5a646ee0",
-    "content-hash": "b63d84864c1be00b3bffb1fdc92fb6d6",
+    "hash": "5f22afb9378631b8340b63ae1b9b1161",
+    "content-hash": "7b3f45defc8b55c049a43ccbc408b317",
     "packages": [
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
-            "version": "dev-master",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amzn/login-and-pay-with-amazon-sdk-php.git",
-                "reference": "eb33f0fa824aa16ba84cbcc5a32600b7c0e460bd"
+                "reference": "5449ed9706d985891d5bb59f123b8963898d0165"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amzn/login-and-pay-with-amazon-sdk-php/zipball/eb33f0fa824aa16ba84cbcc5a32600b7c0e460bd",
-                "reference": "eb33f0fa824aa16ba84cbcc5a32600b7c0e460bd",
+                "url": "https://api.github.com/repos/amzn/login-and-pay-with-amazon-sdk-php/zipball/5449ed9706d985891d5bb59f123b8963898d0165",
+                "reference": "5449ed9706d985891d5bb59f123b8963898d0165",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 "payment",
                 "payments"
             ],
-            "time": "2016-05-12 22:41:53"
+            "time": "2016-05-13 17:25:41"
         },
         {
             "name": "magento/framework",
@@ -4627,7 +4627,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "amzn/login-and-pay-with-amazon-sdk-php": 20,
         "sensiolabs/behat-page-object-extension": 20,
         "bex/behat-magento2-init": 20
     },
