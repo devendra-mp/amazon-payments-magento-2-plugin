@@ -2,11 +2,11 @@
 
 namespace Amazon\Payment\Observer;
 
+use Amazon\Payment\Api\Data\OrderLinkInterfaceFactory;
+use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
-use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
-use Amazon\Payment\Api\Data\OrderLinkInterfaceFactory;
 
 class CopyOrderReference implements ObserverInterface
 {
@@ -40,7 +40,7 @@ class CopyOrderReference implements ObserverInterface
             $quoteLink->load($quoteId, 'quote_id');
 
             $amazonOrderReferenceId = $quoteLink->getAmazonOrderReferenceId();
-            if (!is_null($amazonOrderReferenceId)) {
+            if ( ! is_null($amazonOrderReferenceId)) {
                 $orderLink = $this->orderLinkFactory->create();
                 $orderLink
                     ->load($orderId, 'order_id')

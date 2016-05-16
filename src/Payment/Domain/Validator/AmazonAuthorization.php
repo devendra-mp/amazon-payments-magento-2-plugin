@@ -36,9 +36,7 @@ class AmazonAuthorization
                 $this->throwDeclinedExceptionForStatus($status);
         }
 
-        throw new StateException(
-            __('Amazon authorize invalid state : %1 with reason %2', $status->getState(), $status->getReasonCode())
-        );
+        throw new StateException($this->getExceptionMessage($status));
     }
 
     protected function throwDeclinedExceptionForStatus(AmazonAuthorizationStatus $status)
@@ -47,9 +45,14 @@ class AmazonAuthorization
             case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
             case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
             case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
-                throw new HardDeclineException();
+                throw new HardDeclineException($this->getExceptionMessage($status));
             case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:
-                throw new SoftDeclineException();
+                throw new SoftDeclineException($this->getExceptionMessage($status));
         }
+    }
+
+    protected function getExceptionMessage(AmazonAuthorizationStatus $status)
+    {
+        return __('Amazon authorize invalid state : %1 with reason %2', $status->getState(), $status->getReasonCode());
     }
 }

@@ -16,7 +16,7 @@ class AdditionalInformation
     {
         if (is_array($result)) {
             foreach ($this->additionalKeys as $additionalKey) {
-                if (!array_key_exists($additionalKey, $result) && $subject->hasData($additionalKey)) {
+                if ( ! array_key_exists($additionalKey, $result) && $subject->hasData($additionalKey)) {
                     $result[$additionalKey] = $subject->getDataUsingMethod($additionalKey);
                 }
             }

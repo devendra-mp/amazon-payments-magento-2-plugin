@@ -2,9 +2,9 @@
 
 namespace Amazon\Payment\Exception;
 
-use Exception;
+use Magento\Framework\Exception\LocalizedException;
 
-class SoftDeclineException extends Exception
+class SoftDeclineException extends LocalizedException
 {
     
 }
