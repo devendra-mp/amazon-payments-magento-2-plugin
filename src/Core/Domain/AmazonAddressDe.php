@@ -19,9 +19,9 @@ class AmazonAddressDe extends AmazonAddress
      */
     private function processValues()
     {
-        $line1 = (string) $this->getLine(0);
-        $line2 = (string) $this->getLine(1);
-        $line3 = (string) $this->getLine(2);
+        $line1 = (string) $this->getLine(1);
+        $line2 = (string) $this->getLine(2);
+        $line3 = (string) $this->getLine(3);
 
         if (!empty($line3)) {
             // replace all lines
