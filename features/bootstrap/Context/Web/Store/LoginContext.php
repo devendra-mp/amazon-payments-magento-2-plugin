@@ -2,9 +2,7 @@
 
 namespace Context\Web\Store;
 
-use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Exception;
 use Fixtures\Customer as CustomerFixture;
 use Page\Store\Basket;
 use Page\Store\Login;

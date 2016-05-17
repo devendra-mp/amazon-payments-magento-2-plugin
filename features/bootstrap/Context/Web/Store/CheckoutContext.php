@@ -63,7 +63,12 @@ class CheckoutContext implements SnippetAcceptingContext
     public function theBillingAddressForMyPaymentMethodShouldBeDisplayed()
     {
         $billingAddress = $this->checkoutPage->getBillingAddress();
-        PHPUnit_Framework_Assert::stringContains($billingAddress, 'Amber Kelly 87 Terrick Rd EILEAN DARACH, IV23 2TW United Kingdom');
+        $constraint     = PHPUnit_Framework_Assert::stringContains(
+            'Amber Kelly 87 Terrick Rd EILEAN DARACH, IV23 2TW United Kingdom',
+            false
+        );
+
+        PHPUnit_Framework_Assert::assertThat($billingAddress, $constraint);
     }
 
     /**
@@ -80,6 +85,15 @@ class CheckoutContext implements SnippetAcceptingContext
     public function theStandardShippingFormShouldBeDisplayed()
     {
         $hasShippingForm = $this->checkoutPage->hasStandardShippingForm();
-        PHPUnit_Framework_Assert::isTrue($hasShippingForm);
+        PHPUnit_Framework_Assert::assertTrue($hasShippingForm);
+    }
+
+    /**
+     * @Then I do not see a pay with amazon button
+     */
+    public function iDoNotSeeAPayWithAmazonButton()
+    {
+        $hasPwa = $this->checkoutPage->hasPayWithAmazonButton();
+        PHPUnit_Framework_Assert::assertFalse($hasPwa);
     }
 }

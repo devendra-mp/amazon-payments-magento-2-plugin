@@ -25,6 +25,9 @@ default:
         -
           path: 'is_behat_running'
           value: 1
+        -
+          path: 'currency/options/allow'
+          value: 'GBP,CHF'
 
     SensioLabs\Behat\PageObjectExtension:
       namespaces:
