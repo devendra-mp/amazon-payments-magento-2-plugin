@@ -3,9 +3,9 @@
 namespace Page\Store;
 
 use Page\PageTrait;
-use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
+use Page\UnsecurePage;
 
-class Home extends Page
+class Home extends UnsecurePage
 {
     use PageTrait;
 

@@ -23,7 +23,8 @@ class Checkout extends Page
             'full-screen-loader'    => ['css' => '.loading-mask'],
             'shipping-loader'       => ['css' => '.checkout-shipping-method._block-content-loading'],
             'revert-checkout'       => ['css' => '.revert-checkout'],
-            'shipping-form'         => ['css' => '#co-shipping-form']
+            'shipping-form'         => ['css' => '#co-shipping-form'],
+            'pay-with-amazon'       => ['css' => '#OffAmazonPaymentsWidgets0']
         ];
 
     public function selectFirstAmazonShippingAddress()
@@ -74,6 +75,16 @@ class Checkout extends Page
     {
         try {
             $element = $this->getElementWithWait('shipping-form');
+            return $element->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function hasPayWithAmazonButton()
+    {
+        try {
+            $element = $this->getElementWithWait('pay-with-amazon', 30000);
             return $element->isVisible();
         } catch (\Exception $e) {
             return false;
