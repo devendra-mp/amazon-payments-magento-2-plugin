@@ -20,7 +20,6 @@ class AmazonAddressSpec extends ObjectBehavior
             'City' => 'city',
             'PostalCode' => 'PO4 CODE',
             'CountryCode' => 'GB',
-            'AddressLine0' => 'address 0',
             'AddressLine1' => 'address 1',
             'AddressLine2' => 'address 2',
             'AddressLine3' => 'address 3',
@@ -40,14 +39,13 @@ class AmazonAddressSpec extends ObjectBehavior
 
     function it_returns_address_lines()
     {
-        $this->getLine(0)->shouldReturn('address 0');
         $this->getLine(1)->shouldReturn('address 1');
         $this->getLine(2)->shouldReturn('address 2');
         $this->getLine(3)->shouldReturn('address 3');
         $this->getLine(4)->shouldReturn(null);
         $this->getLine(40)->shouldReturn(null);
 
-        $this->getLines()->shouldReturn(['address 0', 'address 1', 'address 2', 'address 3']);
+        $this->getLines()->shouldReturn([1 => 'address 1', 2 => 'address 2', 3 => 'address 3']);
     }
 
     function it_returns_names()

@@ -54,7 +54,7 @@ class AmazonAddress
 
         $this->lines = [];
 
-        for ($i = 0; $i <= 3; $i++) {
+        for ($i = 1; $i <= 3; $i++) {
             $key = 'AddressLine' . $i;
 
             if (isset($address[$key])) {
