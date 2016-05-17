@@ -6,6 +6,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Customer as CustomerFixture;
 use Page\Store\Basket;
 use Page\Store\Login;
+use PHPUnit_Framework_Assert;
 
 class LoginContext implements SnippetAcceptingContext
 {
@@ -29,6 +30,23 @@ class LoginContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I go to login
+     */
+    public function iGoToLogin()
+    {
+        $this->loginPage->open();
+    }
+
+    /**
+     * @Then I see a login with amazon button on the login page
+     */
+    public function iSeeALoginWithAmazonButtonOnTheLoginPage()
+    {
+        $hasLwa = $this->loginPage->hasLoginWithAmazonButton();
+        PHPUnit_Framework_Assert::assertTrue($hasLwa);
+    }
+
+    /**
      * @Given :email is logged in
      */
     public function isLoggedIn($email)
@@ -46,7 +64,6 @@ class LoginContext implements SnippetAcceptingContext
         $this->loginPage->loginAmazonCustomer($email, $this->getAmazonPassword());
         $this->customerFixture->track($email);
     }
-
 
     /**
      * @Given I login with amazon on the basket page as :email

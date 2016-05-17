@@ -41,4 +41,14 @@ trait AmazonLoginTrait
 
         $this->waitForPageLoad();
     }
+
+    public function hasLoginWithAmazonButton()
+    {
+        try {
+            $element = $this->getElementWithWait('open-amazon-login', 5000);
+            return $element->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
