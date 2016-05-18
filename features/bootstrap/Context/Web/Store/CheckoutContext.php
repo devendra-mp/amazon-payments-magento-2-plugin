@@ -49,12 +49,21 @@ class CheckoutContext implements SnippetAcceptingContext
         $hasPwa = $this->checkoutPage->hasPayWithAmazonButton();
         PHPUnit_Framework_Assert::assertFalse($hasPwa);
     }
-    
+
     /**
      * @When I place my order
      */
     public function iPlaceMyOrder()
     {
-        throw new PendingException();
+        $this->checkoutPage->submitOrder();
+    }
+
+    /**
+     * @Then I should be logged out of amazon
+     */
+    public function iShouldBeLoggedOutOfAmazon()
+    {
+        $loggedIn = $this->checkoutPage->isLoggedIn();
+        PHPUnit_Framework_Assert::assertFalse($loggedIn);
     }
 }

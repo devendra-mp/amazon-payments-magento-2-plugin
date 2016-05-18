@@ -17,9 +17,8 @@ Feature: As a customer
     Then I should be notified that my payment was rejected
     And the amazon wallet widget should be removed
     And I should be logged out of amazon
+    And "existing@example.com" should not have placed an order
     And I should be able to select an alternative payment method
-    And my amazon order should be cancelled
-    #And my quote should not have been converted to an order
 
   Scenario: payment authorization receives a hard decline due to transaction timeout
     Given I am requesting authorization on a payment that will timeout
@@ -27,6 +26,6 @@ Feature: As a customer
     Then I should be notified that my payment was rejected
     And the amazon wallet widget should be removed
     And I should be logged out of amazon
-    And I should be able to select an alternative payment method
     And my amazon order should be cancelled
-    #And my quote should not have been converted to an order
+    And "existing@example.com" should not have placed an order
+    And I should be able to select an alternative payment method

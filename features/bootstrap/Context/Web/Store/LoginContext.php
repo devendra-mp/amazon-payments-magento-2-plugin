@@ -75,14 +75,6 @@ class LoginContext implements SnippetAcceptingContext
         $this->customerFixture->track($email);
     }
 
-    /**
-     * @Then I should be logged out of amazon
-     */
-    public function iShouldBeLoggedOutOfAmazon()
-    {
-        throw new PendingException();
-    }
-
     protected function getAmazonPassword()
     {
         return $this->amazonPassword;

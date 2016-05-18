@@ -4,7 +4,9 @@ namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Page\Store\Checkout;
-use Page\Store\Element\SandboxSimulation;
+use Page\Store\Element\Checkout\Messages;
+use Page\Store\Element\Checkout\PaymentMethods;
+use Page\Store\Element\Checkout\SandboxSimulation;
 use PHPUnit_Framework_Assert;
 
 class BillingContext implements SnippetAcceptingContext
@@ -19,10 +21,25 @@ class BillingContext implements SnippetAcceptingContext
      */
     protected $sandboxSimulationElement;
 
-    public function __construct(Checkout $checkoutPage, SandboxSimulation $sandboxSimulationElement)
-    {
+    /**
+     * @var Messages
+     */
+    protected $messagesElement;
+    /**
+     * @var PaymentMethods
+     */
+    private $paymentMethodsElement;
+
+    public function __construct(
+        Checkout $checkoutPage,
+        SandboxSimulation $sandboxSimulationElement,
+        Messages $messagesElement,
+        PaymentMethods $paymentMethodsElement
+    ) {
         $this->checkoutPage             = $checkoutPage;
         $this->sandboxSimulationElement = $sandboxSimulationElement;
+        $this->messagesElement          = $messagesElement;
+        $this->paymentMethodsElement    = $paymentMethodsElement;
     }
 
     /**
@@ -68,7 +85,8 @@ class BillingContext implements SnippetAcceptingContext
      */
     public function iShouldBeNotifiedThatMyPaymentWasRejected()
     {
-        throw new PendingException();
+        $hardDecline = $this->messagesElement->hasHardDeclineError();
+        PHPUnit_Framework_Assert::assertTrue($hardDecline);
     }
 
     /**
@@ -76,7 +94,8 @@ class BillingContext implements SnippetAcceptingContext
      */
     public function theAmazonWalletWidgetShouldBeRemoved()
     {
-        throw new PendingException();
+        $hasWidget = $this->checkoutPage->hasPaymentWidget();
+        PHPUnit_Framework_Assert::assertFalse($hasWidget);
     }
 
     /**
@@ -84,6 +103,7 @@ class BillingContext implements SnippetAcceptingContext
      */
     public function iShouldBeAbleToSelectAnAlternativePaymentMethod()
     {
-        throw new PendingException();
+        $hasAlternativeMethods = $this->paymentMethodsElement->hasMethods();
+        PHPUnit_Framework_Assert::assertTrue($hasAlternativeMethods);
     }
 }

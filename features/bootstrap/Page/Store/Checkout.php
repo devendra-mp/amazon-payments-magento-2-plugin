@@ -24,7 +24,8 @@ class Checkout extends Page
             'shipping-loader'       => ['css' => '.checkout-shipping-method._block-content-loading'],
             'revert-checkout'       => ['css' => '.revert-checkout'],
             'shipping-form'         => ['css' => '#co-shipping-form'],
-            'pay-with-amazon'       => ['css' => '#OffAmazonPaymentsWidgets0']
+            'pay-with-amazon'       => ['css' => '#OffAmazonPaymentsWidgets0'],
+            'submit-order'          => ['css' => 'button.checkout.primary']
         ];
 
     public function selectFirstAmazonShippingAddress()
@@ -60,6 +61,12 @@ class Checkout extends Page
         $this->waitUntilElementDisappear('full-screen-loader');
     }
 
+    public function submitOrder()
+    {
+        $this->clickElement('submit-order');
+        $this->waitUntilElementDisappear('full-screen-loader');
+    }
+
     public function getBillingAddress()
     {
         $this->waitUntilElementDisappear('full-screen-loader');
@@ -89,5 +96,39 @@ class Checkout extends Page
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function hasPaymentWidget()
+    {
+        try {
+            $element = $this->getElement('payment-widget');
+            return $element->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function isLoggedIn()
+    {
+        try {
+            return $this->getDriver()->evaluateScript(
+                'require(\'uiRegistry\').get(\'checkout.steps.shipping-step.shippingAddress.before-form.amazon-widget-address\').isAmazonAccountLoggedIn();'
+            );
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAmazonOrderRef()
+    {
+        $orderRef = $this->getDriver()->evaluateScript(
+            'require(\'uiRegistry\').get(\'checkout.steps.shipping-step.shippingAddress.before-form.amazon-widget-address\').getAmazonOrderReference();'
+        );
+
+        if (!strlen($orderRef)) {
+            throw new \Exception('Could not locate amazon order reference');
+        }
+
+        return $orderRef;
     }
 }

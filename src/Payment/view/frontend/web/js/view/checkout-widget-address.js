@@ -111,6 +111,11 @@ define(
                         amazonStorage.isShippingMethodsLoading(false);
                     }
                 );
+            },
+
+            getAmazonOrderReference: function()
+            {
+                return amazonStorage.getOrderReference();
             }
         });
     }
