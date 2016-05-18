@@ -14,6 +14,6 @@ class Register extends Page
 
     protected $elements
         = [
-            'open-amazon-login' => '#OffAmazonPaymentsWidgets0'
+            'open-amazon-login' => ['css' => '#OffAmazonPaymentsWidgets0']
         ];
 }

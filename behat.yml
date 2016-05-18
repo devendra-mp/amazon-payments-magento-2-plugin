@@ -9,10 +9,14 @@ default:
         - Context\Data\CustomerContext
         - Context\Data\ProductContext
         - Context\Data\BasketContext
+        - Context\Data\OrderContext
         - Context\Web\Store\LoginContext
         - Context\Web\Store\RegisterContext
         - Context\Web\Store\BasketContext
         - Context\Web\Store\CheckoutContext
+        - Context\Web\Store\BillingContext
+        - Context\Web\Store\ShippingContext
+        - Context\Web\Store\AmazonContext
 
   extensions:
     Bex\Behat\Magento2InitExtension:

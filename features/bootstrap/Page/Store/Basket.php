@@ -12,8 +12,8 @@ class Basket extends Page
 
     protected $elements
         = [
-            'open-amazon-login' => '#OffAmazonPaymentsWidgets0',
-            'amazon-login' => ['css' => 'button']
+            'open-amazon-login' => ['css' => '#OffAmazonPaymentsWidgets0'],
+            'amazon-login'      => ['css' => 'button']
         ];
 
     protected $path = '/checkout/cart/';
