@@ -35,4 +35,12 @@ class BasketContext implements SnippetAcceptingContext
 
         PHPUnit_Framework_Assert::assertNull($basket->getExtensionAttributes()->getAmazonOrderReferenceId());
     }
+
+    /**
+     * @Then my quote should not have been converted to an order
+     */
+    public function myQuoteShouldNotHaveBeenConvertedToAnOrder()
+    {
+        throw new PendingException();
+    }
 }

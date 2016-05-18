@@ -13,8 +13,8 @@ class Checkout extends Page
 
     protected $elements
         = [
-            'shipping-widget'       => '#OffAmazonPaymentsWidgets0IFrame',
-            'payment-widget'        => '#OffAmazonPaymentsWidgets1IFrame',
+            'shipping-widget'       => ['css' => '#OffAmazonPaymentsWidgets0IFrame'],
+            'payment-widget'        => ['css' => '#OffAmazonPaymentsWidgets1IFrame'],
             'first-amazon-address'  => ['css' => '.address-list li:nth-of-type(1) a'],
             'first-amazon-payment'  => ['css' => '.payment-list li:nth-of-type(1) a'],
             'go-to-billing'         => ['css' => 'button.continue.primary'],
@@ -41,6 +41,7 @@ class Checkout extends Page
         $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets1IFrame');
         $this->clickElement('first-amazon-payment');
         $this->getDriver()->switchToIFrame(null);
+        $this->waitUntilElementDisappear('full-screen-loader');
     }
 
     public function selectDefaultShippingMethod()
@@ -62,7 +63,6 @@ class Checkout extends Page
     public function getBillingAddress()
     {
         $this->waitUntilElementDisappear('full-screen-loader');
-
         return $this->getElementText('billing-address');
     }
 

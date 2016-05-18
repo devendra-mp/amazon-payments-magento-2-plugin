@@ -14,8 +14,8 @@ class Login extends Page
 
     protected $elements
         = [
-            'login'             => '#send2',
-            'open-amazon-login' => '#OffAmazonPaymentsWidgets0',
+            'login'             => ['css' => '#send2'],
+            'open-amazon-login' => ['css' => '#OffAmazonPaymentsWidgets0'],
             'amazon-login'      => ['css' => 'button']
         ];
 
