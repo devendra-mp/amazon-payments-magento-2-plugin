@@ -3,7 +3,6 @@
 namespace Page\Store;
 
 use Page\PageTrait;
-use Page\Store\Element\Checkout\SandboxSimulation;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 class Checkout extends Page
@@ -54,17 +53,6 @@ class Checkout extends Page
         $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets2IFrame');
         $this->clickElement('second-amazon-payment');
         $this->getDriver()->switchToIFrame(null);
-        $this->waitForAjaxRequestsToComplete();
-        $this->waitUntilElementDisappear('full-screen-loader');
-    }
-
-    protected function selectAmazonPaymentMethod($element)
-    {
-        $this->waitForElement('payment-widget');
-        $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets1IFrame');
-        $this->clickElement($element);
-        $this->getDriver()->switchToIFrame(null);
-        $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('full-screen-loader');
     }
 
@@ -157,6 +145,7 @@ class Checkout extends Page
 
     public function selectSimulation($simulation)
     {
+        $this->waitUntilElementDisappear('full-screen-loader');
         $this->getElement('Checkout\SandboxSimulation')->selectSimulation($simulation);
     }
 }

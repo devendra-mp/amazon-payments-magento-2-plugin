@@ -17,5 +17,6 @@ class SandboxSimulation extends Element
     {
         $this->find('css', '#amazon-sandbox-simulator-heading')->click();
         $this->find('css', 'input[value="' . $simulation . '"]')->click();
+        $this->find('css', '#amazon-sandbox-simulator-heading')->click();
     }
 }
