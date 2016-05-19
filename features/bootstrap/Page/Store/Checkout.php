@@ -44,6 +44,7 @@ class Checkout extends Page
         $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets1IFrame');
         $this->clickElement('first-amazon-payment');
         $this->getDriver()->switchToIFrame(null);
+        $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('full-screen-loader');
     }
 
@@ -53,6 +54,7 @@ class Checkout extends Page
         $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets2IFrame');
         $this->clickElement('second-amazon-payment');
         $this->getDriver()->switchToIFrame(null);
+        $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('full-screen-loader');
     }
 
