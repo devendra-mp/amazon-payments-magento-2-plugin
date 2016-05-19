@@ -29,3 +29,13 @@ Feature: As a customer
     And my amazon order should be cancelled
     And "existing@example.com" should not have placed an order
     And I should be able to select an alternative payment method
+
+  Scenario: payment authorization receives a soft decline due to invalid payment method
+    Given I am requesting authorization on a payment that will use an invalid method
+    When I place my order
+    Then I should be notified that my payment was invalid
+    And "existing@example.com" should not have placed an order
+    And I should be able to select an alternative payment method from my amazon account
+    Then I am requesting authorization on a payment that will be valid
+    And I place my order
+    Then "existing@example.com" should have placed an order

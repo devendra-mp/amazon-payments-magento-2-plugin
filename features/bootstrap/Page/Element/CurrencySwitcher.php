@@ -1,6 +1,6 @@
 <?php
 
-namespace Page\Store\Element;
+namespace Page\Element;
 
 use SensioLabs\Behat\PageObjectExtension\PageObject\Element;
 
