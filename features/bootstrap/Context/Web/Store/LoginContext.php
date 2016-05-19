@@ -6,6 +6,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Customer as CustomerFixture;
 use Page\Store\Basket;
 use Page\Store\Login;
+use Page\Store\Product;
 use PHPUnit_Framework_Assert;
 
 class LoginContext implements SnippetAcceptingContext
@@ -22,11 +23,27 @@ class LoginContext implements SnippetAcceptingContext
 
     protected $amazonPassword = 'eZhV5fyirWImL7OzIJ9t';
 
-    public function __construct(Login $loginPage, Basket $basketPage)
+    /**
+     * @var CustomerFixture
+     */
+    protected $customerFixture;
+
+    /**
+     * @var Product
+     */
+    protected $productPage;
+
+    /**
+     * @param Login $loginPage
+     * @param Basket $basketPage
+     * @param Product $productPage
+     */
+    public function __construct(Login $loginPage, Basket $basketPage, Product $productPage)
     {
         $this->customerFixture = new CustomerFixture;
         $this->loginPage       = $loginPage;
         $this->basketPage      = $basketPage;
+        $this->productPage     = $productPage;
     }
 
     /**
@@ -62,6 +79,16 @@ class LoginContext implements SnippetAcceptingContext
     {
         $this->loginPage->open();
         $this->loginPage->loginAmazonCustomer($email, $this->getAmazonPassword());
+        $this->customerFixture->track($email);
+    }
+
+    /**
+     * @Given I login with Amazon as :email on Product Page ID :productId
+     */
+    public function iLoginWithAmazonAsOnProductPageId($email, $productId)
+    {
+        $this->productPage->openWithProductId($productId);
+        $this->productPage->loginAmazonCustomer($email, $this->getAmazonPassword());
         $this->customerFixture->track($email);
     }
 

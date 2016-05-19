@@ -27,7 +27,8 @@ class Checkout extends Page
             'revert-checkout'            => ['css' => '.revert-checkout'],
             'shipping-form'              => ['css' => '#co-shipping-form'],
             'pay-with-amazon'            => ['css' => '#OffAmazonPaymentsWidgets0'],
-            'submit-order'               => ['css' => 'button.checkout.primary']
+            'submit-order'               => ['css' => 'button.checkout.primary'],
+            'customer-email-input'       => ['css' => 'input#customer-email'],
         ];
 
     public function selectFirstAmazonShippingAddress()
@@ -149,5 +150,36 @@ class Checkout extends Page
     {
         $this->waitUntilElementDisappear('full-screen-loader');
         $this->getElement('Checkout\SandboxSimulation')->selectSimulation($simulation);
+    }
+
+    /**
+     * @return \Page\Store\Element\Checkout\ShippingAddressForm
+     */
+    public function getShippingForm()
+    {
+        return $this->getElementWithWait('Checkout\ShippingAddressForm');
+    }
+
+    /**
+     * @return \Page\Store\Element\Checkout\PaymentMethodForm
+     */
+    public function getPaymentMethodForm()
+    {
+        return $this->getElementWithWait('Checkout\PaymentMethodForm');
+    }
+
+    /**
+     * @param string $email
+     * @throws \Exception
+     */
+    public function setCustomerEmail($email)
+    {
+        $input = $this->getElementWithWait('customer-email-input');
+
+        if (!$input) {
+            throw new \Exception('No customer email input was found.');
+        }
+
+        $input->setValue((string) $email);
     }
 }

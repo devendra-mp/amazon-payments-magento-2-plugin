@@ -17,8 +17,11 @@ default:
         - Context\Web\Store\BillingContext
         - Context\Web\Store\ShippingContext
         - Context\Web\Store\AmazonContext
+        - Context\Web\Store\CustomerContext
+        - Context\Web\Store\ProductContext
 
   extensions:
+    Cjm\Behat\StepThroughExtension: ~
     Bex\Behat\Magento2InitExtension:
       magento_bootstrap:
         -
@@ -37,6 +40,7 @@ default:
     SensioLabs\Behat\PageObjectExtension:
       namespaces:
         page: [Page]
+        element: [Page\Store\Element]
 
     Behat\MinkExtension:
       base_url: 'https://amazon-payment.dev'
