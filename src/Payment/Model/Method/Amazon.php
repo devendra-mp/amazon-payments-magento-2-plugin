@@ -19,6 +19,7 @@ use Amazon\Payment\Domain\Validator\AmazonRefund;
 use Amazon\Payment\Exception\AuthorizationExpiredException;
 use Amazon\Payment\Exception\CapturePendingException;
 use Amazon\Payment\Exception\SoftDeclineException;
+use Amazon\Payment\Plugin\AdditionalInformation;
 use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -449,5 +450,25 @@ class Amazon extends AbstractMethod
         $quoteLink->load($quoteId, 'quote_id');
 
         return $quoteLink;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function assignData(DataObject $data)
+    {
+        $additionalData = $data->getAdditionalData();
+
+        if ( ! is_array($additionalData)) {
+            return $this;
+        }
+
+        $additionalData = new DataObject($additionalData);
+
+        $infoInstance = $this->getInfoInstance();
+        $key          = AdditionalInformation::KEY_SANDBOX_SIMULATION_REFERENCE;
+        $infoInstance->setAdditionalInformation($key, $additionalData->getData($key));
+
+        return $this;
     }
 }
