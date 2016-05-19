@@ -4,9 +4,9 @@ namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Page\Store\Checkout;
-use Page\Store\Element\Checkout\Messages;
-use Page\Store\Element\Checkout\PaymentMethods;
-use Page\Store\Element\Checkout\SandboxSimulation;
+use Page\Element\Checkout\Messages;
+use Page\Element\Checkout\PaymentMethods;
+use Page\Element\Checkout\SandboxSimulation;
 use PHPUnit_Framework_Assert;
 
 class BillingContext implements SnippetAcceptingContext
@@ -17,27 +17,20 @@ class BillingContext implements SnippetAcceptingContext
     protected $checkoutPage;
 
     /**
-     * @var SandboxSimulation
-     */
-    protected $sandboxSimulationElement;
-
-    /**
      * @var Messages
      */
     protected $messagesElement;
     /**
      * @var PaymentMethods
      */
-    private $paymentMethodsElement;
+    protected $paymentMethodsElement;
 
     public function __construct(
         Checkout $checkoutPage,
-        SandboxSimulation $sandboxSimulationElement,
         Messages $messagesElement,
         PaymentMethods $paymentMethodsElement
     ) {
         $this->checkoutPage             = $checkoutPage;
-        $this->sandboxSimulationElement = $sandboxSimulationElement;
         $this->messagesElement          = $messagesElement;
         $this->paymentMethodsElement    = $paymentMethodsElement;
     }
@@ -69,7 +62,7 @@ class BillingContext implements SnippetAcceptingContext
      */
     public function iAmRequestingAuthorizationOnAPaymentThatWillBeRejected()
     {
-        $this->sandboxSimulationElement->selectSimulation(SandboxSimulation::SIMULATION_REJECTED);
+        $this->checkoutPage->selectSimulation(SandboxSimulation::SIMULATION_REJECTED);
     }
 
     /**
@@ -77,7 +70,23 @@ class BillingContext implements SnippetAcceptingContext
      */
     public function iAmRequestingAuthorizationOnAPaymentThatWillTimeout()
     {
-        $this->sandboxSimulationElement->selectSimulation(SandboxSimulation::SIMILATION_TIMEOUT);
+        $this->checkoutPage->selectSimulation(SandboxSimulation::SIMILATION_TIMEOUT);
+    }
+
+    /**
+     * @Given I am requesting authorization on a payment that will use an invalid method
+     */
+    public function iAmRequestingAuthorizationOnAPaymentThatWillUseAnInvalidMethod()
+    {
+        $this->checkoutPage->selectSimulation(SandboxSimulation::SIMULATION_INVALID_PAYMENT);
+    }
+
+    /**
+     * @Then I am requesting authorization on a payment that will be valid
+     */
+    public function iAmRequestingAuthorizationOnAPaymentThatWillBeValid()
+    {
+        $this->checkoutPage->selectSimulation(SandboxSimulation::NO_SIMULATION);
     }
 
     /**
@@ -87,6 +96,15 @@ class BillingContext implements SnippetAcceptingContext
     {
         $hardDecline = $this->messagesElement->hasHardDeclineError();
         PHPUnit_Framework_Assert::assertTrue($hardDecline);
+    }
+
+    /**
+     * @Then I should be notified that my payment was invalid
+     */
+    public function iShouldBeNotifiedThatMyPaymentWasInvalid()
+    {
+        $softDecline = $this->messagesElement->hasSoftDeclineError();
+        PHPUnit_Framework_Assert::assertTrue($softDecline);
     }
 
     /**
@@ -105,5 +123,13 @@ class BillingContext implements SnippetAcceptingContext
     {
         $hasAlternativeMethods = $this->paymentMethodsElement->hasMethods();
         PHPUnit_Framework_Assert::assertTrue($hasAlternativeMethods);
+    }
+
+    /**
+     * @Then I should be able to select an alternative payment method from my amazon account
+     */
+    public function iShouldBeAbleToSelectAnAlternativePaymentMethodFromMyAmazonAccount()
+    {
+        $this->checkoutPage->selectAlternativeAmazonPaymentMethod();
     }
 }

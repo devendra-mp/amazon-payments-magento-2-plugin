@@ -38,4 +38,17 @@ class OrderContext implements SnippetAcceptingContext
 
         PHPUnit_Framework_Assert::assertSame($orderCount, 0);
     }
+
+    /**
+     * @Then :email should have placed an order
+     */
+    public function shouldHavePlacedAnOrder($email)
+    {
+        $customer = $this->customerFixture->get($email);
+        $orders   = $this->orderFixture->getForCustomer($customer);
+
+        $orderCount = count($orders->getItems());
+
+        PHPUnit_Framework_Assert::assertSame($orderCount, 1);
+    }
 }

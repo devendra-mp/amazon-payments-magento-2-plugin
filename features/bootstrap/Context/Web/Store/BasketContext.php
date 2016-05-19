@@ -4,7 +4,7 @@ namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Currency as CurrencyFixture;
-use Page\Store\Element\CurrencySwitcher;
+use Page\Element\CurrencySwitcher;
 use Page\Store\Home;
 use Page\Store\Product;
 
