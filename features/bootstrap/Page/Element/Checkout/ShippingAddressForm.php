@@ -1,6 +1,6 @@
 <?php
 
-namespace Page\Store\Element\Checkout;
+namespace Page\Element\Checkout;
 
 use Page\Element\ElementHelper;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Element;

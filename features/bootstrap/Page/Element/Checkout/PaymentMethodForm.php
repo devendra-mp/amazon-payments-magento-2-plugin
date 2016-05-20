@@ -1,6 +1,6 @@
 <?php
 
-namespace Page\Store\Element\Checkout;
+namespace Page\Element\Checkout;
 
 use Behat\Mink\Element\NodeElement;
 use Page\Element\ElementHelper;

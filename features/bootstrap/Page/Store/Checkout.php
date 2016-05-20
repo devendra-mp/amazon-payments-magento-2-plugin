@@ -3,8 +3,8 @@
 namespace Page\Store;
 
 use Page\PageTrait;
-use Page\Store\Element\Checkout\PaymentMethodForm;
-use Page\Store\Element\Checkout\ShippingAddressForm;
+use Page\Element\Checkout\PaymentMethodForm;
+use Page\Element\Checkout\ShippingAddressForm;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 class Checkout extends Page
