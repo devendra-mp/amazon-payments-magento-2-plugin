@@ -42,6 +42,19 @@ define([
                 _this.options.loginScope = window.amazonPayment.loginScope;
             }
         },
+        secureHttpsCallback: function(event) {
+            var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
+            if (sections) {
+                customerData.invalidate(sections);
+            }
+            window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
+        },
+        _popupCallback: function() {
+            return (window.location.protocol === 'https:') ? _this.secureHttpsCallback : _this.options.redirectUrl;
+        },
+        getPopUp: function() {
+            return (window.location.protocol === 'https:');
+        },
         /**
          * onAmazonPaymentsReady
          * @private
@@ -58,14 +71,8 @@ define([
                 language: _this.options.buttonLanguage,
 
                 authorization: function () {
-                    loginOptions = {scope: _this.options.loginScope};
-                    authRequest = amazon.Login.authorize(loginOptions, function(event) {
-                        var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
-                        if (sections) {
-                            customerData.invalidate(sections);
-                        }
-                        window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
-                    });
+                    loginOptions = {scope: _this.options.loginScope, popup: _this.getPopUp()};
+                    authRequest = amazon.Login.authorize(loginOptions, _this._popupCallback());
                 }
             });
         }

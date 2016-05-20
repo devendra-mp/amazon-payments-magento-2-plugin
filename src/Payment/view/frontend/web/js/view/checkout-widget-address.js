@@ -113,8 +113,7 @@ define(
                 );
             },
 
-            getAmazonOrderReference: function()
-            {
+            getAmazonOrderReference: function() {
                 return amazonStorage.getOrderReference();
             }
         });
