@@ -57,7 +57,8 @@ class CustomerContext implements SnippetAcceptingContext
      */
     public function iCanCreateANewAmazonAccountOnTheSuccessPageWithEmail($email)
     {
-        $this->successPage->clickCreateAccountHavingEmail($email);
+        $this->successPage->clickCreateAccount();
+        (new \Fixtures\Customer)->track($email);
     }
 
     /**

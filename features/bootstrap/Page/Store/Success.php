@@ -25,10 +25,9 @@ class Success extends Page
     }
 
     /**
-     * @param string $email
      * @throws \Exception
      */
-    public function clickCreateAccountHavingEmail($email)
+    public function clickCreateAccount()
     {
         if (!$this->createAccountButtonIsVisible()) {
             throw new \Exception('Create account button is not existent or visible');
@@ -36,9 +35,5 @@ class Success extends Page
 
         $this->getElement('create-account-btn')->click();
         $this->waitForAjaxRequestsToComplete();
-
-        // delete customer
-        (new \Fixtures\Customer)->track($email);
-
     }
 }
