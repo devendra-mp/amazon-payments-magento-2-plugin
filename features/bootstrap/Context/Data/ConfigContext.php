@@ -20,6 +20,14 @@ class ConfigContext  implements SnippetAcceptingContext
     }
 
     /**
+     * @Given Login with Amazon is disabled
+     */
+    public function loginWithAmazonIsDisabled()
+    {
+        $this->changeConfig('payment/amazon_payment/lwa_enabled', '0');
+    }
+
+    /**
      * @Given orders are charged for at order placement
      */
     public function ordersAreChargedForAtOrderPlacement()

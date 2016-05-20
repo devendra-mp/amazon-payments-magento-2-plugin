@@ -4,16 +4,12 @@ namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Bex\Behat\Magento2InitExtension\Fixtures\MagentoConfigManager;
+use Fixtures\Customer as CustomerFixture;
 use Page\Store\Checkout;
 use Page\Store\Success;
 
 class CustomerContext implements SnippetAcceptingContext
 {
-    /**
-     * @var MagentoConfigManager
-     */
-    protected $m2Config;
-
     /**
      * @var Checkout
      */
@@ -25,31 +21,20 @@ class CustomerContext implements SnippetAcceptingContext
     protected $successPage;
 
     /**
+     * @var CustomerFixture
+     */
+    protected $customerFixture;
+
+    /**
      * CustomerContext constructor.
      *
      * @param Checkout $checkoutPage
-     * @param Success $successPage
+     * @param Success  $successPage
      */
     public function __construct(Checkout $checkoutPage, Success $successPage)
     {
-        $this->m2Config = new MagentoConfigManager;
         $this->checkoutPage = $checkoutPage;
-        $this->successPage = $successPage;
-    }
-
-    /**
-     * @Given Login with Amazon is disabled
-     */
-    public function loginWithAmazonIsDisabled()
-    {
-        $this->m2Config->changeConfigs([
-            [
-                'path' => 'payment/amazon_payment/lwa_enabled',
-                'value' => '0',
-                'scope_type' => 'default',
-                'scope_code' => null,
-            ]
-        ]);
+        $this->successPage  = $successPage;
     }
 
     /**
@@ -58,14 +43,6 @@ class CustomerContext implements SnippetAcceptingContext
     public function iCanCreateANewAmazonAccountOnTheSuccessPageWithEmail($email)
     {
         $this->successPage->clickCreateAccount();
-        (new \Fixtures\Customer)->track($email);
-    }
-
-    /**
-     * @AfterScenario @revert-m2-config
-     */
-    public function revertM2Config()
-    {
-        $this->m2Config->revertAllConfig();
+        $this->customerFixture->track($email);
     }
 }
