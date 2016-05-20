@@ -10,6 +10,7 @@ default:
         - Context\Data\ProductContext
         - Context\Data\BasketContext
         - Context\Data\OrderContext
+        - Context\Data\AmazonContext
         - Context\Web\Store\LoginContext
         - Context\Web\Store\RegisterContext
         - Context\Web\Store\BasketContext

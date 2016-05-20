@@ -26,6 +26,10 @@ class Order extends BaseFixture
         $searchCriteriaBuilder->addFilter(
             'customer_id', $customer->getId()
         );
+        
+        $searchCriteriaBuilder->addSortOrder(
+            'created_at', 'DESC'
+        );
 
         $searchCriteria = $searchCriteriaBuilder
             ->create();
