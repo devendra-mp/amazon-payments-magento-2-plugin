@@ -4,9 +4,11 @@ namespace Context\Data;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Customer as CustomerFixture;
+use Fixtures\Invoice as InvoiceFixture;
 use Fixtures\Order as OrderFixture;
 use Fixtures\Transaction as TransactionFixture;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use PHPUnit_Framework_Assert;
 
@@ -27,11 +29,17 @@ class OrderContext implements SnippetAcceptingContext
      */
     protected $transactionFixture;
 
+    /**
+     * @var invoiceFixture
+     */
+    protected $invoiceFixture;
+
     public function __construct()
     {
         $this->customerFixture    = new CustomerFixture;
         $this->orderFixture       = new OrderFixture;
         $this->transactionFixture = new TransactionFixture;
+        $this->invoiceFixture     = new InvoiceFixture;
     }
 
     /**
@@ -80,6 +88,17 @@ class OrderContext implements SnippetAcceptingContext
 
         PHPUnit_Framework_Assert::assertSame($transaction->getTxnType(), Transaction::TYPE_CAPTURE);
         PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '1');
+    }
+
+    /**
+     * @Then there should be a paid invoice for the last order for :email
+     */
+    public function thereShouldBeAPaidInvoiceForTheLastOrderFor($email)
+    {
+        $transaction = $this->getLastTransactionForLastOrder($email);
+        $invoice = $this->invoiceFixture->getByTransactionId($transaction->getTxnId());
+
+        PHPUnit_Framework_Assert::assertSame($invoice->getState(), (string)Invoice::STATE_PAID);
     }
 
     protected function getLastTransactionForLastOrder($email)
