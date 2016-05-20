@@ -23,4 +23,4 @@ Feature: As a customer
     Then "existing@example.com" should have placed an order
     And there should be a closed capture for the last order for "existing@example.com"
     #And there should be a paid invoice for the last order for "existing@example.com"
-    #And amazon should have a closed capture for the last order for "existing@example.com"
+    And amazon should have a complete capture for the last order for "existing@example.com"

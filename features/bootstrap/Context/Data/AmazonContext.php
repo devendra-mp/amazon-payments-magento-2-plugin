@@ -37,23 +37,30 @@ class AmazonContext implements SnippetAcceptingContext
      */
     public function amazonShouldHaveAnOpenAuthorizationForTheLastOrderFor($email)
     {
-        $customer = $this->customerFixture->get($email);
-        $orders   = $this->orderFixture->getForCustomer($customer);
-
-        $lastOrder = current($orders->getItems());
-
-        $authorizationId = $lastOrder->getPayment()->getLastTransId();
-
+        $authorizationId = $this->getLastTransactionIdForLastOrder($email);
         $authorizationState = $this->amazonOrderFixture->getAuthrorizationState($authorizationId);
 
         PHPUnit_Framework_Assert::assertSame($authorizationState, 'Open');
     }
 
     /**
-     * @Then amazon should have a closed capture for the last order for :email
+     * @Then amazon should have a complete capture for the last order for :email
      */
-    public function amazonShouldHaveAClosedCaptureForTheLastOrderFor($email)
+    public function amazonShouldHaveACompleteCaptureForTheLastOrderFor($email)
     {
-        throw new PendingException();
+        $captureId = $this->getLastTransactionIdForLastOrder($email);
+        $captureState = $this->amazonOrderFixture->getCaptureState($captureId);
+
+        PHPUnit_Framework_Assert::assertSame($captureState, 'Completed');
+    }
+
+    protected function getLastTransactionIdForLastOrder($email)
+    {
+        $customer = $this->customerFixture->get($email);
+        $orders   = $this->orderFixture->getForCustomer($customer);
+
+        $lastOrder = current($orders->getItems());
+
+        return $lastOrder->getPayment()->getLastTransId();
     }
 }

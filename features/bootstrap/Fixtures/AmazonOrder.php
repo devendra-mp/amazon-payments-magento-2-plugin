@@ -44,4 +44,19 @@ class AmazonOrder extends BaseFixture
 
         return $data['GetAuthorizationDetailsResult']['AuthorizationDetails']['AuthorizationStatus']['State'];
     }
+
+
+    public function getCaptureState($captureId)
+    {
+        $client   = $this->clientFactory->create();
+        $response = $client->getCaptureDetails(
+            [
+                'amazon_capture_id' => $captureId
+            ]
+        );
+
+        $data = $response->toArray();
+
+        return $data['GetCaptureDetailsResult']['CaptureDetails']['CaptureStatus']['State'];
+    }
 }
