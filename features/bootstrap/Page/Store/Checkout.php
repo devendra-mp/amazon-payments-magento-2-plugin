@@ -3,6 +3,8 @@
 namespace Page\Store;
 
 use Page\PageTrait;
+use Page\Store\Element\Checkout\PaymentMethodForm;
+use Page\Store\Element\Checkout\ShippingAddressForm;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 class Checkout extends Page
@@ -153,19 +155,19 @@ class Checkout extends Page
     }
 
     /**
-     * @return \Page\Store\Element\Checkout\ShippingAddressForm
+     * @return ShippingAddressForm
      */
     public function getShippingForm()
     {
-        return $this->getElementWithWait('Checkout\ShippingAddressForm');
+        return $this->getElement('Checkout\ShippingAddressForm');
     }
 
     /**
-     * @return \Page\Store\Element\Checkout\PaymentMethodForm
+     * @return PaymentMethodForm
      */
     public function getPaymentMethodForm()
     {
-        return $this->getElementWithWait('Checkout\PaymentMethodForm');
+        return $this->getElement('Checkout\PaymentMethodForm');
     }
 
     /**
