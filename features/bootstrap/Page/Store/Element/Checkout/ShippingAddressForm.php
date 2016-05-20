@@ -2,11 +2,13 @@
 
 namespace Page\Store\Element\Checkout;
 
-use Behat\Mink\Element\NodeElement;
+use Page\Element\ElementHelper;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Element;
 
 class ShippingAddressForm extends Element
 {
+    use ElementHelper;
+
     protected $selector = 'form#co-shipping-form';
 
     /**
@@ -119,22 +121,5 @@ class ShippingAddressForm extends Element
     {
         $this->findElement('input[name="telephone"]')->setValue((string) $phoneNumber);
         return $this;
-    }
-
-    /**
-     * @param string $cssQuery
-     * @param bool $strict
-     * @return NodeElement
-     * @throws \Exception
-     */
-    protected function findElement($cssQuery, $strict = true)
-    {
-        $element = $this->find('css', $cssQuery);
-
-        if ($strict && $element === null) {
-            throw new \Exception('No element found with CSS query: ' . $cssQuery);
-        }
-
-        return $element;
     }
 }

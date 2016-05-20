@@ -3,10 +3,13 @@
 namespace Page\Store\Element\Checkout;
 
 use Behat\Mink\Element\NodeElement;
+use Page\Element\ElementHelper;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Element;
 
 class PaymentMethodForm extends Element
 {
+    use ElementHelper;
+
     protected $selector = 'form#co-payment-form';
 
     /**
@@ -29,22 +32,5 @@ class PaymentMethodForm extends Element
         if ($strict) {
             throw new \Exception("Payment method with code $paymentMethodCode was not found");
         }
-    }
-
-    /**
-     * @param string $cssQuery
-     * @param bool $strict
-     * @return NodeElement
-     * @throws \Exception
-     */
-    protected function findElement($cssQuery, $strict = true)
-    {
-        $element = $this->find('css', $cssQuery);
-
-        if ($strict && $element === null) {
-            throw new \Exception('No element found with CSS query: ' . $cssQuery);
-        }
-
-        return $element;
     }
 }
