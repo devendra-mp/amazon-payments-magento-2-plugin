@@ -48,4 +48,12 @@ class AmazonContext implements SnippetAcceptingContext
 
         PHPUnit_Framework_Assert::assertSame($authorizationState, 'Open');
     }
+
+    /**
+     * @Then amazon should have a closed capture for the last order for :email
+     */
+    public function amazonShouldHaveAClosedCaptureForTheLastOrderFor($email)
+    {
+        throw new PendingException();
+    }
 }

@@ -65,6 +65,25 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function thereShouldBeAnOpenAuthorizationForTheLastOrderFor($email)
     {
+        $transaction = $this->getLastTransactionForLastOrder($email);
+
+        PHPUnit_Framework_Assert::assertSame($transaction->getTxnType(), Transaction::TYPE_AUTH);
+        PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '0');
+    }
+
+    /**
+     * @Then there should be a closed capture for the last order for :email
+     */
+    public function thereShouldBeAClosedCaptureForTheLastOrderFor($email)
+    {
+        $transaction = $this->getLastTransactionForLastOrder($email);
+
+        PHPUnit_Framework_Assert::assertSame($transaction->getTxnType(), Transaction::TYPE_CAPTURE);
+        PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '1');
+    }
+
+    protected function getLastTransactionForLastOrder($email)
+    {
         $customer = $this->customerFixture->get($email);
         $orders   = $this->orderFixture->getForCustomer($customer);
 
@@ -73,9 +92,6 @@ class OrderContext implements SnippetAcceptingContext
         $paymentId     = $lastOrder->getPayment()->getId();
         $orderId       = $lastOrder->getId();
 
-        $transaction = $this->transactionFixture->getByTransactionId($transactionId, $paymentId, $orderId);
-
-        PHPUnit_Framework_Assert::assertSame($transaction->getTxnType(), Transaction::TYPE_AUTH);
-        PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '0');
+        return $this->transactionFixture->getByTransactionId($transactionId, $paymentId, $orderId);
     }
 }
