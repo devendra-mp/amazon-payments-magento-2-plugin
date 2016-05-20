@@ -6,7 +6,7 @@ Feature: As a customer
 
   @javascript @revert-m2-config
   Scenario:
-    Given I login with Amazon as "existing@example.com" on Product Page ID "1"
+    Given I login with Amazon as "existing@example.com" on product page
     Then I should be redirected to the Basket
 
   @javascript @revert-m2-config

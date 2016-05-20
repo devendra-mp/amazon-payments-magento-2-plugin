@@ -83,11 +83,11 @@ class LoginContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given I login with Amazon as :email on Product Page ID :productId
+     * @Given I login with Amazon as :email on product page
      */
-    public function iLoginWithAmazonAsOnProductPageId($email, $productId)
+    public function iLoginWithAmazonAsOnProductPage($email)
     {
-        $this->productPage->openWithProductId($productId);
+        $this->productPage->openWithProductId(1);
         $this->productPage->loginAmazonCustomer($email, $this->getAmazonPassword());
         $this->customerFixture->track($email);
     }
