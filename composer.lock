@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5f22afb9378631b8340b63ae1b9b1161",
-    "content-hash": "7b3f45defc8b55c049a43ccbc408b317",
+    "hash": "6525c68a51d77a077c9afa8750f28dbc",
     "packages": [
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
@@ -2598,6 +2597,55 @@
             "time": "2016-02-02 12:22:32"
         },
         {
+            "name": "ciaranmcnulty/behat-stepthroughextension",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ciaranmcnulty/behat-stepthroughextension.git",
+                "reference": "8c23008002ddf7f32029173e162d9f551f1d60b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ciaranmcnulty/behat-stepthroughextension/zipball/8c23008002ddf7f32029173e162d9f551f1d60b5",
+                "reference": "8c23008002ddf7f32029173e162d9f551f1d60b5",
+                "shasum": ""
+            },
+            "require": {
+                "behat/behat": "~3.0"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "dev-master",
+                "symfony/filesystem": "~2.3",
+                "symfony/process": "~2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ciaran McNulty",
+                    "email": "mail@ciaranmcnulty.com",
+                    "homepage": "http://ciaranmcnulty.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Extension for behat to help debug failing scenarios",
+            "homepage": "http://github.com/ciaranmcnulty/behat-stepthroughextension",
+            "keywords": [
+                "BDD",
+                "Behat",
+                "TDD"
+            ],
+            "time": "2016-05-19 08:19:45"
+        },
+        {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
             "source": {
@@ -4628,7 +4676,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "sensiolabs/behat-page-object-extension": 20,
-        "bex/behat-magento2-init": 20
+        "bex/behat-magento2-init": 20,
+        "ciaranmcnulty/behat-stepthroughextension": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

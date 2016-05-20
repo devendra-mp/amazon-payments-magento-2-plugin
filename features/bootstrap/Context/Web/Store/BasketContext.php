@@ -5,6 +5,7 @@ namespace Context\Web\Store;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Currency as CurrencyFixture;
 use Page\Element\CurrencySwitcher;
+use Page\Store\Basket;
 use Page\Store\Home;
 use Page\Store\Product;
 
@@ -30,12 +31,28 @@ class BasketContext implements SnippetAcceptingContext
      */
     protected $currencyFixture;
 
-    public function __construct(Product $productPage, CurrencySwitcher $currencySwitcherElement, Home $homePage)
-    {
+    /**
+     * @var Basket
+     */
+    protected $basketPage;
+
+    /**
+     * @param Product $productPage
+     * @param CurrencySwitcher $currencySwitcherElement
+     * @param Home $homePage
+     * @param Basket $basketPage
+     */
+    public function __construct(
+        Product $productPage,
+        CurrencySwitcher $currencySwitcherElement,
+        Home $homePage,
+        Basket $basketPage
+    ) {
         $this->productPage             = $productPage;
         $this->currencySwitcherElement = $currencySwitcherElement;
         $this->homePage                = $homePage;
         $this->currencyFixture         = new CurrencyFixture;
+        $this->basketPage              = $basketPage;
     }
 
     /**
@@ -43,9 +60,7 @@ class BasketContext implements SnippetAcceptingContext
      */
     public function thereIsAValidProductInMyBasket()
     {
-        $this->productPage->open([
-            'id' => 1
-        ]);
+        $this->productPage->openWithProductId(1);
         $this->productPage->addToBasket();
     }
 
@@ -64,5 +79,13 @@ class BasketContext implements SnippetAcceptingContext
 
         $this->homePage->open();
         $this->currencySwitcherElement->selectCurrency('CHF');
+    }
+
+    /**
+     * @Then I should be redirected to the Basket
+     */
+    public function iShouldBeRedirectedToTheBasket()
+    {
+        $this->basketPage->isOpen();
     }
 }

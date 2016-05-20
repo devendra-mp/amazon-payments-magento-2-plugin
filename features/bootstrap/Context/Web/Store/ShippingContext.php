@@ -17,7 +17,7 @@ class ShippingContext implements SnippetAcceptingContext
     {
         $this->checkoutPage = $checkoutPage;
     }
-    
+
     /**
      * @Given I select a shipping address from my amazon account
      */
@@ -41,5 +41,13 @@ class ShippingContext implements SnippetAcceptingContext
     {
         $hasShippingForm = $this->checkoutPage->hasStandardShippingForm();
         PHPUnit_Framework_Assert::assertTrue($hasShippingForm);
+    }
+
+    /**
+     * @Given I provide the :email email in the shipping form
+     */
+    public function iProvideTheEmailInTheShippingForm($email)
+    {
+        $this->checkoutPage->setCustomerEmail($email);
     }
 }
