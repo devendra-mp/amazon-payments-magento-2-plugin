@@ -20,6 +20,6 @@ class Login extends Page
     {
         $this->fillField('login[username]', $email);
         $this->fillField('login[password]', $password);
-        $this->getElement('login')->click();
+        $this->clickElement('login');
     }
 }

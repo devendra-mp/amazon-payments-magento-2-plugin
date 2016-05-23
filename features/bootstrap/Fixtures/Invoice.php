@@ -31,6 +31,12 @@ class Invoice extends BaseFixture
 
         $invoices = $this->repository->getList($searchCriteria);
 
-        return current($invoices->getItems());
+        $invoice = current($invoices->getItems());
+
+        if ( ! $invoice) {
+            throw new \Exception('Invoice not found for transaction id ' . $transactionId);
+        }
+
+        return $invoice;
     }
 }

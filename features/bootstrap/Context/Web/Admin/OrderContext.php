@@ -30,7 +30,12 @@ class OrderContext implements SnippetAcceptingContext
         $customer  = $this->customerFixture->get($email);
         $orders    = $this->orderFixture->getForCustomer($customer);
         $lastOrder = current($orders->getItems());
-        $orderId   = $lastOrder->getId();
+
+        if ( ! $lastOrder) {
+            throw new \Exception('Last order not found for ' . $email);
+        }
+
+        $orderId = $lastOrder->getId();
 
         $this->orderPage->openWithOrderId($orderId);
         $this->orderPage->openCreateInvoice();

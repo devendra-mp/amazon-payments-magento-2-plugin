@@ -5,7 +5,7 @@ namespace Context\Data;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Bex\Behat\Magento2InitExtension\Fixtures\MagentoConfigManager;
 
-class ConfigContext  implements SnippetAcceptingContext
+class ConfigContext implements SnippetAcceptingContext
 {
     /**
      * @var MagentoConfigManager

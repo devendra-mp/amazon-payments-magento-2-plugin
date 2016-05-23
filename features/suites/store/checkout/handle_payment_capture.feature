@@ -19,4 +19,5 @@ Feature: As an admin
     And I submit my invoice
     Then there should be a paid invoice for the last order for "existing@example.com"
     And amazon should have a complete capture for the last order for "existing@example.com"
+    And there should be a closed capture for the last order for "existing@example.com"
     And there should be a closed authorization for the last order for "existing@example.com"

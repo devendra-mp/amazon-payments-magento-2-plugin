@@ -84,9 +84,9 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function thereShouldBeAClosedAuthorizationForTheLastOrderFor($email)
     {
-        $lastOrder     = $this->getLastOrderForCustomer($email);
-        $paymentId     = $lastOrder->getPayment()->getId();
-        $orderId       = $lastOrder->getId();
+        $lastOrder = $this->getLastOrderForCustomer($email);
+        $paymentId = $lastOrder->getPayment()->getId();
+        $orderId   = $lastOrder->getId();
 
         $transaction = $this->transactionFixture->getByTransactionType(Transaction::TYPE_AUTH, $paymentId, $orderId);
         PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '1');
@@ -109,19 +109,26 @@ class OrderContext implements SnippetAcceptingContext
     public function thereShouldBeAPaidInvoiceForTheLastOrderFor($email)
     {
         $transaction = $this->getLastTransactionForLastOrder($email);
-        $invoice = $this->invoiceFixture->getByTransactionId($transaction->getTxnId());
+        $invoice     = $this->invoiceFixture->getByTransactionId($transaction->getTxnId());
 
         PHPUnit_Framework_Assert::assertSame($invoice->getState(), (string)Invoice::STATE_PAID);
     }
 
     protected function getLastTransactionForLastOrder($email)
     {
-        $lastOrder     = $this->getLastOrderForCustomer($email);
+        $lastOrder = $this->getLastOrderForCustomer($email);
+        
         $transactionId = $lastOrder->getPayment()->getLastTransId();
         $paymentId     = $lastOrder->getPayment()->getId();
         $orderId       = $lastOrder->getId();
 
-        return $this->transactionFixture->getByTransactionId($transactionId, $paymentId, $orderId);
+        $transaction = $this->transactionFixture->getByTransactionId($transactionId, $paymentId, $orderId);
+
+        if ( ! $transaction) {
+            throw new \Exception('Last transaction not found for ' . $email);
+        }
+
+        return $transaction;
     }
 
     protected function getLastOrderForCustomer($email)
@@ -129,6 +136,12 @@ class OrderContext implements SnippetAcceptingContext
         $customer = $this->customerFixture->get($email);
         $orders   = $this->orderFixture->getForCustomer($customer);
 
-        return current($orders->getItems());
+        $order = current($orders->getItems());
+
+        if ( ! $order) {
+            throw new \Exception('Last order not found for ' . $email);
+        }
+
+        return $order;
     }
 }

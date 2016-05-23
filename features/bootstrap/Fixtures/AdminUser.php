@@ -9,14 +9,6 @@ use Magento\User\Model\UserFactory;
 
 class AdminUser extends BaseFixture
 {
-    protected $defaults
-        = [
-            'first_name' => 'John',
-            'last_name'  => 'Doe',
-            'user_name'  => 'admin',
-            'email'      => 'admin@example.com'
-        ];
-
     /**
      * @var UserFactory
      */
