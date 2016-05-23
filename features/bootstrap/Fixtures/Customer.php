@@ -77,7 +77,10 @@ class Customer extends BaseFixture
         static $defaultPassword = null;
 
         if (null === $defaultPassword) {
-            $defaultPassword = $this->random->getRandomString(20);
+            $defaultPassword
+                = $this->random->getRandomString(7, Random::CHARS_LOWERS)
+                . $this->random->getRandomString(7, Random::CHARS_UPPERS)
+                . $this->random->getRandomString(6, Random::CHARS_DIGITS);
         }
 
         return $defaultPassword;

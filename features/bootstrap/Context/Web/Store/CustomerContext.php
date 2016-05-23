@@ -33,8 +33,9 @@ class CustomerContext implements SnippetAcceptingContext
      */
     public function __construct(Checkout $checkoutPage, Success $successPage)
     {
-        $this->checkoutPage = $checkoutPage;
-        $this->successPage  = $successPage;
+        $this->checkoutPage    = $checkoutPage;
+        $this->successPage     = $successPage;
+        $this->customerFixture = new CustomerFixture;
     }
 
     /**

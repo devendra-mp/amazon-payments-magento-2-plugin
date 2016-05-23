@@ -12,6 +12,7 @@ Feature: As an admin
     And I select a payment method from my amazon account
     And I place my order
 
+  @javascript
   Scenario: admin captures payment for an order
     Given I am logged into admin
     And I go to invoice the last order for "existing@example.com"

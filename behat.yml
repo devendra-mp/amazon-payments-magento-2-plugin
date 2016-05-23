@@ -21,6 +21,8 @@ default:
         - Context\Web\Store\AmazonContext
         - Context\Web\Store\CustomerContext
         - Context\Web\Store\ProductContext
+        - Context\Web\Admin\LoginContext
+        - Context\Web\Admin\OrderContext
 
   extensions:
     Cjm\Behat\StepThroughExtension: ~

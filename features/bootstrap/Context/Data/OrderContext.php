@@ -80,6 +80,14 @@ class OrderContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given there should be a closed authorization for the last order for :email
+     */
+    public function thereShouldBeAClosedAuthorizationForTheLastOrderFor($email)
+    {
+        throw new PendingException();
+    }
+
+    /**
      * @Then there should be a closed capture for the last order for :email
      */
     public function thereShouldBeAClosedCaptureForTheLastOrderFor($email)
