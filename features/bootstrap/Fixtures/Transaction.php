@@ -22,4 +22,9 @@ class Transaction extends BaseFixture
     {
         return $this->repository->getByTransactionId($transactionId, $paymentId, $orderId);
     }
+
+    public function getByTransactionType($transactionType, $paymentId, $orderId)
+    {
+        return $this->repository->getByTransactionType($transactionType, $paymentId, $orderId);
+    }
 }

@@ -3,16 +3,37 @@
 namespace Context\Web\Admin;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Fixtures\Customer as CustomerFixture;
+use Fixtures\Order as OrderFixture;
+use Page\Admin\Order;
 use PHPUnit_Framework_Assert;
 
 class OrderContext implements SnippetAcceptingContext
 {
     /**
-     * @Given I go to invoice the last order for :arg1
+     * @var Order
      */
-    public function iGoToInvoiceTheLastOrderFor($arg1)
+    protected $orderPage;
+
+    public function __construct(Order $orderPage)
     {
-        throw new PendingException();
+        $this->orderPage       = $orderPage;
+        $this->customerFixture = new CustomerFixture;
+        $this->orderFixture    = new OrderFixture;
+    }
+
+    /**
+     * @Given I go to invoice the last order for :email
+     */
+    public function iGoToInvoiceTheLastOrderFor($email)
+    {
+        $customer  = $this->customerFixture->get($email);
+        $orders    = $this->orderFixture->getForCustomer($customer);
+        $lastOrder = current($orders->getItems());
+        $orderId   = $lastOrder->getId();
+
+        $this->orderPage->openWithOrderId($orderId);
+        $this->orderPage->openCreateInvoice();
     }
 
     /**
@@ -20,6 +41,6 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function iSubmitMyInvoice()
     {
-        throw new PendingException();
+        $this->orderPage->submitInvoice();
     }
 }

@@ -84,7 +84,12 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function thereShouldBeAClosedAuthorizationForTheLastOrderFor($email)
     {
-        throw new PendingException();
+        $lastOrder     = $this->getLastOrderForCustomer($email);
+        $paymentId     = $lastOrder->getPayment()->getId();
+        $orderId       = $lastOrder->getId();
+
+        $transaction = $this->transactionFixture->getByTransactionType(Transaction::TYPE_AUTH, $paymentId, $orderId);
+        PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '1');
     }
 
     /**
@@ -111,14 +116,19 @@ class OrderContext implements SnippetAcceptingContext
 
     protected function getLastTransactionForLastOrder($email)
     {
-        $customer = $this->customerFixture->get($email);
-        $orders   = $this->orderFixture->getForCustomer($customer);
-
-        $lastOrder     = current($orders->getItems());
+        $lastOrder     = $this->getLastOrderForCustomer($email);
         $transactionId = $lastOrder->getPayment()->getLastTransId();
         $paymentId     = $lastOrder->getPayment()->getId();
         $orderId       = $lastOrder->getId();
 
         return $this->transactionFixture->getByTransactionId($transactionId, $paymentId, $orderId);
+    }
+
+    protected function getLastOrderForCustomer($email)
+    {
+        $customer = $this->customerFixture->get($email);
+        $orders   = $this->orderFixture->getForCustomer($customer);
+
+        return current($orders->getItems());
     }
 }
