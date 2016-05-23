@@ -3,7 +3,6 @@
 namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Api\Data\PendingCaptureInterfaceFactory;
 use Amazon\Payment\Api\PaymentManagementInterface;
@@ -32,11 +31,6 @@ class PaymentManagement implements PaymentManagementInterface
      * @var PendingCaptureInterfaceFactory
      */
     protected $pendingCaptureFactory;
-
-    /**
-     * @var CoreHelper
-     */
-    protected $coreHelper;
 
     /**
      * @var AmazonCaptureDetailsResponseFactory
@@ -68,7 +62,6 @@ class PaymentManagement implements PaymentManagementInterface
      *
      * @param PendingCaptureInterfaceFactory      $pendingCaptureFactory
      * @param ClientFactoryInterface              $clientFactory
-     * @param CoreHelper                          $coreHelper
      * @param AmazonCaptureDetailsResponseFactory $amazonCaptureDetailsResponseFactory
      * @param TransactionInterfaceFactory         $transactionFactory
      * @param InvoiceInterfaceFactory             $invoiceFactory
@@ -78,7 +71,6 @@ class PaymentManagement implements PaymentManagementInterface
     public function __construct(
         PendingCaptureInterfaceFactory $pendingCaptureFactory,
         ClientFactoryInterface $clientFactory,
-        CoreHelper $coreHelper,
         AmazonCaptureDetailsResponseFactory $amazonCaptureDetailsResponseFactory,
         TransactionInterfaceFactory $transactionFactory,
         InvoiceInterfaceFactory $invoiceFactory,
@@ -87,7 +79,6 @@ class PaymentManagement implements PaymentManagementInterface
     ) {
         $this->clientFactory                       = $clientFactory;
         $this->pendingCaptureFactory               = $pendingCaptureFactory;
-        $this->coreHelper                          = $coreHelper;
         $this->amazonCaptureDetailsResponseFactory = $amazonCaptureDetailsResponseFactory;
         $this->transactionFactory                  = $transactionFactory;
         $this->invoiceFactory                      = $invoiceFactory;
@@ -108,7 +99,6 @@ class PaymentManagement implements PaymentManagementInterface
 
             if ($pendingCapture->getCaptureId()) {
                 $responseParser = $this->clientFactory->create()->getCaptureDetails([
-                    'merchant_id'       => $this->coreHelper->getMerchantId(),
                     'amazon_capture_id' => $pendingCapture->getCaptureId()
                 ]);
 

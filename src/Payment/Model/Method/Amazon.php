@@ -3,7 +3,6 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Core\Helper\Data as CoreHelper;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Api\PaymentManagementInterface;
@@ -83,11 +82,6 @@ class Amazon extends AbstractMethod
     protected $clientFactory;
 
     /**
-     * @var CoreHelper
-     */
-    protected $coreHelper;
-
-    /**
      * @var QuoteLinkInterfaceFactory
      */
     protected $quoteLinkFactory;
@@ -156,7 +150,6 @@ class Amazon extends AbstractMethod
         ScopeConfigInterface $scopeConfig,
         Logger $logger,
         ClientFactoryInterface $clientFactory,
-        CoreHelper $coreHelper,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
         OrderInformationManagementInterface $orderInformationManagement,
         CartRepositoryInterface $cartRepository,
@@ -187,7 +180,6 @@ class Amazon extends AbstractMethod
         );
 
         $this->clientFactory                             = $clientFactory;
-        $this->coreHelper                                = $coreHelper;
         $this->quoteLinkFactory                          = $quoteLinkFactory;
         $this->orderInformationManagement                = $orderInformationManagement;
         $this->cartRepository                            = $cartRepository;
@@ -232,7 +224,6 @@ class Amazon extends AbstractMethod
         $storeId                = $payment->getOrder()->getStoreId();
 
         $data = [
-            'merchant_id'         => $this->getMerchantId($storeId),
             'amazon_capture_id'   => $captureId,
             'refund_reference_id' => $amazonOrderReferenceId . '-R' . time(),
             'refund_amount'       => $amount,
@@ -275,7 +266,6 @@ class Amazon extends AbstractMethod
     protected function _authorize(InfoInterface $payment, $amount, $amazonOrderReferenceId, $storeId, $capture = false)
     {
         $data = [
-            'merchant_id'                => $this->getMerchantId($storeId),
             'amazon_order_reference_id'  => $amazonOrderReferenceId,
             'authorization_amount'       => $amount,
             'currency_code'              => $this->getCurrencyCode($payment),
@@ -349,7 +339,6 @@ class Amazon extends AbstractMethod
 
         if ($this->validatePreCapture($payment, $amount, $amazonOrderReferenceId, $authorizationId, $storeId)) {
             $data = [
-                'merchant_id'             => $this->getMerchantId($storeId),
                 'amazon_authorization_id' => $authorizationId,
                 'capture_amount'          => $amount,
                 'currency_code'           => $this->getCurrencyCode($payment),
@@ -392,7 +381,6 @@ class Amazon extends AbstractMethod
         try {
             $data = [
                 'amazon_authorization_id' => $authorizationId,
-                'merchant_id'             => $this->getMerchantId($storeId)
             ];
 
             $client = $this->clientFactory->create($storeId);
@@ -407,11 +395,6 @@ class Amazon extends AbstractMethod
         }
 
         return false;
-    }
-
-    protected function getMerchantId($storeId)
-    {
-        return $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     protected function getCurrencyCode(InfoInterface $payment)

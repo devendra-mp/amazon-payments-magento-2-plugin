@@ -4,12 +4,12 @@ Feature: As a customer
   Background:
     Given Login with Amazon is disabled
 
-  @javascript @revert-m2-config
+  @javascript
   Scenario:
     Given I login with Amazon as "existing@example.com" on product page
     Then I should be redirected to the Basket
 
-  @javascript @revert-m2-config
+  @javascript
   Scenario:
     Given there is a valid product in my basket
     And I login with amazon on the basket page as "existing@example.com"

@@ -10,6 +10,8 @@ default:
         - Context\Data\ProductContext
         - Context\Data\BasketContext
         - Context\Data\OrderContext
+        - Context\Data\AmazonContext
+        - Context\Data\ConfigContext
         - Context\Web\Store\LoginContext
         - Context\Web\Store\RegisterContext
         - Context\Web\Store\BasketContext
@@ -19,6 +21,8 @@ default:
         - Context\Web\Store\AmazonContext
         - Context\Web\Store\CustomerContext
         - Context\Web\Store\ProductContext
+        - Context\Web\Admin\LoginContext
+        - Context\Web\Admin\OrderContext
 
   extensions:
     Cjm\Behat\StepThroughExtension: ~

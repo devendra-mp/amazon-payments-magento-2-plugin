@@ -4,6 +4,7 @@ namespace Page;
 
 use Behat\Mink\Driver\DriverInterface;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Element;
+use SensioLabs\Behat\PageObjectExtension\PageObject\Exception\ElementNotFoundException;
 
 trait PageTrait
 {
@@ -43,7 +44,13 @@ trait PageTrait
 
     public function clickElement($elementName)
     {
-        $this->getElementWithWait($elementName)->click();
+        $element = $this->getElementWithWait($elementName);
+
+        if ( ! $element) {
+            throw new ElementNotFoundException;
+        }
+
+        $element->click();
     }
 
     public function getElementValue($elementName)

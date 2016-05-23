@@ -8,7 +8,7 @@ class FixtureContext implements Context
 {
     protected static $fixtures = [];
 
-    public static function trackFixture($entity, $repository)
+    public static function trackFixture($entity, $repository = null)
     {
         self::$fixtures[] = [
             'entity'     => $entity,
@@ -23,7 +23,11 @@ class FixtureContext implements Context
     {
         if (count(self::$fixtures)) {
             foreach (self::$fixtures as $fixture) {
-                $fixture['repository']->delete($fixture['entity']);
+                if  (null !== $fixture['repository']) {
+                    $fixture['repository']->delete($fixture['entity']);
+                } else {
+                    $fixture['entity']->delete();
+                }
             }
         }
 
