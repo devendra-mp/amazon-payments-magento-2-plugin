@@ -76,6 +76,10 @@ class Address
 
         $region->loadByCode($amazonAddress->getState(), $countryId);
 
+        if ( ! $region->getId()) {
+            $region->loadByName($amazonAddress->getState(), $countryId);
+        }
+
         if ($region->getId()) {
             $regionData
                 ->setRegionId($region->getId())
