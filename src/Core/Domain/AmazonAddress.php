@@ -58,7 +58,11 @@ class AmazonAddress
             $key = 'AddressLine' . $i;
 
             if (isset($address[$key])) {
-                $this->lines[$i] = $address[$key];
+                if (empty($address[$key])) {
+                    $this->lines[$i] = '';
+                } else {
+                    $this->lines[$i] = $address[$key];
+                }
             }
         }
 
