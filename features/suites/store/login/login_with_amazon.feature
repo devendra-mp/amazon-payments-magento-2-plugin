@@ -19,6 +19,20 @@ Feature: As a customer
     Then I see a login with amazon button on the basket page
 
   @javascript
+  Scenario: login with amazon creates customer account linked to amazon account
+    Given there is a not a customer "existing@example.com"
+    And I login with amazon as "existing@example.com"
+    Then a customer "existing@example.com" should have been created
+    And "existing@example.com" is associated with an amazon account
+
+
+  @javascript
+  Scenario: login with amazon logs in customer account that is already linked to amazon
+
+  @javascript
+  Scenario: login with amazon checks password for customer account that has a matching email but is not linked with amazon
+
+  @javascript
   Scenario: login with amazon links amazon account to customer account if already logged in
     Given there is a customer "magentoexisting@example.com"
     And "magentoexisting@example.com" has never logged in with amazon
