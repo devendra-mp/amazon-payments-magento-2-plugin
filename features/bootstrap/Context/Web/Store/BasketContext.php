@@ -8,6 +8,7 @@ use Page\Element\CurrencySwitcher;
 use Page\Store\Basket;
 use Page\Store\Home;
 use Page\Store\Product;
+use PHPUnit_Framework_Assert;
 
 class BasketContext implements SnippetAcceptingContext
 {
@@ -37,10 +38,10 @@ class BasketContext implements SnippetAcceptingContext
     protected $basketPage;
 
     /**
-     * @param Product $productPage
+     * @param Product          $productPage
      * @param CurrencySwitcher $currencySwitcherElement
-     * @param Home $homePage
-     * @param Basket $basketPage
+     * @param Home             $homePage
+     * @param Basket           $basketPage
      */
     public function __construct(
         Product $productPage,
@@ -62,6 +63,23 @@ class BasketContext implements SnippetAcceptingContext
     {
         $this->productPage->openWithProductId(1);
         $this->productPage->addToBasket();
+    }
+
+    /**
+     * @Given I go to my basket
+     */
+    public function iGoToMyBasket()
+    {
+        $this->basketPage->open();
+    }
+
+    /**
+     * @Then I see a login with amazon button on the basket page
+     */
+    public function iSeeALoginWithAmazonButtonOnTheBasketPage()
+    {
+        $hasLwa = $this->basketPage->hasLoginWithAmazonButton();
+        PHPUnit_Framework_Assert::assertTrue($hasLwa);
     }
 
     /**
