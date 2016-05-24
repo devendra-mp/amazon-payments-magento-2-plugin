@@ -59,4 +59,18 @@ class AmazonOrder extends BaseFixture
 
         return $data['GetCaptureDetailsResult']['CaptureDetails']['CaptureStatus']['State'];
     }
+
+    public function getRefundState($refundId)
+    {
+        $client   = $this->clientFactory->create();
+        $response = $client->getRefundDetails(
+            [
+                'amazon_refund_id' => $refundId
+            ]
+        );
+
+        $data = $response->toArray();
+
+        return $data['GetRefundDetailsResult']['RefundDetails']['RefundStatus']['State'];
+    }
 }

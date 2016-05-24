@@ -3,6 +3,7 @@
 namespace Context\Data;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Fixtures\CreditMemo as CreditMemoFixture;
 use Fixtures\Customer as CustomerFixture;
 use Fixtures\Invoice as InvoiceFixture;
 use Fixtures\Order as OrderFixture;
@@ -34,12 +35,18 @@ class OrderContext implements SnippetAcceptingContext
      */
     protected $invoiceFixture;
 
+    /**
+     * @var CreditMemoFixture
+     */
+    protected $creditMemoFixture;
+
     public function __construct()
     {
         $this->customerFixture    = new CustomerFixture;
         $this->orderFixture       = new OrderFixture;
         $this->transactionFixture = new TransactionFixture;
         $this->invoiceFixture     = new InvoiceFixture;
+        $this->creditMemoFixture  = new CreditMemoFixture;
     }
 
     /**
@@ -73,7 +80,7 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function thereShouldBeAnOpenAuthorizationForTheLastOrderFor($email)
     {
-        $transaction = $this->getLastTransactionForLastOrder($email);
+        $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
 
         PHPUnit_Framework_Assert::assertSame($transaction->getTxnType(), Transaction::TYPE_AUTH);
         PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '0');
@@ -84,7 +91,7 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function thereShouldBeAClosedAuthorizationForTheLastOrderFor($email)
     {
-        $lastOrder = $this->getLastOrderForCustomer($email);
+        $lastOrder = $this->orderFixture->getLastOrderForCustomer($email);
         $paymentId = $lastOrder->getPayment()->getId();
         $orderId   = $lastOrder->getId();
 
@@ -97,7 +104,7 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function thereShouldBeAClosedCaptureForTheLastOrderFor($email)
     {
-        $transaction = $this->getLastTransactionForLastOrder($email);
+        $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
 
         PHPUnit_Framework_Assert::assertSame($transaction->getTxnType(), Transaction::TYPE_CAPTURE);
         PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '1');
@@ -108,40 +115,21 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function thereShouldBeAPaidInvoiceForTheLastOrderFor($email)
     {
-        $transaction = $this->getLastTransactionForLastOrder($email);
+        $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
         $invoice     = $this->invoiceFixture->getByTransactionId($transaction->getTxnId());
 
         PHPUnit_Framework_Assert::assertSame($invoice->getState(), (string)Invoice::STATE_PAID);
     }
 
-    protected function getLastTransactionForLastOrder($email)
+    /**
+     * @Then there should be a credit memo for the value of the last invoice for :email
+     */
+    public function thereShouldBeACreditMemoForTheValueOfTheLastInvoiceFor($email)
     {
-        $lastOrder = $this->getLastOrderForCustomer($email);
-        
-        $transactionId = $lastOrder->getPayment()->getLastTransId();
-        $paymentId     = $lastOrder->getPayment()->getId();
-        $orderId       = $lastOrder->getId();
+        $lastOrder      = $this->orderFixture->getLastOrderForCustomer($email);
+        $lastInvoice    = $this->invoiceFixture->getLastForOrder($lastOrder->getId());
+        $lastCreditMemo = $this->creditMemoFixture->getLastForOrder($lastOrder->getId());
 
-        $transaction = $this->transactionFixture->getByTransactionId($transactionId, $paymentId, $orderId);
-
-        if ( ! $transaction) {
-            throw new \Exception('Last transaction not found for ' . $email);
-        }
-
-        return $transaction;
-    }
-
-    protected function getLastOrderForCustomer($email)
-    {
-        $customer = $this->customerFixture->get($email);
-        $orders   = $this->orderFixture->getForCustomer($customer);
-
-        $order = current($orders->getItems());
-
-        if ( ! $order) {
-            throw new \Exception('Last order not found for ' . $email);
-        }
-
-        return $order;
+        PHPUnit_Framework_Assert::assertSame($lastInvoice->getBaseGrandTotal(), $lastCreditMemo->getBaseGrandTotal());
     }
 }

@@ -13,6 +13,11 @@ class AmazonRefundResponse
     protected $status;
 
     /**
+     * @var string|null
+     */
+    protected $transactionId;
+
+    /**
      * AmazonRefundResponse constructor.
      *
      * @param ResponseInterface $response
@@ -32,6 +37,10 @@ class AmazonRefundResponse
             'state'      => $status['State'],
             'reasonCode' => (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
         ]);
+
+        if (isset($details['AmazonRefundId'])) {
+            $this->transactionId = $details['AmazonRefundId'];
+        }
     }
 
     /**
@@ -42,5 +51,15 @@ class AmazonRefundResponse
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Get transaction id
+     *
+     * @return string|null
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
     }
 }

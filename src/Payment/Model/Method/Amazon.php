@@ -235,6 +235,8 @@ class Amazon extends AbstractMethod
         $responseParser = $client->refund($data);
         $response       = $this->amazonRefundResponseFactory->create(['response' => $responseParser]);
         $this->amazonRefundValidator->validate($response);
+
+        $payment->setTransactionId($response->getTransactionId());
     }
 
     protected function authorizeInStore(InfoInterface $payment, $amount, $capture = false)

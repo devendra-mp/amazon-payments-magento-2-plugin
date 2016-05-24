@@ -6,6 +6,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\AmazonOrder as AmazonOrderFixture;
 use Fixtures\Customer as CustomerFixture;
 use Fixtures\Order as OrderFixture;
+use Fixtures\Transaction as TransactionFixture;
 use PHPUnit_Framework_Assert;
 
 class AmazonContext implements SnippetAcceptingContext
@@ -25,11 +26,17 @@ class AmazonContext implements SnippetAcceptingContext
      */
     protected $customerFixture;
 
+    /**
+     * @var TransactionFixture
+     */
+    protected $transactionFixture;
+
     public function __construct()
     {
         $this->customerFixture    = new CustomerFixture;
         $this->orderFixture       = new OrderFixture;
         $this->amazonOrderFixture = new AmazonOrderFixture;
+        $this->transactionFixture = new TransactionFixture;
     }
 
     /**
@@ -37,7 +44,7 @@ class AmazonContext implements SnippetAcceptingContext
      */
     public function amazonShouldHaveAnOpenAuthorizationForTheLastOrderFor($email)
     {
-        $authorizationId = $this->getLastTransactionIdForLastOrder($email);
+        $authorizationId    = $this->getLastTransactionIdForLastOrder($email);
         $authorizationState = $this->amazonOrderFixture->getAuthrorizationState($authorizationId);
 
         PHPUnit_Framework_Assert::assertSame($authorizationState, 'Open');
@@ -48,10 +55,22 @@ class AmazonContext implements SnippetAcceptingContext
      */
     public function amazonShouldHaveACompleteCaptureForTheLastOrderFor($email)
     {
-        $captureId = $this->getLastTransactionIdForLastOrder($email);
+        $captureId    = $this->getLastTransactionIdForLastOrder($email);
         $captureState = $this->amazonOrderFixture->getCaptureState($captureId);
 
         PHPUnit_Framework_Assert::assertSame($captureState, 'Completed');
+    }
+
+    /**
+     * @Then amazon should have a refund for the last invoice for :email
+     */
+    public function amazonShouldHaveARefundForheLastInvoiceFor($email)
+    {
+        $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
+        $refundId    = $transaction->getTxnId();
+        $refundState = $this->amazonOrderFixture->getRefundState($refundId);
+
+        PHPUnit_Framework_Assert::assertSame($refundState, 'Pending');
     }
 
     protected function getLastTransactionIdForLastOrder($email)
