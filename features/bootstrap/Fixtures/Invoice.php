@@ -39,4 +39,29 @@ class Invoice extends BaseFixture
 
         return $invoice;
     }
+
+    public function getLastForOrder($orderid)
+    {
+        $searchCriteriaBuilder = $this->createMagentoObject(SearchCriteriaBuilder::class);
+        $searchCriteriaBuilder->addFilter(
+            'order_id', $orderid
+        );
+
+        $searchCriteriaBuilder->addSortOrder(
+            'created_at', 'DESC'
+        );
+
+        $searchCriteria = $searchCriteriaBuilder
+            ->create();
+
+        $invoices = $this->repository->getList($searchCriteria);
+
+        $invoice = current($invoices->getItems());
+
+        if ( ! $invoice) {
+            throw new \Exception('Invoice not found for order id ' . $orderid);
+        }
+
+        return $invoice;
+    }
 }

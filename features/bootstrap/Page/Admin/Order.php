@@ -17,9 +17,6 @@ class Order extends Page
 
     protected $path = '/admin/sales/order/view/order_id/{id}';
 
-    /**
-     * @param int $productId
-     */
     public function openWithOrderId($orderId)
     {
         $this->open(['id' => (int)$orderId]);

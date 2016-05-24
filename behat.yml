@@ -3,7 +3,8 @@ default:
   suites:
     web:
       paths:
-        features: features/suites/store
+        features:
+          features/suites/store
       contexts:
         - Context\Data\FixtureContext
         - Context\Data\CustomerContext

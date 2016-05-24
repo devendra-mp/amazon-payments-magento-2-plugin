@@ -4,7 +4,10 @@ namespace Context\Web\Admin;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Customer as CustomerFixture;
+use Fixtures\Invoice as InvoiceFixture;
 use Fixtures\Order as OrderFixture;
+use Page\Admin\CreditMemo;
+use Page\Admin\Invoice;
 use Page\Admin\Order;
 use PHPUnit_Framework_Assert;
 
@@ -15,11 +18,24 @@ class OrderContext implements SnippetAcceptingContext
      */
     protected $orderPage;
 
-    public function __construct(Order $orderPage)
+    /**
+     * @var Invoice
+     */
+    protected $invoicePage;
+
+    /**
+     * @var CreditMemo
+     */
+    protected $creditMemoPage;
+
+    public function __construct(Order $orderPage, Invoice $invoicePage, CreditMemo $creditMemoPage)
     {
         $this->orderPage       = $orderPage;
+        $this->invoicePage     = $invoicePage;
+        $this->creditMemoPage  = $creditMemoPage;
         $this->customerFixture = new CustomerFixture;
         $this->orderFixture    = new OrderFixture;
+        $this->invoiceFixture  = new InvoiceFixture;
     }
 
     /**
@@ -27,9 +43,7 @@ class OrderContext implements SnippetAcceptingContext
      */
     public function iGoToInvoiceTheLastOrderFor($email)
     {
-        $customer  = $this->customerFixture->get($email);
-        $orders    = $this->orderFixture->getForCustomer($customer);
-        $lastOrder = current($orders->getItems());
+        $lastOrder = $this->orderFixture->getLastOrderForCustomer($email);
 
         if ( ! $lastOrder) {
             throw new \Exception('Last order not found for ' . $email);
@@ -47,5 +61,25 @@ class OrderContext implements SnippetAcceptingContext
     public function iSubmitMyInvoice()
     {
         $this->orderPage->submitInvoice();
+    }
+
+    /**
+     * @Given I go to refund the last invoice for :email
+     */
+    public function iGoToRefundTheLastInvoiceFor($email)
+    {
+        $lastOrder   = $this->orderFixture->getLastOrderForCustomer($email);
+        $lastInvoice = $this->invoiceFixture->getLastForOrder($lastOrder->getId());
+
+        $this->invoicePage->openWithInvoiceId($lastInvoice->getId());
+        $this->invoicePage->openCreateCreditMemo();
+    }
+
+    /**
+     * @Given I submit my refund
+     */
+    public function iSubmitMyRefund()
+    {
+        $this->creditMemoPage->submitCreditMemo();
     }
 }
