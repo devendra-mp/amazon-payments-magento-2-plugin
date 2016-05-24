@@ -53,4 +53,24 @@ class AmazonAddressSpec extends ObjectBehavior
         $this->getFirstName()->shouldReturn('Firstname');
         $this->getLastName()->shouldReturn('Lastname');
     }
+
+    function it_correctly_parses_empty_arrays_as_address_lines(AmazonNameFactory $nameFactory)
+    {
+        $fullName = 'Firstname Lastname';
+        $addressData = [
+            'Name' => $fullName,
+            'City' => 'city',
+            'PostalCode' => 'PO4 CODE',
+            'CountryCode' => 'GB',
+            'AddressLine1' => [],
+            'AddressLine2' => '',
+        ];
+        $this->beConstructedWith($addressData, $nameFactory);
+
+        $this->getLine(1)->shouldBe('');
+        $this->getLine(2)->shouldBe('');
+        $this->getLine(3)->shouldBe(null);
+
+        $this->getLines()->shouldBe([1 => '', 2 => '']);
+    }
 }
