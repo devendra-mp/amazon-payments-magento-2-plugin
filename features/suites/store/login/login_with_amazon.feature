@@ -13,6 +13,12 @@ Feature: As a customer
     Then I see a login with amazon button on the registration page
 
   @javascript
+  Scenario: login with amazon button is available on the basket page
+    Given there is a valid product in my basket
+    And I go to my basket
+    Then I see a login with amazon button on the basket page
+
+  @javascript
   Scenario: login with amazon links amazon account to customer account if already logged in
     Given there is a customer "magentoexisting@example.com"
     And "magentoexisting@example.com" has never logged in with amazon
