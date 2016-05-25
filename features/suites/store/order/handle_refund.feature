@@ -18,6 +18,6 @@ Feature: As an admin
   @javascript
   Scenario: admin refunds order
     Given I go to refund the last invoice for "existing@example.com"
-    And I submit my refund
+    When I submit my refund
     Then there should be a credit memo for the value of the last invoice for "existing@example.com"
     And amazon should have a refund for the last invoice for "existing@example.com"

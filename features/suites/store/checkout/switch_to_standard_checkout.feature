@@ -11,7 +11,7 @@ Feature: As a customer
 
   @javascript
   Scenario: Amazon customer reverts to standard checkout
-    Given I revert to standard checkout
+    When I revert to standard checkout
     Then the standard shipping form should be displayed
     And the basket for "existing@example.com" should not be linked to an amazon order
 

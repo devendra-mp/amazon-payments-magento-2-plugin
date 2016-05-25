@@ -3,6 +3,7 @@
 namespace Context\Data;
 
 use Behat\Behat\Context\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class FixtureContext implements Context
 {
@@ -23,10 +24,14 @@ class FixtureContext implements Context
     {
         if (count(self::$fixtures)) {
             foreach (self::$fixtures as $fixture) {
-                if  (null !== $fixture['repository']) {
-                    $fixture['repository']->delete($fixture['entity']);
-                } else {
-                    $fixture['entity']->delete();
+                try {
+                    if  (null !== $fixture['repository']) {
+                        $fixture['repository']->delete($fixture['entity']);
+                    } else {
+                        $fixture['entity']->delete();
+                    }
+                } catch (NoSuchEntityException $e) {
+                    //should have been deleted already sometimes items are tracked twice
                 }
             }
         }
