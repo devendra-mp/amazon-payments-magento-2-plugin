@@ -28,6 +28,9 @@ Feature: As a customer
 
   @javascript
   Scenario: login with amazon logs in customer account that is already linked to amazon
+    Given there is a customer "existing@example.com" which is linked to amazon
+    When I login with amazon as "existing@example.com"
+    Then I should be logged in as a customer
 
   @javascript
   Scenario: login with amazon checks password for customer account that has a matching email but is not linked with amazon
