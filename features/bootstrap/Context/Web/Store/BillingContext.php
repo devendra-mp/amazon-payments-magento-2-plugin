@@ -95,20 +95,6 @@ class BillingContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Then the billing address for my payment method should be displayed
-     */
-    public function theBillingAddressForMyPaymentMethodShouldBeDisplayed()
-    {
-        $billingAddress = $this->checkoutPage->getBillingAddress();
-        $constraint     = PHPUnit_Framework_Assert::stringContains(
-            'Amber Kelly 87 Terrick Rd EILEAN DARACH, IV23 2TW United Kingdom',
-            false
-        );
-
-        PHPUnit_Framework_Assert::assertThat($billingAddress, $constraint);
-    }
-
-    /**
      * @Given I am requesting authorization on a payment that will be rejected
      */
     public function iAmRequestingAuthorizationOnAPaymentThatWillBeRejected()
