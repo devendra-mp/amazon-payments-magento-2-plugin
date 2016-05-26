@@ -3,6 +3,9 @@
 namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Fixtures\AmazonOrder as AmazonOrderFixture;
+use Fixtures\Basket as BasketFixture;
+use Fixtures\Customer as CustomerFixture;
 use Page\Store\Checkout;
 use PHPUnit_Framework_Assert;
 
@@ -13,9 +16,27 @@ class ShippingContext implements SnippetAcceptingContext
      */
     protected $checkoutPage;
 
+    /**
+     * @var CustomerFixture
+     */
+    protected $customerFixture;
+
+    /**
+     * @var BasketFixture
+     */
+    protected $basketFixture;
+
+    /**
+     * @var AmazonOrderFixture
+     */
+    protected $amazonOrderFixture;
+
     public function __construct(Checkout $checkoutPage)
     {
-        $this->checkoutPage = $checkoutPage;
+        $this->checkoutPage       = $checkoutPage;
+        $this->customerFixture    = new CustomerFixture;
+        $this->basketFixture      = new BasketFixture;
+        $this->amazonOrderFixture = new AmazonOrderFixture;
     }
 
     /**
@@ -35,6 +56,24 @@ class ShippingContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Then the amazon shipping widget should be displayed
+     */
+    public function theAmazonShippingWidgetShouldBeDisplayed()
+    {
+        $hasShippingWidget = $this->checkoutPage->hasShippingWidget();
+        PHPUnit_Framework_Assert::assertTrue($hasShippingWidget);
+    }
+
+    /**
+     * @Then the amazon shipping widget should not be displayed
+     */
+    public function theAmazonShippingWidgetShouldNotBeDisplayed()
+    {
+        $hasShippingWidget = $this->checkoutPage->hasShippingWidget();
+        PHPUnit_Framework_Assert::assertFalse($hasShippingWidget);
+    }
+
+    /**
      * @Then the standard shipping form should be displayed
      */
     public function theStandardShippingFormShouldBeDisplayed()
@@ -44,10 +83,44 @@ class ShippingContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Then the standard shipping form should not be displayed
+     */
+    public function theStandardShippingFormShouldNotBeDisplayed()
+    {
+        $hasShippingForm = $this->checkoutPage->hasStandardShippingForm();
+        PHPUnit_Framework_Assert::assertFalse($hasShippingForm);
+    }
+
+
+    /**
      * @Given I provide the :email email in the shipping form
      */
     public function iProvideTheEmailInTheShippingForm($email)
     {
         $this->checkoutPage->setCustomerEmail($email);
+    }
+
+    /**
+     * @Then the current basket for :email should have my amazon shipping address
+     */
+    public function theCurrentBasketForShouldHaveMyAmazonShippingAddress($email)
+    {
+        $customer = $this->customerFixture->get($email);
+        $basket   = $this->basketFixture->getActiveForCustomer($customer->getId());
+
+        $orderRef            = $this->checkoutPage->getAmazonOrderRef();
+        $addressConsentToken = $this->checkoutPage->getAddressConsentToken();
+
+        $amazonShippingAddress = $this->amazonOrderFixture->getShippingAddress($orderRef, $addressConsentToken);
+        $shippingAddress       = $basket->getShippingAddress()->exportCustomerAddress();
+
+        $amazonShippingAddressData = $amazonShippingAddress->__toArray();
+        $shippingAddressData       = array_intersect_key($shippingAddress->__toArray(), $amazonShippingAddressData);
+
+        asort($amazonShippingAddressData);
+        asort($shippingAddressData);
+
+        PHPUnit_Framework_Assert::assertSame($amazonShippingAddressData, $shippingAddressData);
+
     }
 }

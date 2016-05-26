@@ -116,6 +116,11 @@ define(
             getAmazonOrderReference: function()
             {
                 return amazonStorage.getOrderReference();
+            },
+
+            getAddressConsentToken: function()
+            {
+                return amazonStorage.getAddressConsentToken();
             }
         });
     }

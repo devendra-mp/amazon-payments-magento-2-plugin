@@ -114,6 +114,16 @@ class Checkout extends Page
         }
     }
 
+    public function hasShippingWidget()
+    {
+        try {
+            $element = $this->getElementWithWait('shipping-widget');
+            return $element->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function hasPaymentWidget()
     {
         try {
@@ -146,6 +156,19 @@ class Checkout extends Page
         }
 
         return $orderRef;
+    }
+
+    public function getAddressConsentToken()
+    {
+        $addressConsentToken = $this->getDriver()->evaluateScript(
+            'require(\'uiRegistry\').get(\'checkout.steps.shipping-step.shippingAddress.before-form.amazon-widget-address\').getAddressConsentToken();'
+        );
+
+        if ( ! strlen($addressConsentToken)) {
+            throw new \Exception('Could not locate address consent token');
+        }
+
+        return $addressConsentToken;
     }
 
     public function selectSimulation($simulation)
