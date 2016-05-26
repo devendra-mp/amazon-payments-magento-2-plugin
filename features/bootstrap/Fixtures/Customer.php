@@ -65,7 +65,7 @@ class Customer extends BaseFixture
     public function track($email)
     {
         try {
-            $customer = $this->repository->get($email);
+            $customer = $this->get($email, true);
             FixtureContext::trackFixture($customer, $this->repository);
         } catch (NoSuchEntityException $e) {
             //entity not created no need to track for deletion

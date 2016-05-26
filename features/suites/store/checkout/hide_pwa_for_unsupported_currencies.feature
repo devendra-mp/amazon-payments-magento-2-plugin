@@ -5,5 +5,5 @@ Feature: As a customer
   Scenario:
     Given I want to pay using an unsupported currency
     And there is a valid product in my basket
-    And I go to the checkout
+    When I go to the checkout
     Then I do not see a pay with amazon button

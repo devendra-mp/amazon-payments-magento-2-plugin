@@ -9,5 +9,5 @@ Feature: As a customer
     And I select a shipping address from my amazon account
     And I select a valid shipping method
     And I go to billing
-    And I select a payment method from my amazon account
+    When I select a payment method from my amazon account
     Then the billing address for my payment method should be displayed

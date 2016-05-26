@@ -5,8 +5,11 @@ namespace Context\Web\Store;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Customer as CustomerFixture;
 use Page\Store\Basket;
+use Page\Store\CustomerSection;
 use Page\Store\Login;
+use Page\Store\Logout;
 use Page\Store\Product;
+use Page\Store\ValidatePassword;
 use PHPUnit_Framework_Assert;
 
 class LoginContext implements SnippetAcceptingContext
@@ -34,16 +37,40 @@ class LoginContext implements SnippetAcceptingContext
     protected $productPage;
 
     /**
-     * @param Login $loginPage
-     * @param Basket $basketPage
+     * @var CustomerSection
+     */
+    protected $customerSectionPage;
+
+    /**
+     * @var ValidatePassword
+     */
+    protected $validatePasswordPage;
+
+    /**
+     * @var Logout
+     */
+    protected $logoutPage;
+
+    /**
+     * @param Login   $loginPage
+     * @param Basket  $basketPage
      * @param Product $productPage
      */
-    public function __construct(Login $loginPage, Basket $basketPage, Product $productPage)
-    {
-        $this->customerFixture = new CustomerFixture;
-        $this->loginPage       = $loginPage;
-        $this->basketPage      = $basketPage;
-        $this->productPage     = $productPage;
+    public function __construct(
+        Login $loginPage,
+        Logout $logoutPage,
+        Basket $basketPage,
+        Product $productPage,
+        CustomerSection $customerSectionPage,
+        ValidatePassword $validatePasswordPage
+    ) {
+        $this->customerFixture      = new CustomerFixture;
+        $this->loginPage            = $loginPage;
+        $this->logoutPage           = $logoutPage;
+        $this->basketPage           = $basketPage;
+        $this->productPage          = $productPage;
+        $this->customerSectionPage  = $customerSectionPage;
+        $this->validatePasswordPage = $validatePasswordPage;
     }
 
     /**
@@ -100,6 +127,54 @@ class LoginContext implements SnippetAcceptingContext
         $this->basketPage->open();
         $this->basketPage->loginAmazonCustomer($email, $this->getAmazonPassword());
         $this->customerFixture->track($email);
+    }
+
+    /**
+     * @Then I should be asked to confirm my password
+     */
+    public function iShouldBeAskedToConfirmMyPassword()
+    {
+        $this->validatePasswordPage->isOpen();
+    }
+
+    /**
+     * @When I confirm my password
+     */
+    public function iConfirmMyPassword()
+    {
+        $this->validatePasswordPage->submitWithPassword($this->customerFixture->getDefaultPassword());
+    }
+
+    /**
+     * @Then I should be logged in as a customer
+     */
+    public function iShouldBeLoggedInAsACustomer()
+    {
+        $loggedIn = $this->customerSectionPage->isLoggedIn();
+        PHPUnit_Framework_Assert::assertTrue($loggedIn);
+    }
+
+    /**
+     * @Then I should not be logged in as a customer
+     */
+    public function iShouldNotBeLoggedInAsACustomer()
+    {
+        $loggedIn = $this->customerSectionPage->isLoggedIn();
+        PHPUnit_Framework_Assert::assertFalse($loggedIn);
+    }
+
+    /**
+     * @Given there is a customer :email which is linked to amazon
+     */
+    public function thereIsACustomerWhichIsLinkedToAmazon($email)
+    {
+        $this->loginPage->open();
+        $this->loginPage->loginAmazonCustomer($email, $this->getAmazonPassword());
+        $this->customerFixture->track($email);
+        $this->logoutPage->logout();
+
+        $loggedIn = $this->customerSectionPage->isLoggedIn();
+        PHPUnit_Framework_Assert::assertFalse($loggedIn);
     }
 
     protected function getAmazonPassword()
