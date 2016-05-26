@@ -3,7 +3,7 @@ Feature: As a customer
 
   @javascript
   Scenario:
-    Given I login with amazon as "existing@example.com"
+    Given I login with amazon as "amazoncustomer@example.com"
     And there is a valid product in my basket
     And I go to the checkout
     And I select a shipping address from my amazon account

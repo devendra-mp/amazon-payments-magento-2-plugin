@@ -48,7 +48,7 @@ class Address
         $address->setFirstname($amazonAddress->getFirstName());
         $address->setLastname($amazonAddress->getLastName());
         $address->setCity($amazonAddress->getCity());
-        $address->setStreet($amazonAddress->getLines());
+        $address->setStreet(array_values($amazonAddress->getLines()));
         $address->setPostcode($amazonAddress->getPostCode());
         $address->setTelephone($amazonAddress->getTelephone());
         $address->setCountryId($this->getCountryId($amazonAddress));
