@@ -318,7 +318,7 @@ class Amazon extends AbstractMethod
         $this->reserveNewOrderId($payment);
 
         throw new WebapiException(
-            __('Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.'),
+            __('Unfortunately it is not possible to pay with Amazon for this order. Please choose another payment method.'),
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
@@ -327,7 +327,7 @@ class Amazon extends AbstractMethod
     protected function processSoftDecline()
     {
         throw new WebapiException(
-            __('There has been a problem with the selected payment method on your Amazon account, please choose another one.'),
+            __('There has been a problem with the selected payment method on your Amazon account. Please choose another one.'),
             AmazonAuthorizationStatus::CODE_SOFT_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
