@@ -3,10 +3,12 @@
 namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Page\Store\Checkout;
+use Fixtures\AmazonOrder as AmazonOrderFixture;
+use Fixtures\Order as OrderFixture;
 use Page\Element\Checkout\Messages;
 use Page\Element\Checkout\PaymentMethods;
 use Page\Element\Checkout\SandboxSimulation;
+use Page\Store\Checkout;
 use PHPUnit_Framework_Assert;
 
 class BillingContext implements SnippetAcceptingContext
@@ -26,14 +28,31 @@ class BillingContext implements SnippetAcceptingContext
      */
     protected $paymentMethodsElement;
 
+    /**
+     * @var OrderFixture
+     */
+    protected $orderFixture;
+
+    /**
+     * @var AmazonOrderFixture
+     */
+    protected $amazonOrderFixture;
+
+    /**
+     * @var string|null
+     */
+    protected $addressConsentToken = null;
+
     public function __construct(
         Checkout $checkoutPage,
         Messages $messagesElement,
         PaymentMethods $paymentMethodsElement
     ) {
-        $this->checkoutPage             = $checkoutPage;
-        $this->messagesElement          = $messagesElement;
-        $this->paymentMethodsElement    = $paymentMethodsElement;
+        $this->checkoutPage          = $checkoutPage;
+        $this->messagesElement       = $messagesElement;
+        $this->paymentMethodsElement = $paymentMethodsElement;
+        $this->orderFixture          = new OrderFixture;
+        $this->amazonOrderFixture    = new AmazonOrderFixture;
     }
 
     /**
@@ -72,6 +91,7 @@ class BillingContext implements SnippetAcceptingContext
     public function iSelectAPaymentMethodFromMyAmazonAccount()
     {
         $this->checkoutPage->selectFirstAmazonPaymentMethod();
+        $this->addressConsentToken = $this->checkoutPage->getAddressConsentToken();
     }
 
     /**
@@ -163,5 +183,39 @@ class BillingContext implements SnippetAcceptingContext
     public function iShouldBeAbleToSelectAnAlternativePaymentMethodFromMyAmazonAccount()
     {
         $this->checkoutPage->selectAlternativeAmazonPaymentMethod();
+    }
+
+    /**
+     * @Then the last order for :email should have my amazon billing address
+     */
+    public function theLastOrderForShouldHaveMyAmazonBillingAddress($email)
+    {
+        $lastOrder = $this->orderFixture->getLastOrderForCustomer($email);
+
+        $orderRef            = $lastOrder->getExtensionAttributes()->getAmazonOrderReferenceId();
+        $addressConsentToken = $this->addressConsentToken;
+
+        $amazonBillingAddress = $this->amazonOrderFixture->getBillingAddress($orderRef, $addressConsentToken);
+        $billingAddress       = $lastOrder->getBillingAddress();
+
+        $amazonBillingAddressData = $amazonBillingAddress->__toArray();
+        $billingAddressData       = array_intersect_key($billingAddress->getData(), $amazonBillingAddressData);
+
+        if (isset($billingAddressData['street'])) {
+            $billingAddressData['street'] = $billingAddress->getStreet();
+        }
+
+        asort($amazonBillingAddressData);
+        asort($billingAddressData);
+
+        PHPUnit_Framework_Assert::assertSame($billingAddressData, $amazonBillingAddressData);
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function resetConsentToken()
+    {
+        $this->addressConsentToken = null;
     }
 }

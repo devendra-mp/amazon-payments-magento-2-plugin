@@ -53,7 +53,7 @@ class Address
         $address->setTelephone($amazonAddress->getTelephone());
         $address->setCountryId($this->getCountryId($amazonAddress));
 
-        if (!empty($company = $amazonAddress->getCompany())) {
+        if ( ! empty($company = $amazonAddress->getCompany())) {
             $address->setCompany($company);
         }
 
@@ -107,7 +107,11 @@ class Address
             AddressInterface::LASTNAME   => $address->getLastname(),
             AddressInterface::COUNTRY_ID => $address->getCountryId(),
             AddressInterface::STREET     => $address->getStreet(),
-            AddressInterface::POSTCODE   => $address->getPostcode()
+            AddressInterface::POSTCODE   => $address->getPostcode(),
+            AddressInterface::TELEPHONE  => null,
+            AddressInterface::REGION     => null,
+            AddressInterface::REGION_ID  => null,
+            'region_code'                => null
         ];
 
         if ($address->getTelephone()) {

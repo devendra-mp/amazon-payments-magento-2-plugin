@@ -2,6 +2,7 @@ Feature: As a customer
   I need to select a shipping address
   So that I can receive my goods
 
+  @javascript
   Scenario: customer logged into amazon sees shipping widget
     Given I login with amazon as "amazoncustomer@example.com"
     And there is a valid product in my basket
@@ -9,12 +10,14 @@ Feature: As a customer
     Then the amazon shipping widget should be displayed
     And the standard shipping form should not be displayed
 
+  @javascript
   Scenario: customer not logged into amazon sees shipping form
     Given there is a valid product in my basket
     When I go to the checkout
     Then the standard shipping form should be displayed
     And the amazon shipping widget should not be displayed
 
+  @javascript
   Scenario: shipping address is selected from amazon
     Given I login with amazon as "amazoncustomer@example.com"
     And there is a valid product in my basket

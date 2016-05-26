@@ -55,6 +55,8 @@ class Order extends BaseFixture
             throw new \Exception('Last order not found for ' . $email);
         }
 
+        $order->load($order->getId());
+
         return $order;
     }
 }
