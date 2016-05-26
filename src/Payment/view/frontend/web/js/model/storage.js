@@ -27,11 +27,11 @@ define(
          * @param amazonDefined
          */
         function checkAmazonDefined(amazonDefined) {
-            doLogoutOnFlagCookie();
             if(amazonDefined) {
-               verifyAmazonLoggedIn();
-               //remove subscription to amazonDefined once loaded
-               isAmazonDefined.dispose();
+                doLogoutOnFlagCookie();
+                verifyAmazonLoggedIn();
+                //remove subscription to amazonDefined once loaded
+                isAmazonDefined.dispose();
             }
         }
 
