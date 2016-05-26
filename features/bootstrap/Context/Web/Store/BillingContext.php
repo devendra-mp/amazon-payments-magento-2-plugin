@@ -20,6 +20,7 @@ class BillingContext implements SnippetAcceptingContext
      * @var Messages
      */
     protected $messagesElement;
+
     /**
      * @var PaymentMethods
      */
@@ -33,6 +34,36 @@ class BillingContext implements SnippetAcceptingContext
         $this->checkoutPage             = $checkoutPage;
         $this->messagesElement          = $messagesElement;
         $this->paymentMethodsElement    = $paymentMethodsElement;
+    }
+
+    /**
+     * @Then the amazon payment widget should be displayed
+     */
+    public function theAmazonPaymentWidgetShouldBeDisplayed()
+    {
+        $hasWidget = $this->checkoutPage->hasPaymentWidget();
+        PHPUnit_Framework_Assert::assertTrue($hasWidget);
+    }
+
+
+    /**
+     * @Then the amazon payment widget should not be displayed
+     */
+    public function theAmazonPaymentWidgetShouldNotBeDisplayed()
+    {
+        $hasWidget = $this->checkoutPage->hasPaymentWidget();
+        PHPUnit_Framework_Assert::assertFalse($hasWidget);
+    }
+
+    /**
+     * @Given I provide a valid shipping address
+     */
+    public function iProvideAValidShippingAddress()
+    {
+        $hasShippingForm = $this->checkoutPage->hasStandardShippingForm();
+        PHPUnit_Framework_Assert::assertTrue($hasShippingForm);
+
+        $this->checkoutPage->provideShippingAddress();
     }
 
     /**
@@ -117,6 +148,7 @@ class BillingContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Then I should be able to select a payment method
      * @Then I should be able to select an alternative payment method
      */
     public function iShouldBeAbleToSelectAnAlternativePaymentMethod()
