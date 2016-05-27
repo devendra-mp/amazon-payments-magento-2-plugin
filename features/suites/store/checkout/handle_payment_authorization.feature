@@ -11,12 +11,14 @@ Feature: As a customer
     And I go to billing
     And I select a payment method from my amazon account
 
+  @javascript
   Scenario: customer authorizes payment for an order
     When I place my order
     Then "amazoncustomer@example.com" should have placed an order
     And there should be an open authorization for the last order for "amazoncustomer@example.com"
     And amazon should have an open authorization for the last order for "amazoncustomer@example.com"
 
+  @javascript
   Scenario: customer authorizes payment for an order charged on order placement
     Given orders are charged for at order placement
     When I place my order

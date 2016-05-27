@@ -2,16 +2,14 @@
 
 namespace Page\Store;
 
-use Page\PageTrait;
 use Page\Element\Checkout\PaymentMethodForm;
 use Page\Element\Checkout\ShippingAddressForm;
+use Page\PageTrait;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 class Checkout extends Page
 {
     use PageTrait;
-
-    protected $path = '/checkout/';
 
     protected $elements
         = [
@@ -32,6 +30,22 @@ class Checkout extends Page
             'submit-order'               => ['css' => 'button.checkout.primary'],
             'customer-email-input'       => ['css' => 'input#customer-email'],
         ];
+
+    protected $path = '/checkout/';
+
+    public function provideShippingAddress()
+    {
+        $this->getShippingForm()
+            ->withFirstName('John')
+            ->withLastName('Doe')
+            ->withAddressLines(['419 Kings Row', 'Spruce Tree Cottage'])
+            ->withCity('Manchester')
+            ->withCountry('GB')
+            ->withPostCode('M13 9PL')
+            ->withPhoneNumber('+447774443333');
+
+        $this->waitUntilElementDisappear('shipping-loader');
+    }
 
     public function selectFirstAmazonShippingAddress()
     {
@@ -63,6 +77,8 @@ class Checkout extends Page
 
     public function selectDefaultShippingMethod()
     {
+        $this->waitForCondition('true === false', 500);
+        $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('shipping-loader');
 
         $defaultShippingMethod = $this->getElementWithWait('first-shipping-method');
@@ -73,8 +89,12 @@ class Checkout extends Page
 
     public function goToBilling()
     {
+        $this->waitForCondition('true === false', 500);
+        $this->waitForAjaxRequestsToComplete();
+        $this->waitUntilElementDisappear('full-screen-loader');
         $this->clickElement('go-to-billing');
         $this->waitUntilElementDisappear('full-screen-loader');
+
     }
 
     public function submitOrder()
@@ -195,16 +215,17 @@ class Checkout extends Page
 
     /**
      * @param string $email
+     *
      * @throws \Exception
      */
     public function setCustomerEmail($email)
     {
         $input = $this->getElementWithWait('customer-email-input');
 
-        if (!$input) {
+        if ( ! $input) {
             throw new \Exception('No customer email input was found.');
         }
 
-        $input->setValue((string) $email);
+        $input->setValue((string)$email);
     }
 }

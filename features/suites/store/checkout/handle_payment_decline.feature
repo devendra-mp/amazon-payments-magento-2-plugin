@@ -11,6 +11,7 @@ Feature: As a customer
     And I go to billing
     And I select a payment method from my amazon account
 
+  @javascript
   Scenario: payment authorization receives a hard decline as it was rejected by amazon
     Given I am requesting authorization on a payment that will be rejected
     When I place my order
@@ -20,6 +21,7 @@ Feature: As a customer
     And "amazoncustomer@example.com" should not have placed an order
     And I should be able to select an alternative payment method
 
+  @javascript
   Scenario: payment authorization receives a hard decline due to transaction timeout
     Given I am requesting authorization on a payment that will timeout
     When I place my order
@@ -30,6 +32,7 @@ Feature: As a customer
     And "amazoncustomer@example.com" should not have placed an order
     And I should be able to select an alternative payment method
 
+  @javascript
   Scenario: payment authorization receives a soft decline due to invalid payment method
     Given I am requesting authorization on a payment that will use an invalid method
     When I place my order

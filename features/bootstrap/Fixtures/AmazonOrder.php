@@ -52,6 +52,25 @@ class AmazonOrder extends BaseFixture
         }
     }
 
+    public function getBillingAddress($orderRef, $addressConsentToken)
+    {
+        $client   = $this->clientFactory->create();
+        $response = $client->getOrderReferenceDetails(
+            [
+                'amazon_order_reference_id' => $orderRef,
+                'address_consent_token'     => $addressConsentToken
+            ]
+        );
+
+        $data = $response->toArray();
+        if (isset($data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['BillingAddress']['PhysicalAddress'])) {
+            $address = $this->amazonAddressFactory->create(['address' => $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['BillingAddress']['PhysicalAddress']]);
+            return $this->addressHelper->convertToMagentoEntity($address);
+        } else {
+            throw new \Exception('failed to retrieve address data from Amazon');
+        }
+    }
+
     public function getState($orderRef)
     {
         $client   = $this->clientFactory->create();

@@ -14,7 +14,7 @@ class Logout extends Page
     public function logout()
     {
         $this->open();
-        $this->getDriver()->wait(5000, 'true === false');
+        $this->waitForCondition('true === false', 5000);
     }
 
     protected function verifyUrl(array $urlParameters = array())

@@ -120,7 +120,7 @@ class ShippingContext implements SnippetAcceptingContext
         asort($amazonShippingAddressData);
         asort($shippingAddressData);
 
-        PHPUnit_Framework_Assert::assertSame($amazonShippingAddressData, $shippingAddressData);
+        PHPUnit_Framework_Assert::assertSame($shippingAddressData, $amazonShippingAddressData);
 
     }
 }
