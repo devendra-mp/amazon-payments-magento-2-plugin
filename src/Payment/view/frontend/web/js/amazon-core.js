@@ -8,6 +8,7 @@ define([
 
     var clientId = window.amazonPayment.clientId,
         amazonDefined = ko.observable(false),
+        amazonLoginError = ko.observable(false),
         accessToken = ko.observable(null);
         
     function setClientId(cid) {
@@ -33,6 +34,7 @@ define([
         if($.cookieStorage.isSet(errorFlagCookie)) {
             amazonLogout();
             document.cookie = errorFlagCookie + '=; Path=/;  expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            amazonLoginError(true);
         }
     }
 
@@ -72,7 +74,8 @@ define([
         AmazonLogout: amazonLogout,
 
         amazonDefined: amazonDefined,
-        accessToken: accessToken
+        accessToken: accessToken,
+        amazonLoginError: amazonLoginError
     };
 
 });
