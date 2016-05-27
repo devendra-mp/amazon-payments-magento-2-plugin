@@ -32,7 +32,7 @@ define([
         var errorFlagCookie = 'amz_auth_err';
         if($.cookieStorage.isSet(errorFlagCookie)) {
             amazonLogout();
-            document.cookie = errorFlagCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            document.cookie = errorFlagCookie + '=; Path=/;  expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
     }
 
