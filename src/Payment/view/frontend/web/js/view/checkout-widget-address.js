@@ -77,7 +77,6 @@ define(
                         designMode: 'responsive'
                     },
                     onError: function (error) {
-                        errorProcessor.process(error);
                     }
                 }).bind(self.options.addressWidgetDOMId);
             },
