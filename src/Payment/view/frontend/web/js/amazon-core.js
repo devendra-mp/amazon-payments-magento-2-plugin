@@ -15,18 +15,40 @@ define([
         amazon.Login.setClientId(cid);
     }
 
+    function amazonLogout() {
+        if(amazonDefined()) {
+            amazon.Login.logout();
+        } else {
+            var logout = amazonDefined.subscribe(function(defined) {
+                if(defined) {
+                    amazon.Login.logout();
+                    logout.dispose(); //remove subscribe
+                }
+            });
+        }
+    }
+
+    function doLogoutOnFlagCookie() {
+        var errorFlagCookie = 'amz_auth_err';
+        if($.cookieStorage.isSet(errorFlagCookie)) {
+            amazonLogout();
+            document.cookie = errorFlagCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+    }
+
     if(typeof amazon === 'undefined') {
         window.onAmazonLoginReady = function() {
            setClientId(clientId);
+           doLogoutOnFlagCookie();
         }
     } else {
       setClientId(clientId);
+      doLogoutOnFlagCookie();
     }
 
     return {
         /**
          * Verify a user is logged into amazon
-         * @returns {*}
          */
         verifyAmazonLoggedIn: function() {
             var loginOptions = {
@@ -46,21 +68,9 @@ define([
         },
         /**
          * Log user out of Amazon
-         * @constructor
          */
-        AmazonLogout: function() {
-            if(amazonDefined()) {
-                amazon.Login.logout();
-            } else {
-                var logout = amazonDefined.subscribe(function(defined) {
-                    if(defined) {
-                        amazon.Login.logout();
-                        logout.dispose(); //remove subscribe
-                    }
-                })
-            }
+        AmazonLogout: amazonLogout,
 
-        },
         amazonDefined: amazonDefined,
         accessToken: accessToken
     };

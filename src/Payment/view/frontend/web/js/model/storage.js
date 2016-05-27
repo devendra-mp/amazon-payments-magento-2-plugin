@@ -28,19 +28,9 @@ define(
          */
         function checkAmazonDefined(amazonDefined) {
             if(amazonDefined) {
-                doLogoutOnFlagCookie();
                 verifyAmazonLoggedIn();
                 //remove subscription to amazonDefined once loaded
                 isAmazonDefined.dispose();
-            }
-        }
-
-        function doLogoutOnFlagCookie() {
-            var errorFlagCookie = 'amz_auth_err';
-            if($.cookieStorage.isSet(errorFlagCookie)) {
-                amazonCore.AmazonLogout();
-                isAmazonAccountLoggedIn(false);
-                document.cookie = errorFlagCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             }
         }
 
