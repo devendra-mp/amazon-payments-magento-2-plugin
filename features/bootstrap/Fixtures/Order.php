@@ -44,6 +44,11 @@ class Order extends BaseFixture
         return $this->repository->getList($searchCriteria);
     }
 
+    /**
+     * @param $email
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @throws \Exception
+     */
     public function getLastOrderForCustomer($email)
     {
         $customer = $this->customerFixture->get($email);

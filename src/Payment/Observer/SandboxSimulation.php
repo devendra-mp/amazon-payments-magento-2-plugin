@@ -83,7 +83,7 @@ class SandboxSimulation implements ObserverInterface
 
     /**
      * @param $payment
-     * @return Amazon\Payment\Api\Data\QuoteLinkInterface
+     * @return \Amazon\Payment\Api\Data\QuoteLinkInterface
      */
     protected function getQuoteLink($payment) {
         $quoteId = $payment->getOrder()->getQuoteId();
