@@ -14,6 +14,11 @@ class AdminUser extends BaseFixture
      */
     protected $factory;
 
+    /**
+     * @var Random
+     */
+    protected $random;
+
     public function __construct()
     {
         parent::__construct();

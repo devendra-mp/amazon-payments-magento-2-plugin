@@ -6,7 +6,6 @@ use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonAddressFactory;
 use Amazon\Payment\Helper\Address;
 use Bex\Behat\Magento2InitExtension\Fixtures\BaseFixture;
-use Magento\Quote\Api\CartRepositoryInterface;
 
 class AmazonOrder extends BaseFixture
 {
