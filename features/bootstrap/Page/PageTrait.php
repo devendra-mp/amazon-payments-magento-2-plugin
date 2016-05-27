@@ -20,23 +20,23 @@ trait PageTrait
      */
     abstract public function getElement($name);
 
-    public function waitForCondition($condition, $maxWait = 120000)
+    public function waitForCondition($condition, $maxWait = 60000)
     {
         $this->getDriver()->wait($maxWait, $condition);
     }
 
-    public function waitForPageLoad($maxWait = 120000)
+    public function waitForPageLoad($maxWait = 60000)
     {
         $this->waitForCondition('(document.readyState == "complete") && (typeof window.jQuery == "function") && (jQuery.active == 0)', $maxWait);
     }
 
-    public function waitForElement($elementName, $maxWait = 120000)
+    public function waitForElement($elementName, $maxWait = 60000)
     {
         $visibilityCheck = $this->getElementVisibilityCheck($elementName);
         $this->waitForCondition("(typeof window.jQuery == 'function') && $visibilityCheck", $maxWait);
     }
 
-    public function waitUntilElementDisappear($elementName, $maxWait = 120000)
+    public function waitUntilElementDisappear($elementName, $maxWait = 60000)
     {
         $visibilityCheck = $this->getElementVisibilityCheck($elementName);
         $this->waitForCondition("(typeof window.jQuery == 'function') && !$visibilityCheck", $maxWait);
@@ -68,7 +68,7 @@ trait PageTrait
         return $this->getElementWithWait($elementName)->getText();
     }
 
-    public function getElementWithWait($elementName, $waitTime = 120000)
+    public function getElementWithWait($elementName, $waitTime = 60000)
     {
         $this->waitForElement($elementName, $waitTime);
         return $this->getElement($elementName);
@@ -97,7 +97,7 @@ trait PageTrait
         return $this->getDriver()->isVisible($xpath);
     }
 
-    public function waitForAjaxRequestsToComplete($maxWait = 120000)
+    public function waitForAjaxRequestsToComplete($maxWait = 60000)
     {
         $this->getDriver()->wait($maxWait, 'jQuery.active == 0');
     }
