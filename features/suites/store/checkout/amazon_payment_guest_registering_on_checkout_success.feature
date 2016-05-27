@@ -6,11 +6,6 @@ Feature: As a customer
 
   @javascript
   Scenario:
-    Given I login with Amazon as "amazoncustomer@example.com" on product page
-    Then I should be redirected to the Basket
-
-  @javascript
-  Scenario:
     Given there is a valid product in my basket
     And I login with amazon on the basket page as "amazoncustomer@example.com"
     And I go to the checkout
