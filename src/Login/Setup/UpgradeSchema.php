@@ -22,5 +22,14 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 AdapterInterface::FK_ACTION_CASCADE
             );
         }
+
+        if (version_compare($context->getVersion(), '1.2.0', '<')) {
+            $setup->getConnection()->addIndex(
+                CustomerLink::TABLE_NAME,
+                $setup->getIdxName(CustomerLink::TABLE_NAME, ['customer_id'], AdapterInterface::INDEX_TYPE_UNIQUE),
+                ['customer_id'],
+                AdapterInterface::INDEX_TYPE_UNIQUE
+            );
+        }
     }
 }

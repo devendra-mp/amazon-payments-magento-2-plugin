@@ -155,6 +155,26 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '1.5.0', '<')) {
             $this->upgradeAddressStreetMultiline();
         }
+
+        if (version_compare($context->getVersion(), '1.6.0', '<')) {
+            $setup->getConnection()->addForeignKey(
+                $setup->getFkName(QuoteLink::TABLE_NAME, 'quote_id', 'quote', 'entity_id'),
+                QuoteLink::TABLE_NAME,
+                'quote_id',
+                'quote',
+                'entity_id',
+                AdapterInterface::FK_ACTION_CASCADE
+            );
+
+            $setup->getConnection()->addForeignKey(
+                $setup->getFkName(OrderLink::TABLE_NAME, 'order_id', 'sales_order', 'entity_id'),
+                OrderLink::TABLE_NAME,
+                'order_id',
+                'sales_order',
+                'entity_id',
+                AdapterInterface::FK_ACTION_CASCADE
+            );
+        }
     }
 
     /**
