@@ -62,7 +62,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                         [
                             'identity' => true,
                             'unsigned' => true,
-                            'primary'  => true
+                            'primary'  => true,
+                            'nullable' => false
                         ]
                     )
                     ->addColumn(
@@ -135,7 +136,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     [
                         'identity' => true,
                         'unsigned' => true,
-                        'primary'  => true
+                        'primary'  => true,
+                        'nullable' => false
                     ]
                 )
                 ->addColumn(
