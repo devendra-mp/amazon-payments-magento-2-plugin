@@ -26,10 +26,14 @@ class CustomerSession
     protected $urlBuilder;
 
     /**
-     * @param Session $session
+     * @var string
+     */
+    protected $fullCheckoutUrl;
+
+    /**
      * @param UrlInterface $urlBuilder
      */
-    public function __construct(Session $session, UrlInterface $urlBuilder)
+    public function __construct(UrlInterface $urlBuilder)
     {
         $this->urlBuilder = $urlBuilder;
         $this->fullCheckoutUrl = $urlBuilder->getUrl('checkout/index/index');
@@ -40,7 +44,7 @@ class CustomerSession
      *
      * @param Session $subject
      * @param string $beforeAuthUrl
-     * @return string
+     * @return array
      */
     public function beforeSetBeforeAuthUrl(Session $subject, $beforeAuthUrl)
     {
