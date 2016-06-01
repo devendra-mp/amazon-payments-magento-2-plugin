@@ -15,8 +15,10 @@
  */
 namespace Amazon\Payment\Setup;
 
+use Amazon\Payment\Api\Data\PendingAuthorizationInterface;
 use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Model\ResourceModel\OrderLink;
+use Amazon\Payment\Model\ResourceModel\PendingAuthorization;
 use Amazon\Payment\Model\ResourceModel\PendingCapture;
 use Amazon\Payment\Model\ResourceModel\QuoteLink;
 use Magento\Eav\Setup\EavSetup;
@@ -27,6 +29,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 
 class UpgradeSchema implements UpgradeSchemaInterface
 {
@@ -195,6 +198,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '1.7.0', '<')) {
             $this->addColumnsToPendingCaptureQueue($setup);
         }
+
+        if (version_compare($context->getVersion(), '1.8.0', '<')) {
+            $this->createPendingAuthorizationQueueTable($setup);
+        }
     }
 
     private function addColumnsToPendingCaptureQueue(SchemaSetupInterface $setup)
@@ -240,6 +247,85 @@ class UpgradeSchema implements UpgradeSchemaInterface
             PendingCapture::TABLE_NAME,
             $setup->getIdxName(
                 PendingCapture::TABLE_NAME,
+                $pendingColumns,
+                AdapterInterface::INDEX_TYPE_UNIQUE
+            ),
+            $pendingColumns,
+            AdapterInterface::INDEX_TYPE_UNIQUE
+        );
+    }
+
+    private function createPendingAuthorizationQueueTable(SchemaSetupInterface $setup)
+    {
+        $table = $setup->getConnection()->newTable(PendingAuthorization::TABLE_NAME);
+
+        $table
+            ->addColumn(
+                PendingAuthorizationInterface::ID,
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'identity' => true,
+                    'unsigned' => true,
+                    'primary'  => true,
+                    'nullable' => false
+                ]
+            )
+            ->addColumn(
+                PendingAuthorizationInterface::ORDER_ID,
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'unsigned' => true,
+                    'nullable' => false
+                ]
+            )
+            ->addColumn(
+                PendingAuthorizationInterface::PAYMENT_ID,
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'unsigned' => true,
+                    'nullable' => false
+                ]
+            )
+            ->addColumn(
+                PendingAuthorizationInterface::AUTHORIZATION_ID,
+                Table::TYPE_TEXT,
+                255,
+                [
+                    'nullable' => true
+                ]
+            )
+            ->addColumn(
+                PendingAuthorizationInterface::CREATED_AT,
+                Table::TYPE_DATETIME,
+                null,
+                [
+                    'nullable' => false
+                ]
+            )
+            ->addColumn(
+                PendingAuthorizationInterface::UPDATED_AT,
+                Table::TYPE_DATETIME,
+                null,
+                [
+                    'nullable' => true
+                ]
+            );
+
+        $setup->getConnection()->createTable($table);
+
+        $pendingColumns = [
+            PendingAuthorizationInterface::ORDER_ID,
+            PendingAuthorizationInterface::PAYMENT_ID,
+            PendingAuthorizationInterface::AUTHORIZATION_ID
+        ];
+
+        $setup->getConnection()->addIndex(
+            PendingAuthorization::TABLE_NAME,
+            $setup->getIdxName(
+                PendingAuthorization::TABLE_NAME,
                 $pendingColumns,
                 AdapterInterface::INDEX_TYPE_UNIQUE
             ),
