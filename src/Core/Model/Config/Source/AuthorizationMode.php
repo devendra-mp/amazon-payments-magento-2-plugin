@@ -19,15 +19,19 @@ use Magento\Framework\Option\ArrayInterface;
 
 class AuthorizationMode implements ArrayInterface
 {
+    const ASYNC = 'asynchronous';
+    const SYNC = 'synchronous';
+    const SYNC_THEN_ASYNC = 'synchronous_possible';
+
     /**
      * {@inheritdoc}
      */
     public function toOptionArray()
     {
         return [
-            ['value' => 'synchronous', 'label' => __('Synchronous')],
-            ['value' => 'asynchronous', 'label' => __('Asynchronous')]
-            //['value' => 'synchronous_possible', 'label' => __('Synchronous if Possible')]
+            ['value' => static::SYNC, 'label' => __('Synchronous')],
+            ['value' => static::ASYNC, 'label' => __('Asynchronous')]
+            //['value' => static::SYNC_THEN_ASYNC, 'label' => __('Synchronous if Possible')]
         ];
     }
 }

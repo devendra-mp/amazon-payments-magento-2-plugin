@@ -22,6 +22,7 @@ use Fixtures\Invoice as InvoiceFixture;
 use Fixtures\Order as OrderFixture;
 use Fixtures\Transaction as TransactionFixture;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use PHPUnit_Framework_Assert;
@@ -144,5 +145,15 @@ class OrderContext implements SnippetAcceptingContext
         $lastCreditMemo = $this->creditMemoFixture->getLastForOrder($lastOrder->getId());
 
         PHPUnit_Framework_Assert::assertSame($lastInvoice->getBaseGrandTotal(), $lastCreditMemo->getBaseGrandTotal());
+    }
+
+    /**
+     * @Then the last order for :email should be in payment review
+     */
+    public function theLastOrderForShouldBeInPaymentReview($email)
+    {
+        $lastOrder = $this->orderFixture->getLastOrderForCustomer($email);
+
+        PHPUnit_Framework_Assert::assertSame($lastOrder->getState(), Order::STATE_PAYMENT_REVIEW);
     }
 }

@@ -26,3 +26,11 @@ Feature: As a customer
     And there should be a closed capture for the last order for "amazoncustomer@example.com"
     And there should be a paid invoice for the last order for "amazoncustomer@example.com"
     And amazon should have a complete capture for the last order for "amazoncustomer@example.com"
+
+  @javascript
+  Scenario: customer authorizes payment for an order in asynchronous mode
+    Given orders are authorized asynchronously
+    When I place my order
+    Then "amazoncustomer@example.com" should have placed an order
+    And there should be an open authorization for the last order for "amazoncustomer@example.com"
+    And the last order for "amazoncustomer@example.com" should be in payment review
