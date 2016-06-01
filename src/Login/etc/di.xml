@@ -37,4 +37,7 @@
     <type name="Magento\Sales\Api\OrderCustomerManagementInterface">
         <plugin name="amazon_login_order_customer_service" type="Amazon\Login\Plugin\OrderCustomerManagement" sortOrder="1" />
     </type>
+    <type name="Magento\Customer\Model\Session">
+        <plugin name="amazon_login_customer_session" type="Amazon\Login\Plugin\CustomerSession" sortOrder="1" />
+    </type>
 </config>
