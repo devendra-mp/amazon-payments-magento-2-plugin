@@ -48,6 +48,15 @@ class ConfigContext implements SnippetAcceptingContext
         $this->changeConfig('payment/amazon_payment/payment_action', 'authorize_capture');
     }
 
+
+    /**
+     * @Given orders are authorized asynchronously
+     */
+    public function ordersAreAuthorizedAsynchronously()
+    {
+        $this->changeConfig('payment/amazon_payment/authorization_mode', 'asynchronous');
+    }
+
     protected function changeConfig($path, $value, $scopeType = 'default', $scopeCode = null)
     {
         $this->configManager->changeConfigs(

@@ -16,10 +16,13 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Core\Helper\Data as AmazonCoreHelper;
+use Amazon\Core\Model\Config\Source\AuthorizationMode;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationDetailsResponseFactory;
+use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationResponseFactory;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Amazon\Payment\Domain\AmazonCaptureResponseFactory;
@@ -154,6 +157,11 @@ class Amazon extends AbstractMethod
      */
     protected $amazonAuthorizationDetailsResponseFactory;
 
+    /**
+     * @var AmazonCoreHelper
+     */
+    protected $amazonCoreHelper;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -175,6 +183,7 @@ class Amazon extends AbstractMethod
         AmazonCapture $amazonCaptureValidator,
         AmazonRefund $amazonRefundValidator,
         PaymentManagementInterface $paymentManagement,
+        AmazonCoreHelper $amazonCoreHelper,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -205,6 +214,7 @@ class Amazon extends AbstractMethod
         $this->paymentManagement                         = $paymentManagement;
         $this->amazonPreCaptureValidator                 = $amazonPreCaptureValidator;
         $this->amazonAuthorizationDetailsResponseFactory = $amazonAuthorizationDetailsResponseFactory;
+        $this->amazonCoreHelper                          = $amazonCoreHelper;
     }
 
     /**
@@ -256,9 +266,11 @@ class Amazon extends AbstractMethod
     {
         $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
         $storeId                = $payment->getOrder()->getStoreId();
+        $authMode               = $this->amazonCoreHelper->getAuthorizationMode(ScopeInterface::SCOPE_STORE, $storeId);
+        $async                  = (AuthorizationMode::ASYNC === $authMode);
 
         try {
-            $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, $capture);
+            $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, $capture, $async);
         } catch (SoftDeclineException $e) {
             $this->processSoftDecline();
         } catch (Exception $e) {
@@ -278,16 +290,25 @@ class Amazon extends AbstractMethod
         $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, true);
     }
 
-    protected function _authorize(InfoInterface $payment, $amount, $amazonOrderReferenceId, $storeId, $capture = false)
-    {
+    protected function _authorize(
+        InfoInterface $payment,
+        $amount,
+        $amazonOrderReferenceId,
+        $storeId,
+        $capture = false,
+        $async = false
+    ) {
         $data = [
             'amazon_order_reference_id'  => $amazonOrderReferenceId,
             'authorization_amount'       => $amount,
             'currency_code'              => $this->getCurrencyCode($payment),
             'authorization_reference_id' => $amazonOrderReferenceId . '-A' . time(),
             'capture_now'                => $capture,
-            'transaction_timeout'        => 0
         ];
+
+        if ( ! $async) {
+            $data['transaction_timeout'] = 0;
+        }
 
         $transport = new DataObject($data);
         $this->_eventManager->dispatch(
@@ -307,11 +328,20 @@ class Amazon extends AbstractMethod
 
         $this->amazonAuthorizationValidator->validate($response);
 
-        if ($capture) {
+        $this->setAuthorizeTransaction($payment, $response, $capture);
+    }
+
+    protected function setAuthorizeTransaction(InfoInterface $payment, AmazonAuthorizationResponse $response, $capture)
+    {
+        $pending       = (AmazonAuthorizationStatus::STATE_PENDING == $response->getStatus()->getState());
+        $transactionId = $response->getAuthorizeTransactionId();
+
+        $payment->setIsTransactionPending($pending);
+        $payment->setIsTransactionClosed(false);
+
+        if ( ! $pending && $capture) {
             $transactionId = $response->getCaptureTransactionId();
-        } else {
-            $transactionId = $response->getAuthorizeTransactionId();
-            $payment->setIsTransactionClosed(false);
+            $payment->setIsTransactionClosed(true);
         }
 
         $payment->setTransactionId($transactionId);

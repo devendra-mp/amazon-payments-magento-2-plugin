@@ -44,6 +44,7 @@ class AmazonAuthorization
                         return true;
                 }
             case AmazonAuthorizationStatus::STATE_OPEN:
+            case AmazonAuthorizationStatus::STATE_PENDING:
                 return true;
             case AmazonAuthorizationStatus::STATE_DECLINED:
                 $this->throwDeclinedExceptionForStatus($status);
