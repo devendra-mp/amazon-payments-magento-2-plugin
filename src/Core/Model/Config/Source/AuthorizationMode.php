@@ -26,9 +26,8 @@ class AuthorizationMode implements ArrayInterface
     {
         return [
             ['value' => 'synchronous', 'label' => __('Synchronous')],
-            ['value' => 'asynchronous', 'label' => __('Asynchronous')],
-            ['value' => 'synchronous_possible', 'label' => __('Synchronous if Possible')],
-            ['value' => 'none', 'label' => __('None')],
+            ['value' => 'asynchronous', 'label' => __('Asynchronous')]
+            //['value' => 'synchronous_possible', 'label' => __('Synchronous if Possible')]
         ];
     }
 }
