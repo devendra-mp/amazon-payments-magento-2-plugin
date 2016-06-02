@@ -27,7 +27,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
-use Magento\Sales\Api\Data\TransactionInterface;
 
 class UpgradeSchema implements UpgradeSchemaInterface
 {
@@ -195,7 +194,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($context->getVersion(), '1.7.0', '<')) {
             $this->addColumnsToPendingCaptureQueue($setup);
-            $this->addForeignKeyToPendingCaptureQueue($setup);
         }
     }
 
@@ -222,34 +220,31 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'comment'  => 'payment id'
             ]
         );
-    }
 
-    private function addForeignKeyToPendingCaptureQueue(SchemaSetupInterface $setup)
-    {
+        $setup->getConnection()->dropIndex(
+            PendingCapture::TABLE_NAME,
+            $setup->getIdxName(
+                PendingCapture::TABLE_NAME,
+                [PendingCaptureInterface::CAPTURE_ID],
+                AdapterInterface::INDEX_TYPE_UNIQUE
+            )
+        );
+
         $pendingColumns = [
             PendingCaptureInterface::ORDER_ID,
             PendingCaptureInterface::PAYMENT_ID,
             PendingCaptureInterface::CAPTURE_ID
         ];
 
-        $transactionColumns = [
-            TransactionInterface::ORDER_ID,
-            TransactionInterface::PAYMENT_ID,
-            TransactionInterface::TXN_ID
-        ];
-
-        $setup->getConnection()->addForeignKey(
-            $setup->getFkName(
-                PendingCapture::TABLE_NAME,
-                implode('_', $pendingColumns),
-                'sales_payment_transaction',
-                implode('_', $transactionColumns)
-            ),
+        $setup->getConnection()->addIndex(
             PendingCapture::TABLE_NAME,
-            new \Zend_Db_Expr(vsprintf('`%s`,`%s`,`%s`', $pendingColumns)),
-            'sales_payment_transaction',
-            new \Zend_Db_Expr(vsprintf('`%s`,`%s`,`%s`', $transactionColumns)),
-            AdapterInterface::FK_ACTION_CASCADE
+            $setup->getIdxName(
+                PendingCapture::TABLE_NAME,
+                $pendingColumns,
+                AdapterInterface::INDEX_TYPE_UNIQUE
+            ),
+            $pendingColumns,
+            AdapterInterface::INDEX_TYPE_UNIQUE
         );
     }
 
