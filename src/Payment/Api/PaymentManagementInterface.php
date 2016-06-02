@@ -32,17 +32,21 @@ interface PaymentManagementInterface
      * Queue pending capture
      *
      * @param AmazonCaptureResponse $response
+     * @param integer               $paymentId
+     * @param integer               $orderId
      *
      * @return void
      */
-    public function queuePendingCapture(AmazonCaptureResponse $response);
+    public function queuePendingCapture(AmazonCaptureResponse $response, $paymentId, $orderId);
 
     /**
      * Close transaction
      *
-     * @param string $transactionId
+     * @param string  $transactionId
+     * @param integer $paymentId
+     * @param integer $orderId
      *
      * @return void
      */
-    public function closeTransaction($transactionId);
+    public function closeTransaction($transactionId, $paymentId, $orderId);
 }

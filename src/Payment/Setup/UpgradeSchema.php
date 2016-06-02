@@ -27,6 +27,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 
 class UpgradeSchema implements UpgradeSchemaInterface
 {
@@ -101,10 +102,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $setup->getTable(QuoteLink::TABLE_NAME),
                 'sandbox_simulation_reference',
                 [
-                    'type' => Table::TYPE_TEXT,
-                    'length' => 255,
+                    'type'     => Table::TYPE_TEXT,
+                    'length'   => 255,
                     'nullable' => true,
-                    'comment' => 'Sandbox simulation reference'
+                    'comment'  => 'Sandbox simulation reference'
                 ]
             );
 
@@ -118,9 +119,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 [
                     'unsigned' => true,
                     'nullable' => false,
-                    'default' => 0,
-                    'type' => Table::TYPE_SMALLINT,
-                    'comment' => 'Quote confirmed with Amazon'
+                    'default'  => 0,
+                    'type'     => Table::TYPE_SMALLINT,
+                    'comment'  => 'Quote confirmed with Amazon'
                 ]
             );
         }
@@ -158,7 +159,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 )
                 ->addIndex(
                     $setup->getIdxName(
-                        PendingCapture::TABLE_NAME, [PendingCaptureInterface::CAPTURE_ID], AdapterInterface::INDEX_TYPE_UNIQUE
+                        PendingCapture::TABLE_NAME, [PendingCaptureInterface::CAPTURE_ID],
+                        AdapterInterface::INDEX_TYPE_UNIQUE
                     ),
                     [PendingCaptureInterface::CAPTURE_ID],
                     ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
@@ -190,6 +192,65 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 AdapterInterface::FK_ACTION_CASCADE
             );
         }
+
+        if (version_compare($context->getVersion(), '1.7.0', '<')) {
+            $this->addColumnsToPendingCaptureQueue($setup);
+            $this->addForeignKeyToPendingCaptureQueue($setup);
+        }
+    }
+
+    private function addColumnsToPendingCaptureQueue(SchemaSetupInterface $setup)
+    {
+        $setup->getConnection()->addColumn(
+            $setup->getTable(PendingCapture::TABLE_NAME),
+            'order_id',
+            [
+                'unsigned' => true,
+                'nullable' => false,
+                'type'     => Table::TYPE_INTEGER,
+                'comment'  => 'order id'
+            ]
+        );
+
+        $setup->getConnection()->addColumn(
+            $setup->getTable(PendingCapture::TABLE_NAME),
+            'payment_id',
+            [
+                'unsigned' => true,
+                'nullable' => false,
+                'type'     => Table::TYPE_INTEGER,
+                'comment'  => 'payment id'
+            ]
+        );
+    }
+
+    private function addForeignKeyToPendingCaptureQueue(SchemaSetupInterface $setup)
+    {
+        $pendingColumns = [
+            PendingCaptureInterface::ORDER_ID,
+            PendingCaptureInterface::PAYMENT_ID,
+            PendingCaptureInterface::CAPTURE_ID
+        ];
+
+        $transactionColumns = [
+            TransactionInterface::ORDER_ID,
+            TransactionInterface::PAYMENT_ID,
+            TransactionInterface::TXN_ID
+        ];
+
+        $setup->getConnection()->addForeignKey(
+            $setup->getFkName(
+                PendingCapture::TABLE_NAME,
+                implode('_', $pendingColumns),
+                'sales_payment_transaction',
+                implode('_', $transactionColumns)
+            ),
+            PendingCapture::TABLE_NAME,
+            new \Zend_Db_Expr(vsprintf('`%s`,`%s`,`%s`', $pendingColumns)),
+            'sales_payment_transaction',
+            new \Zend_Db_Expr(vsprintf('`%s`,`%s`,`%s`', $transactionColumns)),
+            AdapterInterface::FK_ACTION_CASCADE
+        );
     }
 
     /**
@@ -200,7 +261,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
     {
         $row = $this->eavSetup->getAttribute('customer_address', 'street', 'multiline_count');
 
-        if ($row === false || !is_numeric($row)) {
+        if ($row === false || ! is_numeric($row)) {
             throw new LocalizedException(__('Could not find the "multiline_count" config of the "street" Customer address attribute.'));
         }
 

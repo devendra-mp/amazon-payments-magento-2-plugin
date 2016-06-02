@@ -22,6 +22,8 @@ interface PendingCaptureInterface
 {
     const ID = 'entity_id';
     const CAPTURE_ID = 'capture_id';
+    const ORDER_ID = 'order_id';
+    const PAYMENT_ID = 'payment_id';
     const CREATED_AT = 'created_at';
 
     /**
@@ -48,6 +50,38 @@ interface PendingCaptureInterface
     public function setCaptureId($captureId);
 
     /**
+     * Get payment id
+     *
+     * @return integer
+     */
+    public function getPaymentId();
+
+    /**
+     * Set payment id
+     *
+     * @param integer $paymentId
+     *
+     * @return $this
+     */
+    public function setPaymentId($paymentId);
+
+    /**
+     * Get order id
+     *
+     * @return integer
+     */
+    public function getOrderId();
+
+    /**
+     * Set order id
+     *
+     * @param integer $orderId
+     *
+     * @return $this
+     */
+    public function setOrderId($orderId);
+
+    /**
      * Get created at
      *
      * @return string
@@ -58,10 +92,11 @@ interface PendingCaptureInterface
      * Set created at
      *
      * @param string $createdAt
+     *
      * @return $this
      */
     public function setCreatedAt($createdAt);
-    
+
     /**
      * Save pending capture
      *
@@ -81,8 +116,9 @@ interface PendingCaptureInterface
     /**
      * Load pending capture data
      *
-     * @param integer $modelId
+     * @param integer     $modelId
      * @param null|string $field
+     *
      * @return $this
      */
     public function load($modelId, $field = null);

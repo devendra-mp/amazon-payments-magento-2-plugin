@@ -92,6 +92,38 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
     /**
      * {@inheritDoc}
      */
+    public function getOrderId()
+    {
+        return $this->getData(PendingCaptureInterface::ORDER_ID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setOrderId($orderId)
+    {
+        return $this->setData(PendingCaptureInterface::ORDER_ID, $orderId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPaymentId()
+    {
+        return $this->getData(PendingCaptureInterface::PAYMENT_ID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPaymentId($paymentId)
+    {
+        return $this->setData(PendingCaptureInterface::PAYMENT_ID, $paymentId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setCreatedAt($createdAt)
     {
         return $this->setData(PendingCaptureInterface::CREATED_AT, $createdAt);

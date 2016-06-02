@@ -273,7 +273,7 @@ class Amazon extends AbstractMethod
         $authorizationId,
         $storeId
     ) {
-        $this->paymentManagement->closeTransaction($authorizationId);
+        $this->paymentManagement->closeTransaction($authorizationId, $payment->getOrder()-getId(), $payment->getId());
         $payment->setParentTransactionId(null);
         $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, true);
     }
@@ -377,7 +377,7 @@ class Amazon extends AbstractMethod
             } catch (CapturePendingException $e) {
                 $payment->setIsTransactionPending(true);
                 $payment->setIsTransactionClosed(false);
-                $this->paymentManagement->queuePendingCapture($response);
+                $this->paymentManagement->queuePendingCapture($response, $payment->getId(), $payment->getOrder()->getId());
             } finally {
                 if (isset($response)) {
                     $payment->setTransactionId($response->getTransactionId());
