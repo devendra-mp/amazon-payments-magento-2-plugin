@@ -15,7 +15,9 @@
  */
 namespace Amazon\Payment\Api;
 
+use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonCaptureResponse;
+use Magento\Sales\Api\Data\OrderInterface;
 
 interface PaymentManagementInterface
 {
@@ -29,6 +31,15 @@ interface PaymentManagementInterface
     public function updateCapture($pendingCaptureId);
 
     /**
+     * Update authorization
+     *
+     * @param integer $pendingAuthorizationId
+     *
+     * @return void
+     */
+    public function updateAuthorization($pendingAuthorizationId);
+
+    /**
      * Queue pending capture
      *
      * @param AmazonCaptureResponse $response
@@ -38,6 +49,16 @@ interface PaymentManagementInterface
      * @return void
      */
     public function queuePendingCapture(AmazonCaptureResponse $response, $paymentId, $orderId);
+
+    /**
+     * Queue pending authorization
+     *
+     * @param AmazonAuthorizationResponse $response
+     * @param OrderInterface              $order
+     *
+     * @return void
+     */
+    public function queuePendingAuthorization(AmazonAuthorizationResponse $response, OrderInterface $order);
 
     /**
      * Close transaction

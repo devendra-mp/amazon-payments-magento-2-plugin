@@ -10,5 +10,8 @@
         <job name="get_amazon_capture_updates" instance="Amazon\Payment\Cron\GetAmazonCaptureUpdates" method="execute">
             <schedule>*/5 * * * *</schedule>
         </job>
+        <job name="get_amazon_authorization_updates" instance="Amazon\Payment\Cron\GetAmazonAuthorizationUpdates" method="execute">
+            <schedule>*/5 * * * *</schedule>
+        </job>
     </group>
 </config>

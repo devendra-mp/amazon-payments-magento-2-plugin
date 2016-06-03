@@ -331,8 +331,11 @@ class Amazon extends AbstractMethod
         $this->setAuthorizeTransaction($payment, $response, $capture);
     }
 
-    protected function setAuthorizeTransaction(InfoInterface $payment, AmazonAuthorizationResponse $response, $capture)
-    {
+    protected function setAuthorizeTransaction(
+        InfoInterface $payment,
+        AmazonAuthorizationResponse $response,
+        $capture
+    ) {
         $pending       = (AmazonAuthorizationStatus::STATE_PENDING == $response->getStatus()->getState());
         $transactionId = $response->getAuthorizeTransactionId();
 
@@ -342,6 +345,13 @@ class Amazon extends AbstractMethod
         if ( ! $pending && $capture) {
             $transactionId = $response->getCaptureTransactionId();
             $payment->setIsTransactionClosed(true);
+        }
+
+        if ($pending) {
+            $this->paymentManagement->queuePendingAuthorization(
+                $response,
+                $payment->getOrder()
+            );
         }
 
         $payment->setTransactionId($transactionId);
