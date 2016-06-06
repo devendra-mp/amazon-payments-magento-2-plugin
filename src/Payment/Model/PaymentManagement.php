@@ -16,15 +16,19 @@
 namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Payment\Api\Data\PendingAuthorizationInterface;
+use Amazon\Payment\Api\Data\PendingAuthorizationInterfaceFactory;
 use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Api\Data\PendingCaptureInterfaceFactory;
-use Amazon\Payment\Api\Data\PendingAuthorizationInterfaceFactory;
 use Amazon\Payment\Api\PaymentManagementInterface;
+use Amazon\Payment\Domain\AmazonAuthorizationDetailsResponseFactory;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonCaptureDetailsResponse;
 use Amazon\Payment\Domain\AmazonCaptureDetailsResponseFactory;
 use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
+use Amazon\Payment\Domain\Validator\AmazonAuthorization;
+use Amazon\Payment\Exception\SoftDeclineException;
 use Exception;
 use Magento\Backend\Model\UrlInterface;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
@@ -98,25 +102,39 @@ class PaymentManagement implements PaymentManagementInterface
     protected $pendingAuthorizationFactory;
 
     /**
+     * @var AmazonAuthorizationDetailsResponseFactory
+     */
+    protected $amazonAuthorizationDetailsResponseFactory;
+
+    /**
+     * @var AmazonAuthorization
+     */
+    protected $amazonAuthorizationValidator;
+
+    /**
      * PaymentManagement constructor.
      *
-     * @param PendingCaptureInterfaceFactory       $pendingCaptureFactory
-     * @param PendingAuthorizationInterfaceFactory $pendingAuthorizationFactory
-     * @param ClientFactoryInterface               $clientFactory
-     * @param AmazonCaptureDetailsResponseFactory  $amazonCaptureDetailsResponseFactory
-     * @param NotifierInterface                    $notifier
-     * @param UrlInterface                         $urlBuilder
-     * @param SearchCriteriaBuilderFactory         $searchCriteriaBuilderFactory
-     * @param OrderPaymentRepositoryInterface      $orderPaymentRepository
-     * @param OrderRepositoryInterface             $orderRepository
-     * @param TransactionRepositoryInterface       $transactionRepository
-     * @param InvoiceRepositoryInterface           $invoiceRepository
+     * @param PendingCaptureInterfaceFactory            $pendingCaptureFactory
+     * @param PendingAuthorizationInterfaceFactory      $pendingAuthorizationFactory
+     * @param ClientFactoryInterface                    $clientFactory
+     * @param AmazonCaptureDetailsResponseFactory       $amazonCaptureDetailsResponseFactory
+     * @param AmazonAuthorizationDetailsResponseFactory $amazonAuthorizationDetailsResponseFactory
+     * @param AmazonAuthorization                       $amazonAuthorizationValidator
+     * @param NotifierInterface                         $notifier
+     * @param UrlInterface                              $urlBuilder
+     * @param SearchCriteriaBuilderFactory              $searchCriteriaBuilderFactory
+     * @param OrderPaymentRepositoryInterface           $orderPaymentRepository
+     * @param OrderRepositoryInterface                  $orderRepository
+     * @param TransactionRepositoryInterface            $transactionRepository
+     * @param InvoiceRepositoryInterface                $invoiceRepository
      */
     public function __construct(
         PendingCaptureInterfaceFactory $pendingCaptureFactory,
         PendingAuthorizationInterfaceFactory $pendingAuthorizationFactory,
         ClientFactoryInterface $clientFactory,
         AmazonCaptureDetailsResponseFactory $amazonCaptureDetailsResponseFactory,
+        AmazonAuthorizationDetailsResponseFactory $amazonAuthorizationDetailsResponseFactory,
+        AmazonAuthorization $amazonAuthorizationValidator,
         NotifierInterface $notifier,
         UrlInterface $urlBuilder,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
@@ -125,17 +143,19 @@ class PaymentManagement implements PaymentManagementInterface
         TransactionRepositoryInterface $transactionRepository,
         InvoiceRepositoryInterface $invoiceRepository
     ) {
-        $this->clientFactory                       = $clientFactory;
-        $this->pendingCaptureFactory               = $pendingCaptureFactory;
-        $this->pendingAuthorizationFactory         = $pendingAuthorizationFactory;
-        $this->amazonCaptureDetailsResponseFactory = $amazonCaptureDetailsResponseFactory;
-        $this->notifier                            = $notifier;
-        $this->urlBuilder                          = $urlBuilder;
-        $this->searchCriteriaBuilderFactory        = $searchCriteriaBuilderFactory;
-        $this->orderPaymentRepository              = $orderPaymentRepository;
-        $this->orderRepository                     = $orderRepository;
-        $this->transactionRepository               = $transactionRepository;
-        $this->invoiceRepository                   = $invoiceRepository;
+        $this->clientFactory                             = $clientFactory;
+        $this->pendingCaptureFactory                     = $pendingCaptureFactory;
+        $this->pendingAuthorizationFactory               = $pendingAuthorizationFactory;
+        $this->amazonCaptureDetailsResponseFactory       = $amazonCaptureDetailsResponseFactory;
+        $this->amazonAuthorizationDetailsResponseFactory = $amazonAuthorizationDetailsResponseFactory;
+        $this->amazonAuthorizationValidator              = $amazonAuthorizationValidator;
+        $this->notifier                                  = $notifier;
+        $this->urlBuilder                                = $urlBuilder;
+        $this->searchCriteriaBuilderFactory              = $searchCriteriaBuilderFactory;
+        $this->orderPaymentRepository                    = $orderPaymentRepository;
+        $this->orderRepository                           = $orderRepository;
+        $this->transactionRepository                     = $transactionRepository;
+        $this->invoiceRepository                         = $invoiceRepository;
     }
 
     /**
@@ -151,7 +171,7 @@ class PaymentManagement implements PaymentManagementInterface
 
             if ($pendingAuthorization->getOrderId()) {
                 if ($pendingAuthorization->getAuthorizationId()) {
-                    //process current authorization
+                    $this->processUpdateAuthorization($pendingAuthorization);
                 } else {
                     //check for order state change and open new authorization
                 }
@@ -178,11 +198,9 @@ class PaymentManagement implements PaymentManagementInterface
                 $order   = $this->orderRepository->get($pendingCapture->getOrderId());
                 $payment = $this->orderPaymentRepository->get($pendingCapture->getPaymentId());
 
-                $responseParser = $this->clientFactory->create($order->getStoreId())->getCaptureDetails(
-                    [
-                        'amazon_capture_id' => $pendingCapture->getCaptureId()
-                    ]
-                );
+                $responseParser = $this->clientFactory->create($order->getStoreId())->getCaptureDetails([
+                    'amazon_capture_id' => $pendingCapture->getCaptureId()
+                ]);
 
                 $response = $this->amazonCaptureDetailsResponseFactory->create(['response' => $responseParser]);
                 $this->processUpdateCaptureResponse($response, $pendingCapture, $payment, $order);
@@ -223,6 +241,34 @@ class PaymentManagement implements PaymentManagementInterface
     public function closeTransaction($transactionId, $paymentId, $orderId)
     {
         $this->getTransaction($transactionId, $paymentId, $orderId)->setIsClosed(1)->save();
+    }
+
+    protected function processUpdateAuthorization(PendingAuthorizationInterface $pendingAuthorization)
+    {
+        $order           = $this->orderRepository->get($pendingAuthorization->getOrderId());
+        $payment         = $this->orderPaymentRepository->get($pendingAuthorization->getPaymentId());
+        $authorizationId = $pendingAuthorization->getAuthorizationId();
+
+        $responseParser = $this->clientFactory->create($order->getStoreId())->getAuthorizationDetails([
+            'amazon_authorization_id' => $authorizationId
+        ]);
+
+        $response = $this->amazonAuthorizationDetailsResponseFactory->create([
+            'response' => $responseParser
+        ]);
+
+        try {
+            $this->amazonAuthorizationValidator->validate($response);
+        } catch (SoftDeclineException $e) {
+            $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+            $pendingAuthorization->setAuthorizationId(null);
+            $pendingAuthorization->save();
+        } catch (\Exception $e) {
+            $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+            $this->setOnHold($order);
+            $order->save();
+            $pendingAuthorization->delete();
+        }
     }
 
     protected function processUpdateCaptureResponse(
@@ -271,17 +317,16 @@ class PaymentManagement implements PaymentManagementInterface
         OrderPaymentInterface $payment,
         OrderInterface $order
     ) {
-        $transactionId   = $pendingCapture->getCaptureId();
-        $state           = Order::STATE_HOLDED;
+        $transactionId = $pendingCapture->getCaptureId();
+
         $transaction     = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
         $invoice         = $this->getInvoice($transactionId, $order->getId());
         $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
         $message         = __('Declined amount of %1 online', $formattedAmount);
 
         $invoice->cancel();
-
+        $this->setOnHold($order);
         $order->addRelatedObject($invoice);
-        $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
         $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
         $order->save();
 
@@ -351,5 +396,11 @@ class PaymentManagement implements PaymentManagementInterface
         }
 
         throw new NoSuchEntityException();
+    }
+
+    protected function setOnHold(OrderInterface $order)
+    {
+        $state = Order::STATE_HOLDED;
+        $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
     }
 }
