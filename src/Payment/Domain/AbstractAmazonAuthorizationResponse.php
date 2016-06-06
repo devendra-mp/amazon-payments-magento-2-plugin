@@ -36,6 +36,11 @@ abstract class AbstractAmazonAuthorizationResponse
     protected $authorizeTransactionId;
 
     /**
+     * @var bool
+     */
+    protected $captureNow = false;
+
+    /**
      * AmazonAuthorizationResponse constructor.
      *
      * @param ResponseInterface $response
@@ -64,6 +69,10 @@ abstract class AbstractAmazonAuthorizationResponse
 
         if (isset($details['AmazonAuthorizationId'])) {
             $this->authorizeTransactionId = $details['AmazonAuthorizationId'];
+        }
+
+        if (isset($details['CaptureNow'])) {
+            $this->captureNow = ('true' === $details['CaptureNow']);
         }
     }
 
@@ -95,6 +104,16 @@ abstract class AbstractAmazonAuthorizationResponse
     public function getCaptureTransactionId()
     {
         return $this->captureTransactionId;
+    }
+
+    public function hasCapture()
+    {
+        return $this->captureNow;
+    }
+
+    public function isPending()
+    {
+        return (AmazonAuthorizationStatus::STATE_PENDING === $this->getStatus()->getState());
     }
 
     /**

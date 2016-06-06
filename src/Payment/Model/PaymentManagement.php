@@ -197,6 +197,7 @@ class PaymentManagement implements PaymentManagementInterface
             if ($pendingCapture->getCaptureId()) {
                 $order   = $this->orderRepository->get($pendingCapture->getOrderId());
                 $payment = $this->orderPaymentRepository->get($pendingCapture->getPaymentId());
+                $order->setPayment($payment);
 
                 $responseParser = $this->clientFactory->create($order->getStoreId())->getCaptureDetails([
                     'amazon_capture_id' => $pendingCapture->getCaptureId()
@@ -245,8 +246,9 @@ class PaymentManagement implements PaymentManagementInterface
 
     protected function processUpdateAuthorization(PendingAuthorizationInterface $pendingAuthorization)
     {
-        $order           = $this->orderRepository->get($pendingAuthorization->getOrderId());
-        $payment         = $this->orderPaymentRepository->get($pendingAuthorization->getPaymentId());
+        $order   = $this->orderRepository->get($pendingAuthorization->getOrderId());
+        $payment = $this->orderPaymentRepository->get($pendingAuthorization->getPaymentId());
+        $order->setPayment($payment);
         $authorizationId = $pendingAuthorization->getAuthorizationId();
 
         $responseParser = $this->clientFactory->create($order->getStoreId())->getAuthorizationDetails([
@@ -257,18 +259,106 @@ class PaymentManagement implements PaymentManagementInterface
             'response' => $responseParser
         ]);
 
+        $capture = $response->hasCapture();
+
         try {
             $this->amazonAuthorizationValidator->validate($response);
+
+            if ( ! $response->isPending()) {
+                $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $authorizationId,
+                    $capture);
+            }
         } catch (SoftDeclineException $e) {
-            $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
-            $pendingAuthorization->setAuthorizationId(null);
-            $pendingAuthorization->save();
+            $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $authorizationId, $capture);
         } catch (\Exception $e) {
-            $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
-            $this->setOnHold($order);
-            $order->save();
-            $pendingAuthorization->delete();
+            $this->hardDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $authorizationId, $capture);
         }
+    }
+
+
+    protected function completePendingAuthorization(
+        OrderInterface $order,
+        OrderPaymentInterface $payment,
+        PendingAuthorizationInterface $pendingAuthorization,
+        $authorizationId,
+        $capture
+    ) {
+        $this->setProcessing($order);
+
+
+        if ($capture) {
+            $invoice = $this->getInvoiceAndSetPaid($authorizationId, $order);
+            $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+            $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
+            $message         = __('Captured amount of %1 online', $formattedAmount);
+        } else {
+            $formattedAmount = $order->getBaseCurrency()->formatTxt($payment->getBaseAmountAuthorized());
+            $message         = __('Authorized amount of %1 online', $formattedAmount);
+        }
+
+        $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
+        $payment->addTransactionCommentsToOrder($transaction, $message);
+
+        $order->save();
+        $pendingAuthorization->delete();
+    }
+
+
+    protected function softDeclinePendingAuthorization(
+        OrderInterface $order,
+        OrderPaymentInterface $payment,
+        PendingAuthorizationInterface $pendingAuthorization,
+        $authorizationId,
+        $capture
+    ) {
+        if ($capture) {
+            $invoice = $this->getInvoiceAndSetCancelled($authorizationId, $order);
+            $payment->cancelInvoice($invoice);
+            $this->setPaymentReview($order);
+            $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
+            $message         = __('Declined amount of %1 online', $formattedAmount);
+        } else {
+            $formattedAmount = $order->getBaseCurrency()->formatTxt($payment->getBaseAmountAuthorized());
+            $message         = __('Declined amount of %1 online', $formattedAmount);
+        }
+
+        $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
+        $payment->addTransactionCommentsToOrder($transaction, $message);
+        $payment->setAmountAuthorized(null);
+        $payment->setBaseAmountAuthorized(null);
+
+        $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+        $pendingAuthorization->setAuthorizationId(null);
+        $pendingAuthorization->save();
+        $order->save();
+    }
+
+    protected function hardDeclinePendingAuthorization(
+        OrderInterface $order,
+        OrderPaymentInterface $payment,
+        PendingAuthorizationInterface $pendingAuthorization,
+        $authorizationId,
+        $capture
+    ) {
+        if ($capture) {
+            $invoice = $this->getInvoiceAndSetCancelled($authorizationId, $order);
+            $payment->cancelInvoice($invoice);
+            $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
+            $message         = __('Declined amount of %1 online', $formattedAmount);
+        } else {
+            $formattedAmount = $order->getBaseCurrency()->formatTxt($payment->getBaseAmountAuthorized());
+            $message         = __('Declined amount of %1 online', $formattedAmount);
+        }
+
+        $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
+        $payment->addTransactionCommentsToOrder($transaction, $message);
+        $payment->setAmountAuthorized(null);
+        $payment->setBaseAmountAuthorized(null);
+
+        $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+        $this->setOnHold($order);
+        $pendingAuthorization->delete();
+        $order->save();
     }
 
     protected function processUpdateCaptureResponse(
@@ -295,17 +385,14 @@ class PaymentManagement implements PaymentManagementInterface
         OrderInterface $order
     ) {
         $transactionId   = $pendingCapture->getCaptureId();
-        $state           = Order::STATE_PROCESSING;
         $transaction     = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
-        $invoice         = $this->getInvoice($transactionId, $order->getId());
+        $invoice         = $this->getInvoice($transactionId, $order);
         $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
         $message         = __('Captured amount of %1 online', $formattedAmount);
 
-        $invoice->pay();
-
-        $order->addRelatedObject($invoice);
-        $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
-        $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
+        $this->getInvoiceAndSetPaid($transactionId, $order);
+        $this->setProcessing($order);
+        $payment->addTransactionCommentsToOrder($transaction, $message);
         $order->save();
 
         $this->closeTransaction($transactionId, $payment->getId(), $order->getId());
@@ -317,17 +404,16 @@ class PaymentManagement implements PaymentManagementInterface
         OrderPaymentInterface $payment,
         OrderInterface $order
     ) {
-        $transactionId = $pendingCapture->getCaptureId();
-
+        $transactionId   = $pendingCapture->getCaptureId();
         $transaction     = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
-        $invoice         = $this->getInvoice($transactionId, $order->getId());
+        $invoice         = $this->getInvoice($transactionId, $order);
         $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
         $message         = __('Declined amount of %1 online', $formattedAmount);
 
-        $invoice->cancel();
+        $this->getInvoiceAndSetCancelled($transactionId, $order);
+        $payment->cancelInvoice($invoice);
         $this->setOnHold($order);
-        $order->addRelatedObject($invoice);
-        $order->getPayment()->addTransactionCommentsToOrder($transaction, $message);
+        $payment->addTransactionCommentsToOrder($transaction, $message);
         $order->save();
 
         $this->closeTransaction($transactionId, $payment->getId(), $order->getId());
@@ -372,7 +458,7 @@ class PaymentManagement implements PaymentManagementInterface
         throw new NoSuchEntityException();
     }
 
-    protected function getInvoice($transactionId, $orderId)
+    protected function getInvoice($transactionId, OrderInterface $order)
     {
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
 
@@ -381,7 +467,7 @@ class PaymentManagement implements PaymentManagementInterface
         );
 
         $searchCriteriaBuilder->addFilter(
-            InvoiceInterface::ORDER_ID, $orderId
+            InvoiceInterface::ORDER_ID, $order->getId()
         );
 
         $searchCriteria = $searchCriteriaBuilder
@@ -392,15 +478,50 @@ class PaymentManagement implements PaymentManagementInterface
         $invoiceList = $this->invoiceRepository->getList($searchCriteria);
 
         if (count($items = $invoiceList->getItems())) {
-            return current($items);
+            $invoice = current($items);
+            $invoice->setOrder($order);
+            return $invoice;
         }
 
         throw new NoSuchEntityException();
     }
 
+    protected function getInvoiceAndSetPaid($transactionId, OrderInterface $order)
+    {
+        $invoice = $this->getInvoice($transactionId, $order);
+        $invoice->pay();
+        $order->addRelatedObject($invoice);
+
+        return $invoice;
+    }
+
+    protected function getInvoiceAndSetCancelled($transactionId, OrderInterface $order)
+    {
+        $invoice = $this->getInvoice($transactionId, $order);
+        $invoice->cancel();
+        $order->addRelatedObject($invoice);
+
+        return $invoice;
+    }
+
     protected function setOnHold(OrderInterface $order)
     {
-        $state = Order::STATE_HOLDED;
-        $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
+        $this->setOrderState($order, Order::STATE_HOLDED);
+    }
+
+    protected function setProcessing(OrderInterface $order)
+    {
+        $this->setOrderState($order, Order::STATE_PROCESSING);
+    }
+
+    protected function setPaymentReview(OrderInterface $order)
+    {
+        $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
+    }
+
+    protected function setOrderState(OrderInterface $order, $state)
+    {
+        $status = $order->getConfig()->getStateDefaultStatus($state);
+        $order->setState($state)->setStatus($status);
     }
 }
