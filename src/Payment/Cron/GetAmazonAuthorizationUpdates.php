@@ -49,7 +49,7 @@ class GetAmazonAuthorizationUpdates
     {
         $collection = $this->collectionFactory
             ->create()
-            ->addOrder(PendingAuthorizationInterface::CREATED_AT, Collection::SORT_ORDER_ASC)
+            ->addOrder(PendingAuthorizationInterface::UPDATED_AT, Collection::SORT_ORDER_ASC)
             ->setPageSize($this->limit)
             ->setCurPage(1);
 

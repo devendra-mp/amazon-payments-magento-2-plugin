@@ -15,7 +15,7 @@
  */
 namespace Amazon\Payment\Domain\Validator;
 
-use Amazon\Payment\Domain\AmazonCaptureResponse;
+use Amazon\Payment\Domain\AbstractAmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Amazon\Payment\Exception\CapturePendingException;
 use Magento\Framework\Exception\StateException;
@@ -25,13 +25,13 @@ class AmazonCapture
     /**
      * Validate AmazonCaptureResponse
      *
-     * @param AmazonCaptureResponse $response
+     * @param AbstractAmazonCaptureResponse $response
      *
      * @return bool
      * @throws CapturePendingException
      * @throws StateException
      */
-    public function validate(AmazonCaptureResponse $response)
+    public function validate(AbstractAmazonCaptureResponse $response)
     {
         $status = $response->getStatus();
 

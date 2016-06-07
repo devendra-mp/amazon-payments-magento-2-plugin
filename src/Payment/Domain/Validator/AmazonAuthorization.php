@@ -15,7 +15,7 @@
  */
 namespace Amazon\Payment\Domain\Validator;
 
-use Amazon\Payment\Domain\AmazonAuthorizationResponse;
+use Amazon\Payment\Domain\AbstractAmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Amazon\Payment\Exception\HardDeclineException;
 use Amazon\Payment\Exception\SoftDeclineException;
@@ -26,14 +26,14 @@ class AmazonAuthorization
     /**
      * Validate AmazonAuthorizationResponse
      *
-     * @param AmazonAuthorizationResponse $response
+     * @param AbstractAmazonAuthorizationResponse $response
      *
      * @return bool
      * @throws HardDeclineException
      * @throws SoftDeclineException
      * @throws StateException
      */
-    public function validate(AmazonAuthorizationResponse $response)
+    public function validate(AbstractAmazonAuthorizationResponse $response)
     {
         $status = $response->getStatus();
 
