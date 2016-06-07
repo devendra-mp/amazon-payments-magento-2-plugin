@@ -273,7 +273,7 @@ class Amazon extends AbstractMethod
         $authorizationId,
         $storeId
     ) {
-        $this->paymentManagement->closeTransaction($authorizationId, $payment->getOrder()->getId(), $payment->getId());
+        $this->paymentManagement->closeTransaction($authorizationId, $payment->getId(), $payment->getOrder()->getId());
         $payment->setParentTransactionId(null);
         $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, true);
     }
