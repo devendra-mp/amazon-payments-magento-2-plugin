@@ -502,7 +502,7 @@ class Data extends AbstractHelper
 
         if (in_array($context, ['authorization', 'authorization_capture'])) {
             $simulationStrings['Authorization:Declined:InvalidPaymentMethod']
-                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod"}}';
+                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod", "PaymentMethodUpdateTimeInMins":1}}';
             $simulationStrings['Authorization:Declined:AmazonRejected']
                 = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}';
             $simulationStrings['Authorization:Declined:TransactionTimedOut']
