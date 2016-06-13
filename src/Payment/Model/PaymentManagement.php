@@ -391,6 +391,7 @@ class PaymentManagement implements PaymentManagementInterface
         $message         = __('Captured amount of %1 online', $formattedAmount);
 
         $this->getInvoiceAndSetPaid($transactionId, $order);
+        $payment->setDataUsingMethod('base_amount_paid_online', $invoice->getBaseGrandTotal());
         $this->setProcessing($order);
         $payment->addTransactionCommentsToOrder($transaction, $message);
         $order->save();
