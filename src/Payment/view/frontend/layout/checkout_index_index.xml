@@ -73,13 +73,6 @@
                                                                 </item>
                                                             </item>
                                                         </item>
-                                                        <item name="shipping-address-fieldset" xsi:type="array">
-                                                            <item name="children" xsi:type="array">
-                                                                <item name="telephone" xsi:type="array">
-                                                                    <item name="visible" xsi:type="boolean">false</item>
-                                                                </item>
-                                                            </item>
-                                                        </item>
                                                     </item>
                                                 </item>
                                             </item>
