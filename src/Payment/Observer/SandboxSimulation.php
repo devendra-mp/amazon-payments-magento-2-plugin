@@ -136,6 +136,7 @@ class SandboxSimulation implements ObserverInterface
 
     /**
      * @param string $simulationReference
+     * @param string|null $context
      * @return string
      */
     protected function getSimulationString($simulationReference, $context = null) {

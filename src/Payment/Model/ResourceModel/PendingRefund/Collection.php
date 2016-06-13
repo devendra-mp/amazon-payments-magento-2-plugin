@@ -13,25 +13,23 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Payment\Model\ResourceModel\PendingCapture;
+namespace Amazon\Payment\Model\ResourceModel\PendingRefund;
 
-use Amazon\Payment\Api\Data\PendingCaptureInterface;
-use Generator;
+use Amazon\Payment\Api\Data\PendingRefundInterface;
+use Amazon\Payment\Model\PendingRefund as PendingRefundModel;
+use Amazon\Payment\Model\ResourceModel\PendingRefund as PendingRefundResourceModel;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use Amazon\Payment\Model\PendingCapture as PendingCaptureModel;
-use Amazon\Payment\Model\ResourceModel\PendingCapture as PendingCaptureResourceModel;
 
 class Collection extends AbstractCollection
 {
+
     protected function _construct()
     {
-        $this->_init(PendingCaptureModel::class, PendingCaptureResourceModel::class);
+        $this->_init(PendingRefundModel::class, PendingRefundResourceModel::class);
     }
 
     /**
-     * Get ID generator
-     *
-     * @return Generator
+     * @return \Generator
      */
     public function getIdGenerator()
     {
@@ -41,7 +39,7 @@ class Collection extends AbstractCollection
         $statement = $select->getConnection()->query($select, $this->_bindParams);
 
         while ($row = $statement->fetch()) {
-            yield $row[PendingCaptureInterface::ID];
+            yield $row[PendingRefundInterface::ID];
         }
     }
 }

@@ -51,7 +51,6 @@ use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order\Payment;
-use Magento\Store\Model\ScopeInterface;
 
 class Amazon extends AbstractMethod
 {
@@ -259,7 +258,9 @@ class Amazon extends AbstractMethod
         $response       = $this->amazonRefundResponseFactory->create(['response' => $responseParser]);
         $this->amazonRefundValidator->validate($response);
 
-        $payment->setTransactionId($response->getTransactionId());
+        $payment->setTransactionId($response->getRefundId());
+
+        $this->paymentManagement->queuePendingRefund($response, $payment);
     }
 
     protected function authorizeInStore(InfoInterface $payment, $amount, $capture = false)

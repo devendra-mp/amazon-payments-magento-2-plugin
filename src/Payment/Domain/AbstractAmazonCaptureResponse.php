@@ -16,9 +16,10 @@
 namespace Amazon\Payment\Domain;
 
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
+use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
-abstract class AbstractAmazonCaptureResponse
+abstract class AbstractAmazonCaptureResponse implements AmazonResponseInterface
 {
     /**
      * @var AmazonCaptureStatus
@@ -31,9 +32,9 @@ abstract class AbstractAmazonCaptureResponse
     protected $transactionId;
 
     /**
-     * AbstractAmazonCaptureResponse constructor.
-     *
      * @param ResponseInterface $response
+     * @param AmazonCaptureStatusFactory $amazonCaptureStatusFactory
+     * @throws AmazonServiceUnavailableException
      */
     public function __construct(ResponseInterface $response, AmazonCaptureStatusFactory $amazonCaptureStatusFactory)
     {

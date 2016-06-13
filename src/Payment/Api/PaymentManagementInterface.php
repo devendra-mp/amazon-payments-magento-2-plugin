@@ -18,6 +18,8 @@ namespace Amazon\Payment\Api;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Magento\Sales\Api\Data\OrderInterface;
+use Amazon\Payment\Domain\AmazonRefundResponse;
+use Magento\Payment\Model\InfoInterface;
 
 interface PaymentManagementInterface
 {
@@ -59,6 +61,16 @@ interface PaymentManagementInterface
      * @return void
      */
     public function queuePendingAuthorization(AmazonAuthorizationResponse $response, OrderInterface $order);
+
+    /**
+     * Queue pending refund
+     *
+     * @param AmazonRefundResponse $response
+     * @param InfoInterface        $payment
+     *
+     * @return void
+     */
+    public function queuePendingRefund(AmazonRefundResponse $response, InfoInterface $payment);
 
     /**
      * Close transaction

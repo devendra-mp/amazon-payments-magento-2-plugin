@@ -13,5 +13,8 @@
         <job name="get_amazon_authorization_updates" instance="Amazon\Payment\Cron\GetAmazonAuthorizationUpdates" method="execute">
             <schedule>*/5 * * * *</schedule>
         </job>
+        <job name="amazon_payments_process_queued_refunds" instance="Amazon\Payment\Cron\ProcessAmazonRefunds" method="execute">
+            <schedule>*/5 * * * *</schedule>
+        </job>
     </group>
 </config>

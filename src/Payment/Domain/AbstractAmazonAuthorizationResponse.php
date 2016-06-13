@@ -16,9 +16,10 @@
 namespace Amazon\Payment\Domain;
 
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
+use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
-abstract class AbstractAmazonAuthorizationResponse
+abstract class AbstractAmazonAuthorizationResponse implements AmazonResponseInterface
 {
     /**
      * @var AmazonAuthorizationStatus
@@ -44,6 +45,8 @@ abstract class AbstractAmazonAuthorizationResponse
      * AmazonAuthorizationResponse constructor.
      *
      * @param ResponseInterface $response
+     * @param AmazonAuthorizationStatusFactory $amazonAuthorizationStatusFactory
+     * @throws AmazonServiceUnavailableException
      */
     public function __construct(
         ResponseInterface $response,

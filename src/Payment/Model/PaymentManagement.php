@@ -20,6 +20,7 @@ use Amazon\Payment\Api\Data\PendingAuthorizationInterface;
 use Amazon\Payment\Api\Data\PendingAuthorizationInterfaceFactory;
 use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Api\Data\PendingCaptureInterfaceFactory;
+use Amazon\Payment\Api\Data\PendingRefundInterfaceFactory;
 use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationDetailsResponseFactory;
 use Amazon\Payment\Domain\AmazonAuthorizationResponse;
@@ -29,11 +30,13 @@ use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Amazon\Payment\Domain\Validator\AmazonAuthorization;
 use Amazon\Payment\Exception\SoftDeclineException;
+use Amazon\Payment\Domain\AmazonRefundResponse;
 use Exception;
 use Magento\Backend\Model\UrlInterface;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Notification\NotifierInterface;
+use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
@@ -112,6 +115,11 @@ class PaymentManagement implements PaymentManagementInterface
     protected $amazonAuthorizationValidator;
 
     /**
+     * @var PendingRefundInterfaceFactory
+     */
+    protected $pendingRefundFactory;
+
+    /**
      * PaymentManagement constructor.
      *
      * @param PendingCaptureInterfaceFactory            $pendingCaptureFactory
@@ -127,6 +135,7 @@ class PaymentManagement implements PaymentManagementInterface
      * @param OrderRepositoryInterface                  $orderRepository
      * @param TransactionRepositoryInterface            $transactionRepository
      * @param InvoiceRepositoryInterface                $invoiceRepository
+     * @param PendingRefundInterfaceFactory             $pendingRefundFactory
      */
     public function __construct(
         PendingCaptureInterfaceFactory $pendingCaptureFactory,
@@ -141,7 +150,8 @@ class PaymentManagement implements PaymentManagementInterface
         OrderPaymentRepositoryInterface $orderPaymentRepository,
         OrderRepositoryInterface $orderRepository,
         TransactionRepositoryInterface $transactionRepository,
-        InvoiceRepositoryInterface $invoiceRepository
+        InvoiceRepositoryInterface $invoiceRepository,
+        PendingRefundInterfaceFactory $pendingRefundFactory
     ) {
         $this->clientFactory                             = $clientFactory;
         $this->pendingCaptureFactory                     = $pendingCaptureFactory;
@@ -156,6 +166,7 @@ class PaymentManagement implements PaymentManagementInterface
         $this->orderRepository                           = $orderRepository;
         $this->transactionRepository                     = $transactionRepository;
         $this->invoiceRepository                         = $invoiceRepository;
+        $this->pendingRefundFactory                = $pendingRefundFactory;
     }
 
     /**
@@ -234,6 +245,18 @@ class PaymentManagement implements PaymentManagementInterface
             ->setAuthorizationId($response->getAuthorizeTransactionId());
 
         $order->addRelatedObject($pendingAuthorization);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function queuePendingRefund(AmazonRefundResponse $response, PaymentInfoInterface $payment)
+    {
+        $this->pendingRefundFactory->create()
+            ->setRefundId($response->getRefundId())
+            ->setPaymentId($payment->getId())
+            ->setOrderId($payment->getOrder()->getId())
+            ->save();
     }
 
     /**

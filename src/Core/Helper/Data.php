@@ -483,6 +483,7 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @param string|null $context
      * @return array
      */
     public function getSandboxSimulationStrings($context = null)
