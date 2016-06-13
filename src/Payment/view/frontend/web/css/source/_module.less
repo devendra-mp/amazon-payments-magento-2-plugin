@@ -92,6 +92,12 @@
         }
     }
 
+    /** Prevent movement after a soft decline to other payment steps **/
+    .opc-progress-bar-item._complete.lock-step {
+        cursor: none;
+        pointer-events: none;
+    }
+
 }
 
 @media all and (max-width: @screen__m) {

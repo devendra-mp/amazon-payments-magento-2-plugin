@@ -99,6 +99,9 @@ define(
                         var amazonAddress = data.shift(),
                             addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
 
+                        //if telephone is blank set it to 00000000 so it passes the required validation
+                        addressData.telephone = !(addressData.telephone) ? '0000000000' : addressData.telephone;
+
                         addressData.isAmazonAddress = true;
                         selectShippingAddress(addressData);
                     }
