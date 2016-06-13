@@ -265,26 +265,24 @@ class PaymentManagement implements PaymentManagementInterface
             $this->amazonAuthorizationValidator->validate($response);
 
             if ( ! $response->isPending()) {
-                $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $authorizationId,
-                    $capture);
+                $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
             }
         } catch (SoftDeclineException $e) {
-            $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $authorizationId, $capture);
+            $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         } catch (\Exception $e) {
-            $this->hardDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $authorizationId, $capture);
+            $this->hardDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         }
     }
-
 
     protected function completePendingAuthorization(
         OrderInterface $order,
         OrderPaymentInterface $payment,
         PendingAuthorizationInterface $pendingAuthorization,
-        $authorizationId,
         $capture
     ) {
-        $this->setProcessing($order);
+        $authorizationId = $pendingAuthorization->getAuthorizationId();
 
+        $this->setProcessing($order);
 
         if ($capture) {
             $invoice = $this->getInvoiceAndSetPaid($authorizationId, $order);
@@ -308,9 +306,10 @@ class PaymentManagement implements PaymentManagementInterface
         OrderInterface $order,
         OrderPaymentInterface $payment,
         PendingAuthorizationInterface $pendingAuthorization,
-        $authorizationId,
         $capture
     ) {
+        $authorizationId = $pendingAuthorization->getAuthorizationId();
+
         if ($capture) {
             $invoice = $this->getInvoiceAndSetCancelled($authorizationId, $order);
             $payment->cancelInvoice($invoice);
@@ -337,9 +336,10 @@ class PaymentManagement implements PaymentManagementInterface
         OrderInterface $order,
         OrderPaymentInterface $payment,
         PendingAuthorizationInterface $pendingAuthorization,
-        $authorizationId,
         $capture
     ) {
+        $authorizationId = $pendingAuthorization->getAuthorizationId();
+
         if ($capture) {
             $invoice = $this->getInvoiceAndSetCancelled($authorizationId, $order);
             $payment->cancelInvoice($invoice);
