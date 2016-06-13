@@ -51,6 +51,7 @@ use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order\Payment;
+use Magento\Store\Model\ScopeInterface;
 
 class Amazon extends AbstractMethod
 {
