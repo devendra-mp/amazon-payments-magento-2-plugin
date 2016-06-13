@@ -15,12 +15,13 @@
  */
 namespace Amazon\Payment\Cron;
 
-use Amazon\Payment\Api\Data\PendingCaptureInterface;
+use Amazon\Payment\Api\Data\PendingRefundInterface;
 use Amazon\Payment\Api\PaymentManagementInterface;
-use Amazon\Payment\Model\ResourceModel\PendingCapture\CollectionFactory;
+use Amazon\Payment\Model\QueuedRefundUpdaterFactory;
+use Amazon\Payment\Model\ResourceModel\PendingRefund\CollectionFactory;
 use Magento\Framework\Data\Collection;
 
-class GetAmazonCaptureUpdates
+class ProcessAmazonRefunds
 {
     /**
      * @var int
@@ -30,19 +31,31 @@ class GetAmazonCaptureUpdates
     /**
      * @var CollectionFactory
      */
-    protected $collectionFactory;
+    protected $queuedRefundsCollectionFactory;
 
     /**
      * @var PaymentManagementInterface
      */
     protected $paymentManagement;
 
+    /**
+     * @var QueuedRefundUpdaterFactory
+     */
+    protected $queuedRefundUpdater;
+
+    /**
+     * @param CollectionFactory $collectionFactory
+     * @param PaymentManagementInterface $paymentManagement
+     * @param QueuedRefundUpdaterFactory $queuedRefundUpdater
+     * @param int $limit
+     */
     public function __construct(
         CollectionFactory $collectionFactory,
         PaymentManagementInterface $paymentManagement,
+        QueuedRefundUpdaterFactory $queuedRefundUpdater,
         $limit = 100
     ) {
-        $this->collectionFactory = $collectionFactory;
+        $this->queuedRefundsCollectionFactory = $collectionFactory;
         $this->paymentManagement = $paymentManagement;
 
         $limit = (int) $limit;
@@ -52,19 +65,21 @@ class GetAmazonCaptureUpdates
         }
 
         $this->limit = $limit;
+        $this->queuedRefundUpdater = $queuedRefundUpdater;
     }
 
     public function execute()
     {
-        $collection = $this->collectionFactory
+        $collection = $this->queuedRefundsCollectionFactory
             ->create()
-            ->addOrder(PendingCaptureInterface::CREATED_AT, Collection::SORT_ORDER_ASC)
+            ->addOrder(PendingRefundInterface::CREATED_AT, Collection::SORT_ORDER_ASC)
             ->setPageSize($this->limit)
             ->setCurPage(1);
 
-        $pendingCaptureIds = $collection->getIdGenerator();
-        foreach($pendingCaptureIds as $pendingCaptureId) {
-            $this->paymentManagement->updateCapture($pendingCaptureId);
+        $queuedRefundUpdater = $this->queuedRefundUpdater->create();
+
+        foreach($collection->getIdGenerator() as $pendingRefundId) {
+            $queuedRefundUpdater->checkAndUpdateRefund($pendingRefundId);
         }
     }
 }

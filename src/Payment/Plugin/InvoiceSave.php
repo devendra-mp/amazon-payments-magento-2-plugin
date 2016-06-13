@@ -18,7 +18,6 @@ namespace Amazon\Payment\Plugin;
 use Amazon\Payment\Model\Method\Amazon;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect;
-use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\OrderInterfaceFactory;
 use Magento\Sales\Controller\Adminhtml\Order\Invoice\Save;
 use Magento\Sales\Model\Order\Invoice;

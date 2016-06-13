@@ -16,7 +16,6 @@
 namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
-use Amazon\Core\Domain\AmazonAddress;
 use Amazon\Core\Domain\AmazonAddressFactory;
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Api\AddressManagementInterface;

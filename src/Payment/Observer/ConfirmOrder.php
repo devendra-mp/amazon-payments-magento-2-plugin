@@ -44,8 +44,9 @@ class ConfirmOrder implements ObserverInterface
     /**
      * ConfirmOrder constructor.
      *
-     * @param QuoteLinkInterfaceFactory  $quoteLinkFactory
+     * @param QuoteLinkInterfaceFactory $quoteLinkFactory
      * @param OrderInformationManagement $orderInformationManagement
+     * @param PaymentMethodManagementInterface $paymentMethodManagement
      */
     public function __construct(
         QuoteLinkInterfaceFactory $quoteLinkFactory,

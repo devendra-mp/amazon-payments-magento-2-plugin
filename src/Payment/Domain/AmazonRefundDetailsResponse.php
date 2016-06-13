@@ -17,11 +17,11 @@ namespace Amazon\Payment\Domain;
 
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Domain\Response\AmazonResponseInterface;
+use PayWithAmazon\ResponseInterface;
 use Amazon\Payment\Domain\Response\Part\RefundDetailsPart;
 use Amazon\Payment\Domain\Response\Part\RefundDetailsPartFactory;
-use PayWithAmazon\ResponseInterface;
 
-class AmazonRefundResponse implements AmazonResponseInterface
+class AmazonRefundDetailsResponse implements AmazonResponseInterface
 {
     /**
      * @var RefundDetailsPart
@@ -44,24 +44,8 @@ class AmazonRefundResponse implements AmazonResponseInterface
         }
 
         $this->refundDetailsPart = $refundDetailsPartFactory->create([
-            'rawRefundDetails' => $data['RefundResult']['RefundDetails'],
+            'rawRefundDetails' => $data['GetRefundDetailsResult']['RefundDetails'],
         ]);
-    }
-
-    /**
-     * @return AmazonRefundStatus
-     */
-    public function getStatus()
-    {
-        return $this->refundDetailsPart->getRefundStatus();
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getRefundId()
-    {
-        return $this->refundDetailsPart->getRefundId();
     }
 
     /**

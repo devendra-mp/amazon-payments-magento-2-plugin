@@ -21,6 +21,7 @@ use Amazon\Payment\Model\ResourceModel\OrderLink;
 use Amazon\Payment\Model\ResourceModel\PendingAuthorization;
 use Amazon\Payment\Model\ResourceModel\PendingCapture;
 use Amazon\Payment\Model\ResourceModel\QuoteLink;
+use \Amazon\Payment\Setup\Table\AmazonPendingRefundFactory;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -39,11 +40,18 @@ class UpgradeSchema implements UpgradeSchemaInterface
     private $eavSetup;
 
     /**
-     * @param EavSetup $eavSetup
+     * @var AmazonPendingRefundFactory
      */
-    public function __construct(EavSetup $eavSetup)
+    private $amazonPendingRefundTableFactory;
+
+    /**
+     * @param EavSetup $eavSetup
+     * @param AmazonPendingRefundFactory $amazonPendingRefundFactory
+     */
+    public function __construct(EavSetup $eavSetup, AmazonPendingRefundFactory $amazonPendingRefundFactory)
     {
         $this->eavSetup = $eavSetup;
+        $this->amazonPendingRefundTableFactory = $amazonPendingRefundFactory;
     }
 
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
@@ -201,6 +209,12 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($context->getVersion(), '1.8.0', '<')) {
             $this->createPendingAuthorizationQueueTable($setup);
+        }
+
+        if (version_compare($context->getVersion(), '1.9.0', '<')) {
+            $this->amazonPendingRefundTableFactory
+                 ->create(['connection' => $setup->getConnection()])
+                 ->createTable();
         }
     }
 
