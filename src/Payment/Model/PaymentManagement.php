@@ -209,6 +209,7 @@ class PaymentManagement implements PaymentManagementInterface
         $message         = __('Captured amount of %1 online', $formattedAmount);
 
         $invoice->pay();
+        $payment->setDataUsingMethod('base_amount_paid_online', $invoice->getBaseGrandTotal());
 
         $order->addRelatedObject($invoice);
         $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
@@ -232,7 +233,6 @@ class PaymentManagement implements PaymentManagementInterface
         $message         = __('Declined amount of %1 online', $formattedAmount);
 
         $invoice->cancel();
-        $payment->cancelInvoice($invoice);
 
         $order->addRelatedObject($invoice);
         $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
