@@ -21,4 +21,7 @@
     <event name="checkout_submit_before">
         <observer name="amazon_payment_ignore_billing_address_validation" instance="Amazon\Payment\Observer\IgnoreBillingAddressValidation" />
     </event>
+    <event name="amazon_payment_pending_authorization_soft_decline_after">
+        <observer name="amazon_payment_soft_decline_email" instance="Amazon\Payment\Observer\SoftDeclinedEmailSender" />
+    </event>
 </config>

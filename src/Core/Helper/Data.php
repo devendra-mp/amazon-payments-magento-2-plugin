@@ -15,7 +15,6 @@
  */
 namespace Amazon\Core\Helper;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Encryption\EncryptorInterface;
@@ -24,6 +23,13 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Data extends AbstractHelper
 {
+    protected $amazonAccountUrl = [
+        'us' => 'https://payments.amazon.com/overview',
+        'uk' => 'https://payments.amazon.co.uk/overview',
+        'de' => 'https://payments.amazon.de/overview',
+        'jp' => 'https://payments.amazon.co.jp/overview',
+    ];
+
     /**
      * @var EncryptorInterface
      */
@@ -35,7 +41,9 @@ class Data extends AbstractHelper
     protected $storeManager;
 
     /**
-     * @param Context $context
+     * @param Context               $context
+     * @param EncryptorInterface    $encryptor
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         Context $context,
@@ -546,5 +554,19 @@ class Data extends AbstractHelper
     protected function getCurrentCurrencyCode()
     {
         return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
+    }
+
+    /**
+     * @param string $paymentRegion E.g. "uk", "us", "de", "jp".
+     *
+     * @return mixed
+     */
+    public function getAmazonAccountUrlByPaymentRegion($paymentRegion)
+    {
+        if (empty($this->amazonAccountUrl[$paymentRegion])) {
+            throw new \InvalidArgumentException("$paymentRegion is not a valid payment region");
+        }
+
+        return $this->amazonAccountUrl[$paymentRegion];
     }
 }

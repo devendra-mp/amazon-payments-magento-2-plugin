@@ -34,6 +34,7 @@ use Amazon\Payment\Domain\AmazonRefundResponse;
 use Exception;
 use Magento\Backend\Model\UrlInterface;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Notification\NotifierInterface;
 use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
@@ -120,8 +121,11 @@ class PaymentManagement implements PaymentManagementInterface
     protected $pendingRefundFactory;
 
     /**
-     * PaymentManagement constructor.
-     *
+     * @var ManagerInterface
+     */
+    protected $eventManager;
+
+    /**
      * @param PendingCaptureInterfaceFactory            $pendingCaptureFactory
      * @param PendingAuthorizationInterfaceFactory      $pendingAuthorizationFactory
      * @param ClientFactoryInterface                    $clientFactory
@@ -136,22 +140,24 @@ class PaymentManagement implements PaymentManagementInterface
      * @param TransactionRepositoryInterface            $transactionRepository
      * @param InvoiceRepositoryInterface                $invoiceRepository
      * @param PendingRefundInterfaceFactory             $pendingRefundFactory
+     * @param ManagerInterface                          $eventManager
      */
     public function __construct(
-        PendingCaptureInterfaceFactory $pendingCaptureFactory,
-        PendingAuthorizationInterfaceFactory $pendingAuthorizationFactory,
-        ClientFactoryInterface $clientFactory,
-        AmazonCaptureDetailsResponseFactory $amazonCaptureDetailsResponseFactory,
+        PendingCaptureInterfaceFactory            $pendingCaptureFactory,
+        PendingAuthorizationInterfaceFactory      $pendingAuthorizationFactory,
+        ClientFactoryInterface                    $clientFactory,
+        AmazonCaptureDetailsResponseFactory       $amazonCaptureDetailsResponseFactory,
         AmazonAuthorizationDetailsResponseFactory $amazonAuthorizationDetailsResponseFactory,
-        AmazonAuthorization $amazonAuthorizationValidator,
-        NotifierInterface $notifier,
-        UrlInterface $urlBuilder,
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        OrderPaymentRepositoryInterface $orderPaymentRepository,
-        OrderRepositoryInterface $orderRepository,
-        TransactionRepositoryInterface $transactionRepository,
-        InvoiceRepositoryInterface $invoiceRepository,
-        PendingRefundInterfaceFactory $pendingRefundFactory
+        AmazonAuthorization                       $amazonAuthorizationValidator,
+        NotifierInterface                         $notifier,
+        UrlInterface                              $urlBuilder,
+        SearchCriteriaBuilderFactory              $searchCriteriaBuilderFactory,
+        OrderPaymentRepositoryInterface           $orderPaymentRepository,
+        OrderRepositoryInterface                  $orderRepository,
+        TransactionRepositoryInterface            $transactionRepository,
+        InvoiceRepositoryInterface                $invoiceRepository,
+        PendingRefundInterfaceFactory             $pendingRefundFactory,
+        ManagerInterface                          $eventManager
     ) {
         $this->clientFactory                             = $clientFactory;
         $this->pendingCaptureFactory                     = $pendingCaptureFactory;
@@ -166,7 +172,8 @@ class PaymentManagement implements PaymentManagementInterface
         $this->orderRepository                           = $orderRepository;
         $this->transactionRepository                     = $transactionRepository;
         $this->invoiceRepository                         = $invoiceRepository;
-        $this->pendingRefundFactory                = $pendingRefundFactory;
+        $this->pendingRefundFactory                      = $pendingRefundFactory;
+        $this->eventManager                              = $eventManager;
     }
 
     /**
@@ -324,7 +331,6 @@ class PaymentManagement implements PaymentManagementInterface
         $pendingAuthorization->delete();
     }
 
-
     protected function softDeclinePendingAuthorization(
         OrderInterface $order,
         OrderPaymentInterface $payment,
@@ -353,6 +359,14 @@ class PaymentManagement implements PaymentManagementInterface
         $pendingAuthorization->setAuthorizationId(null);
         $pendingAuthorization->save();
         $order->save();
+
+        $this->eventManager->dispatch(
+            'amazon_payment_pending_authorization_soft_decline_after',
+            [
+                'order'                => $order,
+                'pendingAuthorization' => $pendingAuthorization,
+            ]
+        );
     }
 
     protected function hardDeclinePendingAuthorization(
