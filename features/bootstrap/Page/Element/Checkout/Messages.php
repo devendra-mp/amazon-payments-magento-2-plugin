@@ -27,7 +27,7 @@ class Messages extends Element
         try {
             $element    = $this->find('css', '.message-error div');
             $constraint = PHPUnit_Framework_Assert::stringContains(
-                'Unfortunately it is not possible to pay with Amazon for this order, Please choose another payment method.',
+                'Unfortunately it is not possible to Pay with Amazon for this order. Please choose another payment method.',
                 false
             );
 
@@ -43,7 +43,7 @@ class Messages extends Element
         try {
             $element    = $this->find('css', '.message-error div');
             $constraint = PHPUnit_Framework_Assert::stringContains(
-                'There has been a problem with the selected payment method on your Amazon account, please choose another one.',
+                'There has been a problem with the selected payment method on your Amazon account. Please choose another one.',
                 false
             );
 
