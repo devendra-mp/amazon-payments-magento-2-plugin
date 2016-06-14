@@ -21,6 +21,9 @@
                                                 <item name="shippingAddress" xsi:type="array">
                                                     <item name="component" xsi:type="string">Amazon_Payment/js/view/shipping</item>
                                                     <item name="children" xsi:type="array">
+                                                        <item name="customer-email" xsi:type="array">
+                                                            <item name="component" xsi:type="string">Amazon_Payment/js/view/form/element/email</item>
+                                                        </item>
                                                         <item name="amazon-button" xsi:type="array">
                                                             <item name="component" xsi:type="string">Amazon_Payment/js/view/checkout-button</item>
                                                             <item name="sortOrder" xsi:type="string">0</item>
