@@ -16,6 +16,7 @@
 namespace Amazon\Payment\Helper;
 
 use Amazon\Core\Helper\Data as AmazonCoreHelper;
+use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Sales\Model\Order;
@@ -61,7 +62,12 @@ class Email extends AbstractHelper
         $emailTransportBuilder->addTo($order->getCustomerEmail(), $order->getCustomerName());
         $emailTransportBuilder->setFrom('general');
         $emailTransportBuilder->setTemplateIdentifier('amazon_payments_auth_soft_decline');
-        $emailTransportBuilder->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => $order->getStoreId()]);
+        $emailTransportBuilder->setTemplateOptions(
+            [
+                'area'  => Area::AREA_FRONTEND,
+                'store' => $order->getStoreId()
+            ]
+        );
 
         $paymentRegionByOrderStore = $this->amazonCoreHelper->getPaymentRegion(
             ScopeInterface::SCOPE_STORE,
@@ -74,6 +80,28 @@ class Email extends AbstractHelper
         ];
         $emailTransportBuilder->setTemplateVars($vars);
 
+        $emailTransportBuilder->getTransport()->sendMessage();
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return void
+     */
+    public function sendAuthorizationHardDeclinedEmail(Order $order)
+    {
+        $emailTransportBuilder = $this->emailTransportBuilderFactory->create();
+
+        $emailTransportBuilder->addTo($order->getCustomerEmail(), $order->getCustomerName());
+        $emailTransportBuilder->setFrom('general');
+        $emailTransportBuilder->setTemplateIdentifier('amazon_payments_auth_hard_decline');
+        $emailTransportBuilder->setTemplateOptions(
+            [
+                'area'  => Area::AREA_FRONTEND,
+                'store' => $order->getStoreId()
+            ]
+        );
+        $emailTransportBuilder->setTemplateVars([]);
         $emailTransportBuilder->getTransport()->sendMessage();
     }
 }

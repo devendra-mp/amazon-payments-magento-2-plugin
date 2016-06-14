@@ -24,4 +24,7 @@
     <event name="amazon_payment_pending_authorization_soft_decline_after">
         <observer name="amazon_payment_soft_decline_email" instance="Amazon\Payment\Observer\SoftDeclinedEmailSender" />
     </event>
+    <event name="amazon_payment_pending_authorization_hard_decline_after">
+        <observer name="amazon_payment_hard_decline_email" instance="Amazon\Payment\Observer\HardDeclinedEmailSender" />
+    </event>
 </config>
