@@ -142,6 +142,7 @@ class PaymentManagement implements PaymentManagementInterface
             if ($pendingCapture->getCaptureId()) {
                 $order   = $this->orderRepository->get($pendingCapture->getOrderId());
                 $payment = $this->orderPaymentRepository->get($pendingCapture->getPaymentId());
+                $order->setPayment($payment);
 
                 $responseParser = $this->clientFactory->create($order->getStoreId())->getCaptureDetails([
                     'amazon_capture_id' => $pendingCapture->getCaptureId()
@@ -203,11 +204,12 @@ class PaymentManagement implements PaymentManagementInterface
         $transactionId   = $pendingCapture->getCaptureId();
         $state           = Order::STATE_PROCESSING;
         $transaction     = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
-        $invoice         = $this->getInvoice($transactionId, $order->getId());
+        $invoice         = $this->getInvoice($transactionId, $order);
         $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
         $message         = __('Captured amount of %1 online', $formattedAmount);
 
         $invoice->pay();
+        $payment->setDataUsingMethod('base_amount_paid_online', $invoice->getBaseGrandTotal());
 
         $order->addRelatedObject($invoice);
         $order->setState($state)->setStatus($order->getConfig()->getStateDefaultStatus($state));
@@ -226,7 +228,7 @@ class PaymentManagement implements PaymentManagementInterface
         $transactionId   = $pendingCapture->getCaptureId();
         $state           = Order::STATE_HOLDED;
         $transaction     = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
-        $invoice         = $this->getInvoice($transactionId, $order->getId());
+        $invoice         = $this->getInvoice($transactionId, $order);
         $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
         $message         = __('Declined amount of %1 online', $formattedAmount);
 
@@ -279,7 +281,7 @@ class PaymentManagement implements PaymentManagementInterface
         throw new NoSuchEntityException();
     }
 
-    protected function getInvoice($transactionId, $orderId)
+    protected function getInvoice($transactionId, OrderInterface $order)
     {
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
 
@@ -288,7 +290,7 @@ class PaymentManagement implements PaymentManagementInterface
         );
 
         $searchCriteriaBuilder->addFilter(
-            InvoiceInterface::ORDER_ID, $orderId
+            InvoiceInterface::ORDER_ID, $order->getId()
         );
 
         $searchCriteria = $searchCriteriaBuilder
@@ -299,7 +301,9 @@ class PaymentManagement implements PaymentManagementInterface
         $invoiceList = $this->invoiceRepository->getList($searchCriteria);
 
         if (count($items = $invoiceList->getItems())) {
-            return current($items);
+            $invoice = current($items);
+            $invoice->setOrder($order);
+            return $invoice;
         }
 
         throw new NoSuchEntityException();
