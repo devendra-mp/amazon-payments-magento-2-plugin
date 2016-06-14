@@ -14,7 +14,7 @@ define([
         ) {
             return window.checkoutConfig.amazonLogin.amazon_customer_email;
         }
-        return false;
+        return '';
     }
 
     return Component.extend({
