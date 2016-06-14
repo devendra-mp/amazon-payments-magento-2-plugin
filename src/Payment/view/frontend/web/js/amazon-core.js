@@ -72,7 +72,6 @@ define([
          * Log user out of Amazon
          */
         AmazonLogout: amazonLogout,
-
         amazonDefined: amazonDefined,
         accessToken: accessToken,
         amazonLoginError: amazonLoginError
