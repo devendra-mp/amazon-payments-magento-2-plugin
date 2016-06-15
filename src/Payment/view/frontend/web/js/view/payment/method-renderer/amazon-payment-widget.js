@@ -62,6 +62,8 @@ define(
             initPaymentWidget: function() {
                 self.renderPaymentWidget();
                 $('#amazon_payment').trigger('click'); //activate amazon payments method on render
+                $('#amazon_payment').trigger('rendered');
+                
             },
             /**
              * render Amazon payment Widget
