@@ -20,9 +20,6 @@
     <type name="Magento\Sales\Controller\Adminhtml\Order\Invoice\Save">
         <plugin name="amazon_payment_invoice_save" type="Amazon\Payment\Plugin\InvoiceSave" sortOrder="1" />
     </type>
-    <type name="Magento\Quote\Model\QuoteValidator">
-        <plugin name="amazon_payment_dummy_address_telephone" type="Amazon\Payment\Plugin\QuoteValidatorTelephone" />
-    </type>
     <type name="Amazon\Payment\Cron\ProcessAmazonRefunds">
         <arguments>
             <argument name="paymentManagement" xsi:type="object">Amazon\Payment\Api\PaymentManagementInterface\Proxy</argument>

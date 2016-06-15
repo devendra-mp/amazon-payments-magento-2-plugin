@@ -50,7 +50,7 @@ define([
                     case 7638:
                         amazonStorage.isPlaceOrderDisabled(true);
                         this._reInitializeAmazonWalletWidget();
-                        this._removeDiscountCodesOption();
+                        this._hideEditableOptions();
                         amazonStorage.amazonDeclineCode(false);
                         break;
                     default:
@@ -85,11 +85,13 @@ define([
             }, this);
         },
         /**
-         * removes discount codes option from payment
+         * hides editable content and links to prevent unexptect behaviour
          * @private
          */
-        _removeDiscountCodesOption: function() {
+        _hideEditableOptions: function() {
             $('.payment-option.discount-code', '#payment').remove();
+            $('.action-edit', '.shipping-information').remove();
+            $('.opc-progress-bar-item._complete', '.opc-progress-bar').addClass('lock-step');
         }
     });
 });

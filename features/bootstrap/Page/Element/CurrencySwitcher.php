@@ -16,6 +16,7 @@
 namespace Page\Element;
 
 use SensioLabs\Behat\PageObjectExtension\PageObject\Element;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 class CurrencySwitcher extends Element
 {
@@ -23,7 +24,20 @@ class CurrencySwitcher extends Element
 
     public function selectCurrency($code)
     {
-        $this->find('css', '#switcher-currency-trigger')->click();
-        $this->find('css', 'li.currency-' . $code . ' a')->click();
+        $switcher = $this->find('css', '#switcher-currency-trigger');
+
+        if ($switcher) {
+            $switcher->click();
+        } else {
+            throw new ElementNotFoundException($this->getSession());
+        }
+
+        $currency = $this->find('css', 'li.currency-' . $code . ' a');
+
+        if ($currency) {
+            $currency->click();
+        } else {
+            throw new ElementNotFoundException($this->getSession());
+        }
     }
 }

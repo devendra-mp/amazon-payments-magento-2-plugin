@@ -102,7 +102,8 @@ class BasketContext implements SnippetAcceptingContext
     {
         $rates = [
             'GBP' => [
-                'CHF' => '1.41'
+                'CHF' => '1.41',
+                'GBP' => '1.00'
             ]
         ];
 
