@@ -44,7 +44,7 @@ class Data extends AbstractHelper
     /**
      * @var string
      */
-    private $remoteIp;
+    protected $remoteIp;
 
     /**
      * @param Context               $context
