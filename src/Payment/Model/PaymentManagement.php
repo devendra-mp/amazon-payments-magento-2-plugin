@@ -212,10 +212,10 @@ class PaymentManagement implements PaymentManagementInterface
             $pendingAuthorization->load($pendingAuthorizationId);
 
             if ($pendingAuthorization->getOrderId()) {
-                if ($pendingAuthorization->getAuthorizationId()) {
-                    $this->processUpdateAuthorization($pendingAuthorization);
-                } else {
+                if ($pendingAuthorization->isProcessed()) {
                     $this->processNewAuthorization($pendingAuthorization);
+                } else {
+                    $this->processUpdateAuthorization($pendingAuthorization);
                 }
             }
 
@@ -339,7 +339,7 @@ class PaymentManagement implements PaymentManagementInterface
         OrderPaymentInterface $payment,
         PendingAuthorizationInterface $pendingAuthorization,
         $capture,
-        $new = false
+        $newAuthorizationId = false
     ) {
         $authorizationId = $pendingAuthorization->getAuthorizationId();
 
@@ -348,7 +348,7 @@ class PaymentManagement implements PaymentManagementInterface
         if ($capture) {
             $invoice = $this->getInvoiceAndSetPaid($authorizationId, $order);
 
-            if (!$new) {
+            if (!$newAuthorizationId) {
                 $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
             }
 
@@ -360,7 +360,8 @@ class PaymentManagement implements PaymentManagementInterface
             $message         = __('Authorized amount of %1 online', $formattedAmount);
         }
 
-        $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
+        $transactionId = ($newAuthorizationId) ?: $authorizationId;
+        $transaction = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
         $payment->addTransactionCommentsToOrder($transaction, $message);
 
         $order->save();
@@ -376,8 +377,7 @@ class PaymentManagement implements PaymentManagementInterface
         $authorizationId = $pendingAuthorization->getAuthorizationId();
 
         if ($capture) {
-            $invoice = $this->getInvoiceAndSetCancelled($authorizationId, $order);
-            $payment->cancelInvoice($invoice);
+            $invoice = $this->getInvoice($authorizationId, $order);
             $this->setPaymentReview($order);
             $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
             $message         = __('Declined amount of %1 online', $formattedAmount);
@@ -386,16 +386,11 @@ class PaymentManagement implements PaymentManagementInterface
             $message         = __('Declined amount of %1 online', $formattedAmount);
         }
 
-        if ($authorizationId) {
-            $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
-            $payment->addTransactionCommentsToOrder($transaction, $message);
-            $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
-        }
+        $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
+        $payment->addTransactionCommentsToOrder($transaction, $message);
+        $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
 
-        $payment->setAmountAuthorized(null);
-        $payment->setBaseAmountAuthorized(null);
-
-        $pendingAuthorization->setAuthorizationId(null);
+        $pendingAuthorization->setProcessed(true);
         $pendingAuthorization->save();
         $order->save();
 
@@ -418,7 +413,6 @@ class PaymentManagement implements PaymentManagementInterface
 
         if ($capture) {
             $invoice = $this->getInvoiceAndSetCancelled($authorizationId, $order);
-            $payment->cancelInvoice($invoice);
             $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
             $message         = __('Declined amount of %1 online', $formattedAmount);
             $this->addCaptureDeclinedNotice($order);
@@ -427,16 +421,12 @@ class PaymentManagement implements PaymentManagementInterface
             $message         = __('Declined amount of %1 online', $formattedAmount);
         }
 
-        if ($authorizationId) {
-            $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
-            $payment->addTransactionCommentsToOrder($transaction, $message);
-            $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
-        }
-
-        $payment->setAmountAuthorized(null);
-        $payment->setBaseAmountAuthorized(null);
-
         $this->setOnHold($order);
+
+        $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
+        $payment->addTransactionCommentsToOrder($transaction, $message);
+        $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+
         $pendingAuthorization->delete();
         $order->save();
 
@@ -481,27 +471,23 @@ class PaymentManagement implements PaymentManagementInterface
         OrderPaymentInterface $payment,
         PendingAuthorizationInterface $pendingAuthorization
     ) {
-        try {
-            $amount = $payment->formatAmount($order->getTotalDue(), true);
-            $payment->setAmountAuthorized($amount);
+        $capture = false;
 
-            $baseAmount = $payment->formatAmount($order->getBaseTotalDue(), true);
-            $payment->setBaseAmountAuthorized($amount);
+        try {
+            $baseAmount = $payment->formatAmount($payment->getBaseAmountAuthorized());
 
             $method = $payment->getMethodInstance();
             $method->setStore($order->getStoreId());
-            $method->authorizeInCron($payment, $baseAmount, false);
+            $method->authorizeInCron($payment, $baseAmount, $capture);
 
             $transaction = $payment->addTransaction(Transaction::TYPE_AUTH);
             $transaction->save();
 
-            $pendingAuthorization->setAuthorizationId($transaction->getTxnId());
-
-            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, false);
+            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture, $transaction->getTxnId());
         } catch (SoftDeclineException $e) {
-            $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, null, false);
+            $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         } catch (\Exception $e) {
-            $this->hardDeclinePendingAuthorization($order, $payment, $pendingAuthorization, null, false);
+            $this->hardDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         }
     }
 
@@ -510,29 +496,25 @@ class PaymentManagement implements PaymentManagementInterface
         OrderPaymentInterface $payment,
         PendingAuthorizationInterface $pendingAuthorization
     ) {
+        $capture = true;
+
         try {
-            $invoice = $order->prepareInvoice();
-            $invoice->register();
+            $invoice = $this->getInvoice($payment->getLastTransId(), $order);
 
             $baseAmount = $payment->formatAmount($invoice->getBaseGrandTotal());
 
             $method = $payment->getMethodInstance();
             $method->setStore($order->getStoreId());
-            $method->authorizeInCron($payment, $baseAmount, true);
+            $method->authorizeInCron($payment, $baseAmount, $capture);
 
             $transaction = $payment->addTransaction(Transaction::TYPE_CAPTURE, $invoice, true);
             $transaction->save();
 
-            $pendingAuthorization->setAuthorizationId($transaction->getTxnId());
-
-            $order->addRelatedObject($invoice);
-            $payment->setCreatedInvoice($invoice);
-
-            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, true, true);
+            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture, $transaction->getTxnId());
         } catch (SoftDeclineException $e) {
-            $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, null, true);
+            $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         } catch (\Exception $e) {
-            $this->hardDeclinePendingAuthorization($order, $payment, $pendingAuthorization, null, true);
+            $this->hardDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         }
     }
 
@@ -587,7 +569,6 @@ class PaymentManagement implements PaymentManagementInterface
         $message         = __('Declined amount of %1 online', $formattedAmount);
 
         $this->getInvoiceAndSetCancelled($transactionId, $order);
-        $payment->cancelInvoice($invoice);
         $this->setOnHold($order);
         $payment->addTransactionCommentsToOrder($transaction, $message);
         $order->save();

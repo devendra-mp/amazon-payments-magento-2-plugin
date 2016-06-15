@@ -27,6 +27,7 @@ interface PendingAuthorizationInterface
     const PAYMENT_ID = 'payment_id';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+    const PROCESSED = 'processed';
 
     /**
      * Get pending authorization id
@@ -82,6 +83,22 @@ interface PendingAuthorizationInterface
      * @return $this
      */
     public function setPaymentId($paymentId);
+
+    /**
+     * Is processed
+     *
+     * @return boolean
+     */
+    public function isProcessed();
+
+    /**
+     * Set processed
+     *
+     * @param boolean $processed
+     *
+     * @return $this
+     */
+    public function setProcessed($processed);
 
     /**
      * Get created at

@@ -125,6 +125,22 @@ class PendingAuthorization extends AbstractModel implements PendingAuthorization
     /**
      * {@inheritDoc}
      */
+    public function isProcessed()
+    {
+        return (bool) $this->getData(PendingAuthorizationInterface::PROCESSED);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setProcessed($processed)
+    {
+        return $this->setData(PendingAuthorizationInterface::PROCESSED, $processed);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setCreatedAt($createdAt)
     {
         return $this->setData(PendingAuthorizationInterface::CREATED_AT, $createdAt);

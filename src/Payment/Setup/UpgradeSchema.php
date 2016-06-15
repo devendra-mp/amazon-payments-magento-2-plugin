@@ -216,6 +216,25 @@ class UpgradeSchema implements UpgradeSchemaInterface
                  ->create(['connection' => $setup->getConnection()])
                  ->createTable();
         }
+
+        if (version_compare($context->getVersion(), '1.10.0', '<')) {
+            $this->addColumnsToPendingAuthorizationQueue($setup);
+        }
+    }
+
+    private function addColumnsToPendingAuthorizationQueue(SchemaSetupInterface $setup)
+    {
+        $setup->getConnection()->addColumn(
+            $setup->getTable(PendingAuthorization::TABLE_NAME),
+            'processed',
+            [
+                'unsigned' => true,
+                'nullable' => true,
+                'default'  => 0,
+                'type'     => Table::TYPE_SMALLINT,
+                'comment'  => 'Initial authorization processed'
+            ]
+        );
     }
 
     private function addColumnsToPendingCaptureQueue(SchemaSetupInterface $setup)
