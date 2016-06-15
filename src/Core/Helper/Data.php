@@ -470,15 +470,12 @@ class Data extends AbstractHelper
     }
 
     /*
-     * @return string
+     * @return string[]
      */
-    public function getRestrictedIps($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    public function getAllowedIps($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return $this->scopeConfig->getValue(
-            'payment/amazon_payment/restricted_ips',
-            $scope,
-            $scopeCode
-        );
+        $allowedIpsString = $this->scopeConfig->getValue('payment/amazon_payment/allowed_ips', $scope, $scopeCode);
+        return empty($allowedIpsString) ? [] : explode(',', $allowedIpsString);
     }
 
     /*
