@@ -18,6 +18,7 @@ namespace Amazon\Core\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -41,19 +42,26 @@ class Data extends AbstractHelper
     protected $storeManager;
 
     /**
+     * @var string
+     */
+    protected $remoteIp;
+
+    /**
      * @param Context               $context
      * @param EncryptorInterface    $encryptor
      * @param StoreManagerInterface $storeManager
+     * @param RemoteAddress         $remoteAddress
      */
     public function __construct(
         Context $context,
         EncryptorInterface $encryptor,
-        StoreManagerInterface $storeManager
-    )
-    {
+        StoreManagerInterface $storeManager,
+        RemoteAddress $remoteAddress
+    ) {
         parent::__construct($context);
-        $this->encryptor = $encryptor;
+        $this->encryptor    = $encryptor;
         $this->storeManager = $storeManager;
+        $this->remoteIp     = $remoteAddress->getRemoteAddress();
     }
 
     /*
@@ -237,7 +245,11 @@ class Data extends AbstractHelper
      */
     public function isPwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return (bool)$this->scopeConfig->getValue(
+        if ( ! $this->clientHasAllowedIp()) {
+            return false;
+        }
+
+        return $this->scopeConfig->isSetFlag(
             'payment/amazon_payment/pwa_enabled',
             $scope,
             $scopeCode
@@ -249,7 +261,11 @@ class Data extends AbstractHelper
      */
     public function isLwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return (bool)$this->scopeConfig->getValue(
+        if ( ! $this->clientHasAllowedIp()) {
+            return false;
+        }
+
+        return $this->scopeConfig->isSetFlag(
             'payment/amazon_payment/lwa_enabled',
             $scope,
             $scopeCode
@@ -476,6 +492,16 @@ class Data extends AbstractHelper
     {
         $allowedIpsString = $this->scopeConfig->getValue('payment/amazon_payment/allowed_ips', $scope, $scopeCode);
         return empty($allowedIpsString) ? [] : explode(',', $allowedIpsString);
+    }
+
+    /**
+     * @return bool
+     */
+    public function clientHasAllowedIp()
+    {
+        $allowedIps = $this->getAllowedIps();
+
+        return empty($allowedIps) ? true : in_array($this->remoteIp, $allowedIps);
     }
 
     /*
