@@ -421,6 +421,7 @@ class PaymentManagement implements PaymentManagementInterface
             $payment->cancelInvoice($invoice);
             $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
             $message         = __('Declined amount of %1 online', $formattedAmount);
+            $this->addCaptureDeclinedNotice($order);
         } else {
             $formattedAmount = $order->getBaseCurrency()->formatTxt($payment->getBaseAmountAuthorized());
             $message         = __('Declined amount of %1 online', $formattedAmount);
@@ -594,13 +595,7 @@ class PaymentManagement implements PaymentManagementInterface
         $this->closeTransaction($transactionId, $payment->getId(), $order->getId());
         $pendingCapture->delete();
 
-        $orderUrl = $this->urlBuilder->getUrl('sales/order/view', ['order_id' => $order->getId()]);
-
-        $this->notifier->addNotice(
-            __('Capture declined'),
-            __('Capture declined for Order <a href="%2">#%1</a>', $order->getIncrementId(), $orderUrl),
-            $orderUrl
-        );
+        $this->addCaptureDeclinedNotice($order);
     }
 
     protected function getTransaction($transactionId, $paymentId, $orderId)
@@ -698,5 +693,16 @@ class PaymentManagement implements PaymentManagementInterface
     {
         $status = $order->getConfig()->getStateDefaultStatus($state);
         $order->setState($state)->setStatus($status);
+    }
+
+    protected function addCaptureDeclinedNotice(OrderInterface $order)
+    {
+        $orderUrl = $this->urlBuilder->getUrl('sales/order/view', ['order_id' => $order->getId()]);
+
+        $this->notifier->addNotice(
+            __('Capture declined'),
+            __('Capture declined for Order <a href="%2">#%1</a>', $order->getIncrementId(), $orderUrl),
+            $orderUrl
+        );
     }
 }
