@@ -60,9 +60,10 @@ define(
                 this._super();
             },
             initPaymentWidget: function() {
+                var $amazonPayment = $('#amazon_payment');
                 self.renderPaymentWidget();
-                $('#amazon_payment').trigger('click'); //activate amazon payments method on render
-                $('#amazon_payment').trigger('rendered');
+                $amazonPayment.trigger('click'); //activate amazon payments method on render
+                $amazonPayment.trigger('rendered');
                 
             },
             /**
