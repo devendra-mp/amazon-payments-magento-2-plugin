@@ -51,7 +51,8 @@ use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
-
+use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Store\Model\ScopeInterface;
 
 class PaymentManagement implements PaymentManagementInterface
 {
@@ -337,7 +338,8 @@ class PaymentManagement implements PaymentManagementInterface
         OrderInterface $order,
         OrderPaymentInterface $payment,
         PendingAuthorizationInterface $pendingAuthorization,
-        $capture
+        $capture,
+        $new = false
     ) {
         $authorizationId = $pendingAuthorization->getAuthorizationId();
 
@@ -345,9 +347,14 @@ class PaymentManagement implements PaymentManagementInterface
 
         if ($capture) {
             $invoice = $this->getInvoiceAndSetPaid($authorizationId, $order);
-            $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+
+            if (!$new) {
+                $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+            }
+
             $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
             $message         = __('Captured amount of %1 online', $formattedAmount);
+            $payment->setDataUsingMethod('base_amount_paid_online', $payment->formatAmount($invoice->getBaseGrandTotal()));
         } else {
             $formattedAmount = $order->getBaseCurrency()->formatTxt($payment->getBaseAmountAuthorized());
             $message         = __('Authorized amount of %1 online', $formattedAmount);
@@ -461,7 +468,7 @@ class PaymentManagement implements PaymentManagementInterface
             $capture       = (PaymentAction::AUTHORIZE_AND_CAPTURE === $paymentAction);
 
             if ($capture) {
-                //$this->requestNewAuthorizationAndCapture($order, $payment, $pendingAuthorization);
+                $this->requestNewAuthorizationAndCapture($order, $payment, $pendingAuthorization);
             } else {
                 $this->requestNewAuthorization($order, $payment, $pendingAuthorization);
             }
@@ -503,14 +510,24 @@ class PaymentManagement implements PaymentManagementInterface
         PendingAuthorizationInterface $pendingAuthorization
     ) {
         try {
-            /**
-             * create invoice
-             * authorizeInCron
-             * save/create transaction
-             *
-             * if not pending call completePendingAuthorization
-             * else add transaction id to q
-             */
+            $invoice = $order->prepareInvoice();
+            $invoice->register();
+
+            $baseAmount = $payment->formatAmount($invoice->getBaseGrandTotal());
+
+            $method = $payment->getMethodInstance();
+            $method->setStore($order->getStoreId());
+            $method->authorizeInCron($payment, $baseAmount, true);
+
+            $transaction = $payment->addTransaction(Transaction::TYPE_CAPTURE, $invoice, true);
+            $transaction->save();
+
+            $pendingAuthorization->setAuthorizationId($transaction->getTxnId());
+
+            $order->addRelatedObject($invoice);
+            $payment->setCreatedInvoice($invoice);
+
+            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, true, true);
         } catch (SoftDeclineException $e) {
             $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, null, true);
         } catch (\Exception $e) {
