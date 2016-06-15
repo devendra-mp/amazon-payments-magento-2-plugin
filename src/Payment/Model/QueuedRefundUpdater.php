@@ -17,8 +17,8 @@ namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Payment\Api\Data\PendingRefundInterface;
-use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Amazon\Payment\Domain\AmazonRefundDetailsResponseFactory;
+use Amazon\Payment\Domain\AmazonRefundStatus;
 use Magento\Framework\Notification\NotifierInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -104,10 +104,10 @@ class QueuedRefundUpdater
                 $status   = $response->getRefundDetails()->getRefundStatus();
 
                 switch ($status->getState()) {
-                    case AmazonCaptureStatus::STATE_COMPLETED:
+                    case AmazonRefundStatus::STATE_COMPLETED:
                         $pendingRefund->delete();
                         break;
-                    case AmazonCaptureStatus::STATE_DECLINED:
+                    case AmazonRefundStatus::STATE_DECLINED:
                         $this->triggerAdminNotificationForDeclinedRefund($pendingRefund);
                         $pendingRefund->delete();
                         break;
