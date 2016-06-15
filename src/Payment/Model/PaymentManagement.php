@@ -396,6 +396,14 @@ class PaymentManagement implements PaymentManagementInterface
         $this->setOnHold($order);
         $pendingAuthorization->delete();
         $order->save();
+
+        $this->eventManager->dispatch(
+            'amazon_payment_pending_authorization_hard_decline_after',
+            [
+                'order'                => $order,
+                'pendingAuthorization' => $pendingAuthorization,
+            ]
+        );
     }
 
     protected function processUpdateCaptureResponse(
