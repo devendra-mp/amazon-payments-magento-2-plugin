@@ -18,7 +18,6 @@ namespace Amazon\Core\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Encryption\EncryptorInterface;
-use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -42,26 +41,26 @@ class Data extends AbstractHelper
     protected $storeManager;
 
     /**
-     * @var string
+     * @var \Amazon\Core\Helper\ClientIp
      */
-    protected $remoteIp;
+    private $clientIpHelper;
 
     /**
      * @param Context               $context
      * @param EncryptorInterface    $encryptor
      * @param StoreManagerInterface $storeManager
-     * @param RemoteAddress         $remoteAddress
+     * @param ClientIp              $clientIpHelper
      */
     public function __construct(
-        Context $context,
-        EncryptorInterface $encryptor,
+        Context               $context,
+        EncryptorInterface    $encryptor,
         StoreManagerInterface $storeManager,
-        RemoteAddress $remoteAddress
+        ClientIp              $clientIpHelper
     ) {
         parent::__construct($context);
-        $this->encryptor    = $encryptor;
-        $this->storeManager = $storeManager;
-        $this->remoteIp     = $remoteAddress->getRemoteAddress();
+        $this->encryptor      = $encryptor;
+        $this->storeManager   = $storeManager;
+        $this->clientIpHelper = $clientIpHelper;
     }
 
     /*
@@ -245,7 +244,7 @@ class Data extends AbstractHelper
      */
     public function isPwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        if ( ! $this->clientHasAllowedIp()) {
+        if ( ! $this->clientIpHelper->clientHasAllowedIp()) {
             return false;
         }
 
@@ -261,7 +260,7 @@ class Data extends AbstractHelper
      */
     public function isLwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        if ( ! $this->clientHasAllowedIp()) {
+        if ( ! $this->clientIpHelper->clientHasAllowedIp()) {
             return false;
         }
 
@@ -483,25 +482,6 @@ class Data extends AbstractHelper
             $scope,
             $scopeCode
         );
-    }
-
-    /*
-     * @return string[]
-     */
-    public function getAllowedIps($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
-    {
-        $allowedIpsString = $this->scopeConfig->getValue('payment/amazon_payment/allowed_ips', $scope, $scopeCode);
-        return empty($allowedIpsString) ? [] : explode(',', $allowedIpsString);
-    }
-
-    /**
-     * @return bool
-     */
-    public function clientHasAllowedIp()
-    {
-        $allowedIps = $this->getAllowedIps();
-
-        return empty($allowedIps) ? true : in_array($this->remoteIp, $allowedIps);
     }
 
     /*
