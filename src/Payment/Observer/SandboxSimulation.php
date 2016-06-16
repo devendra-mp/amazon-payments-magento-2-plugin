@@ -19,6 +19,7 @@ use Amazon\Core\Helper\Data;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Payment\Model\InfoInterface;
 
 class SandboxSimulation implements ObserverInterface
 {
@@ -57,8 +58,25 @@ class SandboxSimulation implements ObserverInterface
                 if ( ! empty($simulationString)) {
                     $requestParameter = $this->getRequestParameter($context);
                     $observer->getTransport()->addData([$requestParameter => $simulationString]);
+                    $this->clearSimulationReference($payment);
                 }
             }
+        }
+    }
+
+    protected function clearSimulationReference(InfoInterface $payment)
+    {
+        $additionalInformation = $payment->getAdditionalInformation();
+
+        if (is_array($additionalInformation) && isset($additionalInformation['sandbox_simulation_reference'])) {
+            unset($additionalInformation['sandbox_simulation_reference']);
+            $payment->setAdditionalInformation($additionalInformation);
+        }
+
+        $quoteLink = $this->getQuoteLink($payment);
+
+        if ($quoteLink->getSandboxSimulationReference()) {
+            $quoteLink->setSandboxSimulationReference(null)->save();
         }
     }
 

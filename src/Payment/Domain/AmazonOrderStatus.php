@@ -13,23 +13,13 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Core\Model\Config\Source;
+namespace Amazon\Payment\Domain;
 
-use Magento\Framework\Option\ArrayInterface;
-
-class PaymentAction implements ArrayInterface
+class AmazonOrderStatus extends AbstractAmazonStatus
 {
-    const AUTHORIZE = 'authorize';
-    const AUTHORIZE_AND_CAPTURE = 'authorize_capture';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toOptionArray()
-    {
-        return [
-            ['value' => static::AUTHORIZE, 'label' => __('Charge on Shipment')],
-            ['value' => static::AUTHORIZE_AND_CAPTURE, 'label' => __('Charge on Order')],
-        ];
-    }
+    const STATE_DRAFT = 'Draft';
+    const STATE_OPEN = 'Open';
+    const STATE_SUSPENDED = 'Suspended';
+    const STATE_CANCELED= 'Canceled';
+    const STATE_CLOSED = 'Closed';
 }

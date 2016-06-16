@@ -35,4 +35,7 @@
             <argument name="adminNotifier" xsi:type="object">Magento\Framework\Notification\NotifierInterface\Proxy</argument>
         </arguments>
     </type>
+    <type name="Magento\Sales\Api\TransactionRepositoryInterface">
+        <plugin name="amazon_payment_transaction_repository" type="Amazon\Payment\Plugin\TransactionRepository" sortOrder="1" />
+    </type>
 </config>

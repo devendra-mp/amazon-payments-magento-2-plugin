@@ -162,6 +162,34 @@ class Amazon extends AbstractMethod
      */
     protected $amazonCoreHelper;
 
+    /**
+     * Amazon constructor.
+     *
+     * @param Context                                   $context
+     * @param Registry                                  $registry
+     * @param ExtensionAttributesFactory                $extensionFactory
+     * @param AttributeValueFactory                     $customAttributeFactory
+     * @param Data                                      $paymentData
+     * @param ScopeConfigInterface                      $scopeConfig
+     * @param Logger                                    $logger
+     * @param ClientFactoryInterface                    $clientFactory
+     * @param QuoteLinkInterfaceFactory                 $quoteLinkFactory
+     * @param OrderInformationManagementInterface       $orderInformationManagement
+     * @param CartRepositoryInterface                   $cartRepository
+     * @param AmazonAuthorizationResponseFactory        $amazonAuthorizationResponseFactory
+     * @param AmazonCaptureResponseFactory              $amazonCaptureResponseFactory
+     * @param AmazonRefundResponseFactory               $amazonRefundResponseFactory
+     * @param AmazonAuthorizationDetailsResponseFactory $amazonAuthorizationDetailsResponseFactory
+     * @param AmazonAuthorization                       $amazonAuthorizationValidator
+     * @param AmazonPreCapture                          $amazonPreCaptureValidator
+     * @param AmazonCapture                             $amazonCaptureValidator
+     * @param AmazonRefund                              $amazonRefundValidator
+     * @param PaymentManagementInterface                $paymentManagement
+     * @param AmazonCoreHelper                          $amazonCoreHelper
+     * @param AbstractResource|null                     $resource
+     * @param AbstractDb|null                           $resourceCollection
+     * @param array                                     $data
+     */
     public function __construct(
         Context $context,
         Registry $registry,
@@ -223,6 +251,15 @@ class Amazon extends AbstractMethod
     public function authorize(InfoInterface $payment, $amount)
     {
         $this->authorizeInStore($payment, $amount, false);
+    }
+
+    public function authorizeInCron(InfoInterface $payment, $amount, $capture)
+    {
+        $amazonOrderReferenceId = $this->getAmazonOrderReferenceId($payment);
+        $storeId                = $payment->getOrder()->getStoreId();
+        $async                  = false;
+
+        $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, $capture, $async);
     }
 
     /**
@@ -373,7 +410,9 @@ class Amazon extends AbstractMethod
         $this->reserveNewOrderId($payment);
 
         throw new WebapiException(
-            __('Unfortunately it is not possible to pay with Amazon for this order. Please choose another payment method.'),
+            __(
+                'Unfortunately it is not possible to pay with Amazon for this order. Please choose another payment method.'
+            ),
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
@@ -382,7 +421,9 @@ class Amazon extends AbstractMethod
     protected function processSoftDecline()
     {
         throw new WebapiException(
-            __('There has been a problem with the selected payment method on your Amazon account. Please choose another one.'),
+            __(
+                'There has been a problem with the selected payment method on your Amazon account. Please choose another one.'
+            ),
             AmazonAuthorizationStatus::CODE_SOFT_DECLINE,
             WebapiException::HTTP_FORBIDDEN
         );
@@ -419,7 +460,9 @@ class Amazon extends AbstractMethod
             } catch (CapturePendingException $e) {
                 $payment->setIsTransactionPending(true);
                 $payment->setIsTransactionClosed(false);
-                $this->paymentManagement->queuePendingCapture($response, $payment->getId(), $payment->getOrder()->getId());
+                $this->paymentManagement->queuePendingCapture(
+                    $response, $payment->getId(), $payment->getOrder()->getId()
+                );
             } finally {
                 if (isset($response)) {
                     $payment->setTransactionId($response->getTransactionId());
