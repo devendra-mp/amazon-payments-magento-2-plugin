@@ -19,6 +19,7 @@ use Amazon\Core\Helper\Data;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Payment\Model\InfoInterface;
 
 class SandboxSimulation implements ObserverInterface
 {
@@ -63,7 +64,7 @@ class SandboxSimulation implements ObserverInterface
         }
     }
 
-    protected function clearSimulationReference($payment)
+    protected function clearSimulationReference(InfoInterface $payment)
     {
         $additionalInformation = $payment->getAdditionalInformation();
 
