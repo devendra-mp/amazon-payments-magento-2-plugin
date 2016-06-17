@@ -9,6 +9,8 @@ define([
 ], function ($, _, ko, Component, paymentMethods, checkoutDataResolver, amazonStorage) {
     'use strict';
 
+    var self;
+
     return Component.extend({
         /**
          * Initialize view.
@@ -16,20 +18,24 @@ define([
          * @returns {Component} Chainable.
          */
         initialize: function () {
-            paymentMethods.subscribe(
-                function (changes) {
-                    checkoutDataResolver.resolvePaymentMethod();
-                    //remove renderer for "deleted" payment methods
-                    _.each(changes, function (change) {
-                        if(amazonStorage.isAmazonAccountLoggedIn() && change.value.method !== 'amazon_payment') {
-                            this.removeRenderer(change.value.method);
-                            change.status = 'deleted';
-                        }
-                    }, this);
-                }, this, 'arrayChange');
 
-            this._super();
+            self = this;
+            this._hidePaymentMethodsOnLoad(); //hide methods on load
+
+            //subscribe to payment methods to remove other payment methods from render list
+            paymentMethods.subscribe(function (changes) {
+                checkoutDataResolver.resolvePaymentMethod();
+                //remove renderer for "deleted" payment methods
+                _.each(changes, function (change) {
+                    if(amazonStorage.isAmazonAccountLoggedIn() && change.value.method !== 'amazon_payment') {
+                        this.removeRenderer(change.value.method);
+                        change.status = 'deleted';
+                    }
+                }, this);
+            }, this, 'arrayChange');
+
             this._setupDeclineHandler();
+            this._super();
 
             return this;
         },
@@ -58,6 +64,22 @@ define([
                         break;
                 }
             }, this);
+        },
+        /**
+         * When payment methods exist on load hook into widget render to remove when widget has rendered
+         * @private
+         */
+        _hidePaymentMethodsOnLoad: function() {
+            if(paymentMethods().length > 0) {
+                //if the payment methods are already set
+                $(document).on('rendered', '#amazon_payment', function () {
+                    _.each(paymentMethods(), function (payment) {
+                        if (amazonStorage.isAmazonAccountLoggedIn() && payment.method !== 'amazon_payment') {
+                            this.removeRenderer(payment.method);
+                        }
+                    }, self);
+                });
+            }
         },
         /**
          * reload payment methods on decline
