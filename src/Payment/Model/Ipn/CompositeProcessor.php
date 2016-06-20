@@ -13,17 +13,32 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Payment\Domain;
+namespace Amazon\Payment\Model\Ipn;
 
-class AmazonRefundDetailsResponse extends AbstractAmazonRefundResponse
+use Amazon\Payment\Api\Ipn\CompositeProcessorInterface;
+use Amazon\Payment\Api\Ipn\ProcessorInterface;
+
+class CompositeProcessor implements CompositeProcessorInterface
 {
-    protected $resultKey = 'GetRefundDetailsResult';
+    /**
+     * @var ProcessorInterface[]
+     */
+    protected $processors;
+
+    public function __construct(array $processors)
+    {
+        $this->processors = $processors;
+    }
 
     /**
      * {@inheritDoc}
      */
-    protected function getResultKey()
+    public function process(array $ipnData)
     {
-        return $this->resultKey;
+        foreach ($this->processors as $processor) {
+            if ($processor->supports($ipnData)) {
+                return $processor->process($ipnData);
+            }
+        }
     }
 }

@@ -16,28 +16,28 @@
 namespace Amazon\Payment\Domain;
 
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
+use Amazon\Payment\Domain\Details\AmazonCaptureDetails;
+use Amazon\Payment\Domain\Details\AmazonCaptureDetailsFactory;
 use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
 abstract class AbstractAmazonCaptureResponse implements AmazonResponseInterface
 {
     /**
-     * @var AmazonCaptureStatus
+     * @var AmazonCaptureDetails
      */
-    protected $status;
+    protected $details;
 
     /**
-     * @var string|null
+     * AbstractAmazonCaptureResponse constructor.
+     *
+     * @param ResponseInterface           $response
+     * @param AmazonCaptureDetailsFactory $amazonCaptureDetailsFactory
      */
-    protected $transactionId;
-
-    /**
-     * @param ResponseInterface $response
-     * @param AmazonCaptureStatusFactory $amazonCaptureStatusFactory
-     * @throws AmazonServiceUnavailableException
-     */
-    public function __construct(ResponseInterface $response, AmazonCaptureStatusFactory $amazonCaptureStatusFactory)
-    {
+    public function __construct(
+        ResponseInterface $response,
+        AmazonCaptureDetailsFactory $amazonCaptureDetailsFactory
+    ) {
         $data = $response->toArray();
 
         if (200 != $data['ResponseStatus']) {
@@ -46,35 +46,17 @@ abstract class AbstractAmazonCaptureResponse implements AmazonResponseInterface
 
         $details = $data[$this->getResultKey()]['CaptureDetails'];
 
-        $status       = $details['CaptureStatus'];
-        $this->status = $amazonCaptureStatusFactory->create([
-            'state'      => $status['State'],
-            'reasonCode' => (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
+        $this->details = $amazonCaptureDetailsFactory->create([
+            'details' => $details
         ]);
-
-        if (isset($details['AmazonCaptureId'])) {
-            $this->transactionId = $details['AmazonCaptureId'];
-        }
     }
 
     /**
-     * Get status
-     *
-     * @return AmazonCaptureStatus
+     * @return AmazonCaptureDetails
      */
-    public function getStatus()
+    public function getDetails()
     {
-        return $this->status;
-    }
-
-    /**
-     * Get transaction id
-     *
-     * @return string|null
-     */
-    public function getTransactionId()
-    {
-        return $this->transactionId;
+        return $this->details;
     }
 
     /**

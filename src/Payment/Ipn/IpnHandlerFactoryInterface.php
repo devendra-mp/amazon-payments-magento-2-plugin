@@ -13,12 +13,19 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Payment\Domain\Response\Part;
+namespace Amazon\Payment\Ipn;
 
-/**
- * A Response Part represents a sub-section of an Amazon response.
- */
-interface PartInterface
+use PayWithAmazon\IpnHandlerInterface;
+
+interface IpnHandlerFactoryInterface
 {
-
+    /**
+     * Create amazon ipn instance
+     *
+     * @param array           $headers
+     * @param string          $body
+     *
+     * @return IpnHandlerInterface
+     */
+    public function create($headers, $body);
 }

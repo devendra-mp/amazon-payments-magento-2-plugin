@@ -25,14 +25,14 @@ use Amazon\Payment\Api\Data\PendingCaptureInterfaceFactory;
 use Amazon\Payment\Api\Data\PendingRefundInterfaceFactory;
 use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationDetailsResponseFactory;
-use Amazon\Payment\Domain\AmazonAuthorizationResponse;
-use Amazon\Payment\Domain\AmazonCaptureDetailsResponse;
 use Amazon\Payment\Domain\AmazonCaptureDetailsResponseFactory;
-use Amazon\Payment\Domain\AmazonCaptureResponse;
 use Amazon\Payment\Domain\AmazonCaptureStatus;
 use Amazon\Payment\Domain\AmazonGetOrderDetailsResponseFactory;
 use Amazon\Payment\Domain\AmazonOrderStatus;
-use Amazon\Payment\Domain\AmazonRefundResponse;
+use Amazon\Payment\Domain\Details\AmazonAuthorizationDetails;
+use Amazon\Payment\Domain\Details\AmazonCaptureDetails;
+use Amazon\Payment\Domain\Details\AmazonOrderDetails;
+use Amazon\Payment\Domain\Details\AmazonRefundDetails;
 use Amazon\Payment\Domain\Validator\AmazonAuthorization;
 use Amazon\Payment\Exception\SoftDeclineException;
 use Exception;
@@ -203,8 +203,11 @@ class PaymentManagement implements PaymentManagementInterface
     /**
      * {@inheritdoc}
      */
-    public function updateAuthorization($pendingAuthorizationId)
-    {
+    public function updateAuthorization(
+        $pendingAuthorizationId,
+        AmazonAuthorizationDetails $authorizationDetails = null,
+        AmazonOrderDetails $orderDetails = null
+    ) {
         try {
             $pendingAuthorization = $this->pendingAuthorizationFactory->create();
             $pendingAuthorization->getResource()->beginTransaction();
@@ -213,9 +216,9 @@ class PaymentManagement implements PaymentManagementInterface
 
             if ($pendingAuthorization->getOrderId()) {
                 if ($pendingAuthorization->isProcessed()) {
-                    $this->processNewAuthorization($pendingAuthorization);
+                    $this->processNewAuthorization($pendingAuthorization, $orderDetails);
                 } else {
-                    $this->processUpdateAuthorization($pendingAuthorization);
+                    $this->processUpdateAuthorization($pendingAuthorization, $authorizationDetails);
                 }
             }
 
@@ -228,7 +231,7 @@ class PaymentManagement implements PaymentManagementInterface
     /**
      * {@inheritdoc}
      */
-    public function updateCapture($pendingCaptureId)
+    public function updateCapture($pendingCaptureId, AmazonCaptureDetails $captureDetails = null)
     {
         try {
             $pendingCapture = $this->pendingCaptureFactory->create();
@@ -241,14 +244,16 @@ class PaymentManagement implements PaymentManagementInterface
                 $payment = $this->orderPaymentRepository->get($pendingCapture->getPaymentId());
                 $order->setPayment($payment);
 
-                $responseParser = $this->clientFactory->create($order->getStoreId())->getCaptureDetails(
-                    [
+                if (null === $captureDetails) {
+                    $responseParser = $this->clientFactory->create($order->getStoreId())->getCaptureDetails([
                         'amazon_capture_id' => $pendingCapture->getCaptureId()
-                    ]
-                );
+                    ]);
 
-                $response = $this->amazonCaptureDetailsResponseFactory->create(['response' => $responseParser]);
-                $this->processUpdateCaptureResponse($response, $pendingCapture, $payment, $order);
+                    $response       = $this->amazonCaptureDetailsResponseFactory->create(['response' => $responseParser]);
+                    $captureDetails = $response->getDetails();
+                }
+
+                $this->processUpdateCaptureResponse($captureDetails, $pendingCapture, $payment, $order);
             }
 
             $pendingCapture->getResource()->commit();
@@ -260,10 +265,10 @@ class PaymentManagement implements PaymentManagementInterface
     /**
      * {@inheritdoc}
      */
-    public function queuePendingCapture(AmazonCaptureResponse $response, $paymentId, $orderId)
+    public function queuePendingCapture(AmazonCaptureDetails $details, $paymentId, $orderId)
     {
         $this->pendingCaptureFactory->create()
-            ->setCaptureId($response->getTransactionId())
+            ->setCaptureId($details->getTransactionId())
             ->setPaymentId($paymentId)
             ->setOrderId($orderId)
             ->save();
@@ -272,10 +277,10 @@ class PaymentManagement implements PaymentManagementInterface
     /**
      * {@inheritdoc}
      */
-    public function queuePendingAuthorization(AmazonAuthorizationResponse $response, OrderInterface $order)
+    public function queuePendingAuthorization(AmazonAuthorizationDetails $details, OrderInterface $order)
     {
         $pendingAuthorization = $this->pendingAuthorizationFactory->create()
-            ->setAuthorizationId($response->getAuthorizeTransactionId());
+            ->setAuthorizationId($details->getAuthorizeTransactionId());
 
         $order->addRelatedObject($pendingAuthorization);
     }
@@ -283,10 +288,10 @@ class PaymentManagement implements PaymentManagementInterface
     /**
      * {@inheritdoc}
      */
-    public function queuePendingRefund(AmazonRefundResponse $response, PaymentInfoInterface $payment)
+    public function queuePendingRefund(AmazonRefundDetails $details, PaymentInfoInterface $payment)
     {
         $this->pendingRefundFactory->create()
-            ->setRefundId($response->getRefundId())
+            ->setRefundId($details->getRefundId())
             ->setPaymentId($payment->getId())
             ->setOrderId($payment->getOrder()->getId())
             ->save();
@@ -300,31 +305,30 @@ class PaymentManagement implements PaymentManagementInterface
         $this->getTransaction($transactionId, $paymentId, $orderId)->setIsClosed(1)->save();
     }
 
-    protected function processUpdateAuthorization(PendingAuthorizationInterface $pendingAuthorization)
-    {
+    protected function processUpdateAuthorization(
+        PendingAuthorizationInterface $pendingAuthorization,
+        AmazonAuthorizationDetails $authorizationDetails = null
+    ) {
         $order   = $this->orderRepository->get($pendingAuthorization->getOrderId());
         $payment = $this->orderPaymentRepository->get($pendingAuthorization->getPaymentId());
         $order->setPayment($payment);
         $authorizationId = $pendingAuthorization->getAuthorizationId();
 
-        $responseParser = $this->clientFactory->create($order->getStoreId())->getAuthorizationDetails(
-            [
+        if (null === $authorizationDetails) {
+            $responseParser = $this->clientFactory->create($order->getStoreId())->getAuthorizationDetails([
                 'amazon_authorization_id' => $authorizationId
-            ]
-        );
+            ]);
 
-        $response = $this->amazonAuthorizationDetailsResponseFactory->create(
-            [
-                'response' => $responseParser
-            ]
-        );
+            $response             = $this->amazonAuthorizationDetailsResponseFactory->create(['response' => $responseParser]);
+            $authorizationDetails = $response->getDetails();
+        }
 
-        $capture = $response->hasCapture();
+        $capture = $authorizationDetails->hasCapture();
 
         try {
-            $this->amazonAuthorizationValidator->validate($response);
+            $this->amazonAuthorizationValidator->validate($authorizationDetails);
 
-            if ( ! $response->isPending()) {
+            if ( ! $authorizationDetails->isPending()) {
                 $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
             }
         } catch (SoftDeclineException $e) {
@@ -348,20 +352,23 @@ class PaymentManagement implements PaymentManagementInterface
         if ($capture) {
             $invoice = $this->getInvoiceAndSetPaid($authorizationId, $order);
 
-            if (!$newAuthorizationId) {
+            if ( ! $newAuthorizationId) {
                 $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
             }
 
             $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
             $message         = __('Captured amount of %1 online', $formattedAmount);
-            $payment->setDataUsingMethod('base_amount_paid_online', $payment->formatAmount($invoice->getBaseGrandTotal()));
+            $payment->setDataUsingMethod(
+                'base_amount_paid_online',
+                $payment->formatAmount($invoice->getBaseGrandTotal())
+            );
         } else {
             $formattedAmount = $order->getBaseCurrency()->formatTxt($payment->getBaseAmountAuthorized());
             $message         = __('Authorized amount of %1 online', $formattedAmount);
         }
 
         $transactionId = ($newAuthorizationId) ?: $authorizationId;
-        $transaction = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
+        $transaction   = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
         $payment->addTransactionCommentsToOrder($transaction, $message);
 
         $order->save();
@@ -412,7 +419,7 @@ class PaymentManagement implements PaymentManagementInterface
         $authorizationId = $pendingAuthorization->getAuthorizationId();
 
         if ($capture) {
-            $invoice = $this->getInvoiceAndSetCancelled($authorizationId, $order);
+            $invoice         = $this->getInvoiceAndSetCancelled($authorizationId, $order);
             $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
             $message         = __('Declined amount of %1 online', $formattedAmount);
             $this->addCaptureDeclinedNotice($order);
@@ -439,22 +446,25 @@ class PaymentManagement implements PaymentManagementInterface
         );
     }
 
-    protected function processNewAuthorization(PendingAuthorizationInterface $pendingAuthorization)
-    {
+    protected function processNewAuthorization(
+        PendingAuthorizationInterface $pendingAuthorization,
+        AmazonOrderDetails $orderDetails = null
+    ) {
         $order   = $this->orderRepository->get($pendingAuthorization->getOrderId());
         $payment = $this->orderPaymentRepository->get($pendingAuthorization->getPaymentId());
         $order->setPayment($payment);
         $storeId = $order->getStoreId();
 
-        $responseParser = $this->clientFactory->create($storeId)->getOrderReferenceDetails(
-            [
+        if (null === $orderDetails) {
+            $responseParser = $this->clientFactory->create($storeId)->getOrderReferenceDetails([
                 'amazon_order_reference_id' => $order->getExtensionAttributes()->getAmazonOrderReferenceId()
-            ]
-        );
+            ]);
 
-        $response = $this->amazonGetOrderDetailsResponseFactory->create(['response' => $responseParser]);
+            $response     = $this->amazonGetOrderDetailsResponseFactory->create(['response' => $responseParser]);
+            $orderDetails = $response->getDetails();
+        }
 
-        if (AmazonOrderStatus::STATE_OPEN == $response->getStatus()->getState()) {
+        if (AmazonOrderStatus::STATE_OPEN == $orderDetails->getStatus()->getState()) {
             $paymentAction = $this->amazonCoreHelper->getPaymentAction(ScopeInterface::SCOPE_STORE, $storeId);
             $capture       = (PaymentAction::AUTHORIZE_AND_CAPTURE === $paymentAction);
 
@@ -483,7 +493,8 @@ class PaymentManagement implements PaymentManagementInterface
             $transaction = $payment->addTransaction(Transaction::TYPE_AUTH);
             $transaction->save();
 
-            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture, $transaction->getTxnId());
+            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture,
+                $transaction->getTxnId());
         } catch (SoftDeclineException $e) {
             $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         } catch (\Exception $e) {
@@ -510,7 +521,8 @@ class PaymentManagement implements PaymentManagementInterface
             $transaction = $payment->addTransaction(Transaction::TYPE_CAPTURE, $invoice, true);
             $transaction->save();
 
-            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture, $transaction->getTxnId());
+            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture,
+                $transaction->getTxnId());
         } catch (SoftDeclineException $e) {
             $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         } catch (\Exception $e) {
@@ -519,12 +531,12 @@ class PaymentManagement implements PaymentManagementInterface
     }
 
     protected function processUpdateCaptureResponse(
-        AmazonCaptureDetailsResponse $response,
+        AmazonCaptureDetails $details,
         PendingCaptureInterface $pendingCapture,
         OrderPaymentInterface $payment,
         OrderInterface $order
     ) {
-        $status = $response->getStatus();
+        $status = $details->getStatus();
 
         switch ($status->getState()) {
             case AmazonCaptureStatus::STATE_COMPLETED:

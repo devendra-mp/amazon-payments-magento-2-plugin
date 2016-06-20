@@ -16,7 +16,6 @@
 namespace Amazon\Payment\Cron;
 
 use Amazon\Payment\Api\Data\PendingRefundInterface;
-use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Model\QueuedRefundUpdaterFactory;
 use Amazon\Payment\Model\ResourceModel\PendingRefund\CollectionFactory;
 use Magento\Framework\Data\Collection;
@@ -34,37 +33,29 @@ class ProcessAmazonRefunds
     protected $queuedRefundsCollectionFactory;
 
     /**
-     * @var PaymentManagementInterface
-     */
-    protected $paymentManagement;
-
-    /**
      * @var QueuedRefundUpdaterFactory
      */
     protected $queuedRefundUpdater;
 
     /**
-     * @param CollectionFactory $collectionFactory
-     * @param PaymentManagementInterface $paymentManagement
+     * @param CollectionFactory          $collectionFactory
      * @param QueuedRefundUpdaterFactory $queuedRefundUpdater
-     * @param int $limit
+     * @param int                        $limit
      */
     public function __construct(
         CollectionFactory $collectionFactory,
-        PaymentManagementInterface $paymentManagement,
         QueuedRefundUpdaterFactory $queuedRefundUpdater,
         $limit = 100
     ) {
         $this->queuedRefundsCollectionFactory = $collectionFactory;
-        $this->paymentManagement = $paymentManagement;
 
-        $limit = (int) $limit;
+        $limit = (int)$limit;
 
         if ($limit < 1) {
             throw new \InvalidArgumentException('Limit must be greater than 1.');
         }
 
-        $this->limit = $limit;
+        $this->limit               = $limit;
         $this->queuedRefundUpdater = $queuedRefundUpdater;
     }
 
@@ -78,7 +69,7 @@ class ProcessAmazonRefunds
 
         $queuedRefundUpdater = $this->queuedRefundUpdater->create();
 
-        foreach($collection->getIdGenerator() as $pendingRefundId) {
+        foreach ($collection->getIdGenerator() as $pendingRefundId) {
             $queuedRefundUpdater->checkAndUpdateRefund($pendingRefundId);
         }
     }

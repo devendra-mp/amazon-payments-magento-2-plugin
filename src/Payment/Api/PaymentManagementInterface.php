@@ -15,62 +15,70 @@
  */
 namespace Amazon\Payment\Api;
 
-use Amazon\Payment\Domain\AmazonAuthorizationResponse;
-use Amazon\Payment\Domain\AmazonCaptureResponse;
-use Magento\Sales\Api\Data\OrderInterface;
-use Amazon\Payment\Domain\AmazonRefundResponse;
+use Amazon\Payment\Domain\Details\AmazonAuthorizationDetails;
+use Amazon\Payment\Domain\Details\AmazonCaptureDetails;
+use Amazon\Payment\Domain\Details\AmazonOrderDetails;
+use Amazon\Payment\Domain\Details\AmazonRefundDetails;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 
 interface PaymentManagementInterface
 {
     /**
      * Update capture
      *
-     * @param integer $pendingCaptureId
+     * @param integer                   $pendingCaptureId
+     * @param AmazonCaptureDetails|null $captureDetails
      *
      * @return void
      */
-    public function updateCapture($pendingCaptureId);
+    public function updateCapture($pendingCaptureId, AmazonCaptureDetails $captureDetails = null);
 
     /**
      * Update authorization
      *
-     * @param integer $pendingAuthorizationId
+     * @param integer                         $pendingAuthorizationId
+     * @param AmazonAuthorizationDetails|null $authorizationDetails
+     * @param AmazonOrderDetails|null         $orderDetails
      *
      * @return void
      */
-    public function updateAuthorization($pendingAuthorizationId);
+    public function updateAuthorization(
+        $pendingAuthorizationId,
+        AmazonAuthorizationDetails $authorizationDetails = null,
+        AmazonOrderDetails $orderDetails = null
+    );
 
     /**
      * Queue pending capture
      *
-     * @param AmazonCaptureResponse $response
-     * @param integer               $paymentId
-     * @param integer               $orderId
+     * @param AmazonCaptureDetails $details
+     * @param integer              $paymentId
+     * @param integer              $orderId
      *
      * @return void
      */
-    public function queuePendingCapture(AmazonCaptureResponse $response, $paymentId, $orderId);
+    public function queuePendingCapture(AmazonCaptureDetails $details, $paymentId, $orderId);
 
     /**
      * Queue pending authorization
      *
-     * @param AmazonAuthorizationResponse $response
-     * @param OrderInterface              $order
+     * @param AmazonAuthorizationDetails $details
+     * @param OrderInterface             $order
      *
      * @return void
      */
-    public function queuePendingAuthorization(AmazonAuthorizationResponse $response, OrderInterface $order);
+    public function queuePendingAuthorization(AmazonAuthorizationDetails $details, OrderInterface $order);
 
     /**
      * Queue pending refund
      *
-     * @param AmazonRefundResponse $response
-     * @param InfoInterface        $payment
+     * @param AmazonRefundDetails $details
+     * @param InfoInterface       $payment
      *
      * @return void
      */
-    public function queuePendingRefund(AmazonRefundResponse $response, InfoInterface $payment);
+    public function queuePendingRefund(AmazonRefundDetails $details, InfoInterface $payment);
 
     /**
      * Close transaction

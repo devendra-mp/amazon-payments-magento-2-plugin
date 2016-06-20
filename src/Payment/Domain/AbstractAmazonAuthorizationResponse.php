@@ -16,41 +16,27 @@
 namespace Amazon\Payment\Domain;
 
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
+use Amazon\Payment\Domain\Details\AmazonAuthorizationDetails;
+use Amazon\Payment\Domain\Details\AmazonAuthorizationDetailsFactory;
 use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
 abstract class AbstractAmazonAuthorizationResponse implements AmazonResponseInterface
 {
     /**
-     * @var AmazonAuthorizationStatus
+     * @var AmazonAuthorizationDetails
      */
-    protected $status;
+    protected $details;
 
     /**
-     * @var string|null
-     */
-    protected $captureTransactionId;
-
-    /**
-     * @var string|null
-     */
-    protected $authorizeTransactionId;
-
-    /**
-     * @var bool
-     */
-    protected $captureNow = false;
-
-    /**
-     * AmazonAuthorizationResponse constructor.
+     * AbstractAmazonAuthorizationResponse constructor.
      *
-     * @param ResponseInterface $response
-     * @param AmazonAuthorizationStatusFactory $amazonAuthorizationStatusFactory
-     * @throws AmazonServiceUnavailableException
+     * @param ResponseInterface                 $response
+     * @param AmazonAuthorizationDetailsFactory $amazonAuthorizationDetailsFactory
      */
     public function __construct(
         ResponseInterface $response,
-        AmazonAuthorizationStatusFactory $amazonAuthorizationStatusFactory
+        AmazonAuthorizationDetailsFactory $amazonAuthorizationDetailsFactory
     ) {
         $data = $response->toArray();
 
@@ -60,63 +46,17 @@ abstract class AbstractAmazonAuthorizationResponse implements AmazonResponseInte
 
         $details = $data[$this->getResultKey()]['AuthorizationDetails'];
 
-        $status       = $details['AuthorizationStatus'];
-        $this->status = $amazonAuthorizationStatusFactory->create([
-            'state'      => $status['State'],
-            'reasonCode' => (isset($status['ReasonCode']) ? $status['ReasonCode'] : null)
+        $this->details = $amazonAuthorizationDetailsFactory->create([
+            'details' => $details
         ]);
-
-        if (isset($details['IdList']['member'])) {
-            $this->captureTransactionId = $details['IdList']['member'];
-        }
-
-        if (isset($details['AmazonAuthorizationId'])) {
-            $this->authorizeTransactionId = $details['AmazonAuthorizationId'];
-        }
-
-        if (isset($details['CaptureNow'])) {
-            $this->captureNow = ('true' === $details['CaptureNow']);
-        }
     }
 
     /**
-     * Get status
-     *
-     * @return AmazonAuthorizationStatus
+     * @return AmazonAuthorizationDetails
      */
-    public function getStatus()
+    public function getDetails()
     {
-        return $this->status;
-    }
-
-    /**
-     * Get authorize transaction id
-     *
-     * @return string|null
-     */
-    public function getAuthorizeTransactionId()
-    {
-        return $this->authorizeTransactionId;
-    }
-
-    /**
-     * Get capture transaction id
-     *
-     * @return string|null
-     */
-    public function getCaptureTransactionId()
-    {
-        return $this->captureTransactionId;
-    }
-
-    public function hasCapture()
-    {
-        return $this->captureNow;
-    }
-
-    public function isPending()
-    {
-        return (AmazonAuthorizationStatus::STATE_PENDING === $this->getStatus()->getState());
+        return $this->details;
     }
 
     /**

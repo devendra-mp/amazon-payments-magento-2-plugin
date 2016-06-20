@@ -15,15 +15,20 @@
  */
 namespace Amazon\Payment\Domain\Validator;
 
-use Amazon\Payment\Domain\AmazonAuthorizationDetailsResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
+use Amazon\Payment\Domain\Details\AmazonAuthorizationDetails;
 use Amazon\Payment\Exception\AuthorizationExpiredException;
 
 class AmazonPreCapture
 {
-    public function validate(AmazonAuthorizationDetailsResponse $response)
+    /**
+     * @param AmazonAuthorizationDetails $details
+     *
+     * @throws AuthorizationExpiredException
+     */
+    public function validate(AmazonAuthorizationDetails $details)
     {
-        $status = $response->getStatus();
+        $status = $details->getStatus();
 
         switch ($status->getReasonCode()) {
             case AmazonAuthorizationStatus::REASON_EXPIRED_UNUSED:

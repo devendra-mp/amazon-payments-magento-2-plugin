@@ -16,7 +16,6 @@
 namespace Amazon\Core\Client;
 
 use Amazon\Core\Helper\Data;
-use Amazon\Core\Model\EnvironmentChecker;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\ScopeInterface;
 
@@ -38,28 +37,20 @@ class ClientFactory implements ClientFactoryInterface
     protected $instanceName;
 
     /**
-     * @var EnvironmentChecker
-     */
-    protected $environmentChecker;
-
-    /**
      * ClientFactory constructor.
      *
      * @param ObjectManagerInterface $objectManager
-     * @param Data $coreHelper
-     * @param EnvironmentChecker $environmentChecker
-     * @param string $instanceName
+     * @param Data                   $coreHelper
+     * @param string                 $instanceName
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
         Data $coreHelper,
-        EnvironmentChecker $environmentChecker,
         $instanceName = '\\PayWithAmazon\\ClientInterface'
     ) {
-        $this->objectManager      = $objectManager;
-        $this->coreHelper         = $coreHelper;
-        $this->environmentChecker = $environmentChecker;
-        $this->instanceName       = $instanceName;
+        $this->objectManager = $objectManager;
+        $this->coreHelper    = $coreHelper;
+        $this->instanceName  = $instanceName;
     }
 
     /**
