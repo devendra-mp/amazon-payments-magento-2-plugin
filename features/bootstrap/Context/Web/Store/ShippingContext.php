@@ -20,6 +20,7 @@ use Bex\Behat\Magento2InitExtension\Fixtures\MagentoConfigManager;
 use Fixtures\AmazonOrder as AmazonOrderFixture;
 use Fixtures\Basket as BasketFixture;
 use Fixtures\Customer as CustomerFixture;
+use Magento\Store\Model\ScopeInterface;
 use Page\Store\Checkout;
 use PHPUnit_Framework_Assert;
 
@@ -148,10 +149,16 @@ class ShippingContext implements SnippetAcceptingContext
      */
     public function theBlacklistTermValidationIsTurnedOn()
     {
-        $this->configManager->changeConfigs([
-            'value' => 1,
-            'path' => 'payment/amazon_payment/packstation_terms_validation_enabled',
-        ]);
+        $this->configManager->changeConfigs(
+            [
+                [
+                'value' => 1,
+                'path' => 'payment/amazon_payment/packstation_terms_validation_enabled',
+                'scope_type' => ScopeInterface::SCOPE_STORES,
+                'scope_code' => null,
+                ]
+            ]
+        );
     }
 
     /**
@@ -160,10 +167,16 @@ class ShippingContext implements SnippetAcceptingContext
     public function amazonAddressContainsBlackListedTerms()
     {
         $blackListedTerms = implode(',', range('a', 'z'));
-        $this->configManager->changeConfigs([
-            'value' => $blackListedTerms,
-            'path' => 'payment/amazon_payment/packstation_terms',
-        ]);
+        $this->configManager->changeConfigs(
+            [
+                [
+                'value' => $blackListedTerms,
+                'path' => 'payment/amazon_payment/packstation_terms',
+                'scope_type' => ScopeInterface::SCOPE_STORES,
+                'scope_code' => null,
+                ]
+            ]
+        );
     }
 
     /**
@@ -171,6 +184,6 @@ class ShippingContext implements SnippetAcceptingContext
      */
     public function iShouldSeeAnErrorAboutTheInvalidAddressHavingABlackListedTerm()
     {
-//        throw new PendingException();
+        PHPUnit_Framework_Assert::assertTrue($this->checkoutPage->isErrorMessageContainerVisible());
     }
 }

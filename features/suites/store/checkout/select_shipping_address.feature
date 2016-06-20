@@ -31,8 +31,8 @@ Feature: As a customer
   Scenario: logged-in customer having an address with a blacklisted term shouldn't complete the checkout
     Given I login with amazon as "amazoncustomer@example.com"
     And there is a valid product in my basket
-    And I go to the checkout
-    When the blacklist term validation is turned on
+    And the blacklist term validation is turned on
     And Amazon address contains black listed terms
+    And I go to the checkout
     Then the amazon shipping widget should be displayed
     And I should see an error about the invalid address having a black listed term
