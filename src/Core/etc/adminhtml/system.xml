@@ -146,15 +146,20 @@
                             <config_path>payment/amazon_payment/additional_access_scope</config_path>
                         </field>
                     </group>
+                    -->
                     <group id="sales_exclusions" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sales Exclusions</label>
-                        <field id="exclude_packing_stations" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Exclude Packing Stations</label>
+                        <field id="packstation_terms_validation_switch" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Is Packing Stations Terms Validation Enabled</label>
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                            <config_path>payment/amazon_payment/exclude_packing_stations</config_path>
+                            <config_path>payment/amazon_payment/packstation_terms_validation_enabled</config_path>
+                        </field>
+                        <field id="packstation_terms" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Packing Stations Terms</label>
+                            <config_path>payment/amazon_payment/packstation_terms</config_path>
+                            <comment><![CDATA[A comma-separated list of case-insensitive terms which will be used to check whether a Customer Address is a locker or packing station.]]></comment>
                         </field>
                     </group>
-                    -->
                     <group id="developer_options" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Developer Options</label>
                         <!--

@@ -24,6 +24,9 @@ use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Validator\Exception as ValidatorException;
+use Magento\Framework\Validator\Factory;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
@@ -58,15 +61,21 @@ class AddressManagement implements AddressManagementInterface
     /**
      * @var AmazonAddressFactory
      */
-    private $amazonAddressFactory;
+    protected $amazonAddressFactory;
 
     /**
-     * @param ClientFactoryInterface $clientFactory
-     * @param Address $addressHelper
+     * @var Factory
+     */
+    protected $validatorFactory;
+
+    /**
+     * @param ClientFactoryInterface    $clientFactory
+     * @param Address                   $addressHelper
      * @param QuoteLinkInterfaceFactory $quoteLinkFactory
-     * @param Session $session
-     * @param CollectionFactory $countryCollectionFactory
-     * @param AmazonAddressFactory $amazonAddressFactory
+     * @param Session                   $session
+     * @param CollectionFactory         $countryCollectionFactory
+     * @param AmazonAddressFactory      $amazonAddressFactory
+     * @param Factory                   $validatorFactory
      */
     public function __construct(
         ClientFactoryInterface $clientFactory,
@@ -74,7 +83,8 @@ class AddressManagement implements AddressManagementInterface
         QuoteLinkInterfaceFactory $quoteLinkFactory,
         Session $session,
         CollectionFactory $countryCollectionFactory,
-        AmazonAddressFactory $amazonAddressFactory
+        AmazonAddressFactory $amazonAddressFactory,
+        Factory $validatorFactory
     ) {
         $this->clientFactory            = $clientFactory;
         $this->addressHelper            = $addressHelper;
@@ -82,6 +92,7 @@ class AddressManagement implements AddressManagementInterface
         $this->session                  = $session;
         $this->countryCollectionFactory = $countryCollectionFactory;
         $this->amazonAddressFactory     = $amazonAddressFactory;
+        $this->validatorFactory         = $validatorFactory;
     }
 
     /**
@@ -97,11 +108,13 @@ class AddressManagement implements AddressManagementInterface
             if (isset($data['OrderReferenceDetails']['Destination']['PhysicalDestination'])) {
                 $shippingAddress = $data['OrderReferenceDetails']['Destination']['PhysicalDestination'];
 
-                return $this->convertToMagentoAddress($shippingAddress, true);
+                return $this->convertToMagentoAddress($shippingAddress, true, true);
             }
 
             throw new Exception();
         } catch (WebapiException $e) {
+            throw $e;
+        } catch (ValidatorException $e) {
             throw $e;
         } catch (Exception $e) {
             $this->throwUnknownErrorException();
@@ -145,10 +158,18 @@ class AddressManagement implements AddressManagementInterface
         );
     }
 
-    protected function convertToMagentoAddress(array $address, $verifyCountry = false)
+    protected function convertToMagentoAddress(array $address, $isShippingAddress = false, $verifyCountry = false)
     {
         $amazonAddress  = $this->amazonAddressFactory->create(['address' => $address]);
         $magentoAddress = $this->addressHelper->convertToMagentoEntity($amazonAddress);
+
+        if ($isShippingAddress) {
+            $validator = $this->validatorFactory->createValidator('amazon_address', 'on_select');
+
+            if (!$validator->isValid($magentoAddress)) {
+                throw new ValidatorException(null, null, [ $validator->getMessages() ]);
+            }
+        }
 
         if ($verifyCountry) {
             $countryCollection = $this->countryCollectionFactory->create();
