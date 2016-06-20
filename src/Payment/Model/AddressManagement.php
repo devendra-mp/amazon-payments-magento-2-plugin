@@ -24,7 +24,6 @@ use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Validator\Exception as ValidatorException;
 use Magento\Framework\Validator\Factory;
 use Magento\Framework\Webapi\Exception as WebapiException;
@@ -108,7 +107,7 @@ class AddressManagement implements AddressManagementInterface
             if (isset($data['OrderReferenceDetails']['Destination']['PhysicalDestination'])) {
                 $shippingAddress = $data['OrderReferenceDetails']['Destination']['PhysicalDestination'];
 
-                return $this->convertToMagentoAddress($shippingAddress, true, true);
+                return $this->convertToMagentoAddress($shippingAddress, true);
             }
 
             throw new Exception();
@@ -158,7 +157,7 @@ class AddressManagement implements AddressManagementInterface
         );
     }
 
-    protected function convertToMagentoAddress(array $address, $isShippingAddress = false, $verifyCountry = false)
+    protected function convertToMagentoAddress(array $address, $isShippingAddress = false)
     {
         $amazonAddress  = $this->amazonAddressFactory->create(['address' => $address]);
         $magentoAddress = $this->addressHelper->convertToMagentoEntity($amazonAddress);
@@ -169,9 +168,7 @@ class AddressManagement implements AddressManagementInterface
             if (!$validator->isValid($magentoAddress)) {
                 throw new ValidatorException(null, null, [ $validator->getMessages() ]);
             }
-        }
 
-        if ($verifyCountry) {
             $countryCollection = $this->countryCollectionFactory->create();
 
             $collectionSize = $countryCollection->loadByStore()
