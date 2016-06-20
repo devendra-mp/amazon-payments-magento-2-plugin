@@ -38,11 +38,14 @@ class AddressBlacklistTermsValidator extends AbstractValidator
      */
     public function isValid($entity)
     {
-        /** @var $entity \Magento\Customer\Api\Data\AddressInterface */
+        if (!$this->amazonCoreHelper->isBlacklistedTermValidationEnabled()) {
+            return true;
+        }
 
+        /** @var $entity \Magento\Customer\Api\Data\AddressInterface */
         $addressLines = (array) $entity->getStreet();
 
-        foreach ($this->amazonCoreHelper->getTerms() as $term) {
+        foreach ($this->amazonCoreHelper->getBlackListedTerms() as $term) {
             foreach ($addressLines as $addressLine) {
                 if (stripos($addressLine, $term) !== false) {
                     $this->_addMessages(['Unfortunately, we don’t deliver to lockers/packing stations.']);

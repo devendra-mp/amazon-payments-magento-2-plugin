@@ -587,7 +587,7 @@ class Data extends AbstractHelper
      *
      * @return array
      */
-    public function getTerms($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    public function getBlackListedTerms($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         $terms = $this->scopeConfig->getValue('payment/amazon_payment/packstation_terms', $scope, $scopeCode);
         return explode(',', $terms);
