@@ -16,6 +16,7 @@
 namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Bex\Behat\Magento2InitExtension\Fixtures\MagentoConfigManager;
 use Fixtures\AmazonOrder as AmazonOrderFixture;
 use Fixtures\Basket as BasketFixture;
 use Fixtures\Customer as CustomerFixture;
@@ -44,12 +45,18 @@ class ShippingContext implements SnippetAcceptingContext
      */
     protected $amazonOrderFixture;
 
+    /**
+     * @var MagentoConfigManager
+     */
+    protected $configManager;
+
     public function __construct(Checkout $checkoutPage)
     {
         $this->checkoutPage       = $checkoutPage;
         $this->customerFixture    = new CustomerFixture;
         $this->basketFixture      = new BasketFixture;
         $this->amazonOrderFixture = new AmazonOrderFixture;
+        $this->configManager      = new MagentoConfigManager;
     }
 
     /**
@@ -134,6 +141,36 @@ class ShippingContext implements SnippetAcceptingContext
         asort($shippingAddressData);
 
         PHPUnit_Framework_Assert::assertSame($shippingAddressData, $amazonShippingAddressData);
+    }
 
+    /**
+     * @Given the blacklist term validation is turned on
+     */
+    public function theBlacklistTermValidationIsTurnedOn()
+    {
+        $this->configManager->changeConfigs([
+            'value' => 1,
+            'path' => 'payment/amazon_payment/packstation_terms_validation_enabled',
+        ]);
+    }
+
+    /**
+     * @Given Amazon address contains black listed terms
+     */
+    public function amazonAddressContainsBlackListedTerms()
+    {
+        $blackListedTerms = implode(',', range('a', 'z'));
+        $this->configManager->changeConfigs([
+            'value' => $blackListedTerms,
+            'path' => 'payment/amazon_payment/packstation_terms',
+        ]);
+    }
+
+    /**
+     * @Given I should see an error about the invalid address having a black listed term
+     */
+    public function iShouldSeeAnErrorAboutTheInvalidAddressHavingABlackListedTerm()
+    {
+//        throw new PendingException();
     }
 }
