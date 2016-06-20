@@ -10,6 +10,7 @@
     <type name="Amazon\Core\Helper\Data">
         <arguments>
             <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface\Proxy</argument>
+            <argument name="clientIpHelper" xsi:type="object">Amazon\Core\Helper\ClientIp\Proxy</argument>
         </arguments>
     </type>
     <type name="Amazon\Core\Domain\AmazonAddressFactory">
@@ -18,6 +19,19 @@
                 <item name="DE" xsi:type="string">Amazon\Core\Domain\AmazonAddressDe</item>
                 <item name="AT" xsi:type="string">Amazon\Core\Domain\AmazonAddressDe</item>
             </argument>
+        </arguments>
+    </type>
+    <virtualType name="Amazon_Core_RemoteAddressWithAdditionalIpHeaders" type="Magento\Framework\HTTP\PhpEnvironment\RemoteAddress">
+        <arguments>
+            <argument name="alternativeHeaders" xsi:type="array">
+                <item name="x-forwarded-for" xsi:type="string">HTTP_X_FORWARDED_FOR</item>
+                <item name="x-real-ip" xsi:type="string">HTTP_X_REAL_IP</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Amazon\Core\Helper\ClientIp">
+        <arguments>
+            <argument name="remoteAddress" xsi:type="object">Amazon_Core_RemoteAddressWithAdditionalIpHeaders</argument>
         </arguments>
     </type>
 </config>
