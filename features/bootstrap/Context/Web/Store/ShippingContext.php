@@ -16,11 +16,9 @@
 namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Bex\Behat\Magento2InitExtension\Fixtures\MagentoConfigManager;
 use Fixtures\AmazonOrder as AmazonOrderFixture;
 use Fixtures\Basket as BasketFixture;
 use Fixtures\Customer as CustomerFixture;
-use Magento\Store\Model\ScopeInterface;
 use Page\Store\Checkout;
 use PHPUnit_Framework_Assert;
 
@@ -46,18 +44,12 @@ class ShippingContext implements SnippetAcceptingContext
      */
     protected $amazonOrderFixture;
 
-    /**
-     * @var MagentoConfigManager
-     */
-    protected $configManager;
-
     public function __construct(Checkout $checkoutPage)
     {
         $this->checkoutPage       = $checkoutPage;
         $this->customerFixture    = new CustomerFixture;
         $this->basketFixture      = new BasketFixture;
         $this->amazonOrderFixture = new AmazonOrderFixture;
-        $this->configManager      = new MagentoConfigManager;
     }
 
     /**
