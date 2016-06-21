@@ -1,8 +1,20 @@
 <?php
-
+/**
+ * Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://aws.amazon.com/apache2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 namespace Amazon\Core\Helper;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Encryption\EncryptorInterface;
@@ -11,6 +23,13 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Data extends AbstractHelper
 {
+    protected $amazonAccountUrl = [
+        'us' => 'https://payments.amazon.com/overview',
+        'uk' => 'https://payments.amazon.co.uk/overview',
+        'de' => 'https://payments.amazon.de/overview',
+        'jp' => 'https://payments.amazon.co.jp/overview',
+    ];
+
     /**
      * @var EncryptorInterface
      */
@@ -22,17 +41,26 @@ class Data extends AbstractHelper
     protected $storeManager;
 
     /**
-     * @param Context $context
+     * @var \Amazon\Core\Helper\ClientIp
+     */
+    private $clientIpHelper;
+
+    /**
+     * @param Context               $context
+     * @param EncryptorInterface    $encryptor
+     * @param StoreManagerInterface $storeManager
+     * @param ClientIp              $clientIpHelper
      */
     public function __construct(
-        Context $context,
-        EncryptorInterface $encryptor,
-        StoreManagerInterface $storeManager
-    )
-    {
+        Context               $context,
+        EncryptorInterface    $encryptor,
+        StoreManagerInterface $storeManager,
+        ClientIp              $clientIpHelper
+    ) {
         parent::__construct($context);
-        $this->encryptor = $encryptor;
-        $this->storeManager = $storeManager;
+        $this->encryptor      = $encryptor;
+        $this->storeManager   = $storeManager;
+        $this->clientIpHelper = $clientIpHelper;
     }
 
     /*
@@ -216,7 +244,11 @@ class Data extends AbstractHelper
      */
     public function isPwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return (bool)$this->scopeConfig->getValue(
+        if ( ! $this->clientIpHelper->clientHasAllowedIp()) {
+            return false;
+        }
+
+        return $this->scopeConfig->isSetFlag(
             'payment/amazon_payment/pwa_enabled',
             $scope,
             $scopeCode
@@ -228,7 +260,11 @@ class Data extends AbstractHelper
      */
     public function isLwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return (bool)$this->scopeConfig->getValue(
+        if ( ! $this->clientIpHelper->clientHasAllowedIp()) {
+            return false;
+        }
+
+        return $this->scopeConfig->isSetFlag(
             'payment/amazon_payment/lwa_enabled',
             $scope,
             $scopeCode
@@ -451,18 +487,6 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getRestrictedIps($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
-    {
-        return $this->scopeConfig->getValue(
-            'payment/amazon_payment/restricted_ips',
-            $scope,
-            $scopeCode
-        );
-    }
-
-    /*
-     * @return string
-     */
     public function getRedirectUrl()
     {
         $urlPath = $this->isLwaEnabled() ? 'amazon/login/authorize' : 'amazon/login/guest';
@@ -470,6 +494,7 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @param string|null $context
      * @return array
      */
     public function getSandboxSimulationStrings($context = null)
@@ -480,7 +505,7 @@ class Data extends AbstractHelper
 
         if (in_array($context, ['authorization', 'authorization_capture'])) {
             $simulationStrings['Authorization:Declined:InvalidPaymentMethod']
-                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod"}}';
+                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod", "PaymentMethodUpdateTimeInMins":1}}';
             $simulationStrings['Authorization:Declined:AmazonRejected']
                 = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}';
             $simulationStrings['Authorization:Declined:TransactionTimedOut']
@@ -490,6 +515,8 @@ class Data extends AbstractHelper
         if (in_array($context, ['capture', 'authorization_capture'])) {
             $simulationStrings['Capture:Declined:AmazonRejected']
                 = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}';
+            $simulationStrings['Capture:Pending']
+                = '{"SandboxSimulation": {"State":"Pending"}}';
         }
 
         return $simulationStrings;
@@ -506,6 +533,7 @@ class Data extends AbstractHelper
             'Authorization:Declined:AmazonRejected' => 'Authorization hard decline',
             'Authorization:Declined:TransactionTimedOut' => 'Authorization timed out',
             'Capture:Declined:AmazonRejected' => 'Capture declined',
+            'Capture:Pending' => 'Capture pending'
         ];
 
         return $simulationlabels;
@@ -529,5 +557,19 @@ class Data extends AbstractHelper
     protected function getCurrentCurrencyCode()
     {
         return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
+    }
+
+    /**
+     * @param string $paymentRegion E.g. "uk", "us", "de", "jp".
+     *
+     * @return mixed
+     */
+    public function getAmazonAccountUrlByPaymentRegion($paymentRegion)
+    {
+        if (empty($this->amazonAccountUrl[$paymentRegion])) {
+            throw new \InvalidArgumentException("$paymentRegion is not a valid payment region");
+        }
+
+        return $this->amazonAccountUrl[$paymentRegion];
     }
 }

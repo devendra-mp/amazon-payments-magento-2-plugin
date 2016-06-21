@@ -13,6 +13,7 @@
                     <item name="components" xsi:type="array">
                         <item name="minicart_content" xsi:type="array">
                             <item name="children" xsi:type="array">
+                                <!--
                                 <item name="amazon_minicart_pay" xsi:type="array">
                                     <item name="component" xsi:type="string">Amazon_Payment/js/view/minicart-button</item>
                                     <item name="config" xsi:type="array">
@@ -24,18 +25,19 @@
                                             <item name="component" xsi:type="string">uiComponent</item>
                                             <item name="displayArea" xsi:type="string">before-amazon-button</item>
                                             <item name="children" xsi:type="array">
-                                                <!-- before amazon button -->
+
                                             </item>
                                         </item>
                                         <item name="after-amazon-button" xsi:type="array">
                                             <item name="component" xsi:type="string">uiComponent</item>
                                             <item name="displayArea" xsi:type="string">after-amazon-button</item>
                                             <item name="children" xsi:type="array">
-                                                <!-- after amazon button -->
+
                                             </item>
                                         </item>
                                     </item>
                                 </item>
+                                -->
                             </item>
                         </item>
                     </item>

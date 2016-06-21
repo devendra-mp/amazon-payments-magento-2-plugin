@@ -1,11 +1,25 @@
 <?php
-
+/**
+ * Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://aws.amazon.com/apache2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 namespace Amazon\Payment\Domain;
 
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
+use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
-abstract class AbstractAmazonAuthorizationResponse
+abstract class AbstractAmazonAuthorizationResponse implements AmazonResponseInterface
 {
     /**
      * @var AmazonAuthorizationStatus
@@ -23,9 +37,16 @@ abstract class AbstractAmazonAuthorizationResponse
     protected $authorizeTransactionId;
 
     /**
+     * @var bool
+     */
+    protected $captureNow = false;
+
+    /**
      * AmazonAuthorizationResponse constructor.
      *
      * @param ResponseInterface $response
+     * @param AmazonAuthorizationStatusFactory $amazonAuthorizationStatusFactory
+     * @throws AmazonServiceUnavailableException
      */
     public function __construct(
         ResponseInterface $response,
@@ -51,6 +72,10 @@ abstract class AbstractAmazonAuthorizationResponse
 
         if (isset($details['AmazonAuthorizationId'])) {
             $this->authorizeTransactionId = $details['AmazonAuthorizationId'];
+        }
+
+        if (isset($details['CaptureNow'])) {
+            $this->captureNow = ('true' === $details['CaptureNow']);
         }
     }
 
@@ -82,6 +107,16 @@ abstract class AbstractAmazonAuthorizationResponse
     public function getCaptureTransactionId()
     {
         return $this->captureTransactionId;
+    }
+
+    public function hasCapture()
+    {
+        return $this->captureNow;
+    }
+
+    public function isPending()
+    {
+        return (AmazonAuthorizationStatus::STATE_PENDING === $this->getStatus()->getState());
     }
 
     /**

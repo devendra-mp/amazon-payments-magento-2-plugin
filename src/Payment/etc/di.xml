@@ -6,6 +6,8 @@
     <preference for="Amazon\Payment\Api\Data\QuoteLinkInterface" type="Amazon\Payment\Model\QuoteLink" />
     <preference for="Amazon\Payment\Api\Data\OrderLinkInterface" type="Amazon\Payment\Model\OrderLink" />
     <preference for="Amazon\Payment\Api\Data\PendingCaptureInterface" type="Amazon\Payment\Model\PendingCapture" />
+    <preference for="Amazon\Payment\Api\Data\PendingAuthorizationInterface" type="Amazon\Payment\Model\PendingAuthorization" />
+    <preference for="Amazon\Payment\Api\Data\PendingRefundInterface" type="Amazon\Payment\Model\PendingRefund" />
     <type name="Magento\Quote\Api\CartRepositoryInterface">
         <plugin name="amazon_payment_quote_repository" type="Amazon\Payment\Plugin\QuoteRepository" sortOrder="1" />
     </type>
@@ -17,5 +19,23 @@
     </type>
     <type name="Magento\Sales\Controller\Adminhtml\Order\Invoice\Save">
         <plugin name="amazon_payment_invoice_save" type="Amazon\Payment\Plugin\InvoiceSave" sortOrder="1" />
+    </type>
+    <type name="Amazon\Payment\Cron\ProcessAmazonRefunds">
+        <arguments>
+            <argument name="paymentManagement" xsi:type="object">Amazon\Payment\Api\PaymentManagementInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amazon\Payment\Cron\GetAmazonCaptureUpdates">
+        <arguments>
+            <argument name="paymentManagement" xsi:type="object">Amazon\Payment\Api\PaymentManagementInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amazon\Payment\Model\QueuedRefundUpdater">
+        <arguments>
+            <argument name="adminNotifier" xsi:type="object">Magento\Framework\Notification\NotifierInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Sales\Api\TransactionRepositoryInterface">
+        <plugin name="amazon_payment_transaction_repository" type="Amazon\Payment\Plugin\TransactionRepository" sortOrder="1" />
     </type>
 </config>

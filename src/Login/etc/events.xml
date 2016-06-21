@@ -3,4 +3,7 @@
     <event name="amazon_customer_authenticated">
         <observer name="clear_amazon_customer" instance="Amazon\Login\Observer\ClearAmazonCustomer" />
     </event>
+    <event name="amazon_login_authorize_error">
+        <observer name="amazon_login_set_cookie_on_authorize_error" instance="Amazon\Login\Observer\SetAuthorizeErrorCookie" />
+    </event>
 </config>

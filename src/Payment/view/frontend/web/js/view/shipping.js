@@ -5,6 +5,7 @@ define(
         "underscore",
         'ko',
         'Magento_Checkout/js/view/shipping',
+        'Magento_Customer/js/model/customer',
         'Magento_Checkout/js/action/set-shipping-information',
         'Magento_Checkout/js/model/step-navigator',
         'Amazon_Payment/js/model/storage',
@@ -16,6 +17,7 @@ define(
         _,
         ko,
         Component,
+        customer,
         setShippingInformationAction,
         stepNavigator,
         amazonStorage,
@@ -48,6 +50,9 @@ define(
              * New setShipping Action for Amazon payments to bypass validation
              */
             setShippingInformation: function () {
+                if(amazonStorage.isAmazonAccountLoggedIn()) {
+                    this.isFormInline = false; //remove inline form constraint if logged into amazon
+                }
                 function setShippingInformationAmazon() {
                     setShippingInformationAction().done(
                         function() {
@@ -55,9 +60,10 @@ define(
                         }
                     );
                 }
-                if(amazonStorage.isAmazonAccountLoggedIn()) {
+                if(amazonStorage.isAmazonAccountLoggedIn() && customer.isLoggedIn()) {
                     setShippingInformationAmazon();
                 } else {
+                    //if using guest checkout or guest checkout with amazon pay we need to use the main validation
                     if (this.validateShippingInformation()) {
                         setShippingInformationAmazon();
                     }

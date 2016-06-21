@@ -16,6 +16,7 @@ define(
             orderReference,
             addressConsentToken = amazonCore.accessToken,
             isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined),
+            amazonLoginError = amazonCore.amazonLoginError.subscribe(setAmazonLoggedOutIfLoginError),
             amazonDeclineCode = ko.observable(false),
             sandboxSimulationReference = ko.observable('default'),
             isPlaceOrderDisabled = ko.observable(false),
@@ -27,23 +28,33 @@ define(
          * @param amazonDefined
          */
         function checkAmazonDefined(amazonDefined) {
-           if(amazonDefined) {
-               verifyAmazonLoggedIn();
-               //remove subscription to amazonDefined once loaded
-               isAmazonDefined.dispose();
-           }
+            if(amazonDefined) {
+                verifyAmazonLoggedIn();
+                //remove subscription to amazonDefined once loaded
+                isAmazonDefined.dispose();
+            }
+        }
+
+        function setAmazonLoggedOutIfLoginError(isLoggedOut) {
+            if (true === isLoggedOut) {
+                isAmazonAccountLoggedIn(false);
+                amazonLoginError.dispose();
+            }
         }
 
         //run this on loading storage model. If not defined subscribe will trigger when true
         checkAmazonDefined(amazonCore.amazonDefined());
+        setAmazonLoggedOutIfLoginError(amazonCore.amazonLoginError());
 
         /**
          * Verifies amazon user is logged in
          */
         function verifyAmazonLoggedIn() {
-           amazonCore.verifyAmazonLoggedIn().then(function(response) {
-               isAmazonAccountLoggedIn(response);
-           });
+            amazonCore.verifyAmazonLoggedIn().then(function(response) {
+                if (!amazonCore.amazonLoginError()) {
+                    isAmazonAccountLoggedIn(response);
+                }
+            });
         }
 
         return {

@@ -1,5 +1,18 @@
 <?php
-
+/**
+ * Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://aws.amazon.com/apache2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 namespace Fixtures;
 
 use Bex\Behat\Magento2InitExtension\Fixtures\BaseFixture;
@@ -65,7 +78,7 @@ class Customer extends BaseFixture
     public function track($email)
     {
         try {
-            $customer = $this->repository->get($email);
+            $customer = $this->get($email, true);
             FixtureContext::trackFixture($customer, $this->repository);
         } catch (NoSuchEntityException $e) {
             //entity not created no need to track for deletion
@@ -77,7 +90,10 @@ class Customer extends BaseFixture
         static $defaultPassword = null;
 
         if (null === $defaultPassword) {
-            $defaultPassword = $this->random->getRandomString(20);
+            $defaultPassword
+                = $this->random->getRandomString(7, Random::CHARS_LOWERS)
+                . $this->random->getRandomString(7, Random::CHARS_UPPERS)
+                . $this->random->getRandomString(6, Random::CHARS_DIGITS);
         }
 
         return $defaultPassword;

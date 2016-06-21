@@ -3,13 +3,16 @@ default:
   suites:
     web:
       paths:
-        features: features/suites/store
+        features:
+          features/suites/store
       contexts:
         - Context\Data\FixtureContext
         - Context\Data\CustomerContext
         - Context\Data\ProductContext
         - Context\Data\BasketContext
         - Context\Data\OrderContext
+        - Context\Data\AmazonContext
+        - Context\Data\ConfigContext
         - Context\Web\Store\LoginContext
         - Context\Web\Store\RegisterContext
         - Context\Web\Store\BasketContext
@@ -17,8 +20,13 @@ default:
         - Context\Web\Store\BillingContext
         - Context\Web\Store\ShippingContext
         - Context\Web\Store\AmazonContext
+        - Context\Web\Store\CustomerContext
+        - Context\Web\Store\ProductContext
+        - Context\Web\Admin\LoginContext
+        - Context\Web\Admin\OrderContext
 
   extensions:
+    Cjm\Behat\StepThroughExtension: ~
     Bex\Behat\Magento2InitExtension:
       magento_bootstrap:
         -
@@ -37,6 +45,7 @@ default:
     SensioLabs\Behat\PageObjectExtension:
       namespaces:
         page: [Page]
+        element: [Page\Element]
 
     Behat\MinkExtension:
       base_url: 'https://amazon-payment.dev'

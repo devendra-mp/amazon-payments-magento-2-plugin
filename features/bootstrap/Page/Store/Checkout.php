@@ -1,15 +1,28 @@
 <?php
-
+/**
+ * Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://aws.amazon.com/apache2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 namespace Page\Store;
 
+use Page\Element\Checkout\PaymentMethodForm;
+use Page\Element\Checkout\ShippingAddressForm;
 use Page\PageTrait;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 class Checkout extends Page
 {
     use PageTrait;
-
-    protected $path = '/checkout/';
 
     protected $elements
         = [
@@ -27,8 +40,25 @@ class Checkout extends Page
             'revert-checkout'            => ['css' => '.revert-checkout'],
             'shipping-form'              => ['css' => '#co-shipping-form'],
             'pay-with-amazon'            => ['css' => '#OffAmazonPaymentsWidgets0'],
-            'submit-order'               => ['css' => 'button.checkout.primary']
+            'submit-order'               => ['css' => 'button.checkout.primary'],
+            'customer-email-input'       => ['css' => 'input#customer-email'],
         ];
+
+    protected $path = '/checkout/';
+
+    public function provideShippingAddress()
+    {
+        $this->getShippingForm()
+            ->withFirstName('John')
+            ->withLastName('Doe')
+            ->withAddressLines(['419 Kings Row', 'Spruce Tree Cottage'])
+            ->withCity('Manchester')
+            ->withCountry('GB')
+            ->withPostCode('M13 9PL')
+            ->withPhoneNumber('+447774443333');
+
+        $this->waitUntilElementDisappear('shipping-loader');
+    }
 
     public function selectFirstAmazonShippingAddress()
     {
@@ -60,6 +90,8 @@ class Checkout extends Page
 
     public function selectDefaultShippingMethod()
     {
+        $this->waitForCondition('true === false', 500);
+        $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('shipping-loader');
 
         $defaultShippingMethod = $this->getElementWithWait('first-shipping-method');
@@ -70,8 +102,12 @@ class Checkout extends Page
 
     public function goToBilling()
     {
+        $this->waitForCondition('true === false', 500);
+        $this->waitForAjaxRequestsToComplete();
+        $this->waitUntilElementDisappear('full-screen-loader');
         $this->clickElement('go-to-billing');
         $this->waitUntilElementDisappear('full-screen-loader');
+
     }
 
     public function submitOrder()
@@ -105,6 +141,16 @@ class Checkout extends Page
     {
         try {
             $element = $this->getElementWithWait('pay-with-amazon', 30000);
+            return $element->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function hasShippingWidget()
+    {
+        try {
+            $element = $this->getElementWithWait('shipping-widget');
             return $element->isVisible();
         } catch (\Exception $e) {
             return false;
@@ -145,9 +191,54 @@ class Checkout extends Page
         return $orderRef;
     }
 
+    public function getAddressConsentToken()
+    {
+        $addressConsentToken = $this->getDriver()->evaluateScript(
+            'require(\'uiRegistry\').get(\'checkout.steps.shipping-step.shippingAddress.before-form.amazon-widget-address\').getAddressConsentToken();'
+        );
+
+        if ( ! strlen($addressConsentToken)) {
+            throw new \Exception('Could not locate address consent token');
+        }
+
+        return $addressConsentToken;
+    }
+
     public function selectSimulation($simulation)
     {
         $this->waitUntilElementDisappear('full-screen-loader');
         $this->getElement('Checkout\SandboxSimulation')->selectSimulation($simulation);
+    }
+
+    /**
+     * @return ShippingAddressForm
+     */
+    public function getShippingForm()
+    {
+        return $this->getElement('Checkout\ShippingAddressForm');
+    }
+
+    /**
+     * @return PaymentMethodForm
+     */
+    public function getPaymentMethodForm()
+    {
+        return $this->getElement('Checkout\PaymentMethodForm');
+    }
+
+    /**
+     * @param string $email
+     *
+     * @throws \Exception
+     */
+    public function setCustomerEmail($email)
+    {
+        $input = $this->getElementWithWait('customer-email-input');
+
+        if ( ! $input) {
+            throw new \Exception('No customer email input was found.');
+        }
+
+        $input->setValue((string)$email);
     }
 }

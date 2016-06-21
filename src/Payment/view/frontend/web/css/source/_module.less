@@ -82,6 +82,22 @@
             margin-bottom: 20px;
         }
     }
+
+    .checkout-payment-method {
+        .amazon-payment-method {
+            .payment-method-title {
+                visibility: hidden; //hide the title for amazon payment methods only
+                padding-bottom: 0;
+            }
+        }
+    }
+
+    /** Prevent movement after a soft decline to other payment steps **/
+    .opc-progress-bar-item._complete.lock-step {
+        cursor: none;
+        pointer-events: none;
+    }
+
 }
 
 @media all and (max-width: @screen__m) {

@@ -2,9 +2,10 @@ define([
     'jquery',
     'Magento_Customer/js/customer-data',
     'Magento_Customer/js/section-config',
+    'Amazon_Payment/js/model/amazonPaymentConfig',
     'amazonCore',
     'jquery/ui'
-], function($, customerData, sectionConfig) {
+], function($, customerData, sectionConfig, amazonPaymentConfig) {
     "use strict";
 
     var _this,
@@ -22,6 +23,11 @@ define([
         },
 
         _create: function() {
+
+            if (!amazonPaymentConfig.getValue('isLwaEnabled')) {
+                return;
+            }
+
             _this = this;
             $button = this.element;
             this._verifyAmazonConfig();
@@ -32,14 +38,14 @@ define([
          * @private
          */
         _verifyAmazonConfig: function() {
-            if(window.amazonPayment !== undefined) {
-                _this.options.merchantId = window.amazonPayment.merchantId;
-                _this.options.buttonType = (_this.options.buttonType == 'LwA') ? window.amazonPayment.buttonTypeLwa : window.amazonPayment.buttonTypePwa;
-                _this.options.buttonColor = window.amazonPayment.buttonColor;
-                _this.options.buttonSize = window.amazonPayment.buttonSize;
-                _this.options.redirectUrl = window.amazonPayment.redirectUrl;
-                _this.options.loginPostUrl = window.amazonPayment.loginPostUrl;
-                _this.options.loginScope = window.amazonPayment.loginScope;
+            if(amazonPaymentConfig.isDefined()) {
+                _this.options.merchantId = amazonPaymentConfig.getValue('merchantId');
+                _this.options.buttonType = (_this.options.buttonType == 'LwA') ? amazonPaymentConfig.getValue('buttonTypeLwa') : amazonPaymentConfig.getValue('buttonTypePwa');
+                _this.options.buttonColor = amazonPaymentConfig.getValue('buttonColor');
+                _this.options.buttonSize = amazonPaymentConfig.getValue('buttonSize');
+                _this.options.redirectUrl = amazonPaymentConfig.getValue('redirectUrl');
+                _this.options.loginPostUrl = amazonPaymentConfig.getValue('loginPostUrl');
+                _this.options.loginScope = amazonPaymentConfig.getValue('loginScope');
             }
         },
         secureHttpsCallback: function(event) {
@@ -63,7 +69,7 @@ define([
 
             var authRequest,
                 loginOptions;
-            
+
             OffAmazonPayments.Button($button.attr('id'), _this.options.merchantId, {
                 type: _this.options.buttonType,
                 color: _this.options.buttonColor,
