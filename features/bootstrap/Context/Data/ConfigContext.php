@@ -69,7 +69,7 @@ class ConfigContext implements SnippetAcceptingContext
                 ]
             ]
         );
-        
+
         $this->hasConfigChanges = true;
     }
 
@@ -82,5 +82,21 @@ class ConfigContext implements SnippetAcceptingContext
             $this->configManager->revertAllConfig();
             $this->hasConfigChanges = false;
         }
+    }
+
+    /**
+     * @Given the blacklist term validation is turned on
+     */
+    public function theBlacklistTermValidationIsTurnedOn()
+    {
+        $this->changeConfig('payment/amazon_payment/packstation_terms_validation_enabled', 1);
+    }
+
+    /**
+     * @Given Amazon address contains black listed terms
+     */
+    public function amazonAddressContainsBlackListedTerms()
+    {
+        $this->changeConfig('payment/amazon_payment/packstation_terms', implode(',', range('a', 'z')));
     }
 }

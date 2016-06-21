@@ -145,41 +145,6 @@ class ShippingContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given the blacklist term validation is turned on
-     */
-    public function theBlacklistTermValidationIsTurnedOn()
-    {
-        $this->configManager->changeConfigs(
-            [
-                [
-                'value' => 1,
-                'path' => 'payment/amazon_payment/packstation_terms_validation_enabled',
-                'scope_type' => ScopeInterface::SCOPE_STORES,
-                'scope_code' => null,
-                ]
-            ]
-        );
-    }
-
-    /**
-     * @Given Amazon address contains black listed terms
-     */
-    public function amazonAddressContainsBlackListedTerms()
-    {
-        $blackListedTerms = implode(',', range('a', 'z'));
-        $this->configManager->changeConfigs(
-            [
-                [
-                'value' => $blackListedTerms,
-                'path' => 'payment/amazon_payment/packstation_terms',
-                'scope_type' => ScopeInterface::SCOPE_STORES,
-                'scope_code' => null,
-                ]
-            ]
-        );
-    }
-
-    /**
      * @Given I should see an error about the invalid address having a black listed term
      */
     public function iShouldSeeAnErrorAboutTheInvalidAddressHavingABlackListedTerm()
