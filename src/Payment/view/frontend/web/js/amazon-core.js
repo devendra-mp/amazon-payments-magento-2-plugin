@@ -46,7 +46,7 @@ define([
             $.cookieStorage.set('amazon_Login_state_cache', JSON.stringify(newObj));
             $.cookieStorage.set('amazon_Login_accessToken', token);
         }
-
+        return true;
     }
 
     /**
