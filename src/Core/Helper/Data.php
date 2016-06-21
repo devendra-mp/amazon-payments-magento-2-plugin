@@ -463,18 +463,6 @@ class Data extends AbstractHelper
     /*
      * @return bool
      */
-    public function isExcludePackingStations($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
-    {
-        return (bool)$this->scopeConfig->getValue(
-            'payment/amazon_payment/exclude_packing_stations',
-            $scope,
-            $scopeCode
-        );
-    }
-
-    /*
-     * @return bool
-     */
     public function isLoggingEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return (bool)$this->scopeConfig->getValue(
@@ -571,5 +559,29 @@ class Data extends AbstractHelper
         }
 
         return $this->amazonAccountUrl[$paymentRegion];
+    }
+
+    /**
+     * @param string      $scope
+     * @param null|string $scopeCode
+     *
+     * @return array
+     */
+    public function getBlackListedTerms($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    {
+        $terms = $this->scopeConfig->getValue('payment/amazon_payment/packstation_terms', $scope, $scopeCode);
+        return explode(',', $terms);
+    }
+
+    /**
+     * @param string      $scope
+     * @param null|string $scopeCode
+     *
+     * @return bool
+     */
+    public function isBlacklistedTermValidationEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    {
+        return $this->scopeConfig
+                    ->isSetFlag('payment/amazon_payment/packstation_terms_validation_enabled', $scope, $scopeCode);
     }
 }

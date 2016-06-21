@@ -134,6 +134,13 @@ class ShippingContext implements SnippetAcceptingContext
         asort($shippingAddressData);
 
         PHPUnit_Framework_Assert::assertSame($shippingAddressData, $amazonShippingAddressData);
+    }
 
+    /**
+     * @Given I should see an error about the invalid address having a black listed term
+     */
+    public function iShouldSeeAnErrorAboutTheInvalidAddressHavingABlackListedTerm()
+    {
+        PHPUnit_Framework_Assert::assertTrue($this->checkoutPage->isErrorMessageContainerVisible());
     }
 }
