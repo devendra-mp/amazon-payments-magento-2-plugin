@@ -1,12 +1,13 @@
 define([
     'jquery',
     'ko',
+    './model/amazonPaymentConfig',
     'amazonWidgetsLoader',
     'bluebird'
-], function($, ko) {
+], function($, ko, amazonPaymentConfig) {
     "use strict";
 
-    var clientId = window.amazonPayment.clientId,
+    var clientId = amazonPaymentConfig.getValue('clientId'),
         amazonDefined = ko.observable(false),
         amazonLoginError = ko.observable(false),
         accessToken = ko.observable(null);
@@ -37,7 +38,7 @@ define([
             access_token: token,
             max_age: getURLParameter('expires_in', location.hash),
             expiration_date: new Date().getTime() + (getURLParameter('expires_in', location.hash) * 1000),
-            client_id: "<?php echo $config['client_id'] ?>",
+            client_id: clientId,
             scope: getURLParameter('scope', location.hash)
         };
 
@@ -96,7 +97,7 @@ define([
          */
         verifyAmazonLoggedIn: function() {
             var loginOptions = {
-                scope: window.amazonPayment.loginScope,
+                scope: amazonPaymentConfig.getValue('loginScope'),
                 popup: true,
                 interactive: 'never'
             };
