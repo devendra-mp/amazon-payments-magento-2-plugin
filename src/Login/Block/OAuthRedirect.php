@@ -36,6 +36,9 @@ class OAuthRedirect extends Template
         $this->amazonCoreHelper = $amazonCoreHelper;
     }
 
+    /**
+     * @return string
+     */
     public function getRedirectUrl()
     {
         return $this->amazonCoreHelper->getRedirectUrl();
