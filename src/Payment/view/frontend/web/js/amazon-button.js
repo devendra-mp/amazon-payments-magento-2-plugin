@@ -56,7 +56,7 @@ define([
             window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
         },
         _popupCallback: function() {
-            return (window.location.protocol === 'https:') ? _this.secureHttpsCallback : _this.options.redirectUrl;
+            return (window.location.protocol === 'https:') ? _this.secureHttpsCallback : amazonPaymentConfig.getValue('oAuthHashRedirectUrl');
         },
         getPopUp: function() {
             return (window.location.protocol === 'https:');

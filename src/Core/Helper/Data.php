@@ -572,4 +572,12 @@ class Data extends AbstractHelper
 
         return $this->amazonAccountUrl[$paymentRegion];
     }
+
+    /**
+     * @return string
+     */
+    public function getOAuthRedirectUrl()
+    {
+        return $this->_getUrl('amazon/login/processoAuthHash');
+    }
 }
