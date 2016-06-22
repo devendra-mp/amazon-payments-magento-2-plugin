@@ -54,8 +54,9 @@ class CompleteOrderStatus implements ObserverInterface
          */
         $order    = $observer->getOrder();
         $payment  = $this->paymentMethodManagement->get($order->getQuoteId());
+        $newOrderStatus = $this->coreHelper->getNewOrderStatus();
 
-        if ($newOrderStatus = $this->coreHelper->getNewOrderStatus() &&
+        if ($newOrderStatus &&
             Amazon::PAYMENT_METHOD_CODE == $payment->getMethod() &&
             $order->getState() == Order::STATE_PROCESSING) {
             $order->setStatus($newOrderStatus);
