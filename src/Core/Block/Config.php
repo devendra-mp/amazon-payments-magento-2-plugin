@@ -60,6 +60,7 @@ class Config extends Template
             'buttonSize'               => $this->coreHelper->getButtonSize(),
             'redirectUrl'              => $this->coreHelper->getRedirectUrl(),
             'loginPostUrl'             => $this->url->getLoginPostUrl(),
+            'customerLoginPageUrl'     => $this->url->getLoginUrl(),
             'sandboxSimulationOptions' => [],
             'loginScope'               => $this->coreHelper->getLoginScope(),
             'isEuPaymentRegion'        => $this->coreHelper->isEuPaymentRegion(),
