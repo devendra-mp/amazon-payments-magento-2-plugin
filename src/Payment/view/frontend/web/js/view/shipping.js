@@ -45,7 +45,11 @@ define(
                     }
                 });
             },
-
+            validateGuestEmail: function() {
+                var loginFormSelector = 'form[data-role=email-with-possible-login]';
+                $(loginFormSelector).validation();
+                return $(loginFormSelector).valid();
+            },
             /**
              * New setShipping Action for Amazon payments to bypass validation
              */
@@ -62,6 +66,10 @@ define(
                 }
                 if(amazonStorage.isAmazonAccountLoggedIn() && customer.isLoggedIn()) {
                     setShippingInformationAmazon();
+                } else if(amazonStorage.isAmazonAccountLoggedIn() && !customer.isLoggedIn()) {
+                    if (this.validateGuestEmail()) {
+                        setShippingInformationAmazon();
+                    }
                 } else {
                     //if using guest checkout or guest checkout with amazon pay we need to use the main validation
                     if (this.validateShippingInformation()) {
