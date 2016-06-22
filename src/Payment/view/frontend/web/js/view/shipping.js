@@ -46,7 +46,7 @@ define(
                 });
             },
             validateGuestEmail: function() {
-                var loginFormSelector = 'form[data-role=email-with-possible-login]';
+                var loginFormSelector = 'form[data-role=email-with-possible-login] input[type=email]';
                 $(loginFormSelector).validation();
                 return $(loginFormSelector).valid();
             },
