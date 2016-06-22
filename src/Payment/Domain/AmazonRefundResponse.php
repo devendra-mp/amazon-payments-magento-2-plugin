@@ -21,54 +21,15 @@ use Amazon\Payment\Domain\Response\Part\RefundDetailsPart;
 use Amazon\Payment\Domain\Response\Part\RefundDetailsPartFactory;
 use PayWithAmazon\ResponseInterface;
 
-class AmazonRefundResponse implements AmazonResponseInterface
+class AmazonRefundResponse extends AbstractAmazonRefundResponse
 {
-    /**
-     * @var RefundDetailsPart
-     */
-    protected $refundDetailsPart;
+    protected $resultKey = 'RefundResult';
 
     /**
-     * @param ResponseInterface $response
-     * @param RefundDetailsPartFactory $refundDetailsPartFactory
-     * @throws AmazonServiceUnavailableException
+     * {@inheritDoc}
      */
-    public function __construct(
-        ResponseInterface $response,
-        RefundDetailsPartFactory $refundDetailsPartFactory
-    ) {
-        $data = $response->toArray();
-
-        if (200 != $data['ResponseStatus']) {
-            throw new AmazonServiceUnavailableException();
-        }
-
-        $this->refundDetailsPart = $refundDetailsPartFactory->create([
-            'rawRefundDetails' => $data['RefundResult']['RefundDetails'],
-        ]);
-    }
-
-    /**
-     * @return AmazonRefundStatus
-     */
-    public function getStatus()
+    protected function getResultKey()
     {
-        return $this->refundDetailsPart->getRefundStatus();
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getRefundId()
-    {
-        return $this->refundDetailsPart->getRefundId();
-    }
-
-    /**
-     * @return RefundDetailsPart
-     */
-    public function getRefundDetails()
-    {
-        return $this->refundDetailsPart;
+        return $this->resultKey;
     }
 }

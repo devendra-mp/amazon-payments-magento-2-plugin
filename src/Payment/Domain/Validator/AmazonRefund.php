@@ -15,8 +15,8 @@
  */
 namespace Amazon\Payment\Domain\Validator;
 
-use Amazon\Payment\Domain\AmazonRefundResponse;
 use Amazon\Payment\Domain\AmazonRefundStatus;
+use Amazon\Payment\Domain\Details\AmazonRefundDetails;
 use Magento\Framework\Exception\StateException;
 
 class AmazonRefund
@@ -24,14 +24,14 @@ class AmazonRefund
     /**
      * Validate AmazonRefundResponse
      *
-     * @param AmazonRefundResponse $response
+     * @param  AmazonRefundDetails $details
      *
      * @return bool
      * @throws StateException
      */
-    public function validate(AmazonRefundResponse $response)
+    public function validate(AmazonRefundDetails $details)
     {
-        $status = $response->getStatus();
+        $status = $details->getRefundStatus();
 
         switch ($status->getState()) {
             case AmazonRefundStatus::STATE_COMPLETED:

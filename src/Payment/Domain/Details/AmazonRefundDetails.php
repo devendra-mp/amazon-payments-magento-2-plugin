@@ -13,12 +13,12 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Payment\Domain\Response\Part;
+namespace Amazon\Payment\Domain\Details;
 
 use Amazon\Payment\Domain\AmazonRefundStatus;
 use Amazon\Payment\Domain\AmazonRefundStatusFactory;
 
-class RefundDetailsPart implements PartInterface
+class AmazonRefundDetails
 {
     /**
      * @var AmazonRefundStatus
@@ -32,21 +32,21 @@ class RefundDetailsPart implements PartInterface
 
     /**
      * @param AmazonRefundStatusFactory $amazonRefundStatusFactory
-     * @param array $rawRefundDetails
+     * @param array $details
      */
     public function __construct(
         AmazonRefundStatusFactory $amazonRefundStatusFactory,
-        array $rawRefundDetails = []
+        array $details
     ) {
-        $statusData = $rawRefundDetails['RefundStatus'];
+        $statusData = $details['RefundStatus'];
 
         $this->refundStatus = $amazonRefundStatusFactory->create([
             'state'      => $statusData['State'],
             'reasonCode' => isset($statusData['ReasonCode']) ? $statusData['ReasonCode'] : null
         ]);
 
-        if (isset($rawRefundDetails['AmazonRefundId'])) {
-            $this->refundId = $rawRefundDetails['AmazonRefundId'];
+        if (isset($details['AmazonRefundId'])) {
+            $this->refundId = $details['AmazonRefundId'];
         }
     }
 

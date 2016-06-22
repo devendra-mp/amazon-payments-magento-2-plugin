@@ -22,11 +22,11 @@ use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
 use Amazon\Payment\Api\OrderInformationManagementInterface;
 use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Domain\AmazonAuthorizationDetailsResponseFactory;
-use Amazon\Payment\Domain\AmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationResponseFactory;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Amazon\Payment\Domain\AmazonCaptureResponseFactory;
 use Amazon\Payment\Domain\AmazonRefundResponseFactory;
+use Amazon\Payment\Domain\Details\AmazonAuthorizationDetails;
 use Amazon\Payment\Domain\Validator\AmazonAuthorization;
 use Amazon\Payment\Domain\Validator\AmazonCapture;
 use Amazon\Payment\Domain\Validator\AmazonPreCapture;
@@ -294,11 +294,12 @@ class Amazon extends AbstractMethod
 
         $responseParser = $client->refund($data);
         $response       = $this->amazonRefundResponseFactory->create(['response' => $responseParser]);
-        $this->amazonRefundValidator->validate($response);
+        $refundDetails  = $response->getDetails();
+        $this->amazonRefundValidator->validate($refundDetails);
 
-        $payment->setTransactionId($response->getRefundId());
+        $payment->setTransactionId($refundDetails->getRefundId());
 
-        $this->paymentManagement->queuePendingRefund($response, $payment);
+        $this->paymentManagement->queuePendingRefund($refundDetails, $payment);
     }
 
     protected function authorizeInStore(InfoInterface $payment, $amount, $capture = false)
@@ -362,33 +363,34 @@ class Amazon extends AbstractMethod
 
         $client = $this->clientFactory->create($storeId);
 
-        $responseParser = $client->authorize($data);
-        $response       = $this->amazonAuthorizationResponseFactory->create(['response' => $responseParser]);
+        $responseParser       = $client->authorize($data);
+        $response             = $this->amazonAuthorizationResponseFactory->create(['response' => $responseParser]);
+        $authorizationDetails = $response->getDetails();
 
-        $this->amazonAuthorizationValidator->validate($response);
+        $this->amazonAuthorizationValidator->validate($authorizationDetails);
 
-        $this->setAuthorizeTransaction($payment, $response, $capture);
+        $this->setAuthorizeTransaction($payment, $authorizationDetails, $capture);
     }
 
     protected function setAuthorizeTransaction(
         InfoInterface $payment,
-        AmazonAuthorizationResponse $response,
+        AmazonAuthorizationDetails $details,
         $capture
     ) {
-        $pending       = (AmazonAuthorizationStatus::STATE_PENDING == $response->getStatus()->getState());
-        $transactionId = $response->getAuthorizeTransactionId();
+        $pending       = (AmazonAuthorizationStatus::STATE_PENDING == $details->getStatus()->getState());
+        $transactionId = $details->getAuthorizeTransactionId();
 
         $payment->setIsTransactionPending($pending);
         $payment->setIsTransactionClosed(false);
 
         if ( ! $pending && $capture) {
-            $transactionId = $response->getCaptureTransactionId();
+            $transactionId = $details->getCaptureTransactionId();
             $payment->setIsTransactionClosed(true);
         }
 
         if ($pending) {
             $this->paymentManagement->queuePendingAuthorization(
-                $response,
+                $details,
                 $payment->getOrder()
             );
         }
@@ -455,17 +457,21 @@ class Amazon extends AbstractMethod
             try {
                 $responseParser = $client->capture($data);
                 $response       = $this->amazonCaptureResponseFactory->create(['response' => $responseParser]);
+                $captureDetails = $response->getDetails();
 
-                $this->amazonCaptureValidator->validate($response);
+                $this->amazonCaptureValidator->validate($captureDetails);
             } catch (CapturePendingException $e) {
                 $payment->setIsTransactionPending(true);
                 $payment->setIsTransactionClosed(false);
-                $this->paymentManagement->queuePendingCapture(
-                    $response, $payment->getId(), $payment->getOrder()->getId()
-                );
+
+                if (isset($captureDetails)) {
+                    $this->paymentManagement->queuePendingCapture(
+                        $captureDetails, $payment->getId(), $payment->getOrder()->getId()
+                    );
+                }
             } finally {
-                if (isset($response)) {
-                    $payment->setTransactionId($response->getTransactionId());
+                if (isset($captureDetails)) {
+                    $payment->setTransactionId($captureDetails->getTransactionId());
                 }
             }
         }
@@ -487,7 +493,8 @@ class Amazon extends AbstractMethod
 
             $responseParser = $client->getAuthorizationDetails($data);
             $response       = $this->amazonAuthorizationDetailsResponseFactory->create(['response' => $responseParser]);
-            $this->amazonPreCaptureValidator->validate($response);
+            $authorizationDetails = $response->getDetails();
+            $this->amazonPreCaptureValidator->validate($authorizationDetails);
 
             return true;
         } catch (AuthorizationExpiredException $e) {

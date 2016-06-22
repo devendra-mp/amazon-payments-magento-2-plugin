@@ -17,12 +17,13 @@ namespace Amazon\Payment\Model;
 
 use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Payment\Api\Data\PendingRefundInterface;
+use Amazon\Payment\Api\Data\PendingRefundInterfaceFactory;
 use Amazon\Payment\Domain\AmazonRefundDetailsResponseFactory;
 use Amazon\Payment\Domain\AmazonRefundStatus;
+use Amazon\Payment\Domain\Details\AmazonRefundDetails;
 use Magento\Framework\Notification\NotifierInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Amazon\Payment\Api\Data\PendingRefundInterfaceFactory;
 
 class QueuedRefundUpdater
 {
@@ -65,12 +66,12 @@ class QueuedRefundUpdater
      * @param PendingRefundInterfaceFactory      $pendingRefundFactory
      */
     public function __construct(
-        OrderRepositoryInterface           $orderRepository,
-        OrderPaymentRepositoryInterface    $orderPaymentRepository,
-        ClientFactoryInterface             $amazonHttpClientFactory,
+        OrderRepositoryInterface $orderRepository,
+        OrderPaymentRepositoryInterface $orderPaymentRepository,
+        ClientFactoryInterface $amazonHttpClientFactory,
         AmazonRefundDetailsResponseFactory $amazonRefundDetailsResponseFactory,
-        NotifierInterface                  $adminNotifier,
-        PendingRefundInterfaceFactory      $pendingRefundFactory
+        NotifierInterface $adminNotifier,
+        PendingRefundInterfaceFactory $pendingRefundFactory
     ) {
         $this->orderRepository                    = $orderRepository;
         $this->orderPaymentRepository             = $orderPaymentRepository;
@@ -85,7 +86,7 @@ class QueuedRefundUpdater
      *
      * @return void
      */
-    public function checkAndUpdateRefund($pendingRefundId)
+    public function checkAndUpdateRefund($pendingRefundId, AmazonRefundDetails $refundDetails = null)
     {
         try {
             $pendingRefund = $this->pendingRefundFactory->create();
@@ -96,12 +97,16 @@ class QueuedRefundUpdater
             if ($pendingRefund->getRefundId()) {
                 $order = $this->orderRepository->get($pendingRefund->getOrderId());
 
-                $rawResponse = $this->amazonHttpClientFactory->create($order->getStoreId())->getRefundDetails([
-                    'amazon_refund_id' => $pendingRefund->getRefundId()
-                ]);
+                if (null === $refundDetails) {
+                    $responseParser = $this->amazonHttpClientFactory->create($order->getStoreId())->getRefundDetails([
+                        'amazon_refund_id' => $pendingRefund->getRefundId()
+                    ]);
 
-                $response = $this->amazonRefundDetailsResponseFactory->create(['response' => $rawResponse]);
-                $status   = $response->getRefundDetails()->getRefundStatus();
+                    $response = $this->amazonRefundDetailsResponseFactory->create(['response' => $responseParser]);
+                    $refundDetails = $response->getDetails();
+                }
+
+                $status = $refundDetails->getRefundStatus();
 
                 switch ($status->getState()) {
                     case AmazonRefundStatus::STATE_COMPLETED:

@@ -8,6 +8,14 @@
     <preference for="Amazon\Payment\Api\Data\PendingCaptureInterface" type="Amazon\Payment\Model\PendingCapture" />
     <preference for="Amazon\Payment\Api\Data\PendingAuthorizationInterface" type="Amazon\Payment\Model\PendingAuthorization" />
     <preference for="Amazon\Payment\Api\Data\PendingRefundInterface" type="Amazon\Payment\Model\PendingRefund" />
+    <preference for="Amazon\Payment\Ipn\IpnHandlerFactoryInterface" type="Amazon\Payment\Ipn\IpnHandlerFactory" />
+    <preference for="PayWithAmazon\IpnHandlerInterface" type="PayWithAmazon\IpnHandler" />
+    <preference for="Amazon\Login\Api\Customer\CompositeMatcherInterface" type="Amazon\Login\Model\Customer\CompositeMatcher" />
+    <preference for="Amazon\Payment\Api\Ipn\AuthorizationProcessorInterface" type="Amazon\Payment\Model\Ipn\AuthorizationProcessor" />
+    <preference for="Amazon\Payment\Api\Ipn\CaptureProcessorInterface" type="Amazon\Payment\Model\Ipn\CaptureProcessor" />
+    <preference for="Amazon\Payment\Api\Ipn\RefundProcessorInterface" type="Amazon\Payment\Model\Ipn\RefundProcessor" />
+    <preference for="Amazon\Payment\Api\Ipn\OrderProcessorInterface" type="Amazon\Payment\Model\Ipn\OrderProcessor" />
+    <preference for="Amazon\Payment\Api\Ipn\CompositeProcessorInterface" type="Amazon\Payment\Model\Ipn\CompositeProcessor" />
     <type name="Magento\Quote\Api\CartRepositoryInterface">
         <plugin name="amazon_payment_quote_repository" type="Amazon\Payment\Plugin\QuoteRepository" sortOrder="1" />
     </type>
@@ -37,5 +45,15 @@
     </type>
     <type name="Magento\Sales\Api\TransactionRepositoryInterface">
         <plugin name="amazon_payment_transaction_repository" type="Amazon\Payment\Plugin\TransactionRepository" sortOrder="1" />
+    </type>
+    <type name="Amazon\Payment\Api\Ipn\CompositeProcessorInterface">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="captureprocessor" xsi:type="object">Amazon\Payment\Api\Ipn\CaptureProcessorInterface\Proxy</item>
+                <item name="authorizationprocessor" xsi:type="object">Amazon\Payment\Api\Ipn\AuthorizationProcessorInterface\Proxy</item>
+                <item name="orderprocessor" xsi:type="object">Amazon\Payment\Api\Ipn\OrderProcessorInterface\Proxy</item>
+                <item name="refundprocessor" xsi:type="object">Amazon\Payment\Api\Ipn\RefundProcessorInterface\Proxy</item>
+            </argument>
+        </arguments>
     </type>
 </config>

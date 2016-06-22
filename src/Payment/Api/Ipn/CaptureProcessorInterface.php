@@ -13,17 +13,9 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Payment\Domain;
+namespace Amazon\Payment\Api\Ipn;
 
-class AmazonRefundDetailsResponse extends AbstractAmazonRefundResponse
+interface CaptureProcessorInterface extends ProcessorInterface
 {
-    protected $resultKey = 'GetRefundDetailsResult';
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function getResultKey()
-    {
-        return $this->resultKey;
-    }
 }

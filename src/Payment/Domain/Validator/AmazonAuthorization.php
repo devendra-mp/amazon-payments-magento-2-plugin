@@ -15,8 +15,8 @@
  */
 namespace Amazon\Payment\Domain\Validator;
 
-use Amazon\Payment\Domain\AbstractAmazonAuthorizationResponse;
 use Amazon\Payment\Domain\AmazonAuthorizationStatus;
+use Amazon\Payment\Domain\Details\AmazonAuthorizationDetails;
 use Amazon\Payment\Exception\HardDeclineException;
 use Amazon\Payment\Exception\SoftDeclineException;
 use Magento\Framework\Exception\StateException;
@@ -24,18 +24,16 @@ use Magento\Framework\Exception\StateException;
 class AmazonAuthorization
 {
     /**
-     * Validate AmazonAuthorizationResponse
-     *
-     * @param AbstractAmazonAuthorizationResponse $response
+     * @param AmazonAuthorizationDetails $details
      *
      * @return bool
      * @throws HardDeclineException
      * @throws SoftDeclineException
      * @throws StateException
      */
-    public function validate(AbstractAmazonAuthorizationResponse $response)
+    public function validate(AmazonAuthorizationDetails $details)
     {
-        $status = $response->getStatus();
+        $status = $details->getStatus();
 
         switch ($status->getState()) {
             case AmazonAuthorizationStatus::STATE_CLOSED:

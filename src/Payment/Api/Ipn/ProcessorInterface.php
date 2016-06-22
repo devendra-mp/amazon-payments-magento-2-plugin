@@ -13,17 +13,21 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Payment\Domain;
+namespace Amazon\Payment\Api\Ipn;
 
-class AmazonRefundDetailsResponse extends AbstractAmazonRefundResponse
+interface ProcessorInterface
 {
-    protected $resultKey = 'GetRefundDetailsResult';
+    /**
+     * @param array $ipnData
+     *
+     * @return boolean
+     */
+    public function supports(array $ipnData);
 
     /**
-     * {@inheritDoc}
+     * @param array $ipnData
+     *
+     * @return void
      */
-    protected function getResultKey()
-    {
-        return $this->resultKey;
-    }
+    public function process(array $ipnData);
 }

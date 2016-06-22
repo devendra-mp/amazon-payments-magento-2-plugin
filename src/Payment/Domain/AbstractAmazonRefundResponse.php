@@ -16,38 +16,51 @@
 namespace Amazon\Payment\Domain;
 
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
-use Amazon\Payment\Domain\Details\AmazonOrderDetails;
-use Amazon\Payment\Domain\Details\AmazonOrderDetailsFactory;
+use Amazon\Payment\Domain\Details\AmazonRefundDetails;
+use Amazon\Payment\Domain\Details\AmazonRefundDetailsFactory;
 use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
-class AmazonGetOrderDetailsResponse implements AmazonResponseInterface
+abstract class AbstractAmazonRefundResponse implements AmazonResponseInterface
 {
     /**
-     * @var AmazonOrderDetails
+     * @var AmazonRefundDetails
      */
     protected $details;
 
-    public function __construct(ResponseInterface $response, AmazonOrderDetailsFactory $amazonOrderDetailsFactory)
-    {
+    /**
+     * AbstractAmazonRefundResponse constructor.
+     *
+     * @param ResponseInterface          $response
+     * @param AmazonRefundDetailsFactory $amazonRefundDetailsFactory
+     */
+    public function __construct(
+        ResponseInterface $response,
+        AmazonRefundDetailsFactory $amazonRefundDetailsFactory
+    ) {
         $data = $response->toArray();
 
         if (200 != $data['ResponseStatus']) {
             throw new AmazonServiceUnavailableException();
         }
 
-        $details = $data['GetOrderReferenceDetailsResult']['OrderReferenceDetails'];
-
-        $this->details = $amazonOrderDetailsFactory->create([
-            'details' => $details
+        $this->details = $amazonRefundDetailsFactory->create([
+            'details' => $data[$this->getResultKey()]['RefundDetails']
         ]);
     }
 
     /**
-     * @return AmazonOrderDetails
+     * @return AmazonRefundDetails
      */
     public function getDetails()
     {
         return $this->details;
     }
+
+    /**
+     * Get result key
+     *
+     * @return string
+     */
+    abstract protected function getResultKey();
 }
