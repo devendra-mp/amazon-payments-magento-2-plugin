@@ -62,7 +62,8 @@ class Config extends Template
             'loginPostUrl'             => $this->url->getLoginPostUrl(),
             'sandboxSimulationOptions' => [],
             'loginScope'               => $this->coreHelper->getLoginScope(),
-            'isEuPaymentRegion'        => $this->coreHelper->isEuPaymentRegion()
+            'isEuPaymentRegion'        => $this->coreHelper->isEuPaymentRegion(),
+            'oAuthHashRedirectUrl'     => $this->coreHelper->getOAuthRedirectUrl(),
         ];
 
         if ($this->coreHelper->isSandboxEnabled()) {
@@ -79,7 +80,7 @@ class Config extends Template
     {
         return ($this->coreHelper->isPwaEnabled());
     }
-    
+
     /**
      * @return bool
      */

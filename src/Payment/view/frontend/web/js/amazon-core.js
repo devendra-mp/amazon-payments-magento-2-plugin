@@ -1,16 +1,21 @@
 define([
     'jquery',
     'ko',
+    'amazonPaymentConfig',
     'amazonWidgetsLoader',
     'bluebird'
-], function($, ko) {
+], function($, ko, amazonPaymentConfig) {
     "use strict";
 
-    var clientId = window.amazonPayment.clientId,
+    var clientId = amazonPaymentConfig.getValue('clientId'),
         amazonDefined = ko.observable(false),
         amazonLoginError = ko.observable(false),
         accessToken = ko.observable(null);
-        
+
+    /**
+     * Set Client ID
+     * @param cid
+     */
     function setClientId(cid) {
         amazonDefined(true);
         amazon.Login.setClientId(cid);
@@ -54,16 +59,25 @@ define([
          */
         verifyAmazonLoggedIn: function() {
             var loginOptions = {
-                scope: window.amazonPayment.loginScope,
+                scope: amazonPaymentConfig.getValue('loginScope'),
                 popup: true,
                 interactive: 'never'
             };
 
             return new Promise(function(resolve, reject) {
-                amazon.Login.authorize (loginOptions, function(response) {
-                    accessToken(response.access_token);
-                    !response.error ? resolve(!response.error) : reject(response.error);
-                });
+                var authCookie = $.cookieStorage.get('amazon_Login_accessToken');
+                if(authCookie !== null) {
+                    amazon.Login.retrieveProfile(authCookie, function(response){
+                        accessToken(authCookie);
+                        return !response.error ? resolve(!response.error) : reject(response.error);
+                    });
+                    //if no cookie is set (i.e. come from redirect)
+                } else {
+                    amazon.Login.authorize (loginOptions, function(response) {
+                        accessToken(response.access_token);
+                        return !response.error ? resolve(!response.error) : reject(response.error);
+                    });
+                }
             }).catch(function(e) {
                 console.log('error: ' + e);
             });

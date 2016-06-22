@@ -23,11 +23,6 @@ define([
         },
 
         _create: function() {
-
-            if (!amazonPaymentConfig.getValue('isLwaEnabled')) {
-                return;
-            }
-
             _this = this;
             $button = this.element;
             this._verifyAmazonConfig();
@@ -48,12 +43,24 @@ define([
                 _this.options.loginScope = amazonPaymentConfig.getValue('loginScope');
             }
         },
+        secureHttpsCallback: function(event) {
+            var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
+            if (sections) {
+                customerData.invalidate(sections);
+            }
+            window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
+        },
+        _popupCallback: function() {
+            return (window.location.protocol === 'https:') ? _this.secureHttpsCallback : amazonPaymentConfig.getValue('oAuthHashRedirectUrl');
+        },
+        getPopUp: function() {
+            return (window.location.protocol === 'https:');
+        },
         /**
          * onAmazonPaymentsReady
          * @private
          */
         _renderAmazonButton: function() {
-
             var authRequest,
                 loginOptions;
 
@@ -64,14 +71,8 @@ define([
                 language: _this.options.buttonLanguage,
 
                 authorization: function () {
-                    loginOptions = {scope: _this.options.loginScope};
-                    authRequest = amazon.Login.authorize(loginOptions, function(event) {
-                        var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
-                        if (sections) {
-                            customerData.invalidate(sections);
-                        }
-                        window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
-                    });
+                    loginOptions = {scope: _this.options.loginScope, popup: _this.getPopUp()};
+                    authRequest = amazon.Login.authorize(loginOptions, _this._popupCallback());
                 }
             });
         }

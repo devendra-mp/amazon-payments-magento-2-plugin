@@ -584,4 +584,12 @@ class Data extends AbstractHelper
         return $this->scopeConfig
                     ->isSetFlag('payment/amazon_payment/packstation_terms_validation_enabled', $scope, $scopeCode);
     }
+
+    /**
+     * @return string
+     */
+    public function getOAuthRedirectUrl()
+    {
+        return $this->_getUrl('amazon/login/processAuthHash', ['_secure' => true]);
+    }
 }
