@@ -42,6 +42,7 @@ class Checkout extends Page
             'pay-with-amazon'            => ['css' => '#OffAmazonPaymentsWidgets0'],
             'submit-order'               => ['css' => 'button.checkout.primary'],
             'customer-email-input'       => ['css' => 'input#customer-email'],
+            'error-messages-container'   => ['css' => 'div#checkout > div[data-role=checkout-messages]'],
         ];
 
     protected $path = '/checkout/';
@@ -240,5 +241,14 @@ class Checkout extends Page
         }
 
         $input->setValue((string)$email);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isErrorMessageContainerVisible()
+    {
+        $errorContainer = $this->getElement('error-messages-container');
+        return $errorContainer->isVisible();
     }
 }
