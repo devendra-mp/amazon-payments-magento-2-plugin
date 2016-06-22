@@ -23,11 +23,6 @@ define([
         },
 
         _create: function() {
-
-            if (!amazonPaymentConfig.getValue('isLwaEnabled')) {
-                return;
-            }
-
             _this = this;
             $button = this.element;
             this._verifyAmazonConfig();
@@ -66,7 +61,6 @@ define([
          * @private
          */
         _renderAmazonButton: function() {
-
             var authRequest,
                 loginOptions;
 

@@ -590,6 +590,6 @@ class Data extends AbstractHelper
      */
     public function getOAuthRedirectUrl()
     {
-        return $this->_getUrl('amazon/login/processoAuthHash');
+        return $this->_getUrl('amazon/login/processAuthHash', ['_secure' => true]);
     }
 }
