@@ -45,8 +45,12 @@ define([
             }
         },
         secureHttpsCallback: function(event) {
-            if (!event.hasOwnProperty('state') || !event.state || !amazonCsrf.isValid(event.state)) {
-                return;
+            if (!event.state || !amazonCsrf.isValid(event.state)) {
+                return window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
+            }
+
+            if (!event.access_token || !!event.error) {
+                return window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
             }
 
             var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);

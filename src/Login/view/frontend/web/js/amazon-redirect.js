@@ -14,10 +14,10 @@ define([
          */
         _create: function() {
             // verify nonce first
-            var state = this.getURLParameter('state', location.hash);
-            if (!state || !amazonCsrf.isValid(state)) {
-                return window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
-            }
+            this.redirectOnInvalidState();
+
+            // we don't have the customer's consent or invalid request
+            this.redirectOnRequestWithError();
 
             this.setAuthStateCookies();
             this.redirect();
@@ -62,6 +62,17 @@ define([
 
         redirect: function() {
             window.location = amazonPaymentConfig.getValue('redirectUrl') + '?access_token=' + this.getURLParameter('access_token', location.hash);
+        },
+        redirectOnInvalidState: function() {
+            var state = this.getURLParameter('state', location.hash);
+            if (!state || !amazonCsrf.isValid(state)) {
+                window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
+            }
+        },
+        redirectOnRequestWithError: function() {
+            if (this.getURLParameter('error', window.location)) {
+                window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
+            }
         }
     });
 
