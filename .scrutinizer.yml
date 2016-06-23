@@ -34,4 +34,4 @@ inherit: true
 build_failure_conditions:
   - 'elements.rating(<= D).exists'
   - 'issues.new.exists'
-  - 'project.metric("scrutinizer.quality", < 9.5)'
+  - 'project.metric("scrutinizer.quality", < 9.4)'
