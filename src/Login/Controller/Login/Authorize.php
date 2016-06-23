@@ -23,7 +23,9 @@ use Amazon\Login\Api\Customer\CompositeMatcherInterface;
 use Amazon\Login\Api\CustomerManagerInterface;
 use Amazon\Login\Domain\ValidationCredentials;
 use Amazon\Login\Helper\Session;
+use Amazon\Login\Model\Validator\AccessTokenRequestValidator;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Magento\Customer\Model\Url;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Exception\NotFoundException;
@@ -74,15 +76,27 @@ class Authorize extends Action
     protected $amazonCoreHelper;
 
     /**
-     * @param Context                   $context
-     * @param ClientFactoryInterface    $clientFactory
-     * @param CompositeMatcherInterface $matcher
-     * @param CustomerManagerInterface  $customerManager
-     * @param Session                   $session
-     * @param AccountRedirect           $accountRedirect
-     * @param AmazonCustomerFactory     $amazonCustomerFactory
-     * @param LoggerInterface           $logger
-     * @param AmazonCoreHelper          $amazonCoreHelper
+     * @var Url
+     */
+    protected $customerUrl;
+
+    /**
+     * @var AccessTokenRequestValidator
+     */
+    protected $accessTokenRequestValidator;
+
+    /**
+     * @param Context                     $context
+     * @param ClientFactoryInterface      $clientFactory
+     * @param CompositeMatcherInterface   $matcher
+     * @param CustomerManagerInterface    $customerManager
+     * @param Session                     $session
+     * @param AccountRedirect             $accountRedirect
+     * @param AmazonCustomerFactory       $amazonCustomerFactory
+     * @param LoggerInterface             $logger
+     * @param AmazonCoreHelper            $amazonCoreHelper
+     * @param Url                         $customerUrl
+     * @param AccessTokenRequestValidator $accessTokenRequestValidator
      */
     public function __construct(
         Context $context,
@@ -93,24 +107,32 @@ class Authorize extends Action
         AccountRedirect $accountRedirect,
         AmazonCustomerFactory $amazonCustomerFactory,
         LoggerInterface $logger,
-        AmazonCoreHelper $amazonCoreHelper
+        AmazonCoreHelper $amazonCoreHelper,
+        Url $customerUrl,
+        AccessTokenRequestValidator $accessTokenRequestValidator
     ) {
         parent::__construct($context);
 
-        $this->clientFactory         = $clientFactory;
-        $this->matcher               = $matcher;
-        $this->customerManager       = $customerManager;
-        $this->session               = $session;
-        $this->accountRedirect       = $accountRedirect;
-        $this->amazonCustomerFactory = $amazonCustomerFactory;
-        $this->logger                = $logger;
-        $this->amazonCoreHelper      = $amazonCoreHelper;
+        $this->clientFactory               = $clientFactory;
+        $this->matcher                     = $matcher;
+        $this->customerManager             = $customerManager;
+        $this->session                     = $session;
+        $this->accountRedirect             = $accountRedirect;
+        $this->amazonCustomerFactory       = $amazonCustomerFactory;
+        $this->logger                      = $logger;
+        $this->amazonCoreHelper            = $amazonCoreHelper;
+        $this->customerUrl                 = $customerUrl;
+        $this->accessTokenRequestValidator = $accessTokenRequestValidator;
     }
 
     public function execute()
     {
         if ( ! $this->amazonCoreHelper->isLwaEnabled()) {
             throw new NotFoundException(__('Action is not available'));
+        }
+
+        if ($this->accessTokenRequestValidator->isValid($this->getRequest())) {
+            return $this->_redirect($this->customerUrl->getLoginUrl());
         }
 
         try {

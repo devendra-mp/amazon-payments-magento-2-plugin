@@ -32,10 +32,11 @@ class Config extends Template
      */
     protected $url;
 
-    public function __construct(Context $context, Data $coreHelper, Url $url) {
+    public function __construct(Context $context, Data $coreHelper, Url $url)
+    {
+        parent::__construct($context);
         $this->coreHelper = $coreHelper;
         $this->url = $url;
-        parent::__construct($context);
     }
 
     /**

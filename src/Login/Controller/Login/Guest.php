@@ -19,7 +19,9 @@ use Amazon\Core\Client\ClientFactoryInterface;
 use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Core\Domain\AmazonCustomerFactory;
 use Amazon\Core\Helper\Data as AmazonCoreHelper;
+use Amazon\Login\Model\Validator\AccessTokenRequestValidator;
 use Magento\Customer\Model\Session;
+use Magento\Customer\Model\Url;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Exception\NotFoundException;
@@ -53,12 +55,24 @@ class Guest extends Action
     protected $amazonCoreHelper;
 
     /**
-     * @param Context $context
-     * @param AmazonCustomerFactory $amazonCustomerFactory
-     * @param ClientFactoryInterface $clientFactory
-     * @param LoggerInterface $logger
-     * @param Session $customerSession
-     * @param AmazonCoreHelper $amazonCoreHelper
+     * @var Url
+     */
+    protected $customerUrl;
+
+    /**
+     * @var AccessTokenRequestValidator
+     */
+    protected $accessTokenRequestValidator;
+
+    /**
+     * @param Context                     $context
+     * @param AmazonCustomerFactory       $amazonCustomerFactory
+     * @param ClientFactoryInterface      $clientFactory
+     * @param LoggerInterface             $logger
+     * @param Session                     $customerSession
+     * @param AmazonCoreHelper            $amazonCoreHelper
+     * @param Url                         $customerUrl
+     * @param AccessTokenRequestValidator $accessTokenRequestValidator
      */
     public function __construct(
         Context $context,
@@ -66,7 +80,9 @@ class Guest extends Action
         ClientFactoryInterface $clientFactory,
         LoggerInterface $logger,
         Session $customerSession,
-        AmazonCoreHelper $amazonCoreHelper
+        AmazonCoreHelper $amazonCoreHelper,
+        Url $customerUrl,
+        AccessTokenRequestValidator $accessTokenRequestValidator
     ) {
         parent::__construct($context);
         $this->amazonCustomerFactory = $amazonCustomerFactory;
@@ -74,6 +90,8 @@ class Guest extends Action
         $this->logger = $logger;
         $this->customerSession = $customerSession;
         $this->amazonCoreHelper = $amazonCoreHelper;
+        $this->customerUrl = $customerUrl;
+        $this->accessTokenRequestValidator = $accessTokenRequestValidator;
     }
 
     /**
@@ -83,6 +101,10 @@ class Guest extends Action
     {
         if ($this->amazonCoreHelper->isLwaEnabled()) {
             throw new NotFoundException(__('Action is not available'));
+        }
+
+        if (!$this->accessTokenRequestValidator->isValid($this->getRequest())) {
+            return $this->_redirect($this->customerUrl->getLoginUrl());
         }
 
         try {
