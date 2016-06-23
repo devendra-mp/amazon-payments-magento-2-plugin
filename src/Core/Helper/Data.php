@@ -194,7 +194,8 @@ class Data extends AbstractHelper
     }
 
     /**
-     * @param string $scope
+     * @param string      $scope
+     * @param null|string $scopeCode
      *
      * @return string
      */
