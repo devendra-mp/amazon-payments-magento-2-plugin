@@ -11,7 +11,8 @@ define([
     var clientId = amazonPaymentConfig.getValue('clientId'),
         amazonDefined = ko.observable(false),
         amazonLoginError = ko.observable(false),
-        accessToken = ko.observable(null);
+        accessToken = ko.observable(null),
+        authCookie = $.cookieStorage.get('amazon_Login_accessToken');
 
     /**
      * Set Client ID
@@ -60,7 +61,6 @@ define([
          */
         verifyAmazonLoggedIn: function() {
             return new Promise(function(resolve, reject) {
-                var authCookie = $.cookieStorage.get('amazon_Login_accessToken');
                 if(authCookie !== null) {
                     amazon.Login.retrieveProfile(authCookie, function(response){
                         accessToken(authCookie);
@@ -79,7 +79,7 @@ define([
                         var resolution;
 
                         if (response.error) {
-                            resolution = reject(response.error)
+                            resolution = reject(response.error);
                         // no error: check the nonce
                         } else if (!response.hasOwnProperty('state') || !response.state || !amazonCsrf.isValid(response.state)) {
                             resolution = reject('Invalid state');

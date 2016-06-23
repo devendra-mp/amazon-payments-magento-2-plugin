@@ -20,7 +20,12 @@ define([
             }
 
             this.setAuthStateCookies();
-            this.redirect();
+            amazonCore.amazonDefined.subscribe(function() {
+                //only set this on the redirect page
+                amazon.Login.setUseCookie(true);
+                amazon.Login.setRegion('EU');
+                this.redirect();
+            }, this);
         },
 
         /**
@@ -41,20 +46,7 @@ define([
          */
         setAuthStateCookies: function() {
             var token = this.getURLParameter("access_token", location.hash);
-            //return false is the cookies are already set and token is null
-            if ($.cookieStorage.get('amazon_Login_state_cache') !== null && $.cookieStorage.get('amazon_Login_accessToken') !== null && token === null) {
-                return false;
-            }
-            var newObj = {
-                access_token: token,
-                max_age: this.getURLParameter('expires_in', location.hash),
-                expiration_date: new Date().getTime() + (this.getURLParameter('expires_in', location.hash) * 1000),
-                client_id: amazonPaymentConfig.getValue('clientId'),
-                scope: this.getURLParameter('scope', location.hash)
-            };
-
             if (typeof token === 'string' && token.match(/^Atza/)) {
-                $.cookieStorage.set('amazon_Login_state_cache', JSON.stringify(newObj));
                 $.cookieStorage.set('amazon_Login_accessToken', token);
             }
             return true;
