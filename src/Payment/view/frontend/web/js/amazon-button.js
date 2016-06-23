@@ -3,9 +3,10 @@ define([
     'Magento_Customer/js/customer-data',
     'Magento_Customer/js/section-config',
     'Amazon_Payment/js/model/amazonPaymentConfig',
+    'amazonCsrf',
     'amazonCore',
     'jquery/ui'
-], function($, customerData, sectionConfig, amazonPaymentConfig) {
+], function($, customerData, sectionConfig, amazonPaymentConfig, amazonCsrf) {
     "use strict";
 
     var _this,
@@ -44,6 +45,10 @@ define([
             }
         },
         secureHttpsCallback: function(event) {
+            if (!event.hasOwnProperty('state') || !event.state || !amazonCsrf.isValid(event.state)) {
+                return;
+            }
+
             var sections = sectionConfig.getAffectedSections(_this.options.loginPostUrl);
             if (sections) {
                 customerData.invalidate(sections);
@@ -61,8 +66,7 @@ define([
          * @private
          */
         _renderAmazonButton: function() {
-            var authRequest,
-                loginOptions;
+            var authRequest;
 
             OffAmazonPayments.Button($button.attr('id'), _this.options.merchantId, {
                 type: _this.options.buttonType,
@@ -71,10 +75,16 @@ define([
                 language: _this.options.buttonLanguage,
 
                 authorization: function () {
-                    loginOptions = {scope: _this.options.loginScope, popup: _this.getPopUp()};
-                    authRequest = amazon.Login.authorize(loginOptions, _this._popupCallback());
+                    authRequest = amazon.Login.authorize(_this._getLoginOptions(), _this._popupCallback());
                 }
             });
+        },
+        _getLoginOptions: function() {
+            return {
+                scope: _this.options.loginScope,
+                popup: _this.getPopUp(),
+                state: amazonCsrf.generateNewValue()
+            };
         }
     });
 

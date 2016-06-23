@@ -2,9 +2,10 @@ define([
     'jquery',
     'ko',
     'amazonPaymentConfig',
+    'amazonCsrf',
     'amazonWidgetsLoader',
     'bluebird'
-], function($, ko, amazonPaymentConfig) {
+], function($, ko, amazonPaymentConfig, amazonCsrf) {
     "use strict";
 
     var clientId = amazonPaymentConfig.getValue('clientId'),
@@ -58,12 +59,6 @@ define([
          * Verify a user is logged into amazon
          */
         verifyAmazonLoggedIn: function() {
-            var loginOptions = {
-                scope: amazonPaymentConfig.getValue('loginScope'),
-                popup: true,
-                interactive: 'never'
-            };
-
             return new Promise(function(resolve, reject) {
                 var authCookie = $.cookieStorage.get('amazon_Login_accessToken');
                 if(authCookie !== null) {
@@ -73,12 +68,32 @@ define([
                     });
                     //if no cookie is set (i.e. come from redirect)
                 } else {
+                    var loginOptions = {
+                        scope: amazonPaymentConfig.getValue('loginScope'),
+                        popup: true,
+                        interactive: 'never',
+                        state: amazonCsrf.generateNewValue()
+                    };
+
                     amazon.Login.authorize (loginOptions, function(response) {
-                        accessToken(response.access_token);
-                        return !response.error ? resolve(!response.error) : reject(response.error);
+                        var resolution;
+
+                        if (response.error) {
+                            resolution = reject(response.error)
+                        // no error: check the nonce
+                        } else if (!response.hasOwnProperty('state') || !response.state || !amazonCsrf.isValid(response.state)) {
+                            resolution = reject('Invalid state');
+                        } else {
+                            accessToken(response.access_token);
+                            resolution = resolve(!response.error);
+                        }
+
+                        amazonCsrf.clear(); // always clear nonce
+                        return resolution;
                     });
                 }
             }).catch(function(e) {
+                amazonCsrf.clear();
                 console.log('error: ' + e);
             });
         },

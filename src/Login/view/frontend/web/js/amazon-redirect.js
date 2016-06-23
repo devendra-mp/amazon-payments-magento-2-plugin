@@ -2,8 +2,9 @@ define([
     'jquery',
     'amazonCore',
     'amazonPaymentConfig',
+    'amazonCsrf',
     'jquery/ui'
-], function($, amazonCore, amazonPaymentConfig) {
+], function($, amazonCore, amazonPaymentConfig, amazonCsrf) {
     "use strict";
 
     $.widget('amazon.AmazonRedirect', {
@@ -12,6 +13,12 @@ define([
          * @private
          */
         _create: function() {
+            // verify nonce first
+            var state = this.getURLParameter('state', location.hash);
+            if (!state || !amazonCsrf.isValid(state)) {
+                return window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
+            }
+
             this.setAuthStateCookies();
             this.redirect();
         },
@@ -54,7 +61,7 @@ define([
         },
 
         redirect: function() {
-            window.location = amazonPaymentConfig.getValue('redirectUrl') + '?access_token=' + this.getURLParameter("access_token", location.hash);
+            window.location = amazonPaymentConfig.getValue('redirectUrl') + '?access_token=' + this.getURLParameter('access_token', location.hash);
         }
     });
 
