@@ -95,4 +95,13 @@ class OrderContext implements SnippetAcceptingContext
     {
         $this->creditMemoPage->submitCreditMemo();
     }
+
+    /**
+     * @Then I should be notified that my capture is pending
+     */
+    public function iShouldBeNotifiedThatMyCaptureIsPending()
+    {
+        $hasPendingError = $this->invoicePage->hasPendingError();
+        PHPUnit_Framework_Assert::assertTrue($hasPendingError);
+    }
 }

@@ -16,6 +16,7 @@
 namespace Page\Admin;
 
 use Page\PageTrait;
+use PHPUnit_Framework_Assert;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 class Invoice extends Page
@@ -24,7 +25,8 @@ class Invoice extends Page
 
     protected $elements
         = [
-            'credit-memo' => ['css' => 'button.credit-memo']
+            'credit-memo' => ['css' => 'button.credit-memo'],
+            'error'       => ['css' => '.message-error']
         ];
 
     protected $path = '/admin/sales/order_invoice/view/invoice_id/{id}';
@@ -37,5 +39,21 @@ class Invoice extends Page
     public function openCreateCreditMemo()
     {
         $this->clickElement('credit-memo');
+    }
+
+    public function hasPendingError()
+    {
+        try {
+            $element    = $this->getElement('error');
+            $constraint = PHPUnit_Framework_Assert::stringContains(
+                'Capture pending approval from the payment gateway',
+                false
+            );
+
+            PHPUnit_Framework_Assert::assertThat($element->getText(), $constraint);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

@@ -22,11 +22,6 @@ use Magento\Sales\Api\TransactionRepositoryInterface;
 class Transaction extends BaseFixture
 {
     /**
-     * @var TransactionRepositoryInterface
-     */
-    protected $repository;
-
-    /**
      * @var OrderFixture
      */
     protected $orderFixture;
@@ -34,18 +29,19 @@ class Transaction extends BaseFixture
     public function __construct()
     {
         parent::__construct();
-        $this->repository   = $this->getMagentoObject(TransactionRepositoryInterface::class);
         $this->orderFixture = new OrderFixture;
     }
 
     public function getByTransactionId($transactionId, $paymentId, $orderId)
     {
-        return $this->repository->getByTransactionId($transactionId, $paymentId, $orderId);
+        $repository = $this->createMagentoObject(TransactionRepositoryInterface::class);
+        return $repository->getByTransactionId($transactionId, $paymentId, $orderId);
     }
 
     public function getByTransactionType($transactionType, $paymentId, $orderId)
     {
-        return $this->repository->getByTransactionType($transactionType, $paymentId, $orderId);
+        $repository = $this->createMagentoObject(TransactionRepositoryInterface::class);
+        return $repository->getByTransactionType($transactionType, $paymentId, $orderId);
     }
 
     public function getLastTransactionForLastOrder($email)

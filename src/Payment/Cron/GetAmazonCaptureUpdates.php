@@ -15,6 +15,8 @@
  */
 namespace Amazon\Payment\Cron;
 
+use Amazon\Core\Helper\Data;
+use Amazon\Core\Model\Config\Source\UpdateMechanism;
 use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Model\ResourceModel\PendingCapture\CollectionFactory;
@@ -37,15 +39,22 @@ class GetAmazonCaptureUpdates
      */
     protected $paymentManagement;
 
+    /**
+     * @var Data
+     */
+    protected $coreHelper;
+
     public function __construct(
         CollectionFactory $collectionFactory,
         PaymentManagementInterface $paymentManagement,
+        Data $coreHelper,
         $limit = 100
     ) {
         $this->collectionFactory = $collectionFactory;
         $this->paymentManagement = $paymentManagement;
+        $this->coreHelper        = $coreHelper;
 
-        $limit = (int) $limit;
+        $limit = (int)$limit;
 
         if ($limit < 1) {
             throw new \InvalidArgumentException('Limit must be greater than 1.');
@@ -56,6 +65,10 @@ class GetAmazonCaptureUpdates
 
     public function execute()
     {
+        if (UpdateMechanism::IPN === $this->coreHelper->getUpdateMechanism()) {
+            return;
+        }
+
         $collection = $this->collectionFactory
             ->create()
             ->addOrder(PendingCaptureInterface::CREATED_AT, Collection::SORT_ORDER_ASC)
@@ -63,7 +76,7 @@ class GetAmazonCaptureUpdates
             ->setCurPage(1);
 
         $pendingCaptureIds = $collection->getIdGenerator();
-        foreach($pendingCaptureIds as $pendingCaptureId) {
+        foreach ($pendingCaptureIds as $pendingCaptureId) {
             $this->paymentManagement->updateCapture($pendingCaptureId);
         }
     }

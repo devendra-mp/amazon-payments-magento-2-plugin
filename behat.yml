@@ -13,6 +13,8 @@ default:
         - Context\Data\OrderContext
         - Context\Data\AmazonContext
         - Context\Data\ConfigContext
+        - Context\Data\IpnContext:
+          - 'http://amazon-payment.dev'
         - Context\Web\Store\LoginContext
         - Context\Web\Store\RegisterContext
         - Context\Web\Store\BasketContext

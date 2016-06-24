@@ -243,6 +243,7 @@ class PaymentManagement implements PaymentManagementInterface
                 $order   = $this->orderRepository->get($pendingCapture->getOrderId());
                 $payment = $this->orderPaymentRepository->get($pendingCapture->getPaymentId());
                 $order->setPayment($payment);
+                $order->setData(OrderInterface::PAYMENT, $payment);
 
                 if (null === $captureDetails) {
                     $responseParser = $this->clientFactory->create($order->getStoreId())->getCaptureDetails([
@@ -300,9 +301,9 @@ class PaymentManagement implements PaymentManagementInterface
     /**
      * {@inheritdoc}
      */
-    public function closeTransaction($transactionId, $paymentId, $orderId)
+    public function closeTransaction($transactionId, PaymentInfoInterface $payment, OrderInterface $order)
     {
-        $this->getTransaction($transactionId, $paymentId, $orderId)->setIsClosed(1)->save();
+        $this->getTransaction($transactionId, $payment, $order)->setIsClosed(1)->save();
     }
 
     protected function processUpdateAuthorization(
@@ -312,6 +313,8 @@ class PaymentManagement implements PaymentManagementInterface
         $order   = $this->orderRepository->get($pendingAuthorization->getOrderId());
         $payment = $this->orderPaymentRepository->get($pendingAuthorization->getPaymentId());
         $order->setPayment($payment);
+        $order->setData(OrderInterface::PAYMENT, $payment);
+
         $authorizationId = $pendingAuthorization->getAuthorizationId();
 
         if (null === $authorizationDetails) {
@@ -343,7 +346,7 @@ class PaymentManagement implements PaymentManagementInterface
         OrderPaymentInterface $payment,
         PendingAuthorizationInterface $pendingAuthorization,
         $capture,
-        $newAuthorizationId = false
+        TransactionInterface $newTransaction = null
     ) {
         $authorizationId = $pendingAuthorization->getAuthorizationId();
 
@@ -352,8 +355,10 @@ class PaymentManagement implements PaymentManagementInterface
         if ($capture) {
             $invoice = $this->getInvoiceAndSetPaid($authorizationId, $order);
 
-            if ( ! $newAuthorizationId) {
-                $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+            if ( ! $newTransaction) {
+                $this->closeTransaction($authorizationId, $payment, $order);
+            } else {
+                $invoice->setTransactionId($newTransaction->getTxnId());
             }
 
             $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
@@ -367,8 +372,7 @@ class PaymentManagement implements PaymentManagementInterface
             $message         = __('Authorized amount of %1 online', $formattedAmount);
         }
 
-        $transactionId = ($newAuthorizationId) ?: $authorizationId;
-        $transaction   = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
+        $transaction = ($newTransaction) ?: $this->getTransaction($authorizationId, $payment, $order);
         $payment->addTransactionCommentsToOrder($transaction, $message);
 
         $order->save();
@@ -393,9 +397,9 @@ class PaymentManagement implements PaymentManagementInterface
             $message         = __('Declined amount of %1 online', $formattedAmount);
         }
 
-        $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
+        $transaction = $this->getTransaction($authorizationId, $payment, $order);
         $payment->addTransactionCommentsToOrder($transaction, $message);
-        $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+        $this->closeTransaction($authorizationId, $payment, $order);
 
         $pendingAuthorization->setProcessed(true);
         $pendingAuthorization->save();
@@ -430,9 +434,9 @@ class PaymentManagement implements PaymentManagementInterface
 
         $this->setOnHold($order);
 
-        $transaction = $this->getTransaction($authorizationId, $payment->getId(), $order->getId());
+        $transaction = $this->getTransaction($authorizationId, $payment, $order);
         $payment->addTransactionCommentsToOrder($transaction, $message);
-        $this->closeTransaction($authorizationId, $payment->getId(), $order->getId());
+        $this->closeTransaction($authorizationId, $payment, $order);
 
         $pendingAuthorization->delete();
         $order->save();
@@ -453,6 +457,8 @@ class PaymentManagement implements PaymentManagementInterface
         $order   = $this->orderRepository->get($pendingAuthorization->getOrderId());
         $payment = $this->orderPaymentRepository->get($pendingAuthorization->getPaymentId());
         $order->setPayment($payment);
+        $order->setData(OrderInterface::PAYMENT, $payment);
+
         $storeId = $order->getStoreId();
 
         if (null === $orderDetails) {
@@ -491,10 +497,14 @@ class PaymentManagement implements PaymentManagementInterface
             $method->authorizeInCron($payment, $baseAmount, $capture);
 
             $transaction = $payment->addTransaction(Transaction::TYPE_AUTH);
-            $transaction->save();
 
-            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture,
-                $transaction->getTxnId());
+            $this->completePendingAuthorization(
+                $order,
+                $payment,
+                $pendingAuthorization,
+                $capture,
+                $transaction
+            );
         } catch (SoftDeclineException $e) {
             $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         } catch (\Exception $e) {
@@ -519,10 +529,14 @@ class PaymentManagement implements PaymentManagementInterface
             $method->authorizeInCron($payment, $baseAmount, $capture);
 
             $transaction = $payment->addTransaction(Transaction::TYPE_CAPTURE, $invoice, true);
-            $transaction->save();
 
-            $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture,
-                $transaction->getTxnId());
+            $this->completePendingAuthorization(
+                $order,
+                $payment,
+                $pendingAuthorization,
+                $capture,
+                $transaction
+            );
         } catch (SoftDeclineException $e) {
             $this->softDeclinePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
         } catch (\Exception $e) {
@@ -554,7 +568,7 @@ class PaymentManagement implements PaymentManagementInterface
         OrderInterface $order
     ) {
         $transactionId   = $pendingCapture->getCaptureId();
-        $transaction     = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
+        $transaction     = $this->getTransaction($transactionId, $payment, $order);
         $invoice         = $this->getInvoice($transactionId, $order);
         $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
         $message         = __('Captured amount of %1 online', $formattedAmount);
@@ -565,7 +579,7 @@ class PaymentManagement implements PaymentManagementInterface
         $payment->addTransactionCommentsToOrder($transaction, $message);
         $order->save();
 
-        $this->closeTransaction($transactionId, $payment->getId(), $order->getId());
+        $this->closeTransaction($transactionId, $payment, $order);
         $pendingCapture->delete();
     }
 
@@ -575,7 +589,7 @@ class PaymentManagement implements PaymentManagementInterface
         OrderInterface $order
     ) {
         $transactionId   = $pendingCapture->getCaptureId();
-        $transaction     = $this->getTransaction($transactionId, $payment->getId(), $order->getId());
+        $transaction     = $this->getTransaction($transactionId, $payment, $order);
         $invoice         = $this->getInvoice($transactionId, $order);
         $formattedAmount = $order->getBaseCurrency()->formatTxt($invoice->getBaseGrandTotal());
         $message         = __('Declined amount of %1 online', $formattedAmount);
@@ -585,13 +599,13 @@ class PaymentManagement implements PaymentManagementInterface
         $payment->addTransactionCommentsToOrder($transaction, $message);
         $order->save();
 
-        $this->closeTransaction($transactionId, $payment->getId(), $order->getId());
+        $this->closeTransaction($transactionId, $payment, $order);
         $pendingCapture->delete();
 
         $this->addCaptureDeclinedNotice($order);
     }
 
-    protected function getTransaction($transactionId, $paymentId, $orderId)
+    protected function getTransaction($transactionId, PaymentInfoInterface $payment, OrderInterface $order)
     {
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
 
@@ -600,11 +614,11 @@ class PaymentManagement implements PaymentManagementInterface
         );
 
         $searchCriteriaBuilder->addFilter(
-            TransactionInterface::ORDER_ID, $orderId
+            TransactionInterface::ORDER_ID, $order->getId()
         );
 
         $searchCriteriaBuilder->addFilter(
-            TransactionInterface::PAYMENT_ID, $paymentId
+            TransactionInterface::PAYMENT_ID, $payment->getId()
         );
 
         $searchCriteria = $searchCriteriaBuilder
@@ -615,7 +629,12 @@ class PaymentManagement implements PaymentManagementInterface
         $transactionList = $this->transactionRepository->getList($searchCriteria);
 
         if (count($items = $transactionList->getItems())) {
-            return current($items);
+            $transaction = current($items);
+            $transaction
+                ->setPayment($payment)
+                ->setOrder($order);
+
+            return $transaction;
         }
 
         throw new NoSuchEntityException();

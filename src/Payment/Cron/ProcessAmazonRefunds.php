@@ -15,6 +15,8 @@
  */
 namespace Amazon\Payment\Cron;
 
+use Amazon\Core\Helper\Data;
+use Amazon\Core\Model\Config\Source\UpdateMechanism;
 use Amazon\Payment\Api\Data\PendingRefundInterface;
 use Amazon\Payment\Model\QueuedRefundUpdaterFactory;
 use Amazon\Payment\Model\ResourceModel\PendingRefund\CollectionFactory;
@@ -38,6 +40,11 @@ class ProcessAmazonRefunds
     protected $queuedRefundUpdater;
 
     /**
+     * @var Data
+     */
+    protected $coreHelper;
+
+    /**
      * @param CollectionFactory          $collectionFactory
      * @param QueuedRefundUpdaterFactory $queuedRefundUpdater
      * @param int                        $limit
@@ -45,9 +52,12 @@ class ProcessAmazonRefunds
     public function __construct(
         CollectionFactory $collectionFactory,
         QueuedRefundUpdaterFactory $queuedRefundUpdater,
+        Data $coreHelper,
         $limit = 100
     ) {
         $this->queuedRefundsCollectionFactory = $collectionFactory;
+        $this->queuedRefundUpdater            = $queuedRefundUpdater;
+        $this->coreHelper                     = $coreHelper;
 
         $limit = (int)$limit;
 
@@ -55,12 +65,15 @@ class ProcessAmazonRefunds
             throw new \InvalidArgumentException('Limit must be greater than 1.');
         }
 
-        $this->limit               = $limit;
-        $this->queuedRefundUpdater = $queuedRefundUpdater;
+        $this->limit = $limit;
     }
 
     public function execute()
     {
+        if (UpdateMechanism::IPN === $this->coreHelper->getUpdateMechanism()) {
+            return;
+        }
+
         $collection = $this->queuedRefundsCollectionFactory
             ->create()
             ->addOrder(PendingRefundInterface::CREATED_AT, Collection::SORT_ORDER_ASC)

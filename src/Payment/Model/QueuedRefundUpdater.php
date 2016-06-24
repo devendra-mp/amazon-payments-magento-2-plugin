@@ -135,7 +135,7 @@ class QueuedRefundUpdater
         $this->adminNotifier->addMajor(
             'Amazon Payments has declined a refund',
             "Refund ID {$pendingRefund->getRefundId()} for Order ID {$pendingRefund->getOrderId()} " .
-            " has been declined by Amazon Payments."
+            "has been declined by Amazon Payments."
         );
     }
 }

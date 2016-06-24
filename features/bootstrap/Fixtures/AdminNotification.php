@@ -13,23 +13,16 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Core\Model\Config\Source;
+namespace Fixtures;
 
-use Magento\Framework\Option\ArrayInterface;
+use Bex\Behat\Magento2InitExtension\Fixtures\BaseFixture;
+use Magento\AdminNotification\Model\Inbox;
 
-class UpdateMechanism implements ArrayInterface
+class AdminNotification extends BaseFixture
 {
-    const IPN = 'instant';
-    const CRON = 'polling';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toOptionArray()
+    public function getLatestNotification()
     {
-        return [
-            ['value' => static::CRON, 'label' => __('Data Polling via Cron Job')],
-            ['value' => static::IPN, 'label' => __('Instant Payment Notifications')],
-        ];
+        return $this->getMagentoObject(Inbox::class)
+            ->loadLatestNotice();
     }
 }

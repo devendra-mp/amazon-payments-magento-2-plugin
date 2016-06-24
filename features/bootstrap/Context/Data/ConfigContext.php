@@ -57,6 +57,14 @@ class ConfigContext implements SnippetAcceptingContext
         $this->changeConfig('payment/amazon_payment/authorization_mode', 'asynchronous');
     }
 
+    /**
+     * @Given IPN is enabled
+     */
+    public function ipnIsEnabled()
+    {
+        $this->changeConfig('payment/amazon_payment/update_mechanism', 'instant');
+    }
+
     protected function changeConfig($path, $value, $scopeType = 'default', $scopeCode = null)
     {
         $this->configManager->changeConfigs(
