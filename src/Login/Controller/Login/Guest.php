@@ -103,7 +103,7 @@ class Guest extends Action
             throw new NotFoundException(__('Action is not available'));
         }
 
-        if (!$this->accessTokenRequestValidator->isValid($this->getRequest())) {
+        if ( ! $this->accessTokenRequestValidator->isValid($this->getRequest())) {
             return $this->_redirect($this->customerUrl->getLoginUrl());
         }
 
