@@ -311,13 +311,16 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getDisplayLanguage($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    public function getButtonDisplayLanguage($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return $this->scopeConfig->getValue(
-            'payment/amazon_payment/display_language',
-            $scope,
-            $scopeCode
-        );
+        $buttonConfigLang = $this->scopeConfig
+                                 ->getValue('payment/amazon_payment/button_display_language', $scope, $scopeCode);
+
+        if (empty($buttonConfigLang)) {
+            $buttonConfigLang = $this->scopeConfig->getValue('general/locale/code', $scope, $scopeCode);
+        }
+
+        return str_replace('_', '-', $buttonConfigLang);
     }
 
     /*

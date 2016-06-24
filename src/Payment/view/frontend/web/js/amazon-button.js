@@ -18,7 +18,6 @@ define([
             buttonType: 'LwA',
             buttonColor: 'Gold',
             buttonSize: 'medium',
-            buttonLanguage: 'en-GB',
             redirectUrl: null,
             loginPostUrl: null
         },
@@ -42,6 +41,7 @@ define([
                 _this.options.redirectUrl = amazonPaymentConfig.getValue('redirectUrl');
                 _this.options.loginPostUrl = amazonPaymentConfig.getValue('loginPostUrl');
                 _this.options.loginScope = amazonPaymentConfig.getValue('loginScope');
+                _this.options.buttonLanguage = amazonPaymentConfig.getValue('displayLanguage');
             }
         },
         secureHttpsCallback: function(event) {
