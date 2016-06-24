@@ -537,9 +537,9 @@ class Data extends AbstractHelper
         return $simulationlabels;
     }
 
-    public function isPaymentButtonEnabled()
+    public function isPaymentButtonEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return ($this->isPwaEnabled() && $this->isCurrentCurrencySupportedByAmazon());
+        return ($this->isPwaEnabled($scope, $scopeCode) && $this->isCurrentCurrencySupportedByAmazon());
     }
 
     public function isLoginButtonEnabled()
@@ -601,5 +601,17 @@ class Data extends AbstractHelper
     public function getOAuthRedirectUrl()
     {
         return $this->_getUrl('amazon/login/processAuthHash', ['_secure' => true]);
+    }
+
+    /**
+     * @param string      $scope
+     * @param null|string $scopeCode
+     *
+     * @return bool
+     */
+    public function isPwaButtonVisibleOnProductPage($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    {
+        return $this->isPaymentButtonEnabled($scope, $scopeCode) &&
+               $this->scopeConfig->isSetFlag('payment/amazon_payment/pwa_pp_button_is_visible', $scope, $scopeCode);
     }
 }
