@@ -290,6 +290,17 @@ class Amazon extends AbstractMethod
             'currency_code'       => $this->getCurrencyCode($payment)
         ];
 
+        $transport = new DataObject($data);
+        $this->_eventManager->dispatch(
+            'amazon_payment_refund_before',
+            [
+                'context'   => 'refund',
+                'payment'   => $payment,
+                'transport' => $transport
+            ]
+        );
+        $data = $transport->getData();
+
         $client = $this->clientFactory->create($storeId);
 
         $responseParser = $client->refund($data);
@@ -325,7 +336,7 @@ class Amazon extends AbstractMethod
         $authorizationId,
         $storeId
     ) {
-        $this->paymentManagement->closeTransaction($authorizationId, $payment->getId(), $payment->getOrder()->getId());
+        $this->paymentManagement->closeTransaction($authorizationId, $payment, $payment->getOrder());
         $payment->setParentTransactionId(null);
         $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, true);
     }

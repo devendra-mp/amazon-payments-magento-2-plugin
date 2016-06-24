@@ -15,6 +15,8 @@
  */
 namespace Amazon\Payment\Cron;
 
+use Amazon\Core\Helper\Data;
+use Amazon\Core\Model\Config\Source\UpdateMechanism;
 use Amazon\Payment\Api\Data\PendingAuthorizationInterface;
 use Amazon\Payment\Api\PaymentManagementInterface;
 use Amazon\Payment\Model\ResourceModel\PendingAuthorization\CollectionFactory;
@@ -25,7 +27,7 @@ class GetAmazonAuthorizationUpdates
     /**
      * @var int
      */
-    protected $limit = 100;
+    protected $limit;
 
     /**
      * @var CollectionFactory
@@ -37,16 +39,36 @@ class GetAmazonAuthorizationUpdates
      */
     protected $paymentManagement;
 
+    /**
+     * @var Data
+     */
+    protected $coreHelper;
+
     public function __construct(
         CollectionFactory $collectionFactory,
-        PaymentManagementInterface $paymentManagement
+        PaymentManagementInterface $paymentManagement,
+        Data $coreHelper,
+        $limit = 100
     ) {
         $this->collectionFactory = $collectionFactory;
         $this->paymentManagement = $paymentManagement;
+        $this->coreHelper        = $coreHelper;
+
+        $limit = (int)$limit;
+
+        if ($limit < 1) {
+            throw new \InvalidArgumentException('Limit must be greater than 1.');
+        }
+
+        $this->limit = $limit;
     }
 
     public function execute()
     {
+        if (UpdateMechanism::IPN === $this->coreHelper->getUpdateMechanism()) {
+            return;
+        }
+
         $collection = $this->collectionFactory
             ->create()
             ->addOrder(PendingAuthorizationInterface::UPDATED_AT, Collection::SORT_ORDER_ASC)
@@ -54,7 +76,7 @@ class GetAmazonAuthorizationUpdates
             ->setCurPage(1);
 
         $pendingAuthorizationIds = $collection->getIdGenerator();
-        foreach($pendingAuthorizationIds as $pendingAuthorizationId) {
+        foreach ($pendingAuthorizationIds as $pendingAuthorizationId) {
             $this->paymentManagement->updateAuthorization($pendingAuthorizationId);
         }
     }

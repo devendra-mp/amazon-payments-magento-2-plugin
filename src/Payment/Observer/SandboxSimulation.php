@@ -132,6 +132,7 @@ class SandboxSimulation implements ObserverInterface
             'authorization' => 'seller_authorization_note',
             'authorization_capture' => 'seller_authorization_note',
             'capture' => 'seller_capture_note',
+            'refund' => 'seller_refund_note'
         ];
 
         return $requestParameters;

@@ -60,7 +60,7 @@ class AmazonContext implements SnippetAcceptingContext
         $authorizationId    = $this->getLastTransactionIdForLastOrder($email);
         $authorizationState = $this->amazonOrderFixture->getAuthrorizationState($authorizationId);
 
-        PHPUnit_Framework_Assert::assertSame($authorizationState, 'Open');
+        PHPUnit_Framework_Assert::assertSame('Open', $authorizationState);
     }
 
     /**
@@ -71,7 +71,7 @@ class AmazonContext implements SnippetAcceptingContext
         $captureId    = $this->getLastTransactionIdForLastOrder($email);
         $captureState = $this->amazonOrderFixture->getCaptureState($captureId);
 
-        PHPUnit_Framework_Assert::assertSame($captureState, 'Completed');
+        PHPUnit_Framework_Assert::assertSame('Completed', $captureState);
     }
 
     /**
@@ -83,7 +83,7 @@ class AmazonContext implements SnippetAcceptingContext
         $refundId    = $transaction->getTxnId();
         $refundState = $this->amazonOrderFixture->getRefundState($refundId);
 
-        PHPUnit_Framework_Assert::assertSame($refundState, 'Pending');
+        PHPUnit_Framework_Assert::assertSame('Pending', $refundState);
     }
 
     protected function getLastTransactionIdForLastOrder($email)

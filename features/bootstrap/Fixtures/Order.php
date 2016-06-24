@@ -27,16 +27,10 @@ class Order extends BaseFixture
      * @var CustomerFixture
      */
     protected $customerFixture;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    protected $repository;
-
+    
     public function __construct()
     {
         parent::__construct();
-        $this->repository      = $this->getMagentoObject(OrderRepositoryInterface::class);
         $this->customerFixture = new CustomerFixture;
     }
 
@@ -54,7 +48,8 @@ class Order extends BaseFixture
         $searchCriteria = $searchCriteriaBuilder
             ->create();
 
-        return $this->repository->getList($searchCriteria);
+        $repository = $this->createMagentoObject(OrderRepositoryInterface::class);
+        return $repository->getList($searchCriteria);
     }
 
     /**

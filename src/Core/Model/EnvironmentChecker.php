@@ -15,23 +15,39 @@
  */
 namespace Amazon\Core\Model;
 
+use Amazon\Core\Helper\Data;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\State;
 
-class EnvironmentChecker
+final class EnvironmentChecker
 {
     /**
      * @var ScopeConfigInterface
      */
-    protected $config;
+    private $config;
+
+    /**
+     * @var Data
+     */
+    private $coreHelper;
+
+    /**
+     * @var State
+     */
+    private $state;
 
     /**
      * EnvironmentChecker constructor.
      *
      * @param ScopeConfigInterface $config
+     * @param Data                 $coreHelper
+     * @param State                $state
      */
-    public function __construct(ScopeConfigInterface $config)
+    public function __construct(ScopeConfigInterface $config, Data $coreHelper, State $state)
     {
-        $this->config = $config;
+        $this->config     = $config;
+        $this->coreHelper = $coreHelper;
+        $this->state      = $state;
     }
 
     /**
@@ -41,6 +57,10 @@ class EnvironmentChecker
      */
     public function isTestMode()
     {
-        return ('1' === $this->config->getValue('is_behat_running'));
+        return (
+            '1' === $this->config->getValue('is_behat_running')
+            && $this->coreHelper->isSandboxEnabled()
+            && State::MODE_PRODUCTION !== $this->state->getMode()
+        );
     }
 }

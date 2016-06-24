@@ -24,6 +24,9 @@ class SandboxSimulation extends Element
     const SIMULATION_REJECTED = 'Authorization:Declined:AmazonRejected';
     const SIMILATION_TIMEOUT = 'Authorization:Declined:TransactionTimedOut';
     const SIMULATION_INVALID_PAYMENT = 'Authorization:Declined:InvalidPaymentMethod';
+    const SIMULATION_CAPTURE_PENDING = 'Capture:Pending';
+    const SIMULATION_CAPTURE_DECLINED = 'Capture:Declined:AmazonRejected';
+    const SIMULATION_REFUND_DECLINED = 'Refund:Declined';
     const NO_SIMULATION = 'default';
 
     public function selectSimulation($simulation)

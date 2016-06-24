@@ -83,11 +83,11 @@ interface PaymentManagementInterface
     /**
      * Close transaction
      *
-     * @param string  $transactionId
-     * @param integer $paymentId
-     * @param integer $orderId
+     * @param string         $transactionId
+     * @param InfoInterface  $payment
+     * @param OrderInterface $order
      *
      * @return void
      */
-    public function closeTransaction($transactionId, $paymentId, $orderId);
+    public function closeTransaction($transactionId, InfoInterface $payment, OrderInterface $order);
 }

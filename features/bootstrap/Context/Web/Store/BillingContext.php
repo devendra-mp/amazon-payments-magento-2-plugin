@@ -140,6 +140,30 @@ class BillingContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I am requesting authorization for a capture that will be pending then successful
+     */
+    public function iAmRequestingAuthorizationForACaptureThatWillBePendingThenSuccessful()
+    {
+        $this->checkoutPage->selectSimulation(SandboxSimulation::SIMULATION_CAPTURE_PENDING);
+    }
+
+    /**
+     * @Given I am requesting authorization for a capture that will be pending then declined
+     */
+    public function iAmRequestingAuthorizationForACaptureThatWillBePendingThenDeclined()
+    {
+        $this->checkoutPage->selectSimulation(SandboxSimulation::SIMULATION_CAPTURE_DECLINED);
+    }
+
+    /**
+     * @Given I am requesting authorization for a refund that will be declined
+     */
+    public function iAmRequestingAuthorizationForARefundThatWillBeDeclined()
+    {
+        $this->checkoutPage->selectSimulation(SandboxSimulation::SIMULATION_REFUND_DECLINED);
+    }
+
+    /**
      * @Then I should be notified that my payment was rejected
      */
     public function iShouldBeNotifiedThatMyPaymentWasRejected()
@@ -207,7 +231,7 @@ class BillingContext implements SnippetAcceptingContext
         asort($amazonBillingAddressData);
         asort($billingAddressData);
 
-        PHPUnit_Framework_Assert::assertSame($billingAddressData, $amazonBillingAddressData);
+        PHPUnit_Framework_Assert::assertSame($amazonBillingAddressData, $billingAddressData);
     }
 
     /**

@@ -46,6 +46,6 @@ class AmazonContext implements SnippetAcceptingContext
         $orderRef   = $this->checkoutPage->getAmazonOrderRef();
         $orderState = $this->amazonOrderFixture->getState($orderRef);
 
-        PHPUnit_Framework_Assert::assertSame($orderState, 'Canceled');
+        PHPUnit_Framework_Assert::assertSame('Canceled', $orderState);
     }
 }

@@ -508,6 +508,11 @@ class Data extends AbstractHelper
                 = '{"SandboxSimulation": {"State":"Pending"}}';
         }
 
+        if (in_array($context, ['refund'])) {
+            $simulationStrings['Refund:Declined']
+                = '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}';
+        }
+
         return $simulationStrings;
     }
 
@@ -522,7 +527,8 @@ class Data extends AbstractHelper
             'Authorization:Declined:AmazonRejected' => 'Authorization hard decline',
             'Authorization:Declined:TransactionTimedOut' => 'Authorization timed out',
             'Capture:Declined:AmazonRejected' => 'Capture declined',
-            'Capture:Pending' => 'Capture pending'
+            'Capture:Pending' => 'Capture pending',
+            'Refund:Declined' => 'Refund declined'
         ];
 
         return $simulationlabels;

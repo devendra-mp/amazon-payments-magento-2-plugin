@@ -16,12 +16,12 @@
 namespace Context\Data;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Fixtures\AdminNotification as AdminNotificationFixture;
 use Fixtures\CreditMemo as CreditMemoFixture;
 use Fixtures\Customer as CustomerFixture;
 use Fixtures\Invoice as InvoiceFixture;
 use Fixtures\Order as OrderFixture;
 use Fixtures\Transaction as TransactionFixture;
-use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment\Transaction;
@@ -54,13 +54,19 @@ class OrderContext implements SnippetAcceptingContext
      */
     protected $creditMemoFixture;
 
+    /**
+     * @var AdminNotificationFixture
+     */
+    protected $adminNotificationFixture;
+
     public function __construct()
     {
-        $this->customerFixture    = new CustomerFixture;
-        $this->orderFixture       = new OrderFixture;
-        $this->transactionFixture = new TransactionFixture;
-        $this->invoiceFixture     = new InvoiceFixture;
-        $this->creditMemoFixture  = new CreditMemoFixture;
+        $this->customerFixture          = new CustomerFixture;
+        $this->orderFixture             = new OrderFixture;
+        $this->transactionFixture       = new TransactionFixture;
+        $this->invoiceFixture           = new InvoiceFixture;
+        $this->creditMemoFixture        = new CreditMemoFixture;
+        $this->adminNotificationFixture = new AdminNotificationFixture;
     }
 
     /**
@@ -73,7 +79,7 @@ class OrderContext implements SnippetAcceptingContext
 
         $orderCount = count($orders->getItems());
 
-        PHPUnit_Framework_Assert::assertSame($orderCount, 0);
+        PHPUnit_Framework_Assert::assertSame(0, $orderCount);
     }
 
     /**
@@ -86,7 +92,7 @@ class OrderContext implements SnippetAcceptingContext
 
         $orderCount = count($orders->getItems());
 
-        PHPUnit_Framework_Assert::assertSame($orderCount, 1);
+        PHPUnit_Framework_Assert::assertSame(1, $orderCount);
     }
 
     /**
@@ -96,8 +102,8 @@ class OrderContext implements SnippetAcceptingContext
     {
         $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
 
-        PHPUnit_Framework_Assert::assertSame($transaction->getTxnType(), Transaction::TYPE_AUTH);
-        PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '0');
+        PHPUnit_Framework_Assert::assertSame(Transaction::TYPE_AUTH, $transaction->getTxnType());
+        PHPUnit_Framework_Assert::assertSame('0', $transaction->getIsClosed());
     }
 
     /**
@@ -110,7 +116,7 @@ class OrderContext implements SnippetAcceptingContext
         $orderId   = $lastOrder->getId();
 
         $transaction = $this->transactionFixture->getByTransactionType(Transaction::TYPE_AUTH, $paymentId, $orderId);
-        PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '1');
+        PHPUnit_Framework_Assert::assertSame('1', $transaction->getIsClosed());
     }
 
     /**
@@ -120,8 +126,8 @@ class OrderContext implements SnippetAcceptingContext
     {
         $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
 
-        PHPUnit_Framework_Assert::assertSame($transaction->getTxnType(), Transaction::TYPE_CAPTURE);
-        PHPUnit_Framework_Assert::assertSame($transaction->getIsClosed(), '1');
+        PHPUnit_Framework_Assert::assertSame(Transaction::TYPE_CAPTURE, $transaction->getTxnType());
+        PHPUnit_Framework_Assert::assertSame('1', $transaction->getIsClosed());
     }
 
     /**
@@ -132,7 +138,7 @@ class OrderContext implements SnippetAcceptingContext
         $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
         $invoice     = $this->invoiceFixture->getByTransactionId($transaction->getTxnId());
 
-        PHPUnit_Framework_Assert::assertSame($invoice->getState(), (string)Invoice::STATE_PAID);
+        PHPUnit_Framework_Assert::assertSame((string)Invoice::STATE_PAID, $invoice->getState());
     }
 
     /**
@@ -154,6 +160,79 @@ class OrderContext implements SnippetAcceptingContext
     {
         $lastOrder = $this->orderFixture->getLastOrderForCustomer($email);
 
-        PHPUnit_Framework_Assert::assertSame($lastOrder->getState(), Order::STATE_PAYMENT_REVIEW);
+        PHPUnit_Framework_Assert::assertSame(Order::STATE_PAYMENT_REVIEW, $lastOrder->getState());
+    }
+
+    /**
+     * @Then the last order for :email should have the processing state
+     */
+    public function theLastOrderForShouldHaveTheProcessingState($email)
+    {
+        $lastOrder = $this->orderFixture->getLastOrderForCustomer($email);
+
+        PHPUnit_Framework_Assert::assertSame(Order::STATE_PROCESSING, $lastOrder->getState());
+    }
+
+    /**
+     * @Then the last invoice for :email should be pending
+     */
+    public function theLastInvoiceForShouldBePending($email)
+    {
+        $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
+        $invoice     = $this->invoiceFixture->getByTransactionId($transaction->getTxnId());
+
+        PHPUnit_Framework_Assert::assertSame((string)Invoice::STATE_OPEN, $invoice->getState());
+    }
+
+    /**
+     * @Then the last capture transaction for :email should be open
+     */
+    public function theLastCaptureTransactionForShouldBeOpen($email)
+    {
+        $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
+
+        PHPUnit_Framework_Assert::assertSame(Transaction::TYPE_CAPTURE, $transaction->getTxnType());
+        PHPUnit_Framework_Assert::assertSame('0', $transaction->getIsClosed());
+    }
+
+    /**
+     * @Then the last invoice for :email should be cancelled
+     */
+    public function theLastInvoiceForShouldBeCancelled($email)
+    {
+        $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
+        $invoice     = $this->invoiceFixture->getByTransactionId($transaction->getTxnId());
+
+        PHPUnit_Framework_Assert::assertSame((string)Invoice::STATE_CANCELED, $invoice->getState());
+    }
+
+    /**
+     * @Then the last order for :email should be on hold
+     */
+    public function theLastOrderForShouldBeOnHold($email)
+    {
+        $lastOrder = $this->orderFixture->getLastOrderForCustomer($email);
+
+        PHPUnit_Framework_Assert::assertSame(Order::STATE_HOLDED, $lastOrder->getState());
+    }
+
+    /**
+     * @Then there should be an admin notification that the last refund for :email  was declined
+     */
+    public function thereShouldBeAnAdminNotificationThatTheLastRefundForWasDeclined($email)
+    {
+        $order       = $this->orderFixture->getLastOrderForCustomer($email);
+        $transaction = $this->transactionFixture->getLastTransactionForLastOrder($email);
+
+        $notification = $this->adminNotificationFixture->getLatestNotification();
+
+        PHPUnit_Framework_Assert::assertSame(
+            'Refund ID '
+            . $transaction->getTxnId()
+            . ' for Order ID '
+            . $order->getId()
+            . ' has been declined by Amazon Payments.',
+            $notification->getDescription()
+        );
     }
 }
