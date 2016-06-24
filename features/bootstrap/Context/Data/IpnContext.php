@@ -19,6 +19,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Order as OrderFixture;
 use Fixtures\Transaction as TransactionFixture;
 use GuzzleHttp\Client;
+use PHPUnit_Framework_Assert;
 
 class IpnContext implements SnippetAcceptingContext
 {
@@ -154,6 +155,22 @@ class IpnContext implements SnippetAcceptingContext
     public function iReceiveAAuthorizeAndCaptureHardDeclinedIpnForSLastOrder($email)
     {
         $this->sendAuthorizeIpnForLastOrder($email, 'Declined', 'AmazonRejected', true);
+    }
+
+    /**
+     * @Then a authorization open IPN for :email's last order should be rejected
+     */
+    public function aAuthorizationOpenIpnForSLastOrderShouldBeRejected($email)
+    {
+        $hasError = false;
+
+        try {
+            $this->sendAuthorizeIpnForLastOrder($email, 'Open');
+        } catch (\Exception $e) {
+            $hasError = true;
+        }
+
+        PHPUnit_Framework_Assert::assertTrue($hasError);
     }
 
     /**

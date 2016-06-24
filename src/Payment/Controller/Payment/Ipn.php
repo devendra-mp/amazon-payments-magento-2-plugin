@@ -15,12 +15,15 @@
  */
 namespace Amazon\Payment\Controller\Payment;
 
+use Amazon\Core\Helper\Data;
+use Amazon\Core\Model\Config\Source\UpdateMechanism;
 use Amazon\Payment\Api\Ipn\CompositeProcessorInterface;
 use Amazon\Payment\Ipn\IpnHandlerFactoryInterface;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Exception\NotFoundException;
 
 class Ipn extends Action
 {
@@ -34,18 +37,29 @@ class Ipn extends Action
      */
     protected $compositeProcessor;
 
+    /**
+     * @var Data
+     */
+    protected $coreHelper;
+
     public function __construct(
         Context $context,
         IpnHandlerFactoryInterface $ipnHandlerFactory,
-        CompositeProcessorInterface $compositeProcessor
+        CompositeProcessorInterface $compositeProcessor,
+        Data $coreHelper
     ) {
         parent::__construct($context);
         $this->ipnHandlerFactory  = $ipnHandlerFactory;
         $this->compositeProcessor = $compositeProcessor;
+        $this->coreHelper         = $coreHelper;
     }
 
     public function execute()
     {
+        if (UpdateMechanism::IPN !== $this->coreHelper->getUpdateMechanism()) {
+            throw new NotFoundException(__('IPN not enabled.'));
+        }
+
         $headers = $this->_request->getHeaders()->toArray();
         $body    = $this->_request->getContent();
 
