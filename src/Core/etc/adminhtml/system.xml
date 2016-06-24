@@ -88,12 +88,10 @@
                     <label>Advanced</label>
                     <group id="frontend" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Frontend</label>
-                        <!--
                         <field id="display_language" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                            <label>Display Language</label>
-                            <config_path>payment/amazon_payment/display_language</config_path>
+                            <label>Button Display Language</label>
+                            <config_path>payment/amazon_payment/button_display_language</config_path>
                         </field>
-                        -->
                         <!--
                         <field id="authentication_experience" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Authentication Experience</label>

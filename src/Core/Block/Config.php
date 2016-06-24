@@ -53,7 +53,7 @@ class Config extends Template
             'isSandboxEnabled'         => $this->coreHelper->isSandboxEnabled(),
             'chargeOnOrder'            => $this->sanitizePaymentAction(),
             'authorizationMode'        => $this->coreHelper->getAuthorizationMode(),
-            'displayLanguage'          => $this->coreHelper->getDisplayLanguage(),
+            'displayLanguage'          => $this->coreHelper->getButtonDisplayLanguage(),
             'authenticationExperience' => $this->coreHelper->getAuthenticationExperience(),
             'buttonTypePwa'            => $this->coreHelper->getButtonTypePwa(),
             'buttonTypeLwa'            => $this->coreHelper->getButtonTypeLwa(),
