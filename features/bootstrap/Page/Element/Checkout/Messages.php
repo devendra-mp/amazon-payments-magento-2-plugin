@@ -31,6 +31,10 @@ class Messages extends Element
                 false
             );
 
+            if ( ! $element) {
+                return false;
+            }
+
             PHPUnit_Framework_Assert::assertThat($element->getText(), $constraint);
             return true;
         } catch (\Exception $e) {
@@ -46,6 +50,10 @@ class Messages extends Element
                 'There has been a problem with the selected payment method on your Amazon account. Please choose another one.',
                 false
             );
+
+            if ( ! $element) {
+                return false;
+            }
 
             PHPUnit_Framework_Assert::assertThat($element->getText(), $constraint);
             return true;

@@ -33,7 +33,7 @@ class Success extends Page
      */
     public function createAccountButtonIsVisible()
     {
-        $createAccount = $this->getElementWithWait('create-account-btn', 5000);
+        $createAccount = $this->getElementWithWait('create-account-btn', 30000);
         return ($createAccount !== null) && $createAccount->isVisible();
     }
 

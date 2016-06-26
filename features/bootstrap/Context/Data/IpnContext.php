@@ -178,7 +178,7 @@ class IpnContext implements SnippetAcceptingContext
      */
     public function iReceiveAOrderPaymentOpenIpnFor($email)
     {
-        sleep(90); //allow time for amazon to switch the payment method and mark the order as re open
+        sleep(75); //allow time for amazon to switch the payment method and mark the order as re open
         $order         = $this->orderFixture->getLastOrderForCustomer($email);
         $amazonOrderId = $order->getExtensionAttributes()->getAmazonOrderReferenceId();
 

@@ -40,6 +40,7 @@ trait AmazonLoginTrait
 
     public function loginAmazonCustomer($email, $password)
     {
+        $this->waitForPageLoad();
         $currentWindow = $this->getDriver()->getWindowName();
         
         $this->clickElement('open-amazon-login');

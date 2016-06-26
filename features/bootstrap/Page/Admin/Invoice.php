@@ -44,7 +44,8 @@ class Invoice extends Page
     public function hasPendingError()
     {
         try {
-            $element    = $this->getElement('error');
+            $this->waitForPageLoad();
+            $element    = $this->getElementWithWait('error');
             $constraint = PHPUnit_Framework_Assert::stringContains(
                 'Capture pending approval from the payment gateway',
                 false
