@@ -1,23 +1,24 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6525c68a51d77a077c9afa8750f28dbc",
+    "hash": "1d851474d638630452008c49eb843297",
+    "content-hash": "ebbebbd0d0d4b0682976efe3ed36fd9e",
     "packages": [
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
-            "version": "v2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amzn/login-and-pay-with-amazon-sdk-php.git",
-                "reference": "5449ed9706d985891d5bb59f123b8963898d0165"
+                "reference": "09c2cdecc8f329bc43975d3f604c1aeed9b74b92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amzn/login-and-pay-with-amazon-sdk-php/zipball/5449ed9706d985891d5bb59f123b8963898d0165",
-                "reference": "5449ed9706d985891d5bb59f123b8963898d0165",
+                "url": "https://api.github.com/repos/amzn/login-and-pay-with-amazon-sdk-php/zipball/09c2cdecc8f329bc43975d3f604c1aeed9b74b92",
+                "reference": "09c2cdecc8f329bc43975d3f604c1aeed9b74b92",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +51,7 @@
                 "payment",
                 "payments"
             ],
-            "time": "2016-05-13 17:25:41"
+            "time": "2016-06-22 16:31:08"
         },
         {
             "name": "magento/framework",
@@ -2543,58 +2544,6 @@
                 "tdd"
             ],
             "time": "2016-03-22 12:21:04"
-        },
-        {
-            "name": "ciaranmcnulty/behat-localwebserverextension",
-            "version": "1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ciaranmcnulty/behat-localwebserverextension.git",
-                "reference": "898f9491b3067acf60f58093d97058ecb414d9d9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ciaranmcnulty/behat-localwebserverextension/zipball/898f9491b3067acf60f58093d97058ecb414d9d9",
-                "reference": "898f9491b3067acf60f58093d97058ecb414d9d9",
-                "shasum": ""
-            },
-            "require": {
-                "behat/behat": "~3.0",
-                "php": "~5.4||~7.0",
-                "symfony/process": "~2.3"
-            },
-            "require-dev": {
-                "behat/mink-extension": "~2.0",
-                "behat/mink-goutte-driver": "~1.0",
-                "ciaranmcnulty/phpspec-typehintedmethods": "~1.0",
-                "phpspec/phpspec": "~2.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Cjm\\Behat\\LocalWebserverExtension\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ciaran McNulty",
-                    "email": "mail@ciaranmcnulty.com",
-                    "homepage": "http://ciaranmcnulty.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Extension for behat users who forget to start their webserver",
-            "homepage": "http://github.com/ciaranmcnulty/behat-localwebserverextension",
-            "keywords": [
-                "BDD",
-                "Behat",
-                "TDD"
-            ],
-            "time": "2016-02-02 12:22:32"
         },
         {
             "name": "ciaranmcnulty/behat-stepthroughextension",
