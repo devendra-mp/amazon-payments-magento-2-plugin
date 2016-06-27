@@ -45,7 +45,7 @@ class AdminUser extends BaseFixture
             'firstname' => 'John',
             'lastname'  => 'Doe',
             'username'  => $this->getDefaultUsername(),
-            'email'     => 'admin@example.com',
+            'email'     => 'admin-' .time() . '@example.com',
             'password'  => $this->getDefaultPassword(),
             'role_id'   => 1
         ];

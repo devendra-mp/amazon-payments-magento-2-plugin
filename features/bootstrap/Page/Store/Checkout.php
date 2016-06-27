@@ -94,6 +94,7 @@ class Checkout extends Page
         $this->waitForCondition('true === false', 500);
         $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('shipping-loader');
+        $this->waitUntilElementDisappear('full-screen-loader');
 
         $defaultShippingMethod = $this->getElementWithWait('first-shipping-method');
         if ( ! $defaultShippingMethod->isChecked()) {
