@@ -23,7 +23,6 @@ define([
             amazonCore.amazonDefined.subscribe(function() {
                 //only set this on the redirect page
                 amazon.Login.setUseCookie(true);
-                amazon.Login.setRegion('EU');
                 this.redirect();
             }, this);
         },
