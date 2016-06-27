@@ -58,6 +58,14 @@ class ConfigContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given orders are authorized synchronously then asynchronously
+     */
+    public function ordersAreAuthorizedSynchronouslyThenAsynchronously()
+    {
+        $this->changeConfig('payment/amazon_payment/authorization_mode', 'synchronous_possible');
+    }
+
+    /**
      * @Given IPN is enabled
      */
     public function ipnIsEnabled()

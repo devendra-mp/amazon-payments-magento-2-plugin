@@ -34,3 +34,12 @@ Feature: As a customer
     Then "amazoncustomer@example.com" should have placed an order
     And there should be an open authorization for the last order for "amazoncustomer@example.com"
     And the last order for "amazoncustomer@example.com" should be in payment review
+
+  @javascript
+  Scenario: customer authorizes payment for an order that will timeout in synchronous then asynchronous mode
+    Given orders are authorized synchronously then asynchronously
+    And I am requesting authorization on a payment that will timeout
+    When I place my order
+    Then "amazoncustomer@example.com" should have placed an order
+    And there should be an open authorization for the last order for "amazoncustomer@example.com"
+    And the last order for "amazoncustomer@example.com" should be in payment review
