@@ -19,6 +19,7 @@ use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Amazon\Payment\Domain\Details\AmazonAuthorizationDetails;
 use Amazon\Payment\Exception\HardDeclineException;
 use Amazon\Payment\Exception\SoftDeclineException;
+use Amazon\Payment\Exception\TransactionTimeoutException;
 use Magento\Framework\Exception\StateException;
 
 class AmazonAuthorization
@@ -54,8 +55,9 @@ class AmazonAuthorization
     protected function throwDeclinedExceptionForStatus(AmazonAuthorizationStatus $status)
     {
         switch ($status->getReasonCode()) {
-            case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
             case AmazonAuthorizationStatus::REASON_TRANSACTION_TIMEOUT:
+                throw new TransactionTimeoutException($this->getExceptionMessage($status));
+            case AmazonAuthorizationStatus::REASON_AMAZON_REJECTED:
             case AmazonAuthorizationStatus::REASON_PROCESSING_FAILURE:
                 throw new HardDeclineException($this->getExceptionMessage($status));
             case AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD:

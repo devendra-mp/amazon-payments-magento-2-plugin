@@ -34,6 +34,7 @@ use Amazon\Payment\Domain\Validator\AmazonRefund;
 use Amazon\Payment\Exception\AuthorizationExpiredException;
 use Amazon\Payment\Exception\CapturePendingException;
 use Amazon\Payment\Exception\SoftDeclineException;
+use Amazon\Payment\Exception\TransactionTimeoutException;
 use Amazon\Payment\Plugin\AdditionalInformation;
 use Exception;
 use Magento\Framework\Api\AttributeValueFactory;
@@ -163,6 +164,11 @@ class Amazon extends AbstractMethod
     protected $amazonCoreHelper;
 
     /**
+     * @var integer
+     */
+    protected $lastTransactionTime = 0;
+
+    /**
      * Amazon constructor.
      *
      * @param Context                                   $context
@@ -285,7 +291,7 @@ class Amazon extends AbstractMethod
 
         $data = [
             'amazon_capture_id'   => $captureId,
-            'refund_reference_id' => $amazonOrderReferenceId . '-R' . time(),
+            'refund_reference_id' => $amazonOrderReferenceId . '-R' . $this->getUniqueTransactionPostfix(),
             'refund_amount'       => $amount,
             'currency_code'       => $this->getCurrencyCode($payment)
         ];
@@ -321,7 +327,16 @@ class Amazon extends AbstractMethod
         $async                  = (AuthorizationMode::ASYNC === $authMode);
 
         try {
-            $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, $capture, $async);
+            try {
+                $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, $capture, $async);
+            } catch (TransactionTimeoutException $e) {
+                if (AuthorizationMode::SYNC_THEN_ASYNC === $authMode) {
+                    $async = true;
+                    $this->_authorize($payment, $amount, $amazonOrderReferenceId, $storeId, $capture, $async);
+                } else {
+                    throw $e;
+                }
+            }
         } catch (SoftDeclineException $e) {
             $this->processSoftDecline();
         } catch (Exception $e) {
@@ -353,7 +368,7 @@ class Amazon extends AbstractMethod
             'amazon_order_reference_id'  => $amazonOrderReferenceId,
             'authorization_amount'       => $amount,
             'currency_code'              => $this->getCurrencyCode($payment),
-            'authorization_reference_id' => $amazonOrderReferenceId . '-A' . time(),
+            'authorization_reference_id' => $amazonOrderReferenceId . '-A' . $this->getUniqueTransactionPostfix(),
             'capture_now'                => $capture,
         ];
 
@@ -453,7 +468,7 @@ class Amazon extends AbstractMethod
                 'amazon_authorization_id' => $authorizationId,
                 'capture_amount'          => $amount,
                 'currency_code'           => $this->getCurrencyCode($payment),
-                'capture_reference_id'    => $amazonOrderReferenceId . '-C' . time()
+                'capture_reference_id'    => $amazonOrderReferenceId . '-C' . $this->getUniqueTransactionPostfix()
             ];
 
             $transport = new DataObject($data);
@@ -551,6 +566,19 @@ class Amazon extends AbstractMethod
         $quoteLink->load($quoteId, 'quote_id');
 
         return $quoteLink;
+    }
+
+    protected function getUniqueTransactionPostfix()
+    {
+        $transactionTime = time();
+
+        if ($this->lastTransactionTime === $transactionTime) {
+            $transactionTime++;
+        }
+
+        $this->lastTransactionTime = $transactionTime;
+
+        return $transactionTime;
     }
 
     /**
