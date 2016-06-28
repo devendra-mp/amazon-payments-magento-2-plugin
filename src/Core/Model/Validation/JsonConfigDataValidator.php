@@ -22,9 +22,14 @@ use Magento\Framework\Json\DecoderInterface;
 class JsonConfigDataValidator extends AbstractValidator
 {
     /**
-     * @var \Magento\Framework\Json\DecoderInterface
+     * @var DecoderInterface
      */
     protected $jsonDecoder;
+
+    /**
+     * @var Data
+     */
+    protected $amazonCoreHelper;
 
     /**
      * @param DecoderInterface $jsonDecoder
