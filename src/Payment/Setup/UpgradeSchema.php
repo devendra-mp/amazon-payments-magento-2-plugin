@@ -35,22 +35,15 @@ use Magento\Sales\Api\Data\TransactionInterface;
 class UpgradeSchema implements UpgradeSchemaInterface
 {
     /**
-     * @var EavSetup
-     */
-    private $eavSetup;
-
-    /**
      * @var AmazonPendingRefundFactory
      */
     private $amazonPendingRefundTableFactory;
 
     /**
-     * @param EavSetup $eavSetup
      * @param AmazonPendingRefundFactory $amazonPendingRefundFactory
      */
     public function __construct(EavSetup $eavSetup, AmazonPendingRefundFactory $amazonPendingRefundFactory)
     {
-        $this->eavSetup = $eavSetup;
         $this->amazonPendingRefundTableFactory = $amazonPendingRefundFactory;
     }
 
@@ -177,10 +170,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 );
 
             $setup->getConnection()->createTable($table);
-        }
-
-        if (version_compare($context->getVersion(), '1.5.0', '<')) {
-            $this->upgradeAddressStreetMultiline();
         }
 
         if (version_compare($context->getVersion(), '1.6.0', '<')) {
@@ -365,22 +354,5 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $pendingColumns,
             AdapterInterface::INDEX_TYPE_UNIQUE
         );
-    }
-
-    /**
-     * @throws LocalizedException
-     * @return void
-     */
-    private function upgradeAddressStreetMultiline()
-    {
-        $row = $this->eavSetup->getAttribute('customer_address', 'street', 'multiline_count');
-
-        if ($row === false || ! is_numeric($row)) {
-            throw new LocalizedException(__('Could not find the "multiline_count" config of the "street" Customer address attribute.'));
-        }
-
-        if ($row < 3) {
-            $this->eavSetup->updateAttribute('customer_address', 'street', 'multiline_count', 3);
-        }
     }
 }
