@@ -56,15 +56,15 @@ class ClientFactory implements ClientFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function create($storeId = null)
+    public function create($scope = 'default', $scopeId = null)
     {
         $config = [
-            'secret_key'  => $this->coreHelper->getSecretKey(ScopeInterface::SCOPE_STORE, $storeId),
-            'access_key'  => $this->coreHelper->getAccessKey(ScopeInterface::SCOPE_STORE, $storeId),
-            'merchant_id' => $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId),
-            'region'      => $this->coreHelper->getRegion(ScopeInterface::SCOPE_STORE, $storeId),
-            'sandbox'     => $this->coreHelper->isSandboxEnabled(ScopeInterface::SCOPE_STORE, $storeId),
-            'client_id'   => $this->coreHelper->getClientId(ScopeInterface::SCOPE_STORE, $storeId)
+            Data::AMAZON_SECRET_KEY  => $this->coreHelper->getSecretKey($scope, $scopeId),
+            Data::AMAZON_ACCESS_KEY  => $this->coreHelper->getAccessKey($scope, $scopeId),
+            Data::AMAZON_MERCHANT_ID => $this->coreHelper->getMerchantId($scope, $scopeId),
+            Data::AMAZON_REGION      => $this->coreHelper->getRegion($scope, $scopeId),
+            Data::AMAZON_SANDBOX     => $this->coreHelper->isSandboxEnabled($scope, $scopeId),
+            Data::AMAZON_CLIENT_ID   => $this->coreHelper->getClientId($scope, $scopeId)
         ];
 
         return $this->objectManager->create($this->instanceName, ['config' => $config]);

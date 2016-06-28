@@ -50,15 +50,15 @@ class ApiCredentialsValidator extends AbstractValidator
     /**
      * {@inheritdoc}
      */
-    public function isValid($storeId = null)
+    public function isValid($scope = 'default', $scopeId = null)
     {
-        if (empty($storeId)) {
-            $storeId = null;
+        if (empty($scopeId)) {
+            $scopeId = null;
         }
 
         try {
             // convert to DataObject for an easier array key querying
-            $response = new DataObject($this->sendTestRequest($storeId)->toArray());
+            $response = new DataObject($this->sendTestRequest($scope, $scopeId)->toArray());
         } catch (\Exception $e) {
             $this->_addMessages(['An error occurred while connecting to Amazon: ' . $e->getMessage()]);
             return false;
@@ -74,13 +74,13 @@ class ApiCredentialsValidator extends AbstractValidator
     }
 
     /**
-     * @param null|string $storeId
+     * @param null|string $scopeId
      *
      * @return ResponseInterface
      */
-    protected function sendTestRequest($storeId = null)
+    protected function sendTestRequest($scope = 'default', $scopeId = null)
     {
-        $client = $this->amazonHttpClientFactory->create($storeId);
+        $client = $this->amazonHttpClientFactory->create($scope, $scopeId);
         return $client->getOrderReferenceDetails(['amazon_order_reference_id' => self::TEST_ORDER_REF]);
     }
 
