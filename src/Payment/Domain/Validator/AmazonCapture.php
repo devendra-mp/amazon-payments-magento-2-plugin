@@ -37,9 +37,8 @@ class AmazonCapture
             case AmazonCaptureStatus::STATE_COMPLETED:
                 return true;
             case AmazonCaptureStatus::STATE_PENDING:
-                throw new CapturePendingException();
             case AmazonCaptureStatus::STATE_DECLINED:
-                throw new StateException(__('Amazon capture declined : %1', $status->getReasonCode()));
+                throw new CapturePendingException();
         }
 
         throw new StateException(

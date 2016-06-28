@@ -17,7 +17,7 @@ namespace Amazon\Payment\Model\Ipn;
 
 use Amazon\Payment\Api\Data\PendingCaptureInterface;
 use Amazon\Payment\Api\Ipn\CaptureProcessorInterface;
-use Amazon\Payment\Api\PaymentManagementInterface;
+use Amazon\Payment\Api\PaymentManagement\CaptureInterface;
 use Amazon\Payment\Domain\Details\AmazonCaptureDetailsFactory;
 use Amazon\Payment\Model\ResourceModel\PendingCapture\CollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
@@ -30,15 +30,15 @@ class CaptureProcessor implements CaptureProcessorInterface
     protected $amazonCaptureDetailsFactory;
 
     /**
-     * @var PaymentManagementInterface
+     * @var CaptureInterface
      */
-    protected $paymentManagement;
+    protected $capture;
 
     /**
      * @var CollectionFactory
      */
     protected $collectionFactory;
-    
+
     /**
      * @var StoreManagerInterface
      */
@@ -46,12 +46,12 @@ class CaptureProcessor implements CaptureProcessorInterface
 
     public function __construct(
         AmazonCaptureDetailsFactory $amazonCaptureDetailsFactory,
-        PaymentManagementInterface $paymentManagement,
+        CaptureInterface $capture,
         CollectionFactory $collectionFactory,
         StoreManagerInterface $storeManager
     ) {
         $this->amazonCaptureDetailsFactory = $amazonCaptureDetailsFactory;
-        $this->paymentManagement           = $paymentManagement;
+        $this->capture                     = $capture;
         $this->collectionFactory           = $collectionFactory;
         $this->storeManager                = $storeManager;
     }
@@ -85,7 +85,7 @@ class CaptureProcessor implements CaptureProcessorInterface
 
         if (count($items = $collection->getItems())) {
             $pendingCapture = current($items);
-            $this->paymentManagement->updateCapture($pendingCapture->getId(), $details);
+            $this->capture->updateCapture($pendingCapture->getId(), $details);
         }
     }
 }
