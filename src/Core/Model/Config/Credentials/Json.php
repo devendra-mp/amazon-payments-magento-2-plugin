@@ -37,7 +37,7 @@ class Json
     /**
      * @var JsonConfigDataValidatorFactory
      */
-    protected $jsonConfigDataValidator;
+    protected $jsonConfigDataValidatorFactory;
 
     /**
      * @var ConfigWriter
@@ -72,7 +72,7 @@ class Json
     /**
      * @param Data $amazonCoreHelper
      * @param sonConfigDataValidatorFactory $jsonConfigDataValidator
-     * @param ConfigInterface $config
+     * @param ConfigWriter $configWriter
      * @param ManagerInterface $messageManager
      * @param DecoderInterface $jsonDecoder
      */
@@ -98,7 +98,8 @@ class Json
     }
 
     /**
-     * @param Observer $observer
+     * @param string $jsonCredentials
+     * @param array $scopeData
      */
     public function processCredentialsJson($jsonCredentials, $scopeData)
     {

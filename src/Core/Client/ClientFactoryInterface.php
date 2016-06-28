@@ -22,8 +22,9 @@ interface ClientFactoryInterface
     /**
      * Create amazon client instance
      *
-     * @param null|int|string $storeId
+     * @param null|int|string $scope
+     * @param null|int|string $scopeId
      * @return ClientInterface
      */
-    public function create($storeId = null);
+    public function create($scope = 'default', $scopeId = null);
 }
