@@ -23,11 +23,13 @@ interface PendingAuthorizationInterface
 {
     const ID = 'entity_id';
     const AUTHORIZATION_ID = 'authorization_id';
+    const CAPTURE_ID = 'capture_id';
     const ORDER_ID = 'order_id';
     const PAYMENT_ID = 'payment_id';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     const PROCESSED = 'processed';
+    const CAPTURE = 'capture';
 
     /**
      * Get pending authorization id
@@ -69,6 +71,22 @@ interface PendingAuthorizationInterface
     public function setAuthorizationId($authorizationId);
 
     /**
+     * Get capture id
+     *
+     * @return string
+     */
+    public function getCaptureId();
+
+    /**
+     * Set capture id
+     *
+     * @param string $captureId
+     *
+     * @return $this
+     */
+    public function setCaptureId($captureId);
+
+    /**
      * Get payment id
      *
      * @return integer
@@ -99,6 +117,22 @@ interface PendingAuthorizationInterface
      * @return $this
      */
     public function setProcessed($processed);
+
+    /**
+     * Is capture
+     *
+     * @return boolean
+     */
+    public function isCapture();
+
+    /**
+     * Set capture
+     *
+     * @param boolean $capture
+     *
+     * @return $this
+     */
+    public function setCapture($capture);
 
     /**
      * Get created at

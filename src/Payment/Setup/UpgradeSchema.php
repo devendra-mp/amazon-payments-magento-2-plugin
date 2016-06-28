@@ -21,7 +21,7 @@ use Amazon\Payment\Model\ResourceModel\OrderLink;
 use Amazon\Payment\Model\ResourceModel\PendingAuthorization;
 use Amazon\Payment\Model\ResourceModel\PendingCapture;
 use Amazon\Payment\Model\ResourceModel\QuoteLink;
-use \Amazon\Payment\Setup\Table\AmazonPendingRefundFactory;
+use Amazon\Payment\Setup\Table\AmazonPendingRefundFactory;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -202,20 +202,50 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($context->getVersion(), '1.9.0', '<')) {
             $this->amazonPendingRefundTableFactory
-                 ->create(['connection' => $setup->getConnection()])
-                 ->createTable();
+                ->create(['connection' => $setup->getConnection()])
+                ->createTable();
         }
 
         if (version_compare($context->getVersion(), '1.10.0', '<')) {
             $this->addColumnsToPendingAuthorizationQueue($setup);
         }
+
+        if (version_compare($context->getVersion(), '1.11.0', '<')) {
+            $this->addCaptureColumnsToPendingAuthorizationQueue($setup);
+        }
+    }
+
+    private function addCaptureColumnsToPendingAuthorizationQueue(SchemaSetupInterface $setup)
+    {
+        $setup->getConnection()->addColumn(
+            $setup->getTable(PendingAuthorization::TABLE_NAME),
+            PendingAuthorizationInterface::CAPTURE,
+            [
+                'unsigned' => true,
+                'nullable' => true,
+                'default'  => 0,
+                'type'     => Table::TYPE_SMALLINT,
+                'comment'  => 'Initial authorization has capture'
+            ]
+        );
+
+        $setup->getConnection()->addColumn(
+            $setup->getTable(PendingAuthorization::TABLE_NAME),
+            PendingAuthorizationInterface::CAPTURE_ID,
+            [
+                'nullable' => true,
+                'type'     => Table::TYPE_TEXT,
+                'length'   => 255,
+                'comment'  => 'Initial authorization capture id'
+            ]
+        );
     }
 
     private function addColumnsToPendingAuthorizationQueue(SchemaSetupInterface $setup)
     {
         $setup->getConnection()->addColumn(
             $setup->getTable(PendingAuthorization::TABLE_NAME),
-            'processed',
+            PendingAuthorizationInterface::PROCESSED,
             [
                 'unsigned' => true,
                 'nullable' => true,

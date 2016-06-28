@@ -17,8 +17,6 @@ namespace Amazon\Payment\Observer;
 
 use Amazon\Core\Helper\Data;
 use Amazon\Payment\Model\Method\Amazon;
-use Amazon\Payment\Model\OrderInformationManagement;
-use Exception;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Quote\Api\PaymentMethodManagementInterface;
@@ -37,14 +35,12 @@ class CompleteOrderStatus implements ObserverInterface
      */
     protected $coreHelper;
 
-
     public function __construct(
         PaymentMethodManagementInterface $paymentMethodManagement,
         Data $coreHelper
-    )
-    {
-        $this->paymentMethodManagement    = $paymentMethodManagement;
-        $this->coreHelper                 = $coreHelper;
+    ) {
+        $this->paymentMethodManagement = $paymentMethodManagement;
+        $this->coreHelper              = $coreHelper;
     }
 
     public function execute(Observer $observer)
@@ -52,13 +48,14 @@ class CompleteOrderStatus implements ObserverInterface
         /**
          * @var OrderInterface $order
          */
-        $order    = $observer->getOrder();
-        $payment  = $this->paymentMethodManagement->get($order->getQuoteId());
+        $order          = $observer->getOrder();
+        $payment        = $this->paymentMethodManagement->get($order->getQuoteId());
         $newOrderStatus = $this->coreHelper->getNewOrderStatus();
 
-        if ($newOrderStatus &&
-            Amazon::PAYMENT_METHOD_CODE == $payment->getMethod() &&
-            $order->getState() == Order::STATE_PROCESSING) {
+        if ($newOrderStatus
+            && Amazon::PAYMENT_METHOD_CODE == $payment->getMethod()
+            && $order->getState() == Order::STATE_PROCESSING
+        ) {
             $order->setStatus($newOrderStatus);
         }
     }
