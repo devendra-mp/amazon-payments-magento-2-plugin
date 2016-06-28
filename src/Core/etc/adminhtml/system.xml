@@ -96,7 +96,7 @@
                         <field id="display_language" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Button Display Language</label>
                             <config_path>payment/amazon_payment/button_display_language</config_path>
-                            <comment><![CDATA[E.g. <strong>fr-FR</strong>. The supported languages can be found in the <a href="https://payments.amazon.co.uk/developer/documentation/lpwa/201952050#ENTER_LANGUAGE_PARAMETER">Amazon documentation</a>.]]></comment>
+                            <comment><![CDATA[Controls button and widget language. The default is your shop's locale. Available options can be found <a href="https://payments.amazon.co.uk/developer/documentation/lpwa/201953980#ENTER_LANGUAGE_PARAMETER">here</a>.]]></comment>
                         </field>
                         <!--
                         <field id="authentication_experience" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -160,6 +160,9 @@
                             <label>Packing Stations Terms</label>
                             <config_path>payment/amazon_payment/packstation_terms</config_path>
                             <comment><![CDATA[A comma-separated list of case-insensitive terms which will be used to check whether a Customer Address is a locker or packing station.]]></comment>
+                            <depends>
+                                <field id="packstation_terms_validation_switch">1</field>
+                            </depends>
                         </field>
                         <field id="excluded_categories" translate="label comment" type="Amazon\Core\Block\Adminhtml\Form\Field\CategoryMultiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Excluded Categories</label>
