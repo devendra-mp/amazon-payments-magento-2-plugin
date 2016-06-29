@@ -104,12 +104,13 @@
                             <source_model>Amazon\Core\Model\Config\Source\AuthenticationExperience</source_model>
                             <config_path>payment/amazon_payment/authentication_experience</config_path>
                         </field>
-                        -->
+
                         <field id="button_type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Button Type</label>
                             <source_model>Amazon\Core\Model\Config\Source\Button\Type</source_model>
                             <config_path>payment/amazon_payment/button_type</config_path>
                         </field>
+                        -->
                         <field id="button_color" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Button Color</label>
                             <source_model>Amazon\Core\Model\Config\Source\Button\Color</source_model>
