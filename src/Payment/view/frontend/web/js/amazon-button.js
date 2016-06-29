@@ -4,6 +4,7 @@ define([
     'Magento_Customer/js/section-config',
     'Amazon_Payment/js/model/amazonPaymentConfig',
     'amazonCsrf',
+    'modernizr/modernizr',
     'amazonCore',
     'jquery/ui'
 ], function($, customerData, sectionConfig, amazonPaymentConfig, amazonCsrf) {
@@ -60,10 +61,10 @@ define([
             window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
         },
         _popupCallback: function() {
-            return (window.location.protocol === 'https:') ? _this.secureHttpsCallback : amazonPaymentConfig.getValue('oAuthHashRedirectUrl');
+            return _this.usePopUp() ? _this.secureHttpsCallback : amazonPaymentConfig.getValue('oAuthHashRedirectUrl');
         },
-        getPopUp: function() {
-            return (window.location.protocol === 'https:');
+        usePopUp: function() {
+            return (window.location.protocol === 'https:' && !Modernizr.touch);
         },
         /**
          * onAmazonPaymentsReady
@@ -86,7 +87,7 @@ define([
         _getLoginOptions: function() {
             return {
                 scope: _this.options.loginScope,
-                popup: _this.getPopUp(),
+                popup: _this.usePopUp(),
                 state: amazonCsrf.generateNewValue()
             };
         }
