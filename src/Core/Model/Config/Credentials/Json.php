@@ -21,8 +21,6 @@ use Magento\Config\Model\ResourceModel\Config as ConfigWriter;
 use Magento\Framework\Message\ManagerInterface as MessageManager;
 use Magento\Framework\Json\DecoderInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
-use Magento\Framework\App\Cache\TypeListInterface;
-use Magento\Framework\App\Cache\Frontend\Pool;
 
 class Json
 {
@@ -60,16 +58,6 @@ class Json
     protected $encryptor;
 
     /**
-     * @var TypeListInterface $cacheTypeList
-     */
-    protected $cacheTypeList;
-
-    /**
-     * @var Pool $cacheFrontendPool
-     */
-    protected $cacheFrontendPool;
-
-    /**
      * @param Data $amazonCoreHelper
      * @param sonConfigDataValidatorFactory $jsonConfigDataValidator
      * @param ConfigWriter $configWriter
@@ -82,9 +70,7 @@ class Json
         ConfigWriter $configWriter,
         MessageManager $messageManager,
         DecoderInterface $jsonDecoder,
-        EncryptorInterface $encryptor,
-        TypeListInterface $cacheTypeList,
-        Pool $cacheFrontendPool
+        EncryptorInterface $encryptor
     )
     {
         $this->amazonCoreHelper               = $amazonCoreHelper;
@@ -93,8 +79,6 @@ class Json
         $this->messageManager                 = $messageManager;
         $this->jsonDecoder                    = $jsonDecoder;
         $this->encryptor                      = $encryptor;
-        $this->cacheTypeList                  = $cacheTypeList;
-        $this->cacheFrontendPool              = $cacheFrontendPool;
     }
 
     /**
@@ -133,8 +117,6 @@ class Json
                 $scopeData['scope'],
                 $scopeData['scope_id']
             );
-
-            $this->clearCache();
         }
     }
 
@@ -145,13 +127,5 @@ class Json
             $scopeData['scope'],
             $scopeData['scope_id']
         );
-    }
-
-    protected function clearCache()
-    {
-        $this->cacheTypeList->cleanType('config');
-        foreach ($this->cacheFrontendPool as $cacheFrontend) {
-            $cacheFrontend->getBackend()->clean();
-        }
     }
 }
