@@ -15,13 +15,58 @@
  */
 namespace Amazon\Payment\Block;
 
+use Amazon\Core\Helper\CategoryExclusion;
+use Amazon\Core\Helper\Data;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 
 class ProductPagePaymentLink extends PaymentLink
 {
+    /**
+     * @var CategoryExclusion
+     */
+    protected $categoryExclusionHelper;
+
+    /**
+     * @var Registry
+     */
+    protected $registry;
+
+    /**
+     * @param Context           $context
+     * @param Data              $coreHelper
+     * @param CategoryExclusion $categoryExclusionHelper
+     * @param Registry          $registry
+     * @param array             $data
+     */
+    public function __construct(
+        Context $context,
+        Data $coreHelper,
+        CategoryExclusion $categoryExclusionHelper,
+        Registry $registry,
+        array $data = []
+    ) {
+        parent::__construct($context, $coreHelper, $categoryExclusionHelper, $data);
+        $this->registry = $registry;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function _toHtml()
     {
-        if (!$this->coreHelper->isPwaButtonVisibleOnProductPage()) {
+        if ( ! $this->coreHelper->isPwaButtonVisibleOnProductPage()) {
+            return '';
+        }
+
+        /** @var \Magento\Catalog\Model\Product $product */
+        $product = $this->registry->registry('product');
+
+        if ($product instanceof Product &&
+            $this->categoryExclusionHelper->productHasExcludedCategory($product)
+        ) {
             return '';
         }
 
