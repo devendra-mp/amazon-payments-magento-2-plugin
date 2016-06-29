@@ -15,6 +15,7 @@
  */
 namespace Amazon\Core\Client;
 
+use Magento\Store\Model\ScopeInterface;
 use PayWithAmazon\ClientInterface;
 
 interface ClientFactoryInterface
@@ -22,8 +23,9 @@ interface ClientFactoryInterface
     /**
      * Create amazon client instance
      *
-     * @param null|int|string $storeId
+     * @param null|int|string $scopeId
+     * @param null|int|string $scope
      * @return ClientInterface
      */
-    public function create($storeId = null);
+    public function create($scopeId = null, $scope = ScopeInterface::SCOPE_STORE);
 }

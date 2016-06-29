@@ -23,11 +23,38 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Data extends AbstractHelper
 {
+    const AMAZON_SECRET_KEY    = 'secret_key';
+    const AMAZON_ACCESS_KEY    = 'access_key';
+    const AMAZON_MERCHANT_ID   = 'merchant_id';
+    const AMAZON_CLIENT_ID     = 'client_id';
+    const AMAZON_CLIENT_SECRET = 'client_secret';
+    const AMAZON_REGION        = 'region';
+    const AMAZON_SANDBOX       = 'sandbox';
+
     protected $amazonAccountUrl = [
         'us' => 'https://payments.amazon.com/overview',
         'uk' => 'https://payments.amazon.co.uk/overview',
         'de' => 'https://payments.amazon.de/overview',
         'jp' => 'https://payments.amazon.co.jp/overview',
+    ];
+
+    /**
+     * @var Array
+     */
+    protected $amazonCredentialsFields = [
+        self::AMAZON_SECRET_KEY,
+        self::AMAZON_ACCESS_KEY,
+        self::AMAZON_MERCHANT_ID,
+        self::AMAZON_CLIENT_ID,
+        self::AMAZON_CLIENT_SECRET
+    ];
+
+    /**
+     * @var Array
+     */
+    protected $amazonCredentialsEncryptedFields = [
+        self::AMAZON_SECRET_KEY,
+        self::AMAZON_CLIENT_SECRET
     ];
 
     /**
@@ -613,5 +640,33 @@ class Data extends AbstractHelper
     {
         return $this->isPaymentButtonEnabled($scope, $scopeCode) &&
                $this->scopeConfig->isSetFlag('payment/amazon_payment/pwa_pp_button_is_visible', $scope, $scopeCode);
+    }
+
+    /**
+     * @param string      $scope
+     * @param null|string $scopeCode
+     *
+     * @return string
+     */
+    public function getCredentialsJson($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    {
+        return $this->scopeConfig
+                    ->getValue('payment/amazon_payment/credentials_json', $scope, $scopeCode);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAmazonCredentialsFields()
+    {
+        return $this->amazonCredentialsFields;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAmazonCredentialsEncryptedFields()
+    {
+        return $this->amazonCredentialsEncryptedFields;
     }
 }

@@ -10,34 +10,33 @@
                         <label>Credentials</label>
                         <field id="merchant_id" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Merchant Id</label>
-                            <validate>required-entry</validate>
                             <config_path>payment/amazon_payment/merchant_id</config_path>
                         </field>
                         <field id="access_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Access Key Id</label>
-                            <validate>required-entry</validate>
                             <config_path>payment/amazon_payment/access_key</config_path>
                         </field>
                         <field id="secret_key" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Secret Access Key</label>
-                            <validate>required-entry</validate>
                             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                             <config_path>payment/amazon_payment/secret_key</config_path>
                         </field>
                         <field id="client_id" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Client Id</label>
-                            <validate>required-entry</validate>
                             <config_path>payment/amazon_payment/client_id</config_path>
                         </field>
                         <field id="client_secret" translate="label" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Client Secret</label>
-                            <validate>required-entry</validate>
                             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                             <config_path>payment/amazon_payment/client_secret</config_path>
                         </field>
+                        <field id="credentials_json" translate="label" type="textarea" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Credentials JSON</label>
+                            <config_path>payment/amazon_payment/credentials_json</config_path>
+                            <comment><![CDATA[Warning! Individual credential fields will be populated/overwritten, if credentials JSON is supplied!]]></comment>
+                        </field>
                         <field id="payment_region" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Payment Region</label>
-                            <validate>required-entry</validate>
                             <source_model>Amazon\Core\Model\Config\Source\PaymentRegion</source_model>
                             <config_path>payment/amazon_payment/payment_region</config_path>
                         </field>

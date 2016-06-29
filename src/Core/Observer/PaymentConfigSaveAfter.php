@@ -15,10 +15,14 @@
  */
 namespace Amazon\Core\Observer;
 
+use Amazon\Core\Helper\Data;
 use Amazon\Core\Model\Validation\ApiCredentialsValidatorFactory;
+use Amazon\Core\Model\Config\Credentials\Json;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\App\Config\ReinitableConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class PaymentConfigSaveAfter implements ObserverInterface
 {
@@ -33,15 +37,40 @@ class PaymentConfigSaveAfter implements ObserverInterface
     protected $messageManager;
 
     /**
+     * @var Json
+     */
+    protected $jsonCredentials;
+
+    /**
+     * @var Data
+     */
+    protected $amazonCoreHelper;
+
+    /**
+     * Application config
+     *
+     * @var ReinitableConfigInterface
+     */
+    protected $appConfig;
+
+    /**
      * @param ApiCredentialsValidatorFactory $apiCredentialsValidatorFactory
      * @param ManagerInterface               $messageManager
+     * @param Json                           $jsonCredentials
+     * @param Data                           $amazonCoreHelper
      */
     public function __construct(
         ApiCredentialsValidatorFactory $apiCredentialsValidatorFactory,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        Json $jsonCredentials,
+        Data $amazonCoreHelper,
+        ReinitableConfigInterface $config
     ) {
         $this->apiCredentialsValidatorFactory = $apiCredentialsValidatorFactory;
         $this->messageManager                 = $messageManager;
+        $this->amazonCoreHelper               = $amazonCoreHelper;
+        $this->jsonCredentials                = $jsonCredentials;
+        $this->appConfig                      = $config;
     }
 
     /**
@@ -49,17 +78,49 @@ class PaymentConfigSaveAfter implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+        $scopeData = $this->getScopeData($observer);
+        $jsonCredentials = $this->amazonCoreHelper->getCredentialsJson();
+
+        if (!empty($jsonCredentials)) {
+            $this->appConfig->reinit();
+            $this->jsonCredentials->processCredentialsJson($jsonCredentials, $scopeData);
+        }
+
         /** @see \Magento\Config\Model\Config::save() */
         $validator = $this->apiCredentialsValidatorFactory->create();
 
         $messageManagerMethod = 'addError';
 
-        if ($validator->isValid($observer->getStore())) {
+
+        if ($validator->isValid($scopeData['scope_id'], $scopeData['scope'])) {
             $messageManagerMethod = 'addSuccess';
         }
 
         foreach ($validator->getMessages() as $message) {
             $this->messageManager->$messageManagerMethod($message);
         }
+    }
+
+    protected function getScopeData($observer)
+    {
+        $scopeData = [];
+
+        $scopeData['scope']    = 'default';
+        $scopeData['scope_id'] = null;
+
+        $website = $observer->getWebsite();
+        $store   = $observer->getStore();
+
+        if ($website) {
+             $scopeData['scope']    = ScopeInterface::SCOPE_WEBSITES;
+             $scopeData['scope_id'] = $website;
+        }
+
+        if ($store) {
+             $scopeData['scope']    = ScopeInterface::SCOPE_STORES;
+             $scopeData['scope_id'] = $store;
+        }
+
+        return $scopeData;
     }
 }
