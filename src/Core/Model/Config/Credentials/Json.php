@@ -26,7 +26,7 @@ use Magento\Framework\App\Cache\Frontend\Pool;
 
 class Json
 {
-    const AMAZON_CONFIG_PREFIX      = 'payment/amazon_payment/';
+    const AMAZON_CONFIG_PREFIX           = 'payment/amazon_payment/';
     const AMAZON_CREDENTIALS_JSON        = 'credentials_json';
 
     /**

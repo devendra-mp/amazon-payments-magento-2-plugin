@@ -56,7 +56,7 @@ class ClientFactory implements ClientFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function create($scope = 'default', $scopeId = null)
+    public function create($scopeId = null, $scope = ScopeInterface::SCOPE_STORE)
     {
         $config = [
             Data::AMAZON_SECRET_KEY  => $this->coreHelper->getSecretKey($scope, $scopeId),

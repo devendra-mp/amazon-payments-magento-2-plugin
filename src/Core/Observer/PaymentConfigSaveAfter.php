@@ -22,6 +22,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\App\Config\ReinitableConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class PaymentConfigSaveAfter implements ObserverInterface
 {
@@ -91,7 +92,7 @@ class PaymentConfigSaveAfter implements ObserverInterface
         $messageManagerMethod = 'addError';
 
 
-        if ($validator->isValid($scopeData['scope'], $scopeData['scope_id'])) {
+        if ($validator->isValid($scopeData['scope_id'], $scopeData['scope'])) {
             $messageManagerMethod = 'addSuccess';
         }
 
@@ -111,12 +112,12 @@ class PaymentConfigSaveAfter implements ObserverInterface
         $store   = $observer->getStore();
 
         if ($website) {
-             $scopeData['scope']    = \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES;
+             $scopeData['scope']    = ScopeInterface::SCOPE_WEBSITES;
              $scopeData['scope_id'] = $website;
         }
 
         if ($store) {
-             $scopeData['scope']    = \Magento\Store\Model\ScopeInterface::SCOPE_STORES;
+             $scopeData['scope']    = ScopeInterface::SCOPE_STORES;
              $scopeData['scope_id'] = $store;
         }
 
