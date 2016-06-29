@@ -57,7 +57,7 @@ class PaymentConfigSaveAfter implements ObserverInterface
      * @param ApiCredentialsValidatorFactory $apiCredentialsValidatorFactory
      * @param ManagerInterface               $messageManager
      * @param Json                           $jsonCredentials
-     * @param Data                           $amazonCoreHelper;
+     * @param Data                           $amazonCoreHelper
      */
     public function __construct(
         ApiCredentialsValidatorFactory $apiCredentialsValidatorFactory,
