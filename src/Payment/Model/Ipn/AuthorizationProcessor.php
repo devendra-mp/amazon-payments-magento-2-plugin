@@ -17,7 +17,7 @@ namespace Amazon\Payment\Model\Ipn;
 
 use Amazon\Payment\Api\Data\PendingAuthorizationInterface;
 use Amazon\Payment\Api\Ipn\AuthorizationProcessorInterface;
-use Amazon\Payment\Api\PaymentManagementInterface;
+use Amazon\Payment\Api\PaymentManagement\AuthorizationInterface;
 use Amazon\Payment\Domain\Details\AmazonAuthorizationDetailsFactory;
 use Amazon\Payment\Model\ResourceModel\PendingAuthorization\CollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
@@ -30,9 +30,9 @@ class AuthorizationProcessor implements AuthorizationProcessorInterface
     protected $amazonAuthorizationDetailsFactory;
 
     /**
-     * @var PaymentManagementInterface
+     * @var AuthorizationInterface
      */
-    protected $paymentManagement;
+    protected $authorization;
 
     /**
      * @var CollectionFactory
@@ -46,13 +46,13 @@ class AuthorizationProcessor implements AuthorizationProcessorInterface
 
     public function __construct(
         AmazonAuthorizationDetailsFactory $amazonAuthorizationDetailsFactory,
-        PaymentManagementInterface $paymentManagement,
+        AuthorizationInterface $authorization,
         CollectionFactory $collectionFactory,
         StoreManagerInterface $storeManager
     ) {
 
         $this->amazonAuthorizationDetailsFactory = $amazonAuthorizationDetailsFactory;
-        $this->paymentManagement                 = $paymentManagement;
+        $this->authorization                     = $authorization;
         $this->collectionFactory                 = $collectionFactory;
         $this->storeManager                      = $storeManager;
     }
@@ -88,7 +88,7 @@ class AuthorizationProcessor implements AuthorizationProcessorInterface
 
         if (count($items = $collection->getItems())) {
             $pendingAuthorization = current($items);
-            $this->paymentManagement->updateAuthorization($pendingAuthorization->getId(), $details);
+            $this->authorization->updateAuthorization($pendingAuthorization->getId(), $details);
         }
     }
 }

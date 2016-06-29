@@ -207,6 +207,15 @@ class IpnContext implements SnippetAcceptingContext
 
         $amazonAuthorizationId = $transaction->getTxnId();
 
+        if ($capture) {
+            $amazonAuthorizationId = substr_replace(
+                $amazonAuthorizationId,
+                'A',
+                strrpos($amazonAuthorizationId, 'C'),
+                1
+            );
+        }
+
         $dom = new \DOMDocument('1.0', 'UTF-8');
 
         $authorizationNotification = $dom->createElement('AuthorizationNotification');

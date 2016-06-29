@@ -17,38 +17,14 @@ namespace Amazon\Payment\Api;
 
 use Amazon\Payment\Domain\Details\AmazonAuthorizationDetails;
 use Amazon\Payment\Domain\Details\AmazonCaptureDetails;
-use Amazon\Payment\Domain\Details\AmazonOrderDetails;
 use Amazon\Payment\Domain\Details\AmazonRefundDetails;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 
 interface PaymentManagementInterface
 {
-    /**
-     * Update capture
-     *
-     * @param integer                   $pendingCaptureId
-     * @param AmazonCaptureDetails|null $captureDetails
-     *
-     * @return void
-     */
-    public function updateCapture($pendingCaptureId, AmazonCaptureDetails $captureDetails = null);
-
-    /**
-     * Update authorization
-     *
-     * @param integer                         $pendingAuthorizationId
-     * @param AmazonAuthorizationDetails|null $authorizationDetails
-     * @param AmazonOrderDetails|null         $orderDetails
-     *
-     * @return void
-     */
-    public function updateAuthorization(
-        $pendingAuthorizationId,
-        AmazonAuthorizationDetails $authorizationDetails = null,
-        AmazonOrderDetails $orderDetails = null
-    );
-
     /**
      * Queue pending capture
      *
@@ -90,4 +66,16 @@ interface PaymentManagementInterface
      * @return void
      */
     public function closeTransaction($transactionId, InfoInterface $payment, OrderInterface $order);
+
+    /**
+     * Get transaction
+     *
+     * @param string         $transactionId
+     * @param InfoInterface  $payment
+     * @param OrderInterface $order
+     *
+     * @return TransactionInterface
+     * @throws NoSuchEntityException
+     */
+    public function getTransaction($transactionId, InfoInterface $payment, OrderInterface $order);
 }

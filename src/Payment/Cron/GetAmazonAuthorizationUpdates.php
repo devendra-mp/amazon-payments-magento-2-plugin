@@ -18,7 +18,7 @@ namespace Amazon\Payment\Cron;
 use Amazon\Core\Helper\Data;
 use Amazon\Core\Model\Config\Source\UpdateMechanism;
 use Amazon\Payment\Api\Data\PendingAuthorizationInterface;
-use Amazon\Payment\Api\PaymentManagementInterface;
+use Amazon\Payment\Api\PaymentManagement\AuthorizationInterface;
 use Amazon\Payment\Model\ResourceModel\PendingAuthorization\CollectionFactory;
 use Magento\Framework\Data\Collection;
 
@@ -35,9 +35,9 @@ class GetAmazonAuthorizationUpdates
     protected $collectionFactory;
 
     /**
-     * @var PaymentManagementInterface
+     * @var AuthorizationInterface
      */
-    protected $paymentManagement;
+    protected $authorization;
 
     /**
      * @var Data
@@ -46,12 +46,12 @@ class GetAmazonAuthorizationUpdates
 
     public function __construct(
         CollectionFactory $collectionFactory,
-        PaymentManagementInterface $paymentManagement,
+        AuthorizationInterface $authorization,
         Data $coreHelper,
         $limit = 100
     ) {
         $this->collectionFactory = $collectionFactory;
-        $this->paymentManagement = $paymentManagement;
+        $this->authorization     = $authorization;
         $this->coreHelper        = $coreHelper;
 
         $limit = (int)$limit;
@@ -77,7 +77,7 @@ class GetAmazonAuthorizationUpdates
 
         $pendingAuthorizationIds = $collection->getIdGenerator();
         foreach ($pendingAuthorizationIds as $pendingAuthorizationId) {
-            $this->paymentManagement->updateAuthorization($pendingAuthorizationId);
+            $this->authorization->updateAuthorization($pendingAuthorizationId);
         }
     }
 }

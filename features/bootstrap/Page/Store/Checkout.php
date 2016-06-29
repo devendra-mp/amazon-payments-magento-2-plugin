@@ -26,9 +26,8 @@ class Checkout extends Page
 
     protected $elements
         = [
-            'shipping-widget'            => ['css' => '#OffAmazonPaymentsWidgets0IFrame'],
-            'payment-widget'             => ['css' => '#OffAmazonPaymentsWidgets1IFrame'],
-            'alternative-payment-widget' => ['css' => '#OffAmazonPaymentsWidgets2IFrame'],
+            'shipping-widget'            => ['css' => '#addressBookWidgetDiv iframe'],
+            'payment-widget'             => ['css' => '#walletWidgetDiv iframe'],
             'first-amazon-address'       => ['css' => '.address-list li:nth-of-type(1) a'],
             'first-amazon-payment'       => ['css' => '.payment-list li:nth-of-type(1) a'],
             'second-amazon-payment'      => ['css' => '.payment-list li:nth-of-type(2) a'],
@@ -63,16 +62,16 @@ class Checkout extends Page
 
     public function selectFirstAmazonShippingAddress()
     {
-        $this->waitForElement('shipping-widget');
-        $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets0IFrame');
+        $iframe = $this->getElementWithWait('shipping-widget');
+        $this->getDriver()->switchToIFrame($iframe->getAttribute('name'));
         $this->clickElement('first-amazon-address');
         $this->getDriver()->switchToIFrame(null);
     }
 
     public function selectFirstAmazonPaymentMethod()
     {
-        $this->waitForElement('payment-widget');
-        $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets1IFrame');
+        $iframe = $this->getElementWithWait('payment-widget');
+        $this->getDriver()->switchToIFrame($iframe->getAttribute('name'));
         $this->clickElement('first-amazon-payment');
         $this->getDriver()->switchToIFrame(null);
         $this->waitForAjaxRequestsToComplete();
@@ -81,8 +80,8 @@ class Checkout extends Page
 
     public function selectAlternativeAmazonPaymentMethod()
     {
-        $this->waitForElement('alternative-payment-widget');
-        $this->getDriver()->switchToIFrame('OffAmazonPaymentsWidgets2IFrame');
+        $iframe = $this->getElementWithWait('payment-widget');
+        $this->getDriver()->switchToIFrame($iframe->getAttribute('name'));
         $this->clickElement('second-amazon-payment');
         $this->getDriver()->switchToIFrame(null);
         $this->waitForAjaxRequestsToComplete();

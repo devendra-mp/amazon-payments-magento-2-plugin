@@ -24,6 +24,7 @@ use Amazon\Payment\Domain\Details\AmazonRefundDetails;
 use Magento\Framework\Notification\NotifierInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 class QueuedRefundUpdater
 {
@@ -58,6 +59,11 @@ class QueuedRefundUpdater
     protected $pendingRefundFactory;
 
     /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * @param OrderRepositoryInterface           $orderRepository
      * @param OrderPaymentRepositoryInterface    $orderPaymentRepository
      * @param ClientFactoryInterface             $amazonHttpClientFactory
@@ -71,7 +77,8 @@ class QueuedRefundUpdater
         ClientFactoryInterface $amazonHttpClientFactory,
         AmazonRefundDetailsResponseFactory $amazonRefundDetailsResponseFactory,
         NotifierInterface $adminNotifier,
-        PendingRefundInterfaceFactory $pendingRefundFactory
+        PendingRefundInterfaceFactory $pendingRefundFactory,
+        StoreManagerInterface $storeManager
     ) {
         $this->orderRepository                    = $orderRepository;
         $this->orderPaymentRepository             = $orderPaymentRepository;
@@ -79,6 +86,7 @@ class QueuedRefundUpdater
         $this->amazonRefundDetailsResponseFactory = $amazonRefundDetailsResponseFactory;
         $this->adminNotifier                      = $adminNotifier;
         $this->pendingRefundFactory               = $pendingRefundFactory;
+        $this->storeManager                       = $storeManager;
     }
 
     /**
@@ -97,12 +105,15 @@ class QueuedRefundUpdater
             if ($pendingRefund->getRefundId()) {
                 $order = $this->orderRepository->get($pendingRefund->getOrderId());
 
+                $storeId = $order->getStoreId();
+                $this->storeManager->setCurrentStore($storeId);
+
                 if (null === $refundDetails) {
-                    $responseParser = $this->amazonHttpClientFactory->create($order->getStoreId())->getRefundDetails([
+                    $responseParser = $this->amazonHttpClientFactory->create($storeId)->getRefundDetails([
                         'amazon_refund_id' => $pendingRefund->getRefundId()
                     ]);
 
-                    $response = $this->amazonRefundDetailsResponseFactory->create(['response' => $responseParser]);
+                    $response      = $this->amazonRefundDetailsResponseFactory->create(['response' => $responseParser]);
                     $refundDetails = $response->getDetails();
                 }
 

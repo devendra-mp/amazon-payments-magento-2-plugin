@@ -409,9 +409,12 @@ class Amazon extends AbstractMethod
         $payment->setIsTransactionPending($pending);
         $payment->setIsTransactionClosed(false);
 
-        if ( ! $pending && $capture) {
+        if ($capture) {
             $transactionId = $details->getCaptureTransactionId();
-            $payment->setIsTransactionClosed(true);
+
+            if ( ! $pending) {
+                $payment->setIsTransactionClosed(true);
+            }
         }
 
         if ($pending) {
@@ -519,6 +522,7 @@ class Amazon extends AbstractMethod
 
             $responseParser = $client->getAuthorizationDetails($data);
             $response       = $this->amazonAuthorizationDetailsResponseFactory->create(['response' => $responseParser]);
+
             $authorizationDetails = $response->getDetails();
             $this->amazonPreCaptureValidator->validate($authorizationDetails);
 

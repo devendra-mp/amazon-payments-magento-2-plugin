@@ -17,7 +17,7 @@ namespace Amazon\Payment\Model\Ipn;
 
 use Amazon\Payment\Api\Data\PendingAuthorizationInterface;
 use Amazon\Payment\Api\Ipn\OrderProcessorInterface;
-use Amazon\Payment\Api\PaymentManagementInterface;
+use Amazon\Payment\Api\PaymentManagement\AuthorizationInterface;
 use Amazon\Payment\Domain\Details\AmazonOrderDetailsFactory;
 use Amazon\Payment\Model\ResourceModel\OrderLink;
 use Amazon\Payment\Model\ResourceModel\PendingAuthorization\CollectionFactory;
@@ -31,9 +31,9 @@ class OrderProcessor implements OrderProcessorInterface
     protected $amazonOrderDetailsFactory;
 
     /**
-     * @var PaymentManagementInterface
+     * @var AuthorizationInterface
      */
-    protected $paymentManagement;
+    protected $authorization;
 
     /**
      * @var CollectionFactory
@@ -47,14 +47,14 @@ class OrderProcessor implements OrderProcessorInterface
 
     public function __construct(
         AmazonOrderDetailsFactory $amazonOrderDetailsFactory,
-        PaymentManagementInterface $paymentManagement,
+        AuthorizationInterface $authorization,
         CollectionFactory $collectionFactory,
         StoreManagerInterface $storeManager
     ) {
 
         $this->amazonOrderDetailsFactory = $amazonOrderDetailsFactory;
-        $this->paymentManagement         = $paymentManagement;
         $this->collectionFactory         = $collectionFactory;
+        $this->authorization             = $authorization;
         $this->storeManager              = $storeManager;
     }
 
@@ -89,7 +89,7 @@ class OrderProcessor implements OrderProcessorInterface
 
         if (count($items = $collection->getItems())) {
             $pendingAuthorization = current($items);
-            $this->paymentManagement->updateAuthorization($pendingAuthorization->getId(), null, $details);
+            $this->authorization->updateAuthorization($pendingAuthorization->getId(), null, $details);
         }
     }
 }

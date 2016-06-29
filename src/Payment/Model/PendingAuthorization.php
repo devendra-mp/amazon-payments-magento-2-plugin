@@ -89,7 +89,7 @@ class PendingAuthorization extends AbstractModel implements PendingAuthorization
     {
         return $this->setData(PendingAuthorizationInterface::ORDER_ID, $orderId);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -104,6 +104,22 @@ class PendingAuthorization extends AbstractModel implements PendingAuthorization
     public function setAuthorizationId($authorizationId)
     {
         return $this->setData(PendingAuthorizationInterface::AUTHORIZATION_ID, $authorizationId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCaptureId()
+    {
+        return $this->getData(PendingAuthorizationInterface::CAPTURE_ID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCaptureId($captureId)
+    {
+        return $this->setData(PendingAuthorizationInterface::CAPTURE_ID, $captureId);
     }
 
     /**
@@ -125,9 +141,25 @@ class PendingAuthorization extends AbstractModel implements PendingAuthorization
     /**
      * {@inheritDoc}
      */
+    public function isCapture()
+    {
+        return (bool)$this->getData(PendingAuthorizationInterface::CAPTURE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCapture($capture)
+    {
+        return $this->setData(PendingAuthorizationInterface::CAPTURE, $capture);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function isProcessed()
     {
-        return (bool) $this->getData(PendingAuthorizationInterface::PROCESSED);
+        return (bool)$this->getData(PendingAuthorizationInterface::PROCESSED);
     }
 
     /**
