@@ -15,12 +15,12 @@
  */
 namespace Amazon\Core\Controller\Adminhtml\Download;
 
-use Amazon\Core\Logger\Handler\Client;
+use Amazon\Core\Logger\Handler\Ipn;
 
-class ClientLog extends AbstractLog
+class IpnLog extends AbstractLog
 {
     protected function getFilePath()
     {
-        return Client::FILENAME;
+        return Ipn::FILENAME;
     }
 }

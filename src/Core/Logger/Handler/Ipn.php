@@ -13,14 +13,22 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Core\Controller\Adminhtml\Download;
+namespace Amazon\Core\Logger\Handler;
 
-use Amazon\Core\Logger\Handler\Client;
+use Magento\Framework\Logger\Handler\Base;
+use Monolog\Logger;
 
-class ClientLog extends AbstractLog
+class Ipn extends Base
 {
-    protected function getFilePath()
-    {
-        return Client::FILENAME;
-    }
+    const FILENAME = '/var/log/amazonipn.log';
+
+    /**
+     * @var string
+     */
+    protected $fileName = self::FILENAME;
+
+    /**
+     * @var int
+     */
+    protected $loggerType = Logger::DEBUG;
 }
