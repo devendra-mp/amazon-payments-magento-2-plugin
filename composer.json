@@ -14,7 +14,7 @@
     "magento/module-quote": "100.0.*",
     "magento/module-customer": "100.0.*",
     "magento/module-store": "100.0.*",
-    "amzn/login-and-pay-with-amazon-sdk-php": "^2.0.3"
+    "amzn/login-and-pay-with-amazon-sdk-php": "dev-psr_logging"
   },
   "require-dev": {
     "guzzlehttp/guzzle": "^6.2.0",
@@ -36,6 +36,10 @@
     {
       "type": "git",
       "url": "https://github.com/jamescowie/behat-magento2-init.git"
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/mcurran-inviqa/login-and-pay-with-amazon-sdk-php.git"
     }
   ],
   "type": "magento2-module",

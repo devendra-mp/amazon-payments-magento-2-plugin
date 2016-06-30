@@ -25,6 +25,7 @@ use Magento\Framework\Notification\NotifierInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class QueuedRefundUpdater
 {
@@ -64,12 +65,19 @@ class QueuedRefundUpdater
     protected $storeManager;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param OrderRepositoryInterface           $orderRepository
      * @param OrderPaymentRepositoryInterface    $orderPaymentRepository
      * @param ClientFactoryInterface             $amazonHttpClientFactory
      * @param AmazonRefundDetailsResponseFactory $amazonRefundDetailsResponseFactory
      * @param NotifierInterface                  $adminNotifier
      * @param PendingRefundInterfaceFactory      $pendingRefundFactory
+     * @param StoreManagerInterface              $storeManager
+     * @param LoggerInterface                    $logger
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
@@ -78,7 +86,8 @@ class QueuedRefundUpdater
         AmazonRefundDetailsResponseFactory $amazonRefundDetailsResponseFactory,
         NotifierInterface $adminNotifier,
         PendingRefundInterfaceFactory $pendingRefundFactory,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        LoggerInterface $logger
     ) {
         $this->orderRepository                    = $orderRepository;
         $this->orderPaymentRepository             = $orderPaymentRepository;
@@ -87,6 +96,7 @@ class QueuedRefundUpdater
         $this->adminNotifier                      = $adminNotifier;
         $this->pendingRefundFactory               = $pendingRefundFactory;
         $this->storeManager                       = $storeManager;
+        $this->logger                             = $logger;
     }
 
     /**
@@ -132,6 +142,7 @@ class QueuedRefundUpdater
 
             $pendingRefund->getResource()->commit();
         } catch (\Exception $e) {
+            $this->logger->error($e);
             $pendingRefund->getResource()->rollBack();
         }
     }

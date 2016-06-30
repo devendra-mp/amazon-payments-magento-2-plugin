@@ -31,6 +31,7 @@ use Magento\Framework\Exception\ValidatorException;
 use Magento\Quote\Model\Quote;
 use Magento\Store\Model\ScopeInterface;
 use PayWithAmazon\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class OrderInformationManagement implements OrderInformationManagementInterface
 {
@@ -65,12 +66,18 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     protected $quoteLinkFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param Session                              $session
      * @param ClientFactoryInterface               $clientFactory
      * @param PaymentHelper                        $paymentHelper
      * @param CoreHelper                           $coreHelper
      * @param AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory
      * @param QuoteLinkInterfaceFactory            $quoteLinkFactory
+     * @param LoggerInterface                      $logger
      */
     public function __construct(
         Session $session,
@@ -78,7 +85,8 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         PaymentHelper $paymentHelper,
         CoreHelper $coreHelper,
         AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory,
-        QuoteLinkInterfaceFactory $quoteLinkFactory
+        QuoteLinkInterfaceFactory $quoteLinkFactory,
+        LoggerInterface $logger
     ) {
         $this->session                              = $session;
         $this->clientFactory                        = $clientFactory;
@@ -86,6 +94,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         $this->coreHelper                           = $coreHelper;
         $this->amazonSetOrderDetailsResponseFactory = $amazonSetOrderDetailsResponseFactory;
         $this->quoteLinkFactory                     = $quoteLinkFactory;
+        $this->logger                               = $logger;
     }
 
     /**
@@ -124,6 +133,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {
+            $this->logger->error($e);
             throw new AmazonServiceUnavailableException();
         }
     }
@@ -170,6 +180,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {
+            $this->logger->error($e);
             throw new AmazonServiceUnavailableException();
         }
     }
@@ -191,6 +202,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {
+            $this->logger->error($e);
             throw new AmazonServiceUnavailableException();
         }
     }
@@ -212,6 +224,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {
+            $this->logger->error($e);
             throw new AmazonServiceUnavailableException();
         }
     }

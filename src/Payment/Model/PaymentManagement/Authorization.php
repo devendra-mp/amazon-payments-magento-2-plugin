@@ -40,6 +40,7 @@ use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class Authorization extends AbstractOperation implements AuthorizationInterface
 {
@@ -94,6 +95,11 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
     protected $paymentManagement;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Authorization constructor.
      *
      * @param ClientFactoryInterface                    $clientFactory
@@ -110,6 +116,7 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
      * @param AmazonGetOrderDetailsResponseFactory      $amazonGetOrderDetailsResponseFactory
      * @param StoreManagerInterface                     $storeManager
      * @param PaymentManagementInterface                $paymentManagement
+     * @param LoggerInterface                           $logger
      */
     public function __construct(
         ClientFactoryInterface $clientFactory,
@@ -125,7 +132,8 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
         ManagerInterface $eventManager,
         AmazonGetOrderDetailsResponseFactory $amazonGetOrderDetailsResponseFactory,
         StoreManagerInterface $storeManager,
-        PaymentManagementInterface $paymentManagement
+        PaymentManagementInterface $paymentManagement,
+        LoggerInterface $logger
     ) {
         $this->clientFactory                             = $clientFactory;
         $this->pendingAuthorizationFactory               = $pendingAuthorizationFactory;
@@ -137,6 +145,7 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
         $this->amazonGetOrderDetailsResponseFactory      = $amazonGetOrderDetailsResponseFactory;
         $this->storeManager                              = $storeManager;
         $this->paymentManagement                         = $paymentManagement;
+        $this->logger                                    = $logger;
 
         parent::__construct($notifier, $urlBuilder, $searchCriteriaBuilderFactory, $invoiceRepository);
     }
@@ -165,6 +174,7 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
 
             $pendingAuthorization->getResource()->commit();
         } catch (Exception $e) {
+            $this->logger->error($e);
             $pendingAuthorization->getResource()->rollBack();
         }
     }

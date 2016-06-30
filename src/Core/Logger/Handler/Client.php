@@ -13,20 +13,22 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Core\Model\Config\Source;
+namespace Amazon\Core\Logger\Handler;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Logger\Handler\Base;
+use Monolog\Logger;
 
-class AuthenticationExperience implements ArrayInterface
+class Client extends Base
 {
+    const FILENAME = '/var/log/paywithamazon.log';
+
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function toOptionArray()
-    {
-        return [
-            ['value' => 'popup', 'label' => __('Popup')],
-            ['value' => 'redirect', 'label' => __('Redirect')],
-        ];
-    }
+    protected $fileName = self::FILENAME;
+
+    /**
+     * @var int
+     */
+    protected $loggerType = Logger::DEBUG;
 }
