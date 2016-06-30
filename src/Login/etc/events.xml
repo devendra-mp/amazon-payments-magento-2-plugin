@@ -6,4 +6,7 @@
     <event name="amazon_login_authorize_error">
         <observer name="amazon_login_set_cookie_on_authorize_error" instance="Amazon\Login\Observer\SetAuthorizeErrorCookie" />
     </event>
+    <event name="customer_logout">
+        <observer name="amazon_login_set_logout_cookie" instance="Amazon\Login\Observer\SetLogoutCookie" />
+    </event>
 </config>
