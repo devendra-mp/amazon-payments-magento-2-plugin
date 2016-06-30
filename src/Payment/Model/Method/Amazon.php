@@ -350,7 +350,7 @@ class Amazon extends AbstractMethod
         } catch (SoftDeclineException $e) {
             $this->processSoftDecline();
         } catch (Exception $e) {
-            if ($e instanceof HardDeclineException) {
+            if ( ! $e instanceof HardDeclineException) {
                 $this->errorLogger->error($e);
             }
             $this->processHardDecline($payment, $amazonOrderReferenceId);

@@ -15,13 +15,13 @@
  */
 namespace Amazon\Core\Controller\Adminhtml\Download;
 
-use Amazon\Core\Logger\Handler\Client;
+use Amazon\Core\Logger\Handler\Ipn;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\Controller\Adminhtml\System;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Zend_Filter_BaseName;
 
-class ClientLog extends System
+class IpnLog extends System
 {
     /**
      * @var FileFactory
@@ -37,7 +37,7 @@ class ClientLog extends System
 
     public function execute()
     {
-        $filePath = Client::FILENAME;
+        $filePath = Ipn::FILENAME;
 
         $filter   = new Zend_Filter_BaseName();
         $fileName = $filter->filter($filePath);
