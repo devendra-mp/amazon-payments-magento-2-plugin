@@ -54,7 +54,6 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Model\ScopeInterface;
-use Psr\Log\LoggerInterface;
 
 class Amazon extends AbstractMethod
 {
@@ -171,11 +170,6 @@ class Amazon extends AbstractMethod
     protected $lastTransactionTime = 0;
 
     /**
-     * @var LoggerInterface
-     */
-    protected $errorLogger;
-
-    /**
      * Amazon constructor.
      *
      * @param Context                                   $context
@@ -199,7 +193,6 @@ class Amazon extends AbstractMethod
      * @param AmazonRefund                              $amazonRefundValidator
      * @param PaymentManagementInterface                $paymentManagement
      * @param AmazonCoreHelper                          $amazonCoreHelper
-     * @param LoggerInterface                           $errorLogger
      * @param AbstractResource|null                     $resource
      * @param AbstractDb|null                           $resourceCollection
      * @param array                                     $data
@@ -226,7 +219,6 @@ class Amazon extends AbstractMethod
         AmazonRefund $amazonRefundValidator,
         PaymentManagementInterface $paymentManagement,
         AmazonCoreHelper $amazonCoreHelper,
-        LoggerInterface $errorLogger,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -258,7 +250,6 @@ class Amazon extends AbstractMethod
         $this->amazonPreCaptureValidator                 = $amazonPreCaptureValidator;
         $this->amazonAuthorizationDetailsResponseFactory = $amazonAuthorizationDetailsResponseFactory;
         $this->amazonCoreHelper                          = $amazonCoreHelper;
-        $this->errorLogger                               = $errorLogger;
     }
 
     /**
@@ -351,7 +342,7 @@ class Amazon extends AbstractMethod
             $this->processSoftDecline();
         } catch (Exception $e) {
             if ( ! $e instanceof HardDeclineException) {
-                $this->errorLogger->error($e);
+                $this->_logger->error($e);
             }
             $this->processHardDecline($payment, $amazonOrderReferenceId);
         }
