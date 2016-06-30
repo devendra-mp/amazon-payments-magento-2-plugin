@@ -16,38 +16,11 @@
 namespace Amazon\Core\Controller\Adminhtml\Download;
 
 use Amazon\Core\Logger\Handler\Ipn;
-use Magento\Backend\App\Action\Context;
-use Magento\Backend\Controller\Adminhtml\System;
-use Magento\Framework\App\Response\Http\FileFactory;
-use Zend_Filter_BaseName;
 
-class IpnLog extends System
+class IpnLog extends AbstractLog
 {
-    /**
-     * @var FileFactory
-     */
-    protected $fileFactory;
-
-    public function __construct(Context $context, FileFactory $fileFactory)
+    protected function getFilePath()
     {
-        $this->fileFactory = $fileFactory;
-
-        parent::__construct($context);
-    }
-
-    public function execute()
-    {
-        $filePath = Ipn::FILENAME;
-
-        $filter   = new Zend_Filter_BaseName();
-        $fileName = $filter->filter($filePath);
-
-        return $this->fileFactory->create(
-            $fileName,
-            [
-                'type'  => 'filename',
-                'value' => $filePath
-            ]
-        );
+        return Ipn::FILENAME;
     }
 }
