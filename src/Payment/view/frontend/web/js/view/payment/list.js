@@ -5,8 +5,11 @@ define([
     'Magento_Checkout/js/view/payment/list',
     'Magento_Checkout/js/model/payment/method-list',
     'Magento_Checkout/js/model/checkout-data-resolver',
+    'Magento_Checkout/js/model/address-converter',
+    'Magento_Checkout/js/model/quote',
     'Amazon_Payment/js/model/storage'
-], function ($, _, ko, Component, paymentMethods, checkoutDataResolver, amazonStorage) {
+
+], function ($, _, ko, Component, paymentMethods, checkoutDataResolver, addressConverter, quote, amazonStorage) {
     'use strict';
 
     var self;
@@ -48,6 +51,7 @@ define([
                 switch(declined) {
                     //hard decline
                     case 4273:
+                        this._populateShippingAddressForm();
                         amazonStorage.amazonlogOut();
                         this._reloadPaymentMethods();
                         amazonStorage.amazonDeclineCode(false);
@@ -114,6 +118,38 @@ define([
             $('.payment-option.discount-code', '#payment').remove();
             $('.action-edit', '.shipping-information').remove();
             $('.opc-progress-bar-item._complete', '.opc-progress-bar').addClass('lock-step');
+        },
+        /**
+         * Populate shipping address form in shipping step from quote model
+         * @private
+         */
+        _populateShippingAddressForm: function() {
+            var shippingAddress = quote.shippingAddress(),
+                addressData = addressConverter.formAddressDataToQuoteAddress(shippingAddress);
+
+            function populateShippingForm() {
+                //Copy form data to quote shipping address object
+                for (var field in addressData) {
+                    //populate form
+                    if (addressData.hasOwnProperty(field)
+                        && shippingAddress.hasOwnProperty(field)
+                        && typeof addressData[field] != 'function'
+                    ) {
+                        $('input[name="' + field + '"]', '#co-shipping-form').val(addressData[field]);
+                    }
+                }
+            }
+
+            //check to see if user is logged out of amazon (otherwise shipping form won't be in DOM)
+            if(!this.isAmazonAccountLoggedIn) {
+                populateShippingForm();
+            }
+            //subscribe to logout and trigger shippingform population when logged out.
+            this.isAmazonAccountLoggedIn.subscribe(function(loggedIn) {
+                if(!loggedIn) {
+                    populateShippingForm();
+                }
+            });
         }
     });
 });
