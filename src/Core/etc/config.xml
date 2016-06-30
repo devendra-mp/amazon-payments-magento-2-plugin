@@ -18,6 +18,7 @@
                 <pwa_pp_button_is_visible>1</pwa_pp_button_is_visible>
                 <button_type>full</button_type>
                 <button_size>medium</button_size>
+                <logging>1</logging>
             </amazon_payment>
         </payment>
     </default>

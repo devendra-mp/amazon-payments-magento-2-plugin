@@ -353,18 +353,6 @@ class Data extends AbstractHelper
     /*
      * @return string
      */
-    public function getAuthenticationExperience($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
-    {
-        return $this->scopeConfig->getValue(
-            'payment/amazon_payment/authentication_experience',
-            $scope,
-            $scopeCode
-        );
-    }
-
-    /*
-     * @return string
-     */
     public function getButtonType($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue(
@@ -441,31 +429,6 @@ class Data extends AbstractHelper
             $scopeCode
         );
     }
-
-    /*
-     * @return string
-     */
-    public function getAuthorizedOrderStatus($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
-    {
-        return $this->scopeConfig->getValue(
-            'payment/amazon_payment/authorized_order_status',
-            $scope,
-            $scopeCode
-        );
-    }
-
-    /*
-     * @return string
-     */
-    public function getCapturedOrderStatus($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
-    {
-        return $this->scopeConfig->getValue(
-            'payment/amazon_payment/captured_order_status',
-            $scope,
-            $scopeCode
-        );
-    }
-
 
     /*
      * @return string

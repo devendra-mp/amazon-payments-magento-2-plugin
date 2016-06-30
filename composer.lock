@@ -4,22 +4,16 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1d851474d638630452008c49eb843297",
-    "content-hash": "ebbebbd0d0d4b0682976efe3ed36fd9e",
+    "hash": "cc1feb2c8852eadc969315155601392e",
+    "content-hash": "a56310ab512a616fc8091c47420a2c5e",
     "packages": [
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
-            "version": "2.0.3",
+            "version": "dev-psr_logging",
             "source": {
                 "type": "git",
-                "url": "https://github.com/amzn/login-and-pay-with-amazon-sdk-php.git",
-                "reference": "09c2cdecc8f329bc43975d3f604c1aeed9b74b92"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/amzn/login-and-pay-with-amazon-sdk-php/zipball/09c2cdecc8f329bc43975d3f604c1aeed9b74b92",
-                "reference": "09c2cdecc8f329bc43975d3f604c1aeed9b74b92",
-                "shasum": ""
+                "url": "https://github.com/mcurran-inviqa/login-and-pay-with-amazon-sdk-php.git",
+                "reference": "82e9e9ef08b53372f54dba842e6e5b6a9a58acfb"
             },
             "require": {
                 "ext-curl": "*",
@@ -31,7 +25,6 @@
                     "PayWithAmazon\\": "PayWithAmazon/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache OSL-2"
             ],
@@ -51,7 +44,7 @@
                 "payment",
                 "payments"
             ],
-            "time": "2016-06-22 16:31:08"
+            "time": "2016-06-29 15:22:49"
         },
         {
             "name": "magento/framework",
@@ -4624,6 +4617,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "amzn/login-and-pay-with-amazon-sdk-php": 20,
         "sensiolabs/behat-page-object-extension": 20,
         "bex/behat-magento2-init": 20,
         "ciaranmcnulty/behat-stepthroughextension": 20

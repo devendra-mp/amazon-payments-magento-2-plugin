@@ -35,6 +35,7 @@ use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class Capture extends AbstractOperation implements CaptureInterface
 {
@@ -79,6 +80,11 @@ class Capture extends AbstractOperation implements CaptureInterface
     protected $paymentManagement;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Capture constructor.
      *
      * @param ClientFactoryInterface              $clientFactory
@@ -93,6 +99,7 @@ class Capture extends AbstractOperation implements CaptureInterface
      * @param TransactionRepositoryInterface      $transactionRepository
      * @param StoreManagerInterface               $storeManager
      * @param PaymentManagementInterface          $paymentManagement
+     * @param LoggerInterface                     $logger
      */
     public function __construct(
         ClientFactoryInterface $clientFactory,
@@ -106,7 +113,8 @@ class Capture extends AbstractOperation implements CaptureInterface
         OrderRepositoryInterface $orderRepository,
         TransactionRepositoryInterface $transactionRepository,
         StoreManagerInterface $storeManager,
-        PaymentManagementInterface $paymentManagement
+        PaymentManagementInterface $paymentManagement,
+        LoggerInterface $logger
     ) {
         $this->clientFactory                       = $clientFactory;
         $this->pendingCaptureFactory               = $pendingCaptureFactory;
@@ -116,6 +124,7 @@ class Capture extends AbstractOperation implements CaptureInterface
         $this->transactionRepository               = $transactionRepository;
         $this->storeManager                        = $storeManager;
         $this->paymentManagement                   = $paymentManagement;
+        $this->logger                              = $logger;
 
         parent::__construct($notifier, $urlBuilder, $searchCriteriaBuilderFactory, $invoiceRepository);
     }
@@ -154,6 +163,7 @@ class Capture extends AbstractOperation implements CaptureInterface
 
             $pendingCapture->getResource()->commit();
         } catch (Exception $e) {
+            $this->logger->error($e);
             $pendingCapture->getResource()->rollBack();
         }
     }

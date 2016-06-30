@@ -29,6 +29,7 @@ use Magento\Framework\Validator\Factory;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Quote\Model\Quote;
 use PayWithAmazon\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class AddressManagement implements AddressManagementInterface
 {
@@ -68,6 +69,11 @@ class AddressManagement implements AddressManagementInterface
     protected $validatorFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param ClientFactoryInterface    $clientFactory
      * @param Address                   $addressHelper
      * @param QuoteLinkInterfaceFactory $quoteLinkFactory
@@ -75,6 +81,7 @@ class AddressManagement implements AddressManagementInterface
      * @param CollectionFactory         $countryCollectionFactory
      * @param AmazonAddressFactory      $amazonAddressFactory
      * @param Factory                   $validatorFactory
+     * @param LoggerInterface           $logger
      */
     public function __construct(
         ClientFactoryInterface $clientFactory,
@@ -83,7 +90,8 @@ class AddressManagement implements AddressManagementInterface
         Session $session,
         CollectionFactory $countryCollectionFactory,
         AmazonAddressFactory $amazonAddressFactory,
-        Factory $validatorFactory
+        Factory $validatorFactory,
+        LoggerInterface $logger
     ) {
         $this->clientFactory            = $clientFactory;
         $this->addressHelper            = $addressHelper;
@@ -92,6 +100,7 @@ class AddressManagement implements AddressManagementInterface
         $this->countryCollectionFactory = $countryCollectionFactory;
         $this->amazonAddressFactory     = $amazonAddressFactory;
         $this->validatorFactory         = $validatorFactory;
+        $this->logger                   = $logger;
     }
 
     /**
@@ -116,6 +125,7 @@ class AddressManagement implements AddressManagementInterface
         } catch (ValidatorException $e) {
             throw $e;
         } catch (Exception $e) {
+            $this->logger->error($e);
             $this->throwUnknownErrorException();
         }
     }
@@ -165,8 +175,8 @@ class AddressManagement implements AddressManagementInterface
         if ($isShippingAddress) {
             $validator = $this->validatorFactory->createValidator('amazon_address', 'on_select');
 
-            if (!$validator->isValid($magentoAddress)) {
-                throw new ValidatorException(null, null, [ $validator->getMessages() ]);
+            if ( ! $validator->isValid($magentoAddress)) {
+                throw new ValidatorException(null, null, [$validator->getMessages()]);
             }
 
             $countryCollection = $this->countryCollectionFactory->create();
