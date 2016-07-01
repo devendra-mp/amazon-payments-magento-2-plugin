@@ -13,20 +13,14 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Core\Model\Config\Source;
+namespace Amazon\Core\Controller\Adminhtml\Download;
 
-use Magento\Framework\Option\ArrayInterface;
+use Amazon\Core\Logger\Handler\Client;
 
-class AuthenticationExperience implements ArrayInterface
+class ClientLog extends AbstractLog
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function toOptionArray()
+    protected function getFilePath()
     {
-        return [
-            ['value' => 'popup', 'label' => __('Popup')],
-            ['value' => 'redirect', 'label' => __('Redirect')],
-        ];
+        return Client::FILENAME;
     }
 }

@@ -17,7 +17,6 @@ namespace Amazon\Core\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Store\Model\ScopeInterface;
 
 class ClientIp extends AbstractHelper
@@ -34,13 +33,12 @@ class ClientIp extends AbstractHelper
 
     /**
      * @param Context       $context
-     * @param RemoteAddress $remoteAddress
      */
-    public function __construct(Context $context, RemoteAddress $remoteAddress)
+    public function __construct(Context $context)
     {
         parent::__construct($context);
         // e.g. X-Forwarded-For can have a comma-separated list of IPs
-        $this->clientIp           = explode(',', $remoteAddress->getRemoteAddress())[0];
+        $this->clientIp           = explode(',', $context->getRemoteAddress()->getRemoteAddress())[0];
         $allowedIps               = $this->getAllowedIps();
         $this->clientHasAllowedIp = empty($allowedIps) ? true : in_array($this->clientIp, $allowedIps);
     }

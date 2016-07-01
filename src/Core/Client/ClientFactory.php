@@ -18,6 +18,8 @@ namespace Amazon\Core\Client;
 use Amazon\Core\Helper\Data;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\ScopeInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
 class ClientFactory implements ClientFactoryInterface
 {
@@ -37,20 +39,28 @@ class ClientFactory implements ClientFactoryInterface
     protected $instanceName;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ClientFactory constructor.
      *
      * @param ObjectManagerInterface $objectManager
      * @param Data                   $coreHelper
+     * @param LoggerInterface        $logger
      * @param string                 $instanceName
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
         Data $coreHelper,
+        LoggerInterface $logger,
         $instanceName = '\\PayWithAmazon\\ClientInterface'
     ) {
         $this->objectManager = $objectManager;
         $this->coreHelper    = $coreHelper;
         $this->instanceName  = $instanceName;
+        $this->logger        = $logger;
     }
 
     /**
@@ -67,6 +77,12 @@ class ClientFactory implements ClientFactoryInterface
             Data::AMAZON_CLIENT_ID   => $this->coreHelper->getClientId($scope, $scopeId)
         ];
 
-        return $this->objectManager->create($this->instanceName, ['config' => $config]);
+        $client = $this->objectManager->create($this->instanceName, ['config' => $config]);
+
+        if ($client instanceof LoggerAwareInterface && $this->coreHelper->isLoggingEnabled($scope, $scopeId)) {
+            $client->setLogger($this->logger);
+        }
+
+        return $client;
     }
 }

@@ -2,17 +2,19 @@ define(
     [
         'jquery',
         'ko',
-        'amazonCore'
+        'amazonCore',
+        'amazonPaymentConfig'
     ],
     function(
         $,
         ko,
-        amazonCore
+        amazonCore,
+        amazonPaymentConfig
     ) {
         'use strict';
 
         var isAmazonAccountLoggedIn = ko.observable(false),
-            isAmazonEnabled = ko.observable(window.amazonPayment.isPwaEnabled),
+            isAmazonEnabled = ko.observable(amazonPaymentConfig.getValue('isPwaEnabled')),
             orderReference,
             addressConsentToken = amazonCore.accessToken,
             isAmazonDefined = amazonCore.amazonDefined.subscribe(checkAmazonDefined),
@@ -21,7 +23,9 @@ define(
             sandboxSimulationReference = ko.observable('default'),
             isPlaceOrderDisabled = ko.observable(false),
             isShippingMethodsLoading = ko.observable(true),
-            isAmazonShippingAddressSelected = ko.observable(false);
+            isAmazonShippingAddressSelected = ko.observable(false),
+            isQuoteDirty = ko.observable(amazonPaymentConfig.getValue('isQuoteDirty')),
+            isPwaVisible = ko.computed(function() { return isAmazonEnabled() && !isQuoteDirty(); });
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
@@ -65,6 +69,8 @@ define(
             isPlaceOrderDisabled: isPlaceOrderDisabled,
             isShippingMethodsLoading: isShippingMethodsLoading,
             isAmazonShippingAddressSelected: isAmazonShippingAddressSelected,
+            isQuoteDirty: isQuoteDirty,
+            isPwaVisible: isPwaVisible,
             amazonlogOut: function() {
                 if(amazonCore.amazonDefined()) {
                     amazon.Login.logout();

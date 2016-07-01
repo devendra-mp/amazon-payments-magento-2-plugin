@@ -33,6 +33,7 @@ use Amazon\Payment\Domain\Validator\AmazonPreCapture;
 use Amazon\Payment\Domain\Validator\AmazonRefund;
 use Amazon\Payment\Exception\AuthorizationExpiredException;
 use Amazon\Payment\Exception\CapturePendingException;
+use Amazon\Payment\Exception\HardDeclineException;
 use Amazon\Payment\Exception\SoftDeclineException;
 use Amazon\Payment\Exception\TransactionTimeoutException;
 use Amazon\Payment\Plugin\AdditionalInformation;
@@ -340,6 +341,9 @@ class Amazon extends AbstractMethod
         } catch (SoftDeclineException $e) {
             $this->processSoftDecline();
         } catch (Exception $e) {
+            if ( ! $e instanceof HardDeclineException) {
+                $this->_logger->error($e);
+            }
             $this->processHardDecline($payment, $amazonOrderReferenceId);
         }
     }

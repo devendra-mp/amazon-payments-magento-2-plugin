@@ -15,7 +15,8 @@ define(
         'Magento_Checkout/js/model/address-converter',
         'Magento_Checkout/js/action/select-billing-address',
         'Magento_Checkout/js/model/payment/additional-validators',
-        'Magento_Checkout/js/model/url-builder'
+        'Magento_Checkout/js/model/url-builder',
+        'amazonPaymentConfig'
     ],
     function(
         $,
@@ -33,7 +34,8 @@ define(
         addressConverter,
         selectBillingAddress,
         additionalValidators,
-        urlBuilder
+        urlBuilder,
+        amazonPaymentConfig
     ) {
         'use strict';
 
@@ -51,7 +53,7 @@ define(
             },
             isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isAmazonEnabled: ko.observable(window.amazonPayment.isPwaEnabled),
+            isPwaVisible: amazonStorage.isPwaVisible,
             shippingAddress: quote.shippingAddress,
             billingAddress: quote.billingAddress,
             isPlaceOrderDisabled: amazonStorage.isPlaceOrderDisabled,
@@ -64,7 +66,7 @@ define(
                 self.renderPaymentWidget();
                 $amazonPayment.trigger('click'); //activate amazon payments method on render
                 $amazonPayment.trigger('rendered');
-                
+
             },
             /**
              * render Amazon payment Widget

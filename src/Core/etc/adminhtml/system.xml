@@ -97,19 +97,6 @@
                             <config_path>payment/amazon_payment/button_display_language</config_path>
                             <comment><![CDATA[Controls button and widget language. The default is your shop's locale. Available options can be found <a href="https://payments.amazon.co.uk/developer/documentation/lpwa/201953980#ENTER_LANGUAGE_PARAMETER">here</a>.]]></comment>
                         </field>
-                        <!--
-                        <field id="authentication_experience" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Authentication Experience</label>
-                            <source_model>Amazon\Core\Model\Config\Source\AuthenticationExperience</source_model>
-                            <config_path>payment/amazon_payment/authentication_experience</config_path>
-                        </field>
-
-                        <field id="button_type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Button Type</label>
-                            <source_model>Amazon\Core\Model\Config\Source\Button\Type</source_model>
-                            <config_path>payment/amazon_payment/button_type</config_path>
-                        </field>
-                        -->
                         <field id="button_color" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Button Color</label>
                             <source_model>Amazon\Core\Model\Config\Source\Button\Color</source_model>
@@ -128,26 +115,6 @@
                             <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
                             <config_path>payment/amazon_payment/new_order_status</config_path>
                         </field>
-                        <!--
-                        <field id="authorized_order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Authorized Order Status</label>
-                            <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
-                            <config_path>payment/amazon_payment/authorized_order_status</config_path>
-                        </field>
-                        <field id="captured_order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Captured Order Status</label>
-                            <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
-                            <config_path>payment/amazon_payment/captured_order_status</config_path>
-                        </field>
-                        <field id="email_store_name" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Email Store Name</label>
-                            <config_path>payment/amazon_payment/email_store_name</config_path>
-                        </field>
-                        <field id="additional_access_scope" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Additional Access Scope</label>
-                            <config_path>payment/amazon_payment/additional_access_scope</config_path>
-                        </field>
-                        -->
                     </group>
                     <group id="sales_exclusions" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sales Exclusions</label>
@@ -172,13 +139,11 @@
                     </group>
                     <group id="developer_options" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Developer Options</label>
-                        <!--
                         <field id="logging" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                             <label>Logging</label>
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                             <config_path>payment/amazon_payment/logging</config_path>
                         </field>
-                        -->
                         <field id="allowed_ips" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Allowed IPs</label>
                             <comment><![CDATA[Comma separated. The "Login with Amazon" and "Pay with Amazon" buttons will <em>only</em> be rendered for clients having the above IPs.
