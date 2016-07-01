@@ -36,13 +36,20 @@ define([
         }
     }
 
+    //Check if login error / logout cookies are present
     function doLogoutOnFlagCookie() {
-        var errorFlagCookie = 'amz_auth_err';
-        if($.cookieStorage.isSet(errorFlagCookie)) {
-            amazonLogout();
-            document.cookie = errorFlagCookie + '=; Path=/;  expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-            amazonLoginError(true);
-        }
+        var errorFlagCookie = 'amz_auth_err',
+            amazonLogoutCookie = 'amz_auth_logout';
+
+        $.cookieStorage.isSet(errorFlagCookie) ? amazonLogoutThrowError(errorFlagCookie) : false;
+        $.cookieStorage.isSet(amazonLogoutCookie) ? amazonLogoutThrowError(amazonLogoutCookie) : false;
+    }
+
+    //handle deletion of cookie and log user out if present
+    function amazonLogoutThrowError(cookieToRemove) {
+        amazonLogout();
+        $.cookieStorage.remove(cookieToRemove);
+        amazonLoginError(true);
     }
 
     if(typeof amazon === 'undefined') {
