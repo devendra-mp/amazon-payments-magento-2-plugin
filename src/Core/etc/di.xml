@@ -46,4 +46,12 @@
             <argument name="logger" xsi:type="object">amazonClientLogger</argument>
         </arguments>
     </type>
+    <type name="Amazon\Core\Helper\CategoryExclusion">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="amazon_core_cart_section" type="Amazon\Core\Plugin\CartSection" />
+    </type>
 </config>

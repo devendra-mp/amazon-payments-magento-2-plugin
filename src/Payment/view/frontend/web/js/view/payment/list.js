@@ -5,8 +5,23 @@ define([
     'Magento_Checkout/js/view/payment/list',
     'Magento_Checkout/js/model/payment/method-list',
     'Magento_Checkout/js/model/checkout-data-resolver',
+    'Magento_Checkout/js/model/address-converter',
+    'Magento_Checkout/js/model/quote',
+    'Amazon_Payment/js/action/populate-shipping-address',
     'Amazon_Payment/js/model/storage'
-], function ($, _, ko, Component, paymentMethods, checkoutDataResolver, amazonStorage) {
+
+], function (
+    $,
+    _, 
+    ko, 
+    Component, 
+    paymentMethods, 
+    checkoutDataResolver, 
+    addressConverter, 
+    quote,
+    populateShippingAddress,
+    amazonStorage
+) {
     'use strict';
 
     var self;
@@ -48,6 +63,8 @@ define([
                 switch(declined) {
                     //hard decline
                     case 4273:
+                        //populate shipping form
+                        populateShippingAddress();
                         amazonStorage.amazonlogOut();
                         this._reloadPaymentMethods();
                         amazonStorage.amazonDeclineCode(false);
