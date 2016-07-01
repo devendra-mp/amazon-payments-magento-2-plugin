@@ -19,6 +19,7 @@ use Bex\Behat\Magento2InitExtension\Fixtures\BaseFixture;
 use Fixtures\Customer as CustomerFixture;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SortOrder;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 class Order extends BaseFixture
@@ -41,9 +42,14 @@ class Order extends BaseFixture
             'customer_id', $customer->getId()
         );
 
-        $searchCriteriaBuilder->addSortOrder(
-            'created_at', 'DESC'
-        );
+        $sortOrder = $this->createMagentoObject(SortOrder::class, [
+            'data' => [
+                SortOrder::FIELD     => 'created_at',
+                SortOrder::DIRECTION => SortOrder::SORT_DESC
+            ]
+        ]);
+
+        $searchCriteriaBuilder->addSortOrder($sortOrder);
 
         $searchCriteria = $searchCriteriaBuilder
             ->create();

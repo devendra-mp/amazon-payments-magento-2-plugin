@@ -43,6 +43,45 @@ default:
         -
           path: 'currency/options/allow'
           value: 'GBP,CHF'
+        -
+          path: 'payment/amazon_payment/lwa_enabled'
+          value: '1'
+        -
+          path: 'payment/amazon_payment/pwa_enabled'
+          value: '1'
+        -
+          path: 'payment/amazon_payment/payment_action'
+          value: 'authorize'
+        -
+          path: 'payment/amazon_payment/authorization_mode'
+          value: 'synchronous'
+        -
+          path: 'payment/amazon_payment/update_mechanism'
+          value: 'polling'
+        -
+          path: 'payment/amazon_payment/payment_region'
+          value: 'uk'
+        -
+          path: 'payment/amazon_payment/sandbox'
+          value: '1'
+        -
+          path: 'general/locale/code'
+          value: 'en_GB'
+        -
+          path: 'currency/options/base'
+          value: 'GBP'
+        -
+          path: 'currency/options/default'
+          value: 'GBP'
+        -
+          path: 'tax/defaults/country'
+          value: 'GB'
+        -
+          path: 'general/country/default '
+          value: 'GB'
+        -
+          path: 'general/country/allow '
+          value: 'GB'
 
     SensioLabs\Behat\PageObjectExtension:
       namespaces:

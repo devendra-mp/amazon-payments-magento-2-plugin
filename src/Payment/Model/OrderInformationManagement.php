@@ -25,7 +25,7 @@ use Amazon\Payment\Domain\AmazonSetOrderDetailsResponseFactory;
 use Amazon\Payment\Helper\Data as PaymentHelper;
 use Exception;
 use Magento\Checkout\Model\Session;
-use Magento\Framework\AppInterface;
+use Magento\Framework\App\ProductMetadata;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\ValidatorException;
 use Magento\Quote\Model\Quote;
@@ -71,6 +71,11 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     protected $logger;
 
     /**
+     * @var ProductMetadata
+     */
+    protected $productMetadata;
+
+    /**
      * @param Session                              $session
      * @param ClientFactoryInterface               $clientFactory
      * @param PaymentHelper                        $paymentHelper
@@ -78,6 +83,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
      * @param AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory
      * @param QuoteLinkInterfaceFactory            $quoteLinkFactory
      * @param LoggerInterface                      $logger
+     * @param ProductMetadata                      $productMetadata
      */
     public function __construct(
         Session $session,
@@ -86,7 +92,8 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         CoreHelper $coreHelper,
         AmazonSetOrderDetailsResponseFactory $amazonSetOrderDetailsResponseFactory,
         QuoteLinkInterfaceFactory $quoteLinkFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ProductMetadata $productMetadata
     ) {
         $this->session                              = $session;
         $this->clientFactory                        = $clientFactory;
@@ -95,6 +102,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
         $this->amazonSetOrderDetailsResponseFactory = $amazonSetOrderDetailsResponseFactory;
         $this->quoteLinkFactory                     = $quoteLinkFactory;
         $this->logger                               = $logger;
+        $this->productMetadata                      = $productMetadata;
     }
 
     /**
@@ -117,7 +125,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
                 'seller_order_id'           => $quote->getReservedOrderId(),
                 'store_name'                => $quote->getStore()->getName(),
                 'custom_information'        =>
-                    'Magento Version : ' . AppInterface::VERSION . ' ' .
+                    'Magento Version : ' . $this->productMetadata->getVersion() . ' ' .
                     'Plugin Version : ' . $this->paymentHelper->getModuleVersion()
                 ,
                 'platform_id'               => $this->coreHelper->getMerchantId(ScopeInterface::SCOPE_STORE, $storeId)

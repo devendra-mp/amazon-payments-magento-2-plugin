@@ -39,7 +39,7 @@ class Checkout extends Page
             'revert-checkout'            => ['css' => '.revert-checkout'],
             'shipping-form'              => ['css' => '#co-shipping-form'],
             'pay-with-amazon'            => ['css' => '#OffAmazonPaymentsWidgets0'],
-            'submit-order'               => ['css' => 'button.checkout.primary'],
+            'submit-order'               => ['css' => '._active button.checkout.primary'],
             'customer-email-input'       => ['css' => 'input#customer-email'],
             'error-messages-container'   => ['css' => 'div#checkout > div[data-role=checkout-messages]'],
         ];

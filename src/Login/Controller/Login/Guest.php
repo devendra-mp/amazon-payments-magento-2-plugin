@@ -124,7 +124,7 @@ class Guest extends Action
 
         } catch (\Exception $e) {
             $this->logger->error($e);
-            $this->messageManager->addError(__('Error processing Amazon Login'));
+            $this->messageManager->addErrorMessage(__('Error processing Amazon Login'));
         }
 
         return $this->resultRedirectFactory->create()->setPath('checkout/cart');

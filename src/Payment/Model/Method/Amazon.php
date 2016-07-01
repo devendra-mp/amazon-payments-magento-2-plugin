@@ -16,6 +16,7 @@
 namespace Amazon\Payment\Model\Method;
 
 use Amazon\Core\Client\ClientFactoryInterface;
+use Amazon\Core\Exception\AmazonWebapiException;
 use Amazon\Core\Helper\Data as AmazonCoreHelper;
 use Amazon\Core\Model\Config\Source\AuthorizationMode;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
@@ -46,7 +47,6 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
-use Magento\Framework\Webapi\Exception as WebapiException;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
@@ -444,23 +444,23 @@ class Amazon extends AbstractMethod
         $this->deleteAmazonOrderReferenceId($payment);
         $this->reserveNewOrderId($payment);
 
-        throw new WebapiException(
+        throw new AmazonWebapiException(
             __(
                 'Unfortunately it is not possible to pay with Amazon for this order. Please choose another payment method.'
             ),
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
-            WebapiException::HTTP_FORBIDDEN
+            AmazonWebapiException::HTTP_FORBIDDEN
         );
     }
 
     protected function processSoftDecline()
     {
-        throw new WebapiException(
+        throw new AmazonWebapiException(
             __(
                 'There has been a problem with the selected payment method on your Amazon account. Please choose another one.'
             ),
             AmazonAuthorizationStatus::CODE_SOFT_DECLINE,
-            WebapiException::HTTP_FORBIDDEN
+            AmazonWebapiException::HTTP_FORBIDDEN
         );
     }
 
