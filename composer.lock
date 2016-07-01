@@ -13,7 +13,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mcurran-inviqa/login-and-pay-with-amazon-sdk-php.git",
-                "reference": "82e9e9ef08b53372f54dba842e6e5b6a9a58acfb"
+                "reference": "e74ecb7700cec51d99d623c69f05e86ac356f69f"
             },
             "require": {
                 "ext-curl": "*",
@@ -44,7 +44,7 @@
                 "payment",
                 "payments"
             ],
-            "time": "2016-06-29 15:22:49"
+            "time": "2016-07-01 14:54:20"
         },
         {
             "name": "magento/framework",
