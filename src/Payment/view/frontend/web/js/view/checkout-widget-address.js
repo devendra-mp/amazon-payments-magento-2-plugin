@@ -16,7 +16,8 @@ define(
         'mage/storage',
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/model/error-processor',
-        'Magento_Checkout/js/model/url-builder'
+        'Magento_Checkout/js/model/url-builder',
+        'Magento_Checkout/js/checkout-data'
     ],
     function(
         $,
@@ -33,7 +34,8 @@ define(
         storage,
         fullScreenLoader,
         errorProcessor,
-        urlBuilder
+        urlBuilder,
+        checkoutData
     ) {
         'use strict';
         var self;
@@ -102,8 +104,19 @@ define(
                         //if telephone is blank set it to 00000000 so it passes the required validation
                         addressData.telephone = !(addressData.telephone) ? '0000000000' : addressData.telephone;
 
+                        //fill in blank street fields
+                        if ($.isArray(addressData.street)) {
+                            for(var i = addressData.street.length; i <= 2; i++) {
+                                addressData.street[i] = '';
+                            }
+                        }
+                        
+                        //set checkout data before selecting shipping address
+                        var checkoutAddress = addressConverter.quoteAddressToFormAddressData(addressData);
+                        checkoutData.setShippingAddressFromData(checkoutAddress);
                         addressData.isAmazonAddress = true;
                         selectShippingAddress(addressData);
+
                     }
                 ).fail(
                     function (response) {
@@ -126,3 +139,4 @@ define(
         });
     }
 );
+
