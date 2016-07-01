@@ -17,6 +17,7 @@ namespace Fixtures;
 
 use Bex\Behat\Magento2InitExtension\Fixtures\BaseFixture;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SortOrder;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 
 class CreditMemo extends BaseFixture
@@ -39,9 +40,14 @@ class CreditMemo extends BaseFixture
             'order_id', $orderid
         );
 
-        $searchCriteriaBuilder->addSortOrder(
-            'created_at', 'DESC'
-        );
+        $sortOrder = $this->createMagentoObject(SortOrder::class, [
+            'data' => [
+                SortOrder::FIELD     => 'created_at',
+                SortOrder::DIRECTION => SortOrder::SORT_DESC
+            ]
+        ]);
+
+        $searchCriteriaBuilder->addSortOrder($sortOrder);
 
         $searchCriteria = $searchCriteriaBuilder
             ->create();
