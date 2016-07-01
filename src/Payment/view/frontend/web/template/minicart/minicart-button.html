@@ -1,3 +1,5 @@
-<div id="minicart-amazon-pay-button" class="amazon-minicart-container">
-    <!-- ko template: 'Amazon_Payment/checkout-button' --><!-- /ko -->
-</div>
+<!-- ko if: isPwaVisible -->
+    <div id="minicart-amazon-pay-button" class="amazon-minicart-container">
+        <!-- ko template: 'Amazon_Payment/checkout-button' --><!-- /ko -->
+    </div>
+<!--/ko-->

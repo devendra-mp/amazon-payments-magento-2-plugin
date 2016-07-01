@@ -15,6 +15,7 @@
  */
 namespace Amazon\Core\Block;
 
+use Amazon\Core\Helper\CategoryExclusion;
 use Amazon\Core\Helper\Data;
 use Magento\Customer\Model\Url;
 use Magento\Framework\View\Element\Template;
@@ -32,11 +33,21 @@ class Config extends Template
      */
     protected $url;
 
-    public function __construct(Context $context, Data $coreHelper, Url $url)
-    {
+    /**
+     * @var CategoryExclusion
+     */
+    protected $categoryExclusionHelper;
+
+    public function __construct(
+        Context $context,
+        Data $coreHelper,
+        Url $url,
+        CategoryExclusion $categoryExclusionHelper
+    ) {
         parent::__construct($context);
         $this->coreHelper = $coreHelper;
         $this->url = $url;
+        $this->categoryExclusionHelper = $categoryExclusionHelper;
     }
 
     /**
@@ -65,6 +76,7 @@ class Config extends Template
             'loginScope'               => $this->coreHelper->getLoginScope(),
             'isEuPaymentRegion'        => $this->coreHelper->isEuPaymentRegion(),
             'oAuthHashRedirectUrl'     => $this->coreHelper->getOAuthRedirectUrl(),
+            'isQuoteDirty'             => $this->categoryExclusionHelper->isQuoteDirty(),
         ];
 
         if ($this->coreHelper->isSandboxEnabled()) {

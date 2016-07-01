@@ -25,7 +25,7 @@ class CategoryMultiselect extends Category
     public function getAfterElementHtml()
     {
         $htmlId = $this->getHtmlId();
-        $suggestPlaceholder = __('start typing to search category');
+        $suggestPlaceholder = __('click here to display the categories');
         $selectorOptions = $this->_jsonEncoder->encode($this->_getSelectorOptions());
 
         return <<<HTML

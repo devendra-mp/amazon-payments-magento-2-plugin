@@ -13,52 +13,39 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Amazon\Payment\Block;
+namespace Amazon\Core\Observer;
 
 use Amazon\Core\Helper\CategoryExclusion;
-use Amazon\Core\Helper\Data;
-use Magento\Framework\View\Element\Template;
-use Magento\Framework\View\Element\Template\Context;
-use Magento\Catalog\Model\Product;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
 
-class PaymentLink extends Template
+class ExcludedCategoryQuoteItemAddition implements ObserverInterface
 {
-    /**
-     * @var Data
-     */
-    protected $coreHelper;
-
     /**
      * @var CategoryExclusion
      */
     protected $categoryExclusionHelper;
 
     /**
-     * @param Context           $context
-     * @param Data              $coreHelper
      * @param CategoryExclusion $categoryExclusionHelper
-     * @param array             $data
      */
-    public function __construct(
-        Context $context,
-        Data $coreHelper,
-        CategoryExclusion $categoryExclusionHelper,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-        $this->coreHelper              = $coreHelper;
+    public function __construct(CategoryExclusion $categoryExclusionHelper)
+    {
         $this->categoryExclusionHelper = $categoryExclusionHelper;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function _toHtml()
+    public function execute(Observer $observer)
     {
-        if ( ! $this->coreHelper->isPaymentButtonEnabled() || $this->categoryExclusionHelper->isQuoteDirty()) {
-            return '';
-        }
+        /** @see \Magento\Quote\Model\Quote::addProduct() */
 
-        return parent::_toHtml();
+        /** @var \Magento\Quote\Model\Quote\Item\AbstractItem $quoteItem */
+        foreach ($observer->getItems() as $quoteItem) {
+            $isExcludedProduct = $this->categoryExclusionHelper->productHasExcludedCategory($quoteItem->getProduct());
+            $quoteItem->setDataUsingMethod(CategoryExclusion::ATTR_QUOTE_ITEM_IS_EXCLUDED_PRODUCT, $isExcludedProduct);
+        }
     }
 }
