@@ -158,12 +158,12 @@ class Authorize extends Action
 
         } catch (ValidatorException $e) {
             $this->logger->error($e);
-            $this->messageManager->addError($e->getMessage());
+            $this->messageManager->addErrorMessage($e->getMessage());
             $this->_eventManager->dispatch('amazon_login_authorize_validation_error', ['exception' => $e]);
             $this->_eventManager->dispatch('amazon_login_authorize_error', ['exception' => $e]);
         } catch (\Exception $e) {
             $this->logger->error($e);
-            $this->messageManager->addError(__('Error processing Amazon Login'));
+            $this->messageManager->addErrorMessage(__('Error processing Amazon Login'));
             $this->_eventManager->dispatch('amazon_login_authorize_error', ['exception' => $e]);
         }
 

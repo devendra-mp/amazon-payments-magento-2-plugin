@@ -94,7 +94,7 @@ class Json
         }
 
         foreach ($validator->getMessages() as $message) {
-            $this->messageManager->addError($message);
+            $this->messageManager->addErrorMessage($message);
         }
     }
 

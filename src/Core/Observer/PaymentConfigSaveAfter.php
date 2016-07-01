@@ -89,11 +89,11 @@ class PaymentConfigSaveAfter implements ObserverInterface
         /** @see \Magento\Config\Model\Config::save() */
         $validator = $this->apiCredentialsValidatorFactory->create();
 
-        $messageManagerMethod = 'addError';
+        $messageManagerMethod = 'addErrorMessage';
 
 
         if ($validator->isValid($scopeData['scope_id'], $scopeData['scope'])) {
-            $messageManagerMethod = 'addSuccess';
+            $messageManagerMethod = 'addSuccessMessage';
         }
 
         foreach ($validator->getMessages() as $message) {

@@ -50,7 +50,7 @@ class InvoiceSave
             $lastInvoice = $order->getInvoiceCollection()->getLastItem();
 
             if ($lastInvoice && Invoice::STATE_OPEN == $lastInvoice->getState()) {
-                $this->context->getMessageManager()->addError(__('Capture pending approval from the payment gateway'));
+                $this->context->getMessageManager()->addErrorMessage(__('Capture pending approval from the payment gateway'));
             }
         }
 

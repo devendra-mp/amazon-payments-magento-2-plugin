@@ -26,7 +26,6 @@ use Amazon\Payment\Helper\Data as PaymentHelper;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ProductMetadata;
-use Magento\Framework\AppInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\ValidatorException;
 use Magento\Quote\Model\Quote;
