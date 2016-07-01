@@ -46,4 +46,28 @@ class Product extends Page
         $this->getElement('add-to-cart')->click();
         $this->waitForElement('success-message');
     }
+
+    /**
+     * @return bool
+     */
+    public function pwaButtonIsVisible()
+    {
+        try {
+            return $this->getElementWithWait('open-amazon-login', 30000)->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function pwaButtonIsVisibleNoWait()
+    {
+        try {
+            return $this->getElement('open-amazon-login')->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

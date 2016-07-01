@@ -79,6 +79,15 @@ class BasketContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given Product ID :productId is added to the basket
+     */
+    public function productIDIsAddedToTheBasket($productId)
+    {
+        $this->productPage->openWithProductId((int) $productId);
+        $this->productPage->addToBasket();
+    }
+
+    /**
      * @Given I go to my basket
      */
     public function iGoToMyBasket()
@@ -119,5 +128,25 @@ class BasketContext implements SnippetAcceptingContext
     public function iShouldBeRedirectedToTheBasket()
     {
         $this->basketPage->isOpen();
+    }
+
+    /**
+     * @Then the minicart should not display the PWA button
+     */
+    public function theMinicartShouldNotDisplayThePWAButton()
+    {
+        /** @var \Page\Element\Minicart $minicart */
+        $minicart = $this->homePage->getElement('Minicart');
+
+        $minicart->collapseMinicartContent();
+        $minicart->pwaButtonIsNotVisible();
+    }
+
+    /**
+     * @Then the Basket page should not display the PWA button
+     */
+    public function theBasketPageShouldNotDisplayThePWAButton()
+    {
+        PHPUnit_Framework_Assert::assertFalse($this->basketPage->pwaButtonIsVisibleNoWait());
     }
 }

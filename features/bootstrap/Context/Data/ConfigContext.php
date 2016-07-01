@@ -81,7 +81,7 @@ class ConfigContext implements SnippetAcceptingContext
         $this->changeConfig('payment/amazon_payment/update_mechanism', 'polling');
     }
 
-    protected function changeConfig($path, $value, $scopeType = 'default', $scopeCode = null)
+    public function changeConfig($path, $value, $scopeType = 'default', $scopeCode = null)
     {
         $this->configManager->changeConfigs(
             [

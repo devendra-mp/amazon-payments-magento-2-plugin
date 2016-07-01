@@ -13,33 +13,25 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Page\Store;
+namespace Page\Element;
 
-use Page\AmazonLoginTrait;
-use Page\PageTrait;
-use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
+use PHPUnit_Framework_Assert;
+use SensioLabs\Behat\PageObjectExtension\PageObject\Element;
 
-class Basket extends Page
+class Minicart extends Element
 {
-    use PageTrait, AmazonLoginTrait;
+    protected $selector = 'div[data-block="minicart"]';
 
-    protected $elements
-        = [
-            'open-amazon-login' => ['css' => '#OffAmazonPaymentsWidgets0'],
-            'amazon-login'      => ['css' => 'button']
-        ];
-
-    protected $path = '/checkout/cart/';
+    public function collapseMinicartContent()
+    {
+        $this->click();
+    }
 
     /**
      * @return bool
      */
-    public function pwaButtonIsVisibleNoWait()
+    public function pwaButtonIsNotVisible()
     {
-        try {
-            return $this->getElement('open-amazon-login')->isVisible();
-        } catch (\Exception $e) {
-            return false;
-        }
+        PHPUnit_Framework_Assert::assertNull($this->find('css', '#OffAmazonPaymentsWidgets0'));
     }
 }

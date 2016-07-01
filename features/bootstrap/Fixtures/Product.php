@@ -69,4 +69,9 @@ class Product extends BaseFixture
     {
         return $this->repository->get($sku, false, null, $forceReload);
     }
+
+    public function getById($id, $forceReload = false)
+    {
+        return $this->repository->getById($id, false, null, $forceReload);
+    }
 }

@@ -16,9 +16,10 @@
 namespace Context\Data;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Bex\Behat\Magento2InitExtension\Fixtures\MagentoConfigManager;
+use Context\Data\ConfigContext;
 use Fixtures\Product as ProductFixture;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\CatalogInventory\Api\Data\StockStatusInterface;
 
 class ProductContext implements SnippetAcceptingContext
 {
@@ -27,9 +28,15 @@ class ProductContext implements SnippetAcceptingContext
      */
     protected $productFixture;
 
+    /**
+     * @var ConfigContext
+     */
+    protected $configContext;
+
     public function __construct()
     {
         $this->productFixture = new ProductFixture;
+        $this->configContext = new ConfigContext;
     }
 
     /**
@@ -38,5 +45,47 @@ class ProductContext implements SnippetAcceptingContext
     public function thereIsAProductWithSku($sku)
     {
         $this->productFixture->create([ProductInterface::SKU => $sku]);
+    }
+
+    /**
+     * @Given Product ID :productId belongs to an excluded category
+     */
+    public function productIdBelongsToAnExcludedCategory($productId)
+    {
+        $product = $this->productFixture->getById((int) $productId);
+
+        $productCategories = $product->getCategoryIds();
+
+        if (empty($productCategories)) {
+            throw new \RuntimeException(
+                "Product ID $productId has no associated categories. Please choose another one."
+            );
+        }
+
+        $this->configContext->changeConfig(
+            'payment/amazon_payment/excluded_categories',
+            implode(',', $productCategories)
+        );
+    }
+
+    /**
+     * @Given Product ID :productId does not belong to an excluded category
+     */
+    public function productIDDoesNotBelongToAnExcludedCategory($productId)
+    {
+        $product = $this->productFixture->getById((int) $productId);
+
+        $productCategories = $product->getCategoryIds();
+
+        if (empty($productCategories)) {
+            throw new \RuntimeException(
+                "Product ID $productId has no associated categories. Please choose another one."
+            );
+        }
+
+        $this->configContext->changeConfig(
+            'payment/amazon_payment/excluded_categories',
+            implode(',', $productCategories)
+        );
     }
 }
