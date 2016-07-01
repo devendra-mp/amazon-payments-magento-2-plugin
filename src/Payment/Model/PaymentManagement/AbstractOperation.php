@@ -142,7 +142,7 @@ abstract class AbstractOperation
 
         $this->notifier->addNotice(
             __('Capture declined'),
-            __('Capture declined for Order <a href="%2">#%1</a>', $order->getIncrementId(), $orderUrl),
+            __('Capture declined for Order #%1', $order->getIncrementId()),
             $orderUrl
         );
     }
