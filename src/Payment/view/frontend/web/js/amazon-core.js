@@ -4,7 +4,8 @@ define([
     'amazonPaymentConfig',
     'amazonCsrf',
     'amazonWidgetsLoader',
-    'bluebird'
+    'bluebird',
+    'mage/cookies'
 ], function($, ko, amazonPaymentConfig, amazonCsrf) {
     "use strict";
 
@@ -48,7 +49,7 @@ define([
     //handle deletion of cookie and log user out if present
     function amazonLogoutThrowError(cookieToRemove) {
         amazonLogout();
-        $.cookieStorage.remove(cookieToRemove);
+        $.mage.cookies.clear(cookieToRemove);
         amazonLoginError(true);
     }
 
