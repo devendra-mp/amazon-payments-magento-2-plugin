@@ -17,6 +17,10 @@ namespace Fixtures;
 
 use Bex\Behat\Magento2InitExtension\Fixtures\BaseFixture;
 use Context\Data\FixtureContext;
+use Fixtures\Helper\Product\CompositeDataProvider;
+use Fixtures\Helper\Product\ExistingCategoryDataProvider;
+use Fixtures\Helper\Product\ProductDataProvider;
+use Fixtures\Helper\Product\StockDataProvider;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
@@ -32,11 +36,6 @@ class Product extends BaseFixture
             ProductInterface::STATUS           => Status::STATUS_ENABLED,
             ProductInterface::PRICE            => 100.00,
             ProductInterface::VISIBILITY       => 4,
-            'stock_data'                       => [
-                'qty'          => 10,
-                'is_in_stock'  => 1,
-                'manage_stock' => 1
-            ]
         ];
 
     /**
@@ -47,17 +46,28 @@ class Product extends BaseFixture
     public function __construct()
     {
         parent::__construct();
-        $this->repository    = $this->getMagentoObject(ProductRepositoryInterface::class);
+        $this->repository = $this->getMagentoObject(ProductRepositoryInterface::class);
     }
 
-    public function create(array $data)
+    /**
+     * @param array                    $data
+     * @param ProductDataProvider|null $productDataProvider
+     *
+     * @return ProductInterface
+     */
+    public function create(array $data, ProductDataProvider $productDataProvider = null)
     {
-        $data        = array_merge($this->defaults, $data);
+        $data = array_merge($this->defaults, $data);
+
+        /** @var ProductInterface $productData */
         $productData = $this->createMagentoObject(ProductInterface::class, ['data' => $data]);
 
-        /**
-         * @todo: fix save of stock data
-         */
+        if ($productDataProvider === null) {
+            $productDataProvider = $this->getDefaultProductDataProvider();
+        }
+
+        $productDataProvider->addDataToProduct($productData);
+
         $product = $this->repository->save($productData);
 
         FixtureContext::trackFixture($product, $this->repository);
@@ -65,6 +75,23 @@ class Product extends BaseFixture
         return $product;
     }
 
+    /**
+     * @return ProductDataProvider
+     */
+    protected function getDefaultProductDataProvider()
+    {
+        $productDataProvider = new CompositeDataProvider;
+        $productDataProvider->addDataProvider(new StockDataProvider);
+        $productDataProvider->addDataProvider(new ExistingCategoryDataProvider);
+        return $productDataProvider;
+    }
+
+    /**
+     * @param string $sku
+     * @param bool   $forceReload
+     *
+     * @return ProductInterface
+     */
     public function get($sku, $forceReload = false)
     {
         return $this->repository->get($sku, false, null, $forceReload);
