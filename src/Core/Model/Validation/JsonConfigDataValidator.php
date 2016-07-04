@@ -38,8 +38,8 @@ class JsonConfigDataValidator extends AbstractValidator
     public function __construct(
         Data $amazonCoreHelper,
         DecoderInterface $jsonDecoder
-    )
-    {
+    ) {
+    
         $this->amazonCoreHelper = $amazonCoreHelper;
         $this->jsonDecoder      = $jsonDecoder;
     }
@@ -76,4 +76,3 @@ class JsonConfigDataValidator extends AbstractValidator
         return true;
     }
 }
-

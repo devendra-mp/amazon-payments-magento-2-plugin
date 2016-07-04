@@ -34,7 +34,11 @@ class CustomerCollection
      * @return Collection
      */
     public function aroundAddAttributeToFilter(
-        Collection $collection, Closure $proceed, $attribute, $condition = null, $joinType = 'inner'
+        Collection $collection,
+        Closure $proceed,
+        $attribute,
+        $condition = null,
+        $joinType = 'inner'
     ) {
         if (is_array($attribute)) {
             $attribute = $this->addAmazonIdFilter($attribute, $collection);

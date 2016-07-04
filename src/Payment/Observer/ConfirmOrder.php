@@ -77,7 +77,7 @@ class ConfirmOrder implements ObserverInterface
 
     protected function saveOrderInformation(QuoteLinkInterface $quoteLink, $amazonOrderReferenceId)
     {
-        if ( ! $quoteLink->isConfirmed()) {
+        if (! $quoteLink->isConfirmed()) {
             $this->orderInformationManagement->saveOrderInformation($amazonOrderReferenceId);
         }
     }

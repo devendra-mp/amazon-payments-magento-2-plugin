@@ -71,8 +71,8 @@ class Json
         MessageManager $messageManager,
         DecoderInterface $jsonDecoder,
         EncryptorInterface $encryptor
-    )
-    {
+    ) {
+    
         $this->amazonCoreHelper               = $amazonCoreHelper;
         $this->jsonConfigDataValidatorFactory = $jsonConfigDataValidator;
         $this->configWriter                   = $configWriter;

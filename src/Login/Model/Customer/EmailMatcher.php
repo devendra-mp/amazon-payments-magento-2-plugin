@@ -49,7 +49,6 @@ class EmailMatcher implements EmailMatcherInterface
             if ($customerData->getId()) {
                 return $customerData;
             }
-
         } catch (NoSuchEntityException $exception) {
             return null;
         }

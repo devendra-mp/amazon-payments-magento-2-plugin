@@ -142,7 +142,7 @@ class PendingCapture extends AbstractModel implements PendingCaptureInterface
      */
     public function beforeSave()
     {
-        if ( ! $this->getId()) {
+        if (! $this->getId()) {
             $this->setCreatedAt($this->dateFactory->create()->gmtDate());
         }
 

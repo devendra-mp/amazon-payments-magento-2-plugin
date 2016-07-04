@@ -50,7 +50,7 @@ class AmazonAddressFactory
      * @return AmazonAddress
      * @throws LocalizedException
      */
-    public function create(array $data = array())
+    public function create(array $data = [])
     {
         $instanceClassName = AmazonAddress::class;
         $countryCode = strtoupper($data['address']['CountryCode']);

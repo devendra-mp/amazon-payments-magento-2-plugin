@@ -103,7 +103,7 @@ class Guest extends Action
             throw new NotFoundException(__('Action is not available'));
         }
 
-        if ( ! $this->accessTokenRequestValidator->isValid($this->getRequest())) {
+        if (! $this->accessTokenRequestValidator->isValid($this->getRequest())) {
             return $this->_redirect($this->customerUrl->getLoginUrl());
         }
 
@@ -121,7 +121,6 @@ class Guest extends Action
 
                 $this->storeUserInfoToSession($amazonCustomer);
             }
-
         } catch (\Exception $e) {
             $this->logger->error($e);
             $this->messageManager->addErrorMessage(__('Error processing Amazon Login'));

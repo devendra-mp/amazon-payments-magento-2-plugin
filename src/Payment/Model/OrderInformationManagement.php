@@ -137,7 +137,6 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             ]);
 
             $this->validateConstraints($response, $allowedConstraints);
-
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -156,7 +155,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
     protected function validateConstraints(AmazonSetOrderDetailsResponse $response, $allowedConstraints)
     {
         foreach ($response->getConstraints() as $constraint) {
-            if ( ! in_array($constraint->getId(), $allowedConstraints)) {
+            if (! in_array($constraint->getId(), $allowedConstraints)) {
                 throw new ValidatorException(__($constraint->getErrorMessage()));
             }
         }
@@ -164,7 +163,7 @@ class OrderInformationManagement implements OrderInformationManagementInterface
 
     protected function setReservedOrderId(Quote $quote)
     {
-        if ( ! $quote->getReservedOrderId()) {
+        if (! $quote->getReservedOrderId()) {
             $quote
                 ->reserveOrderId()
                 ->save();
@@ -184,7 +183,6 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             );
 
             $this->validateResponse($response);
-
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -206,7 +204,6 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             );
 
             $this->validateResponse($response);
-
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -228,7 +225,6 @@ class OrderInformationManagement implements OrderInformationManagementInterface
             );
 
             $this->validateResponse($response);
-
         } catch (LocalizedException $e) {
             throw $e;
         } catch (Exception $e) {

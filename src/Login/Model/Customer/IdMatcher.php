@@ -52,7 +52,8 @@ class IdMatcher implements IdMatcherInterface
     public function match(AmazonCustomer $amazonCustomer)
     {
         $this->searchCriteriaBuilder->addFilter(
-            'amazon_id', $amazonCustomer->getId()
+            'amazon_id',
+            $amazonCustomer->getId()
         );
 
         $searchCriteria = $this->searchCriteriaBuilder

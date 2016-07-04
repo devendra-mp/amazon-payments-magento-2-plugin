@@ -207,7 +207,7 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
         try {
             $this->amazonAuthorizationValidator->validate($authorizationDetails);
 
-            if ( ! $authorizationDetails->isPending()) {
+            if (! $authorizationDetails->isPending()) {
                 $this->completePendingAuthorization($order, $payment, $pendingAuthorization, $capture);
             }
         } catch (SoftDeclineException $e) {
@@ -232,7 +232,7 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
         if ($capture) {
             $invoice = $this->getInvoiceAndSetPaid($transactionId, $order);
 
-            if ( ! $newTransaction) {
+            if (! $newTransaction) {
                 $this->paymentManagement->closeTransaction($transactionId, $payment, $order);
             } else {
                 $invoice->setTransactionId($newTransaction->getTxnId());

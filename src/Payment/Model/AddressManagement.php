@@ -175,7 +175,7 @@ class AddressManagement implements AddressManagementInterface
         if ($isShippingAddress) {
             $validator = $this->validatorFactory->createValidator('amazon_address', 'on_select');
 
-            if ( ! $validator->isValid($magentoAddress)) {
+            if (! $validator->isValid($magentoAddress)) {
                 throw new ValidatorException(null, null, [$validator->getMessages()]);
             }
 

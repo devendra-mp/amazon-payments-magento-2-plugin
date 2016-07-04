@@ -127,11 +127,11 @@ class Authorize extends Action
 
     public function execute()
     {
-        if ( ! $this->amazonCoreHelper->isLwaEnabled()) {
+        if (! $this->amazonCoreHelper->isLwaEnabled()) {
             throw new NotFoundException(__('Action is not available'));
         }
 
-        if ( ! $this->accessTokenRequestValidator->isValid($this->getRequest())) {
+        if (! $this->accessTokenRequestValidator->isValid($this->getRequest())) {
             return $this->_redirect($this->customerUrl->getLoginUrl());
         }
 
@@ -155,7 +155,6 @@ class Authorize extends Action
                     $this->session->login($processed);
                 }
             }
-
         } catch (ValidatorException $e) {
             $this->logger->error($e);
             $this->messageManager->addErrorMessage($e->getMessage());
@@ -179,7 +178,7 @@ class Authorize extends Action
         }
 
         if ($amazonCustomer->getId() != $customerData->getExtensionAttributes()->getAmazonId()) {
-            if ( ! $this->session->isLoggedIn()) {
+            if (! $this->session->isLoggedIn()) {
                 return new ValidationCredentials($customerData->getId(), $amazonCustomer->getId());
             }
 
@@ -191,7 +190,7 @@ class Authorize extends Action
 
     protected function createCustomer(AmazonCustomer $amazonCustomer)
     {
-        if ( ! Zend_Validate::is($amazonCustomer->getEmail(), 'EmailAddress')) {
+        if (! Zend_Validate::is($amazonCustomer->getEmail(), 'EmailAddress')) {
             throw new ValidatorException(__('the email address for your Amazon account is invalid'));
         }
 

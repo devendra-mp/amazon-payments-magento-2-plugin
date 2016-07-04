@@ -88,7 +88,7 @@ class Address
 
         $region->loadByCode($amazonAddress->getState(), $countryId);
 
-        if ( ! $region->getId()) {
+        if (! $region->getId()) {
             $region->loadByName($amazonAddress->getState(), $countryId);
         }
 
