@@ -84,16 +84,16 @@ class Checkout extends Page
         $this->getDriver()->switchToIFrame($iframe->getAttribute('name'));
         $this->clickElement('second-amazon-payment');
         $this->getDriver()->switchToIFrame(null);
+        $this->waitForCondition('true === false', 1000);
         $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('full-screen-loader');
     }
 
     public function selectDefaultShippingMethod()
     {
-        $this->waitForCondition('true === false', 500);
+        $this->waitForCondition('true === false', 1000);
         $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('shipping-loader');
-        $this->waitUntilElementDisappear('full-screen-loader');
 
         $defaultShippingMethod = $this->getElementWithWait('first-shipping-method');
         if ( ! $defaultShippingMethod->isChecked()) {
@@ -103,7 +103,7 @@ class Checkout extends Page
 
     public function goToBilling()
     {
-        $this->waitForCondition('true === false', 500);
+        $this->waitForCondition('true === false', 1000);
         $this->waitForAjaxRequestsToComplete();
         $this->waitUntilElementDisappear('full-screen-loader');
         $this->clickElement('go-to-billing');
@@ -113,8 +113,12 @@ class Checkout extends Page
 
     public function submitOrder()
     {
+        $this->waitForCondition('true === false', 1000);
+        $this->waitForAjaxRequestsToComplete();
+        $this->waitUntilElementDisappear('full-screen-loader');
         $this->clickElement('submit-order');
         $this->waitUntilElementDisappear('full-screen-loader');
+        $this->waitForPageLoad();
     }
 
     public function getBillingAddress()

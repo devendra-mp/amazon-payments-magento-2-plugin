@@ -77,7 +77,7 @@ class ClientFactory implements ClientFactoryInterface
             Data::AMAZON_CLIENT_ID   => $this->coreHelper->getClientId($scope, $scopeId)
         ];
 
-        $client = $this->objectManager->create($this->instanceName, ['config' => $config]);
+        $client = $this->objectManager->create($this->instanceName, ['amazonConfig' => $config]);
 
         if ($client instanceof LoggerAwareInterface && $this->coreHelper->isLoggingEnabled($scope, $scopeId)) {
             $client->setLogger($this->logger);

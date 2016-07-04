@@ -12,16 +12,6 @@ Feature: As a customer
     And I select a payment method from my amazon account
 
   @javascript
-  Scenario: payment authorization receives a hard decline as it was rejected by amazon
-    Given I am requesting authorization on a payment that will be rejected
-    When I place my order
-    Then I should be notified that my payment was rejected
-    And the amazon wallet widget should be removed
-    And I should be logged out of amazon
-    And "amazoncustomer@example.com" should not have placed an order
-    And I should be able to select an alternative payment method
-
-  @javascript
   Scenario: payment authorization receives a hard decline due to transaction timeout
     Given I am requesting authorization on a payment that will timeout
     When I place my order
@@ -29,6 +19,16 @@ Feature: As a customer
     And the amazon wallet widget should be removed
     And I should be logged out of amazon
     And my amazon order should be cancelled
+    And "amazoncustomer@example.com" should not have placed an order
+    And I should be able to select an alternative payment method
+
+  @javascript
+  Scenario: payment authorization receives a hard decline as it was rejected by amazon
+    Given I am requesting authorization on a payment that will be rejected
+    When I place my order
+    Then I should be notified that my payment was rejected
+    And the amazon wallet widget should be removed
+    And I should be logged out of amazon
     And "amazoncustomer@example.com" should not have placed an order
     And I should be able to select an alternative payment method
 

@@ -23,7 +23,7 @@ class Login extends Page
 {
     use PageTrait, AmazonLoginTrait;
 
-    protected $path = '/customer/account/login';
+    protected $path = '/customer/account/login/';
 
     protected $elements
         = [

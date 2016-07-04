@@ -65,7 +65,7 @@ class Order extends BaseFixture
      */
     public function getLastOrderForCustomer($email)
     {
-        $customer = $this->customerFixture->get($email);
+        $customer = $this->customerFixture->get($email, true);
         $orders   = $this->getForCustomer($customer);
 
         $order = current($orders->getItems());
