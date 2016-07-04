@@ -136,7 +136,6 @@ class ConfigContext implements SnippetAcceptingContext
     public function productIdBelongsToAnExcludedCategory($productId)
     {
         $product = $this->productFixture->getById((int) $productId);
-        $product = $this->productFixture->create(['sku' => 'xxx']);
 
         $productCategories = $product->getCategoryIds();
 

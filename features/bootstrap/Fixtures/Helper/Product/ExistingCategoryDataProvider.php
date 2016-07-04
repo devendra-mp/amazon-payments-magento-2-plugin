@@ -36,7 +36,10 @@ class ExistingCategoryDataProvider implements ProductDataProvider
 
         $category = $categoryManagement->getTree($this->categoryId, 0);
 
-        $product->setData('category_ids', [$category->getId()]);
+        $categories = (array) $product->getData('category_ids');
+        $categories = array_merge($categories, [$category->getId()]);
+
+        $product->setData('category_ids', $categories);
     }
 
     /**
