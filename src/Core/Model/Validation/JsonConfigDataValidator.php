@@ -39,7 +39,6 @@ class JsonConfigDataValidator extends AbstractValidator
         Data $amazonCoreHelper,
         DecoderInterface $jsonDecoder
     ) {
-    
         $this->amazonCoreHelper = $amazonCoreHelper;
         $this->jsonDecoder      = $jsonDecoder;
     }

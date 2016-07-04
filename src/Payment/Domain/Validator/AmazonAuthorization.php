@@ -42,6 +42,7 @@ class AmazonAuthorization
                     case AmazonAuthorizationStatus::REASON_MAX_CAPTURES_PROCESSED:
                         return true;
                 }
+                break;
             case AmazonAuthorizationStatus::STATE_OPEN:
             case AmazonAuthorizationStatus::STATE_PENDING:
                 return true;

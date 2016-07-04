@@ -435,12 +435,7 @@ class Amazon extends AbstractMethod
     {
         $storeId = $payment->getOrder()->getStoreId();
 
-        try {
-            $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId, $storeId);
-        } catch (Exception $e) {
-            //ignored as it's likely in a cancelled state already or there is a problem we cannot rectify
-        }
-
+        $this->cancelOrderReference($amazonOrderReferenceId, $storeId);
         $this->deleteAmazonOrderReferenceId($payment);
         $this->reserveNewOrderId($payment);
 
@@ -451,6 +446,16 @@ class Amazon extends AbstractMethod
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
             AmazonWebapiException::HTTP_FORBIDDEN
         );
+    }
+
+    protected function cancelOrderReference($amazonOrderReferenceId, $storeId)
+    {
+        try {
+            $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId, $storeId);
+        } catch (Exception $e) {
+            //ignored as it's likely in a cancelled state already or there is a problem we cannot rectify
+            return;
+        }
     }
 
     protected function processSoftDecline()

@@ -29,7 +29,6 @@ class SessionMatcher implements SessionMatcherInterface
     public function __construct(
         Session $session
     ) {
-    
         $this->session = $session;
     }
 
