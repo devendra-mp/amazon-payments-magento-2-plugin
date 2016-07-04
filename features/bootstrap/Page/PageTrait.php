@@ -49,7 +49,7 @@ trait PageTrait
         $this->waitForCondition("(typeof window.jQuery == 'function') && $visibilityCheck", $maxWait);
     }
 
-    public function waitUntilElementDisappear($elementName, $maxWait = 90000)
+    public function waitUntilElementDisappear($elementName, $maxWait = 180000)
     {
         $visibilityCheck = $this->getElementVisibilityCheck($elementName);
         $this->waitForCondition("(typeof window.jQuery == 'function') && !$visibilityCheck", $maxWait);
@@ -81,7 +81,7 @@ trait PageTrait
         return $this->getElementWithWait($elementName)->getText();
     }
 
-    public function getElementWithWait($elementName, $waitTime = 90000)
+    public function getElementWithWait($elementName, $waitTime = 120000)
     {
         $this->waitForElement($elementName, $waitTime);
         return $this->getElement($elementName);

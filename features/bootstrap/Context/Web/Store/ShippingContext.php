@@ -130,6 +130,9 @@ class ShippingContext implements SnippetAcceptingContext
         $amazonShippingAddressData = $amazonShippingAddress->__toArray();
         $shippingAddressData       = array_intersect_key($shippingAddress->__toArray(), $amazonShippingAddressData);
 
+        unset($shippingAddressData['company']);
+        unset($amazonShippingAddressData['company']);
+
         asort($amazonShippingAddressData);
         asort($shippingAddressData);
 

@@ -270,12 +270,14 @@ class IpnContext implements SnippetAcceptingContext
 
     protected function postRequest($postData)
     {
-        $this->client->request(
+        $response = $this->client->request(
             'POST',
             '/amazonpayments/payment/ipn',
             [
                 'body' => $postData
             ]
         );
+
+        return $response->getBody()->getContents();
     }
 }

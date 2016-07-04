@@ -38,6 +38,7 @@ class Order extends Page
     public function openCreateInvoice()
     {
         $this->clickElement('invoice');
+        $this->waitForPageLoad();
     }
 
     public function submitInvoice()
