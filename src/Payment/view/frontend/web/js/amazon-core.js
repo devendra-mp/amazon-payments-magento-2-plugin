@@ -2,11 +2,10 @@ define([
     'jquery',
     'ko',
     'amazonPaymentConfig',
-    'amazonCsrf',
     'amazonWidgetsLoader',
     'bluebird',
     'mage/cookies'
-], function($, ko, amazonPaymentConfig, amazonCsrf) {
+], function($, ko, amazonPaymentConfig) {
     "use strict";
 
     var clientId = amazonPaymentConfig.getValue('clientId'),
@@ -14,6 +13,17 @@ define([
         amazonLoginError = ko.observable(false),
         accessToken = ko.observable(null),
         authCookie = $.cookieStorage.get('amazon_Login_accessToken');
+
+
+    if(typeof amazon === 'undefined') {
+        window.onAmazonLoginReady = function() {
+            setClientId(clientId);
+            doLogoutOnFlagCookie();
+        }
+    } else {
+        setClientId(clientId);
+        doLogoutOnFlagCookie();
+    }
 
     /**
      * Set Client ID
@@ -24,6 +34,9 @@ define([
         amazon.Login.setClientId(cid);
     }
 
+    /**
+     * Log user out of amazon
+     */
     function amazonLogout() {
         if(amazonDefined()) {
             amazon.Login.logout();
@@ -53,16 +66,6 @@ define([
         amazonLoginError(true);
     }
 
-    if(typeof amazon === 'undefined') {
-        window.onAmazonLoginReady = function() {
-           setClientId(clientId);
-           doLogoutOnFlagCookie();
-        }
-    } else {
-      setClientId(clientId);
-      doLogoutOnFlagCookie();
-    }
-
     return {
         /**
          * Verify a user is logged into amazon
@@ -79,8 +82,7 @@ define([
                     var loginOptions = {
                         scope: amazonPaymentConfig.getValue('loginScope'),
                         popup: true,
-                        interactive: 'never',
-                        state: amazonCsrf.generateNewValue()
+                        interactive: 'never'
                     };
 
                     amazon.Login.authorize (loginOptions, function(response) {
@@ -89,19 +91,14 @@ define([
                         if (response.error) {
                             resolution = reject(response.error);
                         // no error: check the nonce
-                        } else if (!response.hasOwnProperty('state') || !response.state || !amazonCsrf.isValid(response.state)) {
-                            resolution = reject('Invalid state');
                         } else {
                             accessToken(response.access_token);
                             resolution = resolve(!response.error);
                         }
-
-                        amazonCsrf.clear(); // always clear nonce
                         return resolution;
                     });
                 }
             }).catch(function(e) {
-                amazonCsrf.clear();
                 console.log('error: ' + e);
             });
         },
