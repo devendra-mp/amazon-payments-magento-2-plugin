@@ -23,39 +23,42 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Data extends AbstractHelper
 {
-    const AMAZON_SECRET_KEY    = 'secret_key';
-    const AMAZON_ACCESS_KEY    = 'access_key';
-    const AMAZON_MERCHANT_ID   = 'merchant_id';
-    const AMAZON_CLIENT_ID     = 'client_id';
+    const AMAZON_SECRET_KEY = 'secret_key';
+    const AMAZON_ACCESS_KEY = 'access_key';
+    const AMAZON_MERCHANT_ID = 'merchant_id';
+    const AMAZON_CLIENT_ID = 'client_id';
     const AMAZON_CLIENT_SECRET = 'client_secret';
-    const AMAZON_REGION        = 'region';
-    const AMAZON_SANDBOX       = 'sandbox';
+    const AMAZON_REGION = 'region';
+    const AMAZON_SANDBOX = 'sandbox';
 
-    protected $amazonAccountUrl = [
-        'us' => 'https://payments.amazon.com/overview',
-        'uk' => 'https://payments.amazon.co.uk/overview',
-        'de' => 'https://payments.amazon.de/overview',
-        'jp' => 'https://payments.amazon.co.jp/overview',
-    ];
-
-    /**
-     * @var Array
-     */
-    protected $amazonCredentialsFields = [
-        self::AMAZON_SECRET_KEY,
-        self::AMAZON_ACCESS_KEY,
-        self::AMAZON_MERCHANT_ID,
-        self::AMAZON_CLIENT_ID,
-        self::AMAZON_CLIENT_SECRET
-    ];
+    protected $amazonAccountUrl
+        = [
+            'us' => 'https://payments.amazon.com/overview',
+            'uk' => 'https://payments.amazon.co.uk/overview',
+            'de' => 'https://payments.amazon.de/overview',
+            'jp' => 'https://payments.amazon.co.jp/overview',
+        ];
 
     /**
      * @var Array
      */
-    protected $amazonCredentialsEncryptedFields = [
-        self::AMAZON_SECRET_KEY,
-        self::AMAZON_CLIENT_SECRET
-    ];
+    protected $amazonCredentialsFields
+        = [
+            self::AMAZON_SECRET_KEY,
+            self::AMAZON_ACCESS_KEY,
+            self::AMAZON_MERCHANT_ID,
+            self::AMAZON_CLIENT_ID,
+            self::AMAZON_CLIENT_SECRET
+        ];
+
+    /**
+     * @var Array
+     */
+    protected $amazonCredentialsEncryptedFields
+        = [
+            self::AMAZON_SECRET_KEY,
+            self::AMAZON_CLIENT_SECRET
+        ];
 
     /**
      * @var EncryptorInterface
@@ -79,10 +82,10 @@ class Data extends AbstractHelper
      * @param ClientIp              $clientIpHelper
      */
     public function __construct(
-        Context               $context,
-        EncryptorInterface    $encryptor,
+        Context $context,
+        EncryptorInterface $encryptor,
         StoreManagerInterface $storeManager,
-        ClientIp              $clientIpHelper
+        ClientIp $clientIpHelper
     ) {
         parent::__construct($context);
         $this->encryptor      = $encryptor;
@@ -190,7 +193,7 @@ class Data extends AbstractHelper
             'jp' => 'JPY'
         ];
 
-        return array_key_exists($paymentRegion, $currencyCodeMap) ? $currencyCodeMap[$paymentRegion]: '';
+        return array_key_exists($paymentRegion, $currencyCodeMap) ? $currencyCodeMap[$paymentRegion] : '';
     }
 
     /*
@@ -198,7 +201,7 @@ class Data extends AbstractHelper
      */
     public function getWidgetUrl($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        $paymentRegion = $this->getPaymentRegion($scope, $scopeCode);
+        $paymentRegion  = $this->getPaymentRegion($scope, $scopeCode);
         $sandboxEnabled = $this->isSandboxEnabled($scope, $scopeCode);
 
         $widgetUrlMap = [
@@ -217,7 +220,7 @@ class Data extends AbstractHelper
             ];
         }
 
-        return array_key_exists($paymentRegion, $widgetUrlMap) ? $widgetUrlMap[$paymentRegion]: '';
+        return array_key_exists($paymentRegion, $widgetUrlMap) ? $widgetUrlMap[$paymentRegion] : '';
     }
 
     /**
@@ -272,7 +275,7 @@ class Data extends AbstractHelper
      */
     public function isPwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        if ( ! $this->clientIpHelper->clientHasAllowedIp()) {
+        if (! $this->clientIpHelper->clientHasAllowedIp()) {
             return false;
         }
 
@@ -288,7 +291,7 @@ class Data extends AbstractHelper
      */
     public function isLwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        if ( ! $this->clientIpHelper->clientHasAllowedIp()) {
+        if (! $this->clientIpHelper->clientHasAllowedIp()) {
             return false;
         }
 
@@ -341,7 +344,7 @@ class Data extends AbstractHelper
     public function getButtonDisplayLanguage($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         $buttonConfigLang = $this->scopeConfig
-                                 ->getValue('payment/amazon_payment/button_display_language', $scope, $scopeCode);
+            ->getValue('payment/amazon_payment/button_display_language', $scope, $scopeCode);
 
         if (empty($buttonConfigLang)) {
             $buttonConfigLang = $this->scopeConfig->getValue('general/locale/code', $scope, $scopeCode);
@@ -370,12 +373,12 @@ class Data extends AbstractHelper
         $buttonType = $this->getButtonType($scope, $scopeCode);
 
         $buttonTypeMap = [
-            'full' => 'PwA',
+            'full'  => 'PwA',
             'short' => 'Pay',
-            'logo' => 'A',
+            'logo'  => 'A',
         ];
 
-        return array_key_exists($buttonType, $buttonTypeMap) ? $buttonTypeMap[$buttonType]: '';
+        return array_key_exists($buttonType, $buttonTypeMap) ? $buttonTypeMap[$buttonType] : '';
     }
 
     /*
@@ -386,12 +389,12 @@ class Data extends AbstractHelper
         $buttonType = $this->getButtonType($scope, $scopeCode);
 
         $buttonTypeMap = [
-            'full' => 'LwA',
+            'full'  => 'LwA',
             'short' => 'Login',
-            'logo' => 'A',
+            'logo'  => 'A',
         ];
 
-        return array_key_exists($buttonType, $buttonTypeMap) ? $buttonTypeMap[$buttonType]: '';
+        return array_key_exists($buttonType, $buttonTypeMap) ? $buttonTypeMap[$buttonType] : '';
     }
 
     /*
@@ -477,6 +480,7 @@ class Data extends AbstractHelper
 
     /**
      * @param string|null $context
+     *
      * @return array
      */
     public function getSandboxSimulationStrings($context = null)
@@ -515,13 +519,13 @@ class Data extends AbstractHelper
     public function getSandboxSimulationOptions()
     {
         $simulationlabels = [
-            'default' => 'No Simulation',
-            'Authorization:Declined:InvalidPaymentMethod' => 'Authorization soft decline',
-            'Authorization:Declined:AmazonRejected' => 'Authorization hard decline',
-            'Authorization:Declined:TransactionTimedOut' => 'Authorization timed out',
-            'Capture:Declined:AmazonRejected' => 'Capture declined',
-            'Capture:Pending' => 'Capture pending',
-            'Refund:Declined' => 'Refund declined'
+            'default'                                     => __('No Simulation'),
+            'Authorization:Declined:InvalidPaymentMethod' => __('Authorization soft decline'),
+            'Authorization:Declined:AmazonRejected'       => __('Authorization hard decline'),
+            'Authorization:Declined:TransactionTimedOut'  => __('Authorization timed out'),
+            'Capture:Declined:AmazonRejected'             => __('Capture declined'),
+            'Capture:Pending'                             => __('Capture pending'),
+            'Refund:Declined'                             => __('Refund declined')
         ];
 
         return $simulationlabels;
@@ -582,7 +586,7 @@ class Data extends AbstractHelper
     public function isBlacklistedTermValidationEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig
-                    ->isSetFlag('payment/amazon_payment/packstation_terms_validation_enabled', $scope, $scopeCode);
+            ->isSetFlag('payment/amazon_payment/packstation_terms_validation_enabled', $scope, $scopeCode);
     }
 
     /**
@@ -601,8 +605,8 @@ class Data extends AbstractHelper
      */
     public function isPwaButtonVisibleOnProductPage($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        return $this->isPaymentButtonEnabled($scope, $scopeCode) &&
-               $this->scopeConfig->isSetFlag('payment/amazon_payment/pwa_pp_button_is_visible', $scope, $scopeCode);
+        return $this->isPaymentButtonEnabled($scope, $scopeCode)
+        && $this->scopeConfig->isSetFlag('payment/amazon_payment/pwa_pp_button_is_visible', $scope, $scopeCode);
     }
 
     /**
@@ -614,7 +618,7 @@ class Data extends AbstractHelper
     public function getCredentialsJson($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig
-                    ->getValue('payment/amazon_payment/credentials_json', $scope, $scopeCode);
+            ->getValue('payment/amazon_payment/credentials_json', $scope, $scopeCode);
     }
 
     /**

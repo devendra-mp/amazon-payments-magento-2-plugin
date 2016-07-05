@@ -57,7 +57,7 @@ class ProductPagePaymentLink extends PaymentLink
      */
     protected function _toHtml()
     {
-        if ( ! $this->coreHelper->isPwaButtonVisibleOnProductPage()) {
+        if (! $this->coreHelper->isPwaButtonVisibleOnProductPage()) {
             return '';
         }
 

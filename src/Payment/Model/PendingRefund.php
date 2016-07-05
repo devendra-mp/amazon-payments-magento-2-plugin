@@ -140,7 +140,7 @@ class PendingRefund extends AbstractModel implements PendingRefundInterface
      */
     public function beforeSave()
     {
-        if ( ! $this->getId()) {
+        if (! $this->getId()) {
             $this->setCreatedAt($this->dateFactory->create()->gmtDate());
         }
 

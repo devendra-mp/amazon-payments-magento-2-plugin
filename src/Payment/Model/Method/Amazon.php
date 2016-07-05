@@ -341,7 +341,7 @@ class Amazon extends AbstractMethod
         } catch (SoftDeclineException $e) {
             $this->processSoftDecline();
         } catch (Exception $e) {
-            if ( ! $e instanceof HardDeclineException) {
+            if (! $e instanceof HardDeclineException) {
                 $this->_logger->error($e);
             }
             $this->processHardDecline($payment, $amazonOrderReferenceId);
@@ -376,7 +376,7 @@ class Amazon extends AbstractMethod
             'capture_now'                => $capture,
         ];
 
-        if ( ! $async) {
+        if (! $async) {
             $data['transaction_timeout'] = 0;
         }
 
@@ -416,7 +416,7 @@ class Amazon extends AbstractMethod
         if ($capture) {
             $transactionId = $details->getCaptureTransactionId();
 
-            if ( ! $pending) {
+            if (! $pending) {
                 $payment->setIsTransactionClosed(true);
             }
         }
@@ -435,12 +435,7 @@ class Amazon extends AbstractMethod
     {
         $storeId = $payment->getOrder()->getStoreId();
 
-        try {
-            $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId, $storeId);
-        } catch (Exception $e) {
-            //ignored as it's likely in a cancelled state already or there is a problem we cannot rectify
-        }
-
+        $this->cancelOrderReference($amazonOrderReferenceId, $storeId);
         $this->deleteAmazonOrderReferenceId($payment);
         $this->reserveNewOrderId($payment);
 
@@ -451,6 +446,16 @@ class Amazon extends AbstractMethod
             AmazonAuthorizationStatus::CODE_HARD_DECLINE,
             AmazonWebapiException::HTTP_FORBIDDEN
         );
+    }
+
+    protected function cancelOrderReference($amazonOrderReferenceId, $storeId)
+    {
+        try {
+            $this->orderInformationManagement->cancelOrderReference($amazonOrderReferenceId, $storeId);
+        } catch (Exception $e) {
+            //ignored as it's likely in a cancelled state already or there is a problem we cannot rectify
+            return;
+        }
     }
 
     protected function processSoftDecline()
@@ -499,7 +504,9 @@ class Amazon extends AbstractMethod
 
                 if (isset($captureDetails)) {
                     $this->paymentManagement->queuePendingCapture(
-                        $captureDetails, $payment->getId(), $payment->getOrder()->getId()
+                        $captureDetails,
+                        $payment->getId(),
+                        $payment->getOrder()->getId()
                     );
                 }
             } finally {
@@ -596,7 +603,7 @@ class Amazon extends AbstractMethod
     {
         $additionalData = $data->getAdditionalData();
 
-        if ( ! is_array($additionalData)) {
+        if (! is_array($additionalData)) {
             return $this;
         }
 

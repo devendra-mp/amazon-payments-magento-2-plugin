@@ -3,15 +3,12 @@
     <preference for="Amazon\Login\Api\Data\CustomerLinkInterface" type="Amazon\Login\Model\CustomerLink" />
     <preference for="Amazon\Login\Api\CustomerManagerInterface" type="Amazon\Login\Model\CustomerManager" />
     <preference for="Amazon\Login\Api\Customer\CompositeMatcherInterface" type="Amazon\Login\Model\Customer\CompositeMatcher" />
-    <preference for="Amazon\Login\Api\Customer\EmailMatcherInterface" type="Amazon\Login\Model\Customer\EmailMatcher" />
-    <preference for="Amazon\Login\Api\Customer\IdMatcherInterface" type="Amazon\Login\Model\Customer\IdMatcher" />
-    <preference for="Amazon\Login\Api\Customer\SessionMatcherInterface" type="Amazon\Login\Model\Customer\SessionMatcher" />
     <type name="Amazon\Login\Api\Customer\CompositeMatcherInterface">
         <arguments>
             <argument name="matchers" xsi:type="array">
-                <item name="sessionmatcher" xsi:type="object">Amazon\Login\Api\Customer\SessionMatcherInterface</item>
-                <item name="idmatcher" xsi:type="object">Amazon\Login\Api\Customer\IdMatcherInterface</item>
-                <item name="emailmatcher" xsi:type="object">Amazon\Login\Api\Customer\EmailMatcherInterface</item>
+                <item name="sessionmatcher" xsi:type="object">Amazon\Login\Model\Customer\SessionMatcher</item>
+                <item name="idmatcher" xsi:type="object">Amazon\Login\Model\Customer\IdMatcher</item>
+                <item name="emailmatcher" xsi:type="object">Amazon\Login\Model\Customer\EmailMatcher</item>
             </argument>
         </arguments>
     </type>

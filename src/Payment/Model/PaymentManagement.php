@@ -153,15 +153,18 @@ class PaymentManagement implements PaymentManagementInterface
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
 
         $searchCriteriaBuilder->addFilter(
-            TransactionInterface::TXN_ID, $transactionId
+            TransactionInterface::TXN_ID,
+            $transactionId
         );
 
         $searchCriteriaBuilder->addFilter(
-            TransactionInterface::ORDER_ID, $order->getId()
+            TransactionInterface::ORDER_ID,
+            $order->getId()
         );
 
         $searchCriteriaBuilder->addFilter(
-            TransactionInterface::PAYMENT_ID, $payment->getId()
+            TransactionInterface::PAYMENT_ID,
+            $payment->getId()
         );
 
         $searchCriteria = $searchCriteriaBuilder

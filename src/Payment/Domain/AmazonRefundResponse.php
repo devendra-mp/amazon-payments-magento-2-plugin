@@ -15,10 +15,6 @@
  */
 namespace Amazon\Payment\Domain;
 
-use Amazon\Core\Exception\AmazonServiceUnavailableException;
-use Amazon\Payment\Domain\Response\AmazonResponseInterface;
-use Amazon\Payment\Domain\Response\Part\RefundDetailsPart;
-use Amazon\Payment\Domain\Response\Part\RefundDetailsPartFactory;
 use PayWithAmazon\ResponseInterface;
 
 class AmazonRefundResponse extends AbstractAmazonRefundResponse

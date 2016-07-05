@@ -18,14 +18,14 @@ namespace Amazon\Core\Model\Config\Credentials;
 use Amazon\Core\Helper\Data;
 use Amazon\Core\Model\Validation\JsonConfigDataValidatorFactory;
 use Magento\Config\Model\ResourceModel\Config as ConfigWriter;
-use Magento\Framework\Message\ManagerInterface as MessageManager;
-use Magento\Framework\Json\DecoderInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Json\DecoderInterface;
+use Magento\Framework\Message\ManagerInterface as MessageManager;
 
 class Json
 {
-    const AMAZON_CONFIG_PREFIX           = 'payment/amazon_payment/';
-    const AMAZON_CREDENTIALS_JSON        = 'credentials_json';
+    const AMAZON_CONFIG_PREFIX = 'payment/amazon_payment/';
+    const AMAZON_CREDENTIALS_JSON = 'credentials_json';
 
     /**
      * @var Data
@@ -58,11 +58,12 @@ class Json
     protected $encryptor;
 
     /**
-     * @param Data $amazonCoreHelper
-     * @param sonConfigDataValidatorFactory $jsonConfigDataValidator
-     * @param ConfigWriter $configWriter
-     * @param ManagerInterface $messageManager
-     * @param DecoderInterface $jsonDecoder
+     * @param Data                           $amazonCoreHelper
+     * @param JsonConfigDataValidatorFactory $jsonConfigDataValidator
+     * @param ConfigWriter                   $configWriter
+     * @param MessageManager                 $messageManager
+     * @param DecoderInterface               $jsonDecoder
+     * @param EncryptorInterface             $encryptor
      */
     public function __construct(
         Data $amazonCoreHelper,
@@ -71,8 +72,7 @@ class Json
         MessageManager $messageManager,
         DecoderInterface $jsonDecoder,
         EncryptorInterface $encryptor
-    )
-    {
+    ) {
         $this->amazonCoreHelper               = $amazonCoreHelper;
         $this->jsonConfigDataValidatorFactory = $jsonConfigDataValidator;
         $this->configWriter                   = $configWriter;
@@ -83,7 +83,7 @@ class Json
 
     /**
      * @param string $jsonCredentials
-     * @param array $scopeData
+     * @param array  $scopeData
      */
     public function processCredentialsJson($jsonCredentials, $scopeData)
     {
@@ -104,7 +104,7 @@ class Json
         $this->wipeJsonCredentialsConfig($scopeData);
 
         foreach ($this->amazonCoreHelper->getAmazonCredentialsFields() as $mandatoryField) {
-            $valueToSave = $arrayCredentials[$mandatoryField];
+            $valueToSave     = $arrayCredentials[$mandatoryField];
             $encryptedFields = array_flip($this->amazonCoreHelper->getAmazonCredentialsEncryptedFields());
 
             if (isset($encryptedFields[$mandatoryField])) {

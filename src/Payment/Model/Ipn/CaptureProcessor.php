@@ -16,13 +16,13 @@
 namespace Amazon\Payment\Model\Ipn;
 
 use Amazon\Payment\Api\Data\PendingCaptureInterface;
-use Amazon\Payment\Api\Ipn\CaptureProcessorInterface;
+use Amazon\Payment\Api\Ipn\ProcessorInterface;
 use Amazon\Payment\Api\PaymentManagement\CaptureInterface;
 use Amazon\Payment\Domain\Details\AmazonCaptureDetailsFactory;
 use Amazon\Payment\Model\ResourceModel\PendingCapture\CollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
-class CaptureProcessor implements CaptureProcessorInterface
+class CaptureProcessor implements ProcessorInterface
 {
     /**
      * @var AmazonCaptureDetailsFactory

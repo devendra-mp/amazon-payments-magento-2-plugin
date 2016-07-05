@@ -16,13 +16,13 @@
 namespace Amazon\Payment\Model\Ipn;
 
 use Amazon\Payment\Api\Data\PendingAuthorizationInterface;
-use Amazon\Payment\Api\Ipn\AuthorizationProcessorInterface;
+use Amazon\Payment\Api\Ipn\ProcessorInterface;
 use Amazon\Payment\Api\PaymentManagement\AuthorizationInterface;
 use Amazon\Payment\Domain\Details\AmazonAuthorizationDetailsFactory;
 use Amazon\Payment\Model\ResourceModel\PendingAuthorization\CollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
-class AuthorizationProcessor implements AuthorizationProcessorInterface
+class AuthorizationProcessor implements ProcessorInterface
 {
     /**
      * @var AmazonAuthorizationDetailsFactory

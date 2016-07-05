@@ -74,11 +74,13 @@ abstract class AbstractOperation
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
 
         $searchCriteriaBuilder->addFilter(
-            InvoiceInterface::TRANSACTION_ID, $transactionId
+            InvoiceInterface::TRANSACTION_ID,
+            $transactionId
         );
 
         $searchCriteriaBuilder->addFilter(
-            InvoiceInterface::ORDER_ID, $order->getId()
+            InvoiceInterface::ORDER_ID,
+            $order->getId()
         );
 
         $searchCriteria = $searchCriteriaBuilder
