@@ -59,6 +59,14 @@ class ProductContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I go to the Product Page of product SKU :productSku
+     */
+    public function iGoToTheProductPageOfProductSku($productSku)
+    {
+        $this->productPage->openWithProductSku($productSku);
+    }
+
+    /**
      * @Then the PWA button should not be visible
      */
     public function thePWAButtonShouldNotBeVisible()

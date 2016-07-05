@@ -19,6 +19,7 @@ use Bex\Behat\Magento2InitExtension\Fixtures\BaseFixture;
 use Context\Data\FixtureContext;
 use Fixtures\Helper\Product\CompositeDataProvider;
 use Fixtures\Helper\Product\ExistingCategoryDataProvider;
+use Fixtures\Helper\Product\NewCategoryDataProvider;
 use Fixtures\Helper\Product\ProductDataProvider;
 use Fixtures\Helper\Product\StockDataProvider;
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -83,6 +84,7 @@ class Product extends BaseFixture
         $productDataProvider = new CompositeDataProvider;
         $productDataProvider->addDataProvider(new StockDataProvider);
         $productDataProvider->addDataProvider(new ExistingCategoryDataProvider);
+        $productDataProvider->addDataProvider(new NewCategoryDataProvider);
         return $productDataProvider;
     }
 

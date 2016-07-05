@@ -88,6 +88,15 @@ class BasketContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given Product SKU :productSku is added to the basket
+     */
+    public function productSKUIsAddedToTheBasket($productSku)
+    {
+        $this->productPage->openWithProductSku($productSku);
+        $this->productPage->addToBasket();
+    }
+
+    /**
      * @Given I go to my basket
      */
     public function iGoToMyBasket()

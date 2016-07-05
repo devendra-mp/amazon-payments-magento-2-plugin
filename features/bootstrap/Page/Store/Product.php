@@ -15,9 +15,11 @@
  */
 namespace Page\Store;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Page\AmazonLoginTrait;
 use Page\PageTrait;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
+use \Magento\Framework\App\ObjectManager;
 
 class Product extends Page
 {
@@ -39,6 +41,15 @@ class Product extends Page
     public function openWithProductId($productId)
     {
         $this->open(['id' => (int) $productId]);
+    }
+
+    /**
+     * @param string $sku
+     */
+    public function openWithProductSku($sku)
+    {
+        $productRepository = ObjectManager::getInstance()->get(ProductRepositoryInterface::class);
+        $this->open(['id' => $productRepository->get($sku)->getId()]);
     }
 
     public function addToBasket()

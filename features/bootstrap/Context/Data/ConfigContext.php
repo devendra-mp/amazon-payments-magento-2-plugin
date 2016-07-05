@@ -131,38 +131,17 @@ class ConfigContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given Product ID :productId belongs to an excluded category
+     * @Given Product SKU :productSku belongs to an excluded category
      */
-    public function productIdBelongsToAnExcludedCategory($productId)
+    public function productSkuBelongsToAnExcludedCategory($productSku)
     {
-        $product = $this->productFixture->getById((int) $productId);
+        $product = $this->productFixture->create(['sku' => $productSku]);
 
         $productCategories = $product->getCategoryIds();
 
         if (empty($productCategories)) {
             throw new \RuntimeException(
-                "Product ID $productId has no associated categories. Please choose another one."
-            );
-        }
-
-        $this->changeConfig(
-            'payment/amazon_payment/excluded_categories',
-            implode(',', $productCategories)
-        );
-    }
-
-    /**
-     * @Given Product ID :productId does not belong to an excluded category
-     */
-    public function productIDDoesNotBelongToAnExcludedCategory($productId)
-    {
-        $product = $this->productFixture->getById((int) $productId);
-
-        $productCategories = $product->getCategoryIds();
-
-        if (empty($productCategories)) {
-            throw new \RuntimeException(
-                "Product ID $productId has no associated categories. Please choose another one."
+                "Product ID $productSku has no associated categories."
             );
         }
 
