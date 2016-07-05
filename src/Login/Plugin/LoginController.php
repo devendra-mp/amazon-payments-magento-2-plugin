@@ -15,12 +15,12 @@
  */
 namespace Amazon\Login\Plugin;
 
-use Magento\Checkout\Controller\Cart\Index;
+use Magento\Customer\Controller\Account\Login;
 use Magento\Customer\Model\Session;
+use Magento\Customer\Model\Url;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\UrlInterface;
 
-class CartController
+class LoginController
 {
     /**
      * @var Session
@@ -28,19 +28,19 @@ class CartController
     protected $session;
 
     /**
-     * @var UrlInterface
+     * @var Url
      */
     protected $url;
 
-    public function __construct(Session $session, UrlInterface $url)
+    public function __construct(Session $session, Url $url)
     {
         $this->session = $session;
         $this->url     = $url;
     }
 
-    public function afterExecute(Index $index, ResultInterface $result)
+    public function afterExecute(Login $login, ResultInterface $result)
     {
-        $this->session->setAfterAmazonAuthUrl($this->url->getUrl('checkout'));
+        $this->session->setAfterAmazonAuthUrl($this->url->getAccountUrl());
 
         return $result;
     }

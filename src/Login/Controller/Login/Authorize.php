@@ -24,7 +24,7 @@ use Amazon\Login\Api\CustomerManagerInterface;
 use Amazon\Login\Domain\ValidationCredentials;
 use Amazon\Login\Helper\Session;
 use Amazon\Login\Model\Validator\AccessTokenRequestValidator;
-use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Amazon\Login\Model\Customer\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Url;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
