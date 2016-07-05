@@ -11,8 +11,7 @@ define([
     var clientId = amazonPaymentConfig.getValue('clientId'),
         amazonDefined = ko.observable(false),
         amazonLoginError = ko.observable(false),
-        accessToken = ko.observable(null),
-        authCookie = $.cookieStorage.get('amazon_Login_accessToken');
+        accessToken = ko.observable(null);
 
 
     if(typeof amazon === 'undefined') {
@@ -30,8 +29,8 @@ define([
      * @param cid
      */
     function setClientId(cid) {
-        amazonDefined(true);
         amazon.Login.setClientId(cid);
+        amazonDefined(true);
     }
 
     /**
@@ -72,32 +71,24 @@ define([
          */
         verifyAmazonLoggedIn: function() {
             return new Promise(function(resolve, reject) {
-                if(authCookie !== null) {
-                    amazon.Login.retrieveProfile(authCookie, function(response){
-                        accessToken(authCookie);
-                        return !response.error ? resolve(!response.error) : reject(response.error);
-                    });
-                    //if no cookie is set (i.e. come from redirect)
-                } else {
-                    var loginOptions = {
-                        scope: amazonPaymentConfig.getValue('loginScope'),
-                        popup: true,
-                        interactive: 'never'
-                    };
 
-                    amazon.Login.authorize (loginOptions, function(response) {
-                        var resolution;
+                var loginOptions = {
+                    scope: amazonPaymentConfig.getValue('loginScope'),
+                    popup: true,
+                    interactive: 'never'
+                };
 
-                        if (response.error) {
-                            resolution = reject(response.error);
-                        // no error: check the nonce
-                        } else {
-                            accessToken(response.access_token);
-                            resolution = resolve(!response.error);
-                        }
-                        return resolution;
-                    });
-                }
+                amazon.Login.authorize (loginOptions, function(response) {
+                    var resolution;
+                    if (response.error) {
+                        resolution = reject(response.error);
+                    } else {
+                        accessToken(response.access_token);
+                        resolution = resolve(!response.error);
+                    }
+                    return resolution;
+                });
+                
             }).catch(function(e) {
                 console.log('error: ' + e);
             });
