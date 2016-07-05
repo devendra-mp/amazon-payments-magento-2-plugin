@@ -82,7 +82,6 @@ define([
                     var resolution;
                     if (response.error) {
                         resolution = reject(response.error);
-                    // no error: check the nonce
                     } else {
                         accessToken(response.access_token);
                         resolution = resolve(!response.error);
