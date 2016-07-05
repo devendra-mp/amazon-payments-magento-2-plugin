@@ -24,6 +24,6 @@ class AmazonCaptureResponse extends AbstractAmazonCaptureResponse
      */
     protected function getResultKey()
     {
-       return $this->resultKey;
+        return $this->resultKey;
     }
 }

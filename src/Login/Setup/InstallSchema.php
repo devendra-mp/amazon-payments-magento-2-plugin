@@ -59,7 +59,9 @@ class InstallSchema implements InstallSchemaInterface
             )
             ->addIndex(
                 $setup->getIdxName(
-                    CustomerLink::TABLE_NAME, ['customer_id', 'amazon_id'], AdapterInterface::INDEX_TYPE_UNIQUE
+                    CustomerLink::TABLE_NAME,
+                    ['customer_id', 'amazon_id'],
+                    AdapterInterface::INDEX_TYPE_UNIQUE
                 ),
                 ['customer_id', 'amazon_id'],
                 ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]

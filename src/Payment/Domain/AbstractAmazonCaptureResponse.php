@@ -18,10 +18,9 @@ namespace Amazon\Payment\Domain;
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Domain\Details\AmazonCaptureDetails;
 use Amazon\Payment\Domain\Details\AmazonCaptureDetailsFactory;
-use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
-abstract class AbstractAmazonCaptureResponse implements AmazonResponseInterface
+abstract class AbstractAmazonCaptureResponse
 {
     /**
      * @var AmazonCaptureDetails

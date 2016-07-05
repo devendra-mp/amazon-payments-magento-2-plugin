@@ -15,9 +15,20 @@
  */
 namespace Amazon\Core\Exception;
 
+use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception;
 
 class AmazonWebapiException extends Exception
 {
-
+    public function __construct(
+        Phrase $phrase,
+        $code = 0,
+        $httpCode = self::HTTP_BAD_REQUEST,
+        array $details = [],
+        $name = '',
+        $errors = null,
+        $stackTrace = null
+    ) {
+        parent::__construct($phrase, $code, $httpCode, $details, $name, $errors, $stackTrace);
+    }
 }

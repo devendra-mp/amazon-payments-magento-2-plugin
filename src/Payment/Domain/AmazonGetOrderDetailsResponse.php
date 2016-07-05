@@ -18,10 +18,9 @@ namespace Amazon\Payment\Domain;
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
 use Amazon\Payment\Domain\Details\AmazonOrderDetails;
 use Amazon\Payment\Domain\Details\AmazonOrderDetailsFactory;
-use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
-class AmazonGetOrderDetailsResponse implements AmazonResponseInterface
+class AmazonGetOrderDetailsResponse
 {
     /**
      * @var AmazonOrderDetails

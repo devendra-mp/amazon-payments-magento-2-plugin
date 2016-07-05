@@ -16,13 +16,13 @@
 namespace Amazon\Payment\Model\Ipn;
 
 use Amazon\Payment\Api\Data\PendingRefundInterface;
-use Amazon\Payment\Api\Ipn\RefundProcessorInterface;
+use Amazon\Payment\Api\Ipn\ProcessorInterface;
 use Amazon\Payment\Domain\Details\AmazonRefundDetailsFactory;
 use Amazon\Payment\Model\QueuedRefundUpdater;
 use Amazon\Payment\Model\ResourceModel\PendingRefund\CollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
-class RefundProcessor implements RefundProcessorInterface
+class RefundProcessor implements ProcessorInterface
 {
     /**
      * @var AmazonRefundDetailsFactory

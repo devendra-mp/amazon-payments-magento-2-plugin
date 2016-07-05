@@ -16,10 +16,9 @@
 namespace Amazon\Payment\Domain;
 
 use Amazon\Core\Exception\AmazonServiceUnavailableException;
-use Amazon\Payment\Domain\Response\AmazonResponseInterface;
 use PayWithAmazon\ResponseInterface;
 
-class AmazonSetOrderDetailsResponse implements AmazonResponseInterface
+class AmazonSetOrderDetailsResponse
 {
     /**
      * @var AmazonConstraint[]

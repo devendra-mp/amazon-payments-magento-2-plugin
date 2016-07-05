@@ -275,7 +275,7 @@ class Data extends AbstractHelper
      */
     public function isPwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        if ( ! $this->clientIpHelper->clientHasAllowedIp()) {
+        if (! $this->clientIpHelper->clientHasAllowedIp()) {
             return false;
         }
 
@@ -291,7 +291,7 @@ class Data extends AbstractHelper
      */
     public function isLwaEnabled($scope = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
-        if ( ! $this->clientIpHelper->clientHasAllowedIp()) {
+        if (! $this->clientIpHelper->clientHasAllowedIp()) {
             return false;
         }
 

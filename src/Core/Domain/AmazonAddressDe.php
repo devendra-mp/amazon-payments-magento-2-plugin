@@ -47,7 +47,6 @@ class AmazonAddressDe extends AmazonAddress
             } else {
                 $this->company = $firstTwoLines;
             }
-
         } elseif (!empty($line2)) {
             // replace all lines
             $this->lines = [ $line2 ];

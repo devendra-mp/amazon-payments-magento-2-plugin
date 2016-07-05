@@ -21,7 +21,7 @@ class Client extends AmazonClient
 {
     /**
      * Client constructor
-     * 
+     *
      * Changes variable name from config to fix an issue with M2 DI compiler
      *
      * @param array $amazonConfig

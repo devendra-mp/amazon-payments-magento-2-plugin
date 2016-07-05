@@ -55,7 +55,7 @@ class PaymentLink extends Template
      */
     protected function _toHtml()
     {
-        if ( ! $this->coreHelper->isPaymentButtonEnabled() || $this->categoryExclusionHelper->isQuoteDirty()) {
+        if (! $this->coreHelper->isPaymentButtonEnabled() || $this->categoryExclusionHelper->isQuoteDirty()) {
             return '';
         }
 

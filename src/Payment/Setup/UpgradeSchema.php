@@ -89,7 +89,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     )
                     ->addIndex(
                         $setup->getIdxName(
-                            $tableName, [$fieldName], AdapterInterface::INDEX_TYPE_UNIQUE
+                            $tableName,
+                            [$fieldName],
+                            AdapterInterface::INDEX_TYPE_UNIQUE
                         ),
                         [$fieldName],
                         ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
@@ -100,7 +102,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
         }
 
         if (version_compare($context->getVersion(), '1.2.0', '<')) {
-
             $setup->getConnection()->addColumn(
                 $setup->getTable(QuoteLink::TABLE_NAME),
                 'sandbox_simulation_reference',
@@ -111,11 +112,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'comment'  => 'Sandbox simulation reference'
                 ]
             );
-
         }
 
         if (version_compare($context->getVersion(), '1.3.0', '<')) {
-
             $setup->getConnection()->addColumn(
                 $setup->getTable(QuoteLink::TABLE_NAME),
                 'confirmed',
@@ -162,7 +161,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 )
                 ->addIndex(
                     $setup->getIdxName(
-                        PendingCapture::TABLE_NAME, [PendingCaptureInterface::CAPTURE_ID],
+                        PendingCapture::TABLE_NAME,
+                        [PendingCaptureInterface::CAPTURE_ID],
                         AdapterInterface::INDEX_TYPE_UNIQUE
                     ),
                     [PendingCaptureInterface::CAPTURE_ID],

@@ -58,6 +58,7 @@ class CompleteOrder implements ObserverInterface
             }
         } catch (Exception $e) {
             //ignored as either it's in a closed state already or it will be auto closed by amazon
+            return;
         }
     }
 }
