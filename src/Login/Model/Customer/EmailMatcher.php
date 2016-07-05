@@ -16,11 +16,11 @@
 namespace Amazon\Login\Model\Customer;
 
 use Amazon\Core\Domain\AmazonCustomer;
-use Amazon\Login\Api\Customer\EmailMatcherInterface;
+use Amazon\Login\Api\Customer\MatcherInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-class EmailMatcher implements EmailMatcherInterface
+class EmailMatcher implements MatcherInterface
 {
     /**
      * @var CustomerRepositoryInterface

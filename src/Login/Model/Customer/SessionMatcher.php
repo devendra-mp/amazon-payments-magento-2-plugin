@@ -16,10 +16,10 @@
 namespace Amazon\Login\Model\Customer;
 
 use Amazon\Core\Domain\AmazonCustomer;
-use Amazon\Login\Api\Customer\SessionMatcherInterface;
+use Amazon\Login\Api\Customer\MatcherInterface;
 use Magento\Customer\Model\Session;
 
-class SessionMatcher implements SessionMatcherInterface
+class SessionMatcher implements MatcherInterface
 {
     /**
      * @var Session

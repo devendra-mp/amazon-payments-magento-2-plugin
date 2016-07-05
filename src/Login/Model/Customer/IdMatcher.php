@@ -16,11 +16,11 @@
 namespace Amazon\Login\Model\Customer;
 
 use Amazon\Core\Domain\AmazonCustomer;
-use Amazon\Login\Api\Customer\IdMatcherInterface;
+use Amazon\Login\Api\Customer\MatcherInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 
-class IdMatcher implements IdMatcherInterface
+class IdMatcher implements MatcherInterface
 {
     /**
      * @var CustomerRepositoryInterface
