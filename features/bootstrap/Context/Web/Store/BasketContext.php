@@ -17,6 +17,8 @@ namespace Context\Web\Store;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Fixtures\Currency as CurrencyFixture;
+use Fixtures\Product as ProductFixture;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Page\Element\CurrencySwitcher;
 use Page\Store\Basket;
 use Page\Store\Home;
@@ -51,6 +53,11 @@ class BasketContext implements SnippetAcceptingContext
     protected $basketPage;
 
     /**
+     * @var ProductFixture
+     */
+    protected $productFixture;
+
+    /**
      * @param Product          $productPage
      * @param CurrencySwitcher $currencySwitcherElement
      * @param Home             $homePage
@@ -67,6 +74,7 @@ class BasketContext implements SnippetAcceptingContext
         $this->homePage                = $homePage;
         $this->currencyFixture         = new CurrencyFixture;
         $this->basketPage              = $basketPage;
+        $this->productFixture          = new ProductFixture;
     }
 
     /**
@@ -74,19 +82,11 @@ class BasketContext implements SnippetAcceptingContext
      */
     public function thereIsAValidProductInMyBasket()
     {
-        $this->productPage->openWithProductId(1);
+        $product = $this->productFixture->create([ProductInterface::SKU => 'test-product-' . time()]);
+        $this->productPage->openWithProductId($product->getId());
         $this->productPage->addToBasket();
     }
-
-    /**
-     * @Given Product ID :productId is added to the basket
-     */
-    public function productIDIsAddedToTheBasket($productId)
-    {
-        $this->productPage->openWithProductId((int) $productId);
-        $this->productPage->addToBasket();
-    }
-
+    
     /**
      * @Given Product SKU :productSku is added to the basket
      */

@@ -83,7 +83,6 @@ class Product extends BaseFixture
     {
         $productDataProvider = new CompositeDataProvider;
         $productDataProvider->addDataProvider(new StockDataProvider);
-        $productDataProvider->addDataProvider(new ExistingCategoryDataProvider);
         $productDataProvider->addDataProvider(new NewCategoryDataProvider);
         return $productDataProvider;
     }

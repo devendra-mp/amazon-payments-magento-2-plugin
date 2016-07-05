@@ -141,7 +141,7 @@ class ConfigContext implements SnippetAcceptingContext
 
         if (empty($productCategories)) {
             throw new \RuntimeException(
-                "Product ID $productSku has no associated categories."
+                "Product $productSku has no associated categories."
             );
         }
 

@@ -43,22 +43,6 @@ class ProductContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given I am on a Product Page
-     */
-    public function iAmOnAProductPage()
-    {
-        $this->productPage->openWithProductId(1);
-    }
-
-    /**
-     * @Given I go to the Product Page of product ID :productId
-     */
-    public function iGoToTheProductPageOfProductID($productId)
-    {
-        $this->productPage->openWithProductId((int) $productId);
-    }
-
-    /**
      * @Given I go to the Product Page of product SKU :productSku
      */
     public function iGoToTheProductPageOfProductSku($productSku)
