@@ -7,23 +7,30 @@ define([
 ], function($, amazonCore, amazonPaymentConfig, amazonCsrf) {
     "use strict";
 
+    var self;
+
     $.widget('amazon.AmazonRedirect', {
 
         /**
          * @private
          */
         _create: function() {
+
+            self = this;
             // verify nonce first
             this.redirectOnInvalidState();
 
             // we don't have the customer's consent or invalid request
             this.redirectOnRequestWithError();
-
             this.setAuthStateCookies();
             amazonCore.amazonDefined.subscribe(function() {
                 //only set this on the redirect page
                 amazon.Login.setUseCookie(true);
-                this.redirect();
+                amazonCore.verifyAmazonLoggedIn().then(function(loggedIn) {
+                    if(loggedIn) {
+                        self.redirect()
+                    }
+                });
             }, this);
         },
 
