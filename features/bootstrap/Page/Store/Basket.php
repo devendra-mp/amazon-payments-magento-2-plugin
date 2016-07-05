@@ -30,4 +30,16 @@ class Basket extends Page
         ];
 
     protected $path = '/checkout/cart/';
+
+    /**
+     * @return bool
+     */
+    public function pwaButtonIsVisibleNoWait()
+    {
+        try {
+            return $this->getElement('open-amazon-login')->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

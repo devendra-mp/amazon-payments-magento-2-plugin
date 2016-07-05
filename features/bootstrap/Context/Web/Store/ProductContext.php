@@ -18,6 +18,7 @@ namespace Context\Web\Store;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Page\Store\Basket;
 use Page\Store\Product;
+use PHPUnit_Framework_Assert;
 
 class ProductContext implements SnippetAcceptingContext
 {
@@ -47,5 +48,37 @@ class ProductContext implements SnippetAcceptingContext
     public function iAmOnAProductPage()
     {
         $this->productPage->openWithProductId(1);
+    }
+
+    /**
+     * @Given I go to the Product Page of product ID :productId
+     */
+    public function iGoToTheProductPageOfProductID($productId)
+    {
+        $this->productPage->openWithProductId((int) $productId);
+    }
+
+    /**
+     * @Given I go to the Product Page of product SKU :productSku
+     */
+    public function iGoToTheProductPageOfProductSku($productSku)
+    {
+        $this->productPage->openWithProductSku($productSku);
+    }
+
+    /**
+     * @Then the PWA button should not be visible
+     */
+    public function thePWAButtonShouldNotBeVisible()
+    {
+        PHPUnit_Framework_Assert::assertFalse($this->productPage->pwaButtonIsVisibleNoWait());
+    }
+
+    /**
+     * @Then the PWA button should be visible
+     */
+    public function thePWAButtonShouldBeVisible()
+    {
+        PHPUnit_Framework_Assert::assertTrue($this->productPage->pwaButtonIsVisible());
     }
 }

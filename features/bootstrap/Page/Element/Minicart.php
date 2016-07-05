@@ -13,29 +13,25 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Context\Data;
+namespace Page\Element;
 
-use Behat\Behat\Context\SnippetAcceptingContext;
-use Fixtures\Product as ProductFixture;
-use Magento\Catalog\Api\Data\ProductInterface;
+use PHPUnit_Framework_Assert;
+use SensioLabs\Behat\PageObjectExtension\PageObject\Element;
 
-class ProductContext implements SnippetAcceptingContext
+class Minicart extends Element
 {
-    /**
-     * @var ProductFixture
-     */
-    protected $productFixture;
+    protected $selector = 'div[data-block="minicart"]';
 
-    public function __construct()
+    public function collapseMinicartContent()
     {
-        $this->productFixture = new ProductFixture;
+        $this->click();
     }
 
     /**
-     * @Given there is a product with sku :sku
+     * @return bool
      */
-    public function thereIsAProductWithSku($sku)
+    public function pwaButtonIsNotVisible()
     {
-        $this->productFixture->create([ProductInterface::SKU => $sku]);
+        PHPUnit_Framework_Assert::assertNull($this->find('css', '#OffAmazonPaymentsWidgets0'));
     }
 }
