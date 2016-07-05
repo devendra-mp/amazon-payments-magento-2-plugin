@@ -13,29 +13,33 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Context\Data;
+namespace Fixtures\Helper\Product;
 
-use Behat\Behat\Context\SnippetAcceptingContext;
-use Fixtures\Product as ProductFixture;
 use Magento\Catalog\Api\Data\ProductInterface;
+use \Magento\Framework\App\ObjectManager;
 
-class ProductContext implements SnippetAcceptingContext
+class CompositeDataProvider implements ProductDataProvider
 {
     /**
-     * @var ProductFixture
+     * @var ProductDataProvider[]
      */
-    protected $productFixture;
+    private $dataProviders = [];
 
-    public function __construct()
+    /**
+     * @param ProductInterface $product
+     */
+    public function addDataToProduct(ProductInterface $product)
     {
-        $this->productFixture = new ProductFixture;
+        foreach ($this->dataProviders as $dataProvider) {
+            $dataProvider->addDataToProduct($product);
+        }
     }
 
     /**
-     * @Given there is a product with sku :sku
+     * @param ProductDataProvider $dataProvider
      */
-    public function thereIsAProductWithSku($sku)
+    public function addDataProvider(ProductDataProvider $dataProvider)
     {
-        $this->productFixture->create([ProductInterface::SKU => $sku]);
+        $this->dataProviders[] = $dataProvider;
     }
 }

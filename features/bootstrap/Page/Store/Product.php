@@ -15,9 +15,11 @@
  */
 namespace Page\Store;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Page\AmazonLoginTrait;
 use Page\PageTrait;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
+use \Magento\Framework\App\ObjectManager;
 
 class Product extends Page
 {
@@ -41,9 +43,42 @@ class Product extends Page
         $this->open(['id' => (int) $productId]);
     }
 
+    /**
+     * @param string $sku
+     */
+    public function openWithProductSku($sku)
+    {
+        $productRepository = ObjectManager::getInstance()->get(ProductRepositoryInterface::class);
+        $this->open(['id' => $productRepository->get($sku)->getId()]);
+    }
+
     public function addToBasket()
     {
         $this->getElement('add-to-cart')->click();
         $this->waitForElement('success-message');
+    }
+
+    /**
+     * @return bool
+     */
+    public function pwaButtonIsVisible()
+    {
+        try {
+            return $this->getElementWithWait('open-amazon-login', 30000)->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function pwaButtonIsVisibleNoWait()
+    {
+        try {
+            return $this->getElement('open-amazon-login')->isVisible();
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

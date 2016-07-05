@@ -17,6 +17,7 @@ namespace Context\Data;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Bex\Behat\Magento2InitExtension\Fixtures\MagentoConfigManager;
+use Fixtures\Product as ProductFixture;
 
 class ConfigContext implements SnippetAcceptingContext
 {
@@ -27,9 +28,23 @@ class ConfigContext implements SnippetAcceptingContext
 
     protected $hasConfigChanges = false;
 
+    /**
+     * @var ProductFixture
+     */
+    protected $productFixture;
+
+    /**
+     * @Given IPN is disabled
+     */
+    public function ipnIsDisabled()
+    {
+        $this->changeConfig('payment/amazon_payment/update_mechanism', 'polling');
+    }
+
     public function __construct()
     {
         $this->configManager = new MagentoConfigManager;
+        $this->productFixture = new ProductFixture;
     }
 
     /**
@@ -47,7 +62,6 @@ class ConfigContext implements SnippetAcceptingContext
     {
         $this->changeConfig('payment/amazon_payment/payment_action', 'authorize_capture');
     }
-
 
     /**
      * @Given orders are authorized asynchronously
@@ -73,15 +87,7 @@ class ConfigContext implements SnippetAcceptingContext
         $this->changeConfig('payment/amazon_payment/update_mechanism', 'instant');
     }
 
-    /**
-     * @Given IPN is disabled
-     */
-    public function ipnIsDisabled()
-    {
-        $this->changeConfig('payment/amazon_payment/update_mechanism', 'polling');
-    }
-
-    protected function changeConfig($path, $value, $scopeType = 'default', $scopeCode = null)
+    public function changeConfig($path, $value, $scopeType = 'default', $scopeCode = null)
     {
         $this->configManager->changeConfigs(
             [
@@ -122,5 +128,26 @@ class ConfigContext implements SnippetAcceptingContext
     public function amazonAddressContainsBlackListedTerms()
     {
         $this->changeConfig('payment/amazon_payment/packstation_terms', implode(',', range('a', 'z')));
+    }
+
+    /**
+     * @Given Product SKU :productSku belongs to an excluded category
+     */
+    public function productSkuBelongsToAnExcludedCategory($productSku)
+    {
+        $product = $this->productFixture->create(['sku' => $productSku]);
+
+        $productCategories = $product->getCategoryIds();
+
+        if (empty($productCategories)) {
+            throw new \RuntimeException(
+                "Product $productSku has no associated categories."
+            );
+        }
+
+        $this->changeConfig(
+            'payment/amazon_payment/excluded_categories',
+            implode(',', $productCategories)
+        );
     }
 }

@@ -1,4 +1,6 @@
 <?php
+use Magento\Catalog\Api\Data\ProductInterface;
+
 /**
  * Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
@@ -13,29 +15,20 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-namespace Context\Data;
+namespace Fixtures\Helper\Product;
 
-use Behat\Behat\Context\SnippetAcceptingContext;
-use Fixtures\Product as ProductFixture;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\Api\ExtensibleDataInterface;
 
-class ProductContext implements SnippetAcceptingContext
+/**
+ * Base class for Product Data provider.
+ *
+ * Data providers populate the received Product with data needed to properly create it using M2 system.
+ */
+interface ProductDataProvider
 {
-    /**
-     * @var ProductFixture
-     */
-    protected $productFixture;
+    const KEY_CUSTOM_ATTRIBUTES = 'custom_attributes';
+    const KEY_EXTENSION_ATTRIBUTES = ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY;
 
-    public function __construct()
-    {
-        $this->productFixture = new ProductFixture;
-    }
-
-    /**
-     * @Given there is a product with sku :sku
-     */
-    public function thereIsAProductWithSku($sku)
-    {
-        $this->productFixture->create([ProductInterface::SKU => $sku]);
-    }
+    public function addDataToProduct(ProductInterface $product);
 }
