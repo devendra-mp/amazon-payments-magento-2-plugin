@@ -6,9 +6,9 @@
     <type name="Amazon\Login\Api\Customer\CompositeMatcherInterface">
         <arguments>
             <argument name="matchers" xsi:type="array">
-                <item name="sessionmatcher" xsi:type="object">Amazon\Login\Api\Customer\SessionMatcher</item>
-                <item name="idmatcher" xsi:type="object">Amazon\Login\Api\Customer\IdMatcher</item>
-                <item name="emailmatcher" xsi:type="object">Amazon\Login\Api\Customer\EmailMatcher</item>
+                <item name="sessionmatcher" xsi:type="object">Amazon\Login\Model\Customer\SessionMatcher</item>
+                <item name="idmatcher" xsi:type="object">Amazon\Login\Model\Customer\IdMatcher</item>
+                <item name="emailmatcher" xsi:type="object">Amazon\Login\Model\Customer\EmailMatcher</item>
             </argument>
         </arguments>
     </type>

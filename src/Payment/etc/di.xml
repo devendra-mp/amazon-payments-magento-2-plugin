@@ -47,10 +47,10 @@
     <type name="Amazon\Payment\Api\Ipn\CompositeProcessorInterface">
         <arguments>
             <argument name="processors" xsi:type="array">
-                <item name="captureprocessor" xsi:type="object">Amazon\Payment\Api\Ipn\CaptureProcessor\Proxy</item>
-                <item name="authorizationprocessor" xsi:type="object">Amazon\Payment\Api\Ipn\AuthorizationProcessor\Proxy</item>
-                <item name="orderprocessor" xsi:type="object">Amazon\Payment\Api\Ipn\OrderProcessor\Proxy</item>
-                <item name="refundprocessor" xsi:type="object">Amazon\Payment\Api\Ipn\RefundProcessor\Proxy</item>
+                <item name="captureprocessor" xsi:type="object">Amazon\Payment\Model\Ipn\CaptureProcessor\Proxy</item>
+                <item name="authorizationprocessor" xsi:type="object">Amazon\Payment\Model\Ipn\AuthorizationProcessor\Proxy</item>
+                <item name="orderprocessor" xsi:type="object">Amazon\Payment\Model\Ipn\OrderProcessor\Proxy</item>
+                <item name="refundprocessor" xsi:type="object">Amazon\Payment\Model\Ipn\RefundProcessor\Proxy</item>
             </argument>
         </arguments>
     </type>
