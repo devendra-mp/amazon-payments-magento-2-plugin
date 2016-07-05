@@ -15,12 +15,12 @@
  */
 namespace Amazon\Login\Plugin;
 
-use Magento\Checkout\Controller\Cart\Index;
+use Magento\Checkout\Controller\Index\Index;
 use Magento\Customer\Model\Session;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\UrlInterface;
 
-class CartController
+class CheckoutController
 {
     /**
      * @var Session

@@ -21,6 +21,15 @@
     <type name="Magento\Checkout\Controller\Cart\Index">
         <plugin name="amazon_login_cart_controller" type="Amazon\Login\Plugin\CartController" sortOrder="1" />
     </type>
+    <type name="Magento\Checkout\Controller\Index\Index">
+        <plugin name="amazon_login_checkout_controller" type="Amazon\Login\Plugin\CheckoutController" sortOrder="1" />
+    </type>
+    <type name="Magento\Customer\Controller\Account\Login">
+        <plugin name="amazon_login_login_controller" type="Amazon\Login\Plugin\LoginController" sortOrder="1" />
+    </type>
+    <type name="Magento\Customer\Controller\Account\Create">
+        <plugin name="amazon_login_create_controller" type="Amazon\Login\Plugin\CreateController" sortOrder="1" />
+    </type>
     <type name="Amazon\Login\Controller\Login\Guest">
         <arguments>
             <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
@@ -34,7 +43,10 @@
     <type name="Magento\Sales\Api\OrderCustomerManagementInterface">
         <plugin name="amazon_login_order_customer_service" type="Amazon\Login\Plugin\OrderCustomerManagement" sortOrder="1" />
     </type>
-    <type name="Magento\Customer\Model\Session">
-        <plugin name="amazon_login_customer_session" type="Amazon\Login\Plugin\CustomerSession" sortOrder="1" />
+    <type name="Amazon\Login\Model\Customer\Account\Redirect">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
     </type>
 </config>

@@ -20,6 +20,7 @@ use Amazon\Core\Domain\AmazonCustomer;
 use Amazon\Core\Domain\AmazonCustomerFactory;
 use Amazon\Core\Helper\Data as AmazonCoreHelper;
 use Amazon\Login\Model\Validator\AccessTokenRequestValidator;
+use Amazon\Login\Model\Customer\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Session;
 use Magento\Customer\Model\Url;
 use Magento\Framework\App\Action\Action;
@@ -65,6 +66,11 @@ class Guest extends Action
     protected $accessTokenRequestValidator;
 
     /**
+     * @var AccountRedirect
+     */
+    protected $accountRedirect;
+
+    /**
      * @param Context                     $context
      * @param AmazonCustomerFactory       $amazonCustomerFactory
      * @param ClientFactoryInterface      $clientFactory
@@ -73,6 +79,7 @@ class Guest extends Action
      * @param AmazonCoreHelper            $amazonCoreHelper
      * @param Url                         $customerUrl
      * @param AccessTokenRequestValidator $accessTokenRequestValidator
+     * @param AccountRedirect             $accountRedirect
      */
     public function __construct(
         Context $context,
@@ -82,7 +89,8 @@ class Guest extends Action
         Session $customerSession,
         AmazonCoreHelper $amazonCoreHelper,
         Url $customerUrl,
-        AccessTokenRequestValidator $accessTokenRequestValidator
+        AccessTokenRequestValidator $accessTokenRequestValidator,
+        AccountRedirect $accountRedirect
     ) {
         parent::__construct($context);
         $this->amazonCustomerFactory = $amazonCustomerFactory;
@@ -92,6 +100,7 @@ class Guest extends Action
         $this->amazonCoreHelper = $amazonCoreHelper;
         $this->customerUrl = $customerUrl;
         $this->accessTokenRequestValidator = $accessTokenRequestValidator;
+        $this->accountRedirect = $accountRedirect;
     }
 
     /**
@@ -126,7 +135,7 @@ class Guest extends Action
             $this->messageManager->addErrorMessage(__('Error processing Amazon Login'));
         }
 
-        return $this->resultRedirectFactory->create()->setPath('checkout/cart');
+        return $this->accountRedirect->getRedirect();
     }
 
     /**
