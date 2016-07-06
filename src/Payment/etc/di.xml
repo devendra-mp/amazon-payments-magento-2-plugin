@@ -11,7 +11,7 @@
     <preference for="Amazon\Payment\Api\Data\PendingAuthorizationInterface" type="Amazon\Payment\Model\PendingAuthorization" />
     <preference for="Amazon\Payment\Api\Data\PendingRefundInterface" type="Amazon\Payment\Model\PendingRefund" />
     <preference for="Amazon\Payment\Ipn\IpnHandlerFactoryInterface" type="Amazon\Payment\Ipn\IpnHandlerFactory" />
-    <preference for="PayWithAmazon\IpnHandlerInterface" type="PayWithAmazon\IpnHandler" />
+    <preference for="PayWithAmazon\IpnHandlerInterface" type="Amazon\Payment\Ipn\IpnHandler" />
     <preference for="Amazon\Login\Api\Customer\CompositeMatcherInterface" type="Amazon\Login\Model\Customer\CompositeMatcher" />
     <preference for="Amazon\Payment\Api\Ipn\CompositeProcessorInterface" type="Amazon\Payment\Model\Ipn\CompositeProcessor" />
     <type name="Magento\Quote\Api\CartRepositoryInterface">

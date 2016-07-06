@@ -17,20 +17,12 @@ namespace Amazon\Payment\Ipn;
 
 use PayWithAmazon\IpnHandler as AmazonIpnHandler;
 
-/**
- * Class MockIpnHandler
- *
- * Mock IPN Handler for use with Behat Tests, skips signature verification
- */
-class MockIpnHandler extends AmazonIpnHandler
+class IpnHandler extends AmazonIpnHandler
 {
     /**
-     * @var \ReflectionClass
-     */
-    private $parent;
-
-    /**
-     * MockIpnHandler constructor.
+     * IpnHandler constructor.
+     *
+     * Change variable names to fix an issue with M2 DI Compiler
      *
      * @param array      $requestHeaders
      * @param string     $requestBody
@@ -38,20 +30,6 @@ class MockIpnHandler extends AmazonIpnHandler
      */
     public function __construct($requestHeaders, $requestBody, $ipnConfig = null)
     {
-        $reflection   = new \ReflectionClass($this);
-        $this->parent = $reflection->getParentClass();
-
-        $bodyProperty = $this->parent->getProperty('body');
-        $bodyProperty->setAccessible(true);
-        $bodyProperty->setValue($this, $requestBody);
-
-        $this->getMessage();
-    }
-
-    private function getMessage()
-    {
-        $method = $this->parent->getMethod('getMessage');
-        $method->setAccessible(true);
-        $method->invoke($this);
+        parent::__construct($requestHeaders, $requestBody, $ipnConfig);
     }
 }

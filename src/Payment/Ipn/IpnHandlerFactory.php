@@ -74,7 +74,7 @@ class IpnHandlerFactory implements IpnHandlerFactoryInterface
 
         $handler = $this->objectManager->create(
             $this->instanceName,
-            ['headers' => $headers, 'body' => $body]
+            ['requestHeaders' => $headers, 'requestBody' => $body]
         );
 
         if ($handler instanceof LoggerAwareInterface && $this->coreHelper->isLoggingEnabled()) {
