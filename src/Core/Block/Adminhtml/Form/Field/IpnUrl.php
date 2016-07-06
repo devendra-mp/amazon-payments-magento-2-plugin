@@ -19,7 +19,7 @@ use Magento\Config\Block\System\Config\Form\Field as BaseField;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\UrlInterface;
 
-class RedirectUrl extends BaseField
+class IpnUrl extends BaseField
 {
     protected function _renderValue(AbstractElement $element)
     {
@@ -29,7 +29,7 @@ class RedirectUrl extends BaseField
         $baseUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_WEB, true);
 
         if ($baseUrl) {
-            $value = $baseUrl . 'amazon/login/processAuthHash/';
+            $value = $baseUrl . 'amazonpayments/payment/ipn/';
         }
 
         return '<td class="value">' . $value . '</td>';
