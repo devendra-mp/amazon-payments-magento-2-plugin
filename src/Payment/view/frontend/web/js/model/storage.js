@@ -25,7 +25,8 @@ define(
             isShippingMethodsLoading = ko.observable(true),
             isAmazonShippingAddressSelected = ko.observable(false),
             isQuoteDirty = ko.observable(amazonPaymentConfig.getValue('isQuoteDirty')),
-            isPwaVisible = ko.computed(function() { return isAmazonEnabled() && !isQuoteDirty(); });
+            isPwaVisible = ko.computed(function() { return isAmazonEnabled() && !isQuoteDirty(); }),
+            isAmazonCartInValid = ko.computed(function() { return isAmazonAccountLoggedIn() && isQuoteDirty() });
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
@@ -38,6 +39,21 @@ define(
                 isAmazonDefined.dispose();
             }
         }
+
+        /** log out amazon user **/
+        function amazonLogOut() {
+            if(amazonCore.amazonDefined()) {
+                amazon.Login.logout();
+            }
+            this.isAmazonAccountLoggedIn(false);
+        }
+
+        /** if Amazon cart contents are invalid log user out **/
+        isAmazonCartInValid.subscribe(function(isCartInValid) {
+            if(isCartInValid) {
+                amazonLogOut();
+            }
+        });
 
         function setAmazonLoggedOutIfLoginError(isLoggedOut) {
             if (true === isLoggedOut) {
@@ -71,12 +87,7 @@ define(
             isAmazonShippingAddressSelected: isAmazonShippingAddressSelected,
             isQuoteDirty: isQuoteDirty,
             isPwaVisible: isPwaVisible,
-            amazonlogOut: function() {
-                if(amazonCore.amazonDefined()) {
-                    amazon.Login.logout();
-                }
-                this.isAmazonAccountLoggedIn(false);
-            },
+            amazonlogOut: amazonLogOut,
             setOrderReference: function(or) {
                 orderReference = or;
             },

@@ -15,8 +15,11 @@
  */
 namespace Amazon\Payment\Observer;
 
+use Amazon\Core\Exception\AmazonWebapiException;
+use Amazon\Core\Helper\CategoryExclusion;
 use Amazon\Payment\Api\Data\QuoteLinkInterface;
 use Amazon\Payment\Api\Data\QuoteLinkInterfaceFactory;
+use Amazon\Payment\Domain\AmazonAuthorizationStatus;
 use Amazon\Payment\Model\Method\Amazon;
 use Amazon\Payment\Model\OrderInformationManagement;
 use Magento\Framework\Event\Observer;
@@ -42,20 +45,28 @@ class ConfirmOrder implements ObserverInterface
     protected $paymentMethodManagement;
 
     /**
+     * @var CategoryExclusion
+     */
+    protected $categoryExclusionHelper;
+
+    /**
      * ConfirmOrder constructor.
      *
-     * @param QuoteLinkInterfaceFactory $quoteLinkFactory
-     * @param OrderInformationManagement $orderInformationManagement
+     * @param QuoteLinkInterfaceFactory        $quoteLinkFactory
+     * @param OrderInformationManagement       $orderInformationManagement
      * @param PaymentMethodManagementInterface $paymentMethodManagement
+     * @param CategoryExclusion                $categoryExclusionHelper
      */
     public function __construct(
         QuoteLinkInterfaceFactory $quoteLinkFactory,
         OrderInformationManagement $orderInformationManagement,
-        PaymentMethodManagementInterface $paymentMethodManagement
+        PaymentMethodManagementInterface $paymentMethodManagement,
+        CategoryExclusion $categoryExclusionHelper
     ) {
         $this->quoteLinkFactory           = $quoteLinkFactory;
         $this->orderInformationManagement = $orderInformationManagement;
         $this->paymentMethodManagement    = $paymentMethodManagement;
+        $this->categoryExclusionHelper    = $categoryExclusionHelper;
     }
 
     public function execute(Observer $observer)
@@ -69,9 +80,23 @@ class ConfirmOrder implements ObserverInterface
         if ($amazonOrderReferenceId) {
             $payment = $this->paymentMethodManagement->get($quoteId);
             if (Amazon::PAYMENT_METHOD_CODE == $payment->getMethod()) {
+                $this->checkForExcludedProducts();
                 $this->saveOrderInformation($quoteLink, $amazonOrderReferenceId);
                 $this->confirmOrderReference($quoteLink, $amazonOrderReferenceId, $storeId);
             }
+        }
+    }
+
+    protected function checkForExcludedProducts()
+    {
+        if ($this->categoryExclusionHelper->isQuoteDirty()) {
+            throw new AmazonWebapiException(
+                __(
+                    'Unfortunately it is not possible to pay with Amazon for this order. Please choose another payment method.'
+                ),
+                AmazonAuthorizationStatus::CODE_HARD_DECLINE,
+                AmazonWebapiException::HTTP_FORBIDDEN
+            );
         }
     }
 
