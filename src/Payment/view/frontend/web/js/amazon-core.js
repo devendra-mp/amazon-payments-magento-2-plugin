@@ -3,8 +3,7 @@ define([
     'ko',
     'amazonPaymentConfig',
     'amazonWidgetsLoader',
-    'bluebird',
-    'mage/cookies'
+    'bluebird'
 ], function($, ko, amazonPaymentConfig) {
     "use strict";
 
@@ -61,7 +60,7 @@ define([
     //handle deletion of cookie and log user out if present
     function amazonLogoutThrowError(cookieToRemove) {
         amazonLogout();
-        $.mage.cookies.clear(cookieToRemove);
+        document.cookie = cookieToRemove + '=; Path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         amazonLoginError(true);
     }
 
