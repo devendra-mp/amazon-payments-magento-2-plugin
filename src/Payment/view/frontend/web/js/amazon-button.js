@@ -64,7 +64,8 @@ define([
             return _this.usePopUp() ? _this.secureHttpsCallback : amazonPaymentConfig.getValue('oAuthHashRedirectUrl');
         },
         usePopUp: function() {
-            return (window.location.protocol === 'https:' && !Modernizr.touch);
+            //always use redirect journey on product page and touch devices
+            return ((window.location.protocol === 'https:' && !$('body').hasClass('catalog-product-view')) && !Modernizr.touch);
         },
         /**
          * onAmazonPaymentsReady
@@ -84,6 +85,11 @@ define([
                 }
             });
         },
+        /**
+         * Build login options
+         * @returns {{scope: *, popup: *, state: *}}
+         * @private
+         */
         _getLoginOptions: function() {
             return {
                 scope: _this.options.loginScope,
