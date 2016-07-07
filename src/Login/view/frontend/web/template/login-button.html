@@ -2,11 +2,11 @@
     <!-- ko template: getTemplate() --><!-- /ko -->
 <!--/ko-->
 
-<!-- ko if: (isPwaVisible) -->
+<!-- ko if: (isLwaVisible) -->
     <!-- ko ifnot: (isAmazonAccountLoggedIn) -->
         <div class="amazon-button-container">
             <div class="amazon-button-container__cell">
-                <div id="PayWithAmazon" class="login-with-amazon" data-bind="mageInit: {'amazonButton':{'buttonType': 'PwA'}}"></div>
+                <div id="LoginWithAmazon" class="login-with-amazon" data-bind="mageInit: {'amazonButton':{'buttonType': 'LwA'}}"></div>
             </div>
 
             <div class="amazon-button-container__cell">
