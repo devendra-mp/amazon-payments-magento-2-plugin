@@ -46,9 +46,9 @@ define(
                 });
             },
             validateGuestEmail: function() {
-                var loginFormSelector = 'form[data-role=email-with-possible-login] input[type=email]';
+                var loginFormSelector = 'form[data-role=email-with-possible-login]';
                 $(loginFormSelector).validation();
-                return $(loginFormSelector).valid();
+                return $(loginFormSelector + ' input[type=email]').valid();
             },
             /**
              * New setShipping Action for Amazon payments to bypass validation
