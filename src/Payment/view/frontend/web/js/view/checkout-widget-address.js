@@ -17,7 +17,8 @@ define(
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/model/error-processor',
         'Magento_Checkout/js/model/url-builder',
-        'Magento_Checkout/js/checkout-data'
+        'Magento_Checkout/js/checkout-data',
+        'Magento_Checkout/js/model/checkout-data-resolver'
     ],
     function(
         $,
@@ -35,7 +36,8 @@ define(
         fullScreenLoader,
         errorProcessor,
         urlBuilder,
-        checkoutData
+        checkoutData,
+        checkoutDataResolver
     ) {
         'use strict';
         var self;
@@ -114,9 +116,10 @@ define(
                         //set checkout data before selecting shipping address
                         var checkoutAddress = addressConverter.quoteAddressToFormAddressData(addressData);
                         checkoutData.setShippingAddressFromData(checkoutAddress);
-                        addressData.isAmazonAddress = true;
-                        selectShippingAddress(addressData);
-
+                        var address = addressConverter.formAddressDataToQuoteAddress(
+                            checkoutData.getShippingAddressFromData()
+                        );
+                        selectShippingAddress(address);
                     }
                 ).fail(
                     function (response) {
