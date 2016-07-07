@@ -39,11 +39,10 @@ define(
                 this._super();
 
                 quote.shippingMethod.subscribe(function() {
-                    if(typeof quote.shippingAddress().isAmazonAddress !== 'undefined') {
+                    if(this.isAmazonLoggedIn()) {
                         amazonStorage.isShippingMethodsLoading(false); //remove loader when shippingMethod is set
-                        delete quote.shippingAddress().isAmazonAddress; //delete key now it's no longer needed
                     }
-                });
+                }, this);
             },
             validateGuestEmail: function() {
                 var loginFormSelector = 'form[data-role=email-with-possible-login]';

@@ -114,9 +114,10 @@ define(
                         //set checkout data before selecting shipping address
                         var checkoutAddress = addressConverter.quoteAddressToFormAddressData(addressData);
                         checkoutData.setShippingAddressFromData(checkoutAddress);
-                        addressData.isAmazonAddress = true;
-                        selectShippingAddress(addressData);
-
+                        var address = addressConverter.formAddressDataToQuoteAddress(
+                            checkoutData.getShippingAddressFromData()
+                        );
+                        selectShippingAddress(address);
                     }
                 ).fail(
                     function (response) {
