@@ -15,25 +15,25 @@
  */
 namespace Amazon\Payment\Observer;
 
-use Amazon\Payment\Helper\EmailFactory;
+use Amazon\Payment\Helper\Email;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
 class SoftDeclinedEmailSender implements ObserverInterface
 {
     /**
-     * @var EmailFactory
+     * @var Email
      */
-    protected $emailHelperFactory;
+    protected $emailHelper;
 
     /**
      * SoftDeclinedEmailSender constructor.
      *
-     * @param EmailFactory $emailHelperFactory
+     * @param Email $emailHelper
      */
-    public function __construct(EmailFactory $emailHelperFactory)
+    public function __construct(Email $emailHelper)
     {
-        $this->emailHelperFactory = $emailHelperFactory;
+        $this->emailHelper = $emailHelper;
     }
 
     /**
@@ -41,6 +41,6 @@ class SoftDeclinedEmailSender implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $this->emailHelperFactory->create()->sendAuthorizationSoftDeclinedEmail($observer->getOrder());
+        $this->emailHelper->sendAuthorizationSoftDeclinedEmail($observer->getOrder());
     }
 }
