@@ -17,8 +17,7 @@ define(
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/model/error-processor',
         'Magento_Checkout/js/model/url-builder',
-        'Magento_Checkout/js/checkout-data',
-        'Magento_Checkout/js/model/checkout-data-resolver'
+        'Magento_Checkout/js/checkout-data'
     ],
     function(
         $,
@@ -36,8 +35,7 @@ define(
         fullScreenLoader,
         errorProcessor,
         urlBuilder,
-        checkoutData,
-        checkoutDataResolver
+        checkoutData
     ) {
         'use strict';
         var self;
