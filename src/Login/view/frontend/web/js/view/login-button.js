@@ -24,7 +24,7 @@ define(
             },
             isCustomerLoggedIn: customer.isLoggedIn,
             isAmazonAccountLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isLwaVisible: ko.observable(!amazonPaymentConfig.getValue('isLwaEnabled')),
+            isLwaVisible: ko.observable(amazonPaymentConfig.getValue('isLwaEnabled')),
             initialize: function () {
                 var self = this;
                 this._super();
