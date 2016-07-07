@@ -115,6 +115,8 @@ define(
                         var amazonAddress = data.shift();
                         var addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
 
+                        addressData.telephone = !(addressData.telephone) ? '0000000000' : addressData.telephone;
+
                         selectBillingAddress(addressData);
                         amazonStorage.isPlaceOrderDisabled(false);
                     }
