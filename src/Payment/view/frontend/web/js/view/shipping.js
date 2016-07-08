@@ -43,6 +43,12 @@ define(
                         amazonStorage.isShippingMethodsLoading(false); //remove loader when shippingMethod is set
                     }
                 }, this);
+
+                //switch form inline based on amazon and customer loggedIn status
+                amazonStorage.isAmazonAccountLoggedIn.subscribe(function(loggedIn) {
+                    this.isFormInline = (customer.isLoggedIn()) ? false : !loggedIn;
+                }, this);
+
             },
             validateGuestEmail: function() {
                 var loginFormSelector = 'form[data-role=email-with-possible-login]';
@@ -53,9 +59,6 @@ define(
              * New setShipping Action for Amazon payments to bypass validation
              */
             setShippingInformation: function () {
-                if(amazonStorage.isAmazonAccountLoggedIn()) {
-                    this.isFormInline = false; //remove inline form constraint if logged into amazon
-                }
                 function setShippingInformationAmazon() {
                     setShippingInformationAction().done(
                         function() {
