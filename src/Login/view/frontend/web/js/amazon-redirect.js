@@ -17,7 +17,7 @@ define([
         _create: function() {
 
             self = this;
-            // verify nonce first
+            //verify nonce first
             this.redirectOnInvalidState();
 
             // we don't have the customer's consent or invalid request
@@ -28,7 +28,7 @@ define([
                 amazon.Login.setUseCookie(true);
                 amazonCore.verifyAmazonLoggedIn().then(function(loggedIn) {
                     if(loggedIn) {
-                        self.redirect()
+                        self.redirect();
                     }
                 });
             }, this);
@@ -57,7 +57,9 @@ define([
             }
             return true;
         },
-
+        /**
+         * Redirect user to correct controller which logs them into M2 via Amazon hash
+         */
         redirect: function() {
             window.location = amazonPaymentConfig.getValue('redirectUrl') + '?access_token=' + this.getURLParameter('access_token', location.hash);
         },
