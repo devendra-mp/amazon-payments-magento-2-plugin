@@ -27,7 +27,7 @@ define(
         amazonPaymentConfig
     ) {
         'use strict';
-
+        
         var isAmazonAccountLoggedIn = ko.observable(false),
             isAmazonEnabled = ko.observable(amazonPaymentConfig.getValue('isPwaEnabled')),
             orderReference,
@@ -41,14 +41,15 @@ define(
             isAmazonShippingAddressSelected = ko.observable(false),
             isQuoteDirty = ko.observable(amazonPaymentConfig.getValue('isQuoteDirty')),
             isPwaVisible = ko.computed(function() { return isAmazonEnabled() && !isQuoteDirty(); }),
-            isAmazonCartInValid = ko.computed(function() { return isAmazonAccountLoggedIn() && isQuoteDirty() });
+            isAmazonCartInValid = ko.computed(function() { return isAmazonAccountLoggedIn() && isQuoteDirty() }),
+            isLoginRedirectPage = $('body').hasClass('amazon-login-login-processauthhash');
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
          * @param amazonDefined
          */
         function checkAmazonDefined(amazonDefined) {
-            if(amazonDefined) {
+            if(amazonDefined && !isLoginRedirectPage) {
                 verifyAmazonLoggedIn();
                 //remove subscription to amazonDefined once loaded
                 isAmazonDefined.dispose();
@@ -63,12 +64,6 @@ define(
             this.isAmazonAccountLoggedIn(false);
         }
 
-        /** if Amazon cart contents are invalid log user out **/
-        isAmazonCartInValid.subscribe(function(isCartInValid) {
-            if(isCartInValid) {
-                amazonLogOut();
-            }
-        });
 
         function setAmazonLoggedOutIfLoginError(isLoggedOut) {
             if (true === isLoggedOut) {
@@ -76,6 +71,13 @@ define(
                 amazonLoginError.dispose();
             }
         }
+
+        /** if Amazon cart contents are invalid log user out **/
+        isAmazonCartInValid.subscribe(function(isCartInValid) {
+            if(isCartInValid) {
+                amazonLogOut();
+            }
+        });
 
         //run this on loading storage model. If not defined subscribe will trigger when true
         checkAmazonDefined(amazonCore.amazonDefined());
