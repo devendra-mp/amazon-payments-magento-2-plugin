@@ -46,7 +46,7 @@ define(
 
                 //switch form inline based on amazon and customer loggedIn status
                 amazonStorage.isAmazonAccountLoggedIn.subscribe(function(loggedIn) {
-                    this.isFormInline = (customer.isLoggedIn()) ? false : !loggedIn;
+                    this.isFormInline = (loggedIn) ? false : !customer.isLoggedIn();
                 }, this);
 
             },
