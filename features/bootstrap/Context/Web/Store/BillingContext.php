@@ -230,6 +230,8 @@ class BillingContext implements SnippetAcceptingContext
 
         unset($billingAddressData['company']);
         unset($amazonBillingAddressData['company']);
+        unset($billingAddressData['telephone']);
+        unset($amazonBillingAddressData['telephone']);
 
         asort($amazonBillingAddressData);
         asort($billingAddressData);

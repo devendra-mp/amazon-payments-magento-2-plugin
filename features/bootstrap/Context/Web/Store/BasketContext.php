@@ -82,11 +82,14 @@ class BasketContext implements SnippetAcceptingContext
      */
     public function thereIsAValidProductInMyBasket()
     {
-        $product = $this->productFixture->create([ProductInterface::SKU => 'test-product-' . time()]);
+        $product = $this->productFixture->create([
+            ProductInterface::SKU  => 'test-product-' . time(),
+            ProductInterface::NAME => 'Test Product ' . time()
+        ]);
         $this->productPage->openWithProductId($product->getId());
         $this->productPage->addToBasket();
     }
-    
+
     /**
      * @Given Product SKU :productSku is added to the basket
      */
