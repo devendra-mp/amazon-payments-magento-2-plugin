@@ -57,7 +57,7 @@ default:
           value: 'synchronous'
         -
           path: 'payment/amazon_payment/update_mechanism'
-          value: 'polling'
+          value: 'instant'
         -
           path: 'payment/amazon_payment/payment_region'
           value: 'uk'

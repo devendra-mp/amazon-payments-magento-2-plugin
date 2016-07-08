@@ -190,6 +190,14 @@ class LoginContext implements SnippetAcceptingContext
         PHPUnit_Framework_Assert::assertFalse($loggedIn);
     }
 
+    /**
+     * @AfterScenario
+     */
+    public function logoutUser()
+    {
+        $this->logoutPage->open();
+    }
+
     protected function getAmazonPassword()
     {
         return $this->amazonPassword;
