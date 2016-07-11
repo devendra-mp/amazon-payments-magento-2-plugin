@@ -8,7 +8,7 @@ define(
         'Magento_Customer/js/model/customer',
         'Amazon_Payment/js/model/storage'
     ],
-    function(
+    function (
         $,
         Component,
         ko,
@@ -17,7 +17,7 @@ define(
     ) {
         'use strict';
         return Component.extend({
-             defaults: {
+            defaults: {
                 template: 'Amazon_Payment/checkout-button'
             },
             isCustomerLoggedIn: customer.isLoggedIn,

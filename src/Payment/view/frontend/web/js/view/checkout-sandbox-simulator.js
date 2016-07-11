@@ -7,7 +7,7 @@ define(
         'ko',
         'Amazon_Payment/js/model/storage'
     ],
-    function(
+    function (
         $,
         Component,
         ko,

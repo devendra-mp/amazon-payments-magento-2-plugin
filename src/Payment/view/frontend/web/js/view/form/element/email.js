@@ -8,7 +8,8 @@ define([
 ], function ($, Component, customerData, quote, checkoutData) {
     'use strict';
 
-    function getAmazonCustomerEmail() {
+    function getAmazonCustomerEmail()
+    {
         if (window.checkoutConfig.hasOwnProperty('amazonLogin') &&
             typeof window.checkoutConfig.amazonLogin.amazon_customer_email === "string"
         ) {

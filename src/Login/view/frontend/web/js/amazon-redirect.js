@@ -19,7 +19,7 @@ define([
     'amazonPaymentConfig',
     'amazonCsrf',
     'jquery/ui'
-], function($, amazonCore, amazonPaymentConfig, amazonCsrf) {
+], function ($, amazonCore, amazonPaymentConfig, amazonCsrf) {
     "use strict";
 
     var self;
@@ -29,7 +29,7 @@ define([
         /**
          * @private
          */
-        _create: function() {
+        _create: function () {
 
             self = this;
             //verify nonce first
@@ -38,11 +38,11 @@ define([
             // we don't have the customer's consent or invalid request
             this.redirectOnRequestWithError();
             this.setAuthStateCookies();
-            amazonCore.amazonDefined.subscribe(function() {
+            amazonCore.amazonDefined.subscribe(function () {
                 //only set this on the redirect page
                 amazon.Login.setUseCookie(true);
-                amazonCore.verifyAmazonLoggedIn().then(function(loggedIn) {
-                    if(loggedIn) {
+                amazonCore.verifyAmazonLoggedIn().then(function (loggedIn) {
+                    if (loggedIn) {
                         self.redirect();
                     }
                 });
@@ -55,17 +55,19 @@ define([
          * @param source
          * @returns {string|null}
          */
-        getURLParameter: function(name, source) {
+        getURLParameter: function (name, source) {
             return decodeURIComponent((new RegExp('[?|&|#]' + name + '=' +
-                    '([^&]+?)(&|#|;|$)').exec(source) || [,""])[1].replace(/\+/g,
-                    '%20')) || null;
+                    '([^&]+?)(&|#|;|$)').exec(source) || [,""])[1].replace(
+                        /\+/g,
+                        '%20'
+                    )) || null;
         },
 
         /**
          * Set State Cache Auth Cookies if they aren't already set
          * @returns {boolean}
          */
-        setAuthStateCookies: function() {
+        setAuthStateCookies: function () {
             var token = this.getURLParameter("access_token", location.hash);
             if (typeof token === 'string' && token.match(/^Atza/)) {
                 $.cookieStorage.set('amazon_Login_accessToken', token);
@@ -75,16 +77,16 @@ define([
         /**
          * Redirect user to correct controller which logs them into M2 via Amazon hash
          */
-        redirect: function() {
+        redirect: function () {
             window.location = amazonPaymentConfig.getValue('redirectUrl') + '?access_token=' + this.getURLParameter('access_token', location.hash);
         },
-        redirectOnInvalidState: function() {
+        redirectOnInvalidState: function () {
             var state = this.getURLParameter('state', location.hash);
             if (!state || !amazonCsrf.isValid(state)) {
                 window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
             }
         },
-        redirectOnRequestWithError: function() {
+        redirectOnRequestWithError: function () {
             if (this.getURLParameter('error', window.location)) {
                 window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
             }
