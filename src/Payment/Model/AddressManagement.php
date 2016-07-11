@@ -24,6 +24,7 @@ use Amazon\Payment\Helper\Address;
 use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory;
+use Magento\Framework\Exception\SessionException;
 use Magento\Framework\Validator\Exception as ValidatorException;
 use Magento\Framework\Validator\Factory;
 use Magento\Framework\Webapi\Exception as WebapiException;
@@ -220,7 +221,13 @@ class AddressManagement implements AddressManagementInterface
 
     protected function updateQuoteLink($amazonOrderReferenceId)
     {
-        $quote     = $this->session->getQuote();
+        $quote = $this->session->getQuote();
+
+        if (! $quote->getId()) {
+            throw new SessionException(__('Your session has expired, please reload the page and try again.'));
+        }
+
+
         $quoteLink = $this->quoteLinkFactory->create()->load($quote->getId(), 'quote_id');
 
         if ($quoteLink->getAmazonOrderReferenceId() != $amazonOrderReferenceId) {
