@@ -85,6 +85,7 @@ class CaptureProcessor implements ProcessorInterface
 
         if (count($items = $collection->getItems())) {
             $pendingCapture = current($items);
+            $this->capture->setThrowExceptions(true);
             $this->capture->updateCapture($pendingCapture->getId(), $details);
         }
     }

@@ -20,6 +20,13 @@ use Amazon\Payment\Domain\Details\AmazonCaptureDetails;
 interface CaptureInterface
 {
     /**
+     * @param boolean $throwExceptions
+     *
+     * @return $this
+     */
+    public function setThrowExceptions($throwExceptions);
+
+    /**
      * Update capture
      *
      * @param integer                   $pendingCaptureId

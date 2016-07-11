@@ -100,6 +100,11 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
     protected $logger;
 
     /**
+     * @var bool
+     */
+    protected $throwExceptions = false;
+
+    /**
      * Authorization constructor.
      *
      * @param ClientFactoryInterface                    $clientFactory
@@ -153,6 +158,16 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
     /**
      * {@inheritdoc}
      */
+    public function setThrowExceptions($throwExceptions)
+    {
+        $this->throwExceptions = $throwExceptions;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function updateAuthorization(
         $pendingAuthorizationId,
         AmazonAuthorizationDetails $authorizationDetails = null,
@@ -176,6 +191,10 @@ class Authorization extends AbstractOperation implements AuthorizationInterface
         } catch (Exception $e) {
             $this->logger->error($e);
             $pendingAuthorization->getResource()->rollBack();
+
+            if ($this->throwExceptions) {
+                throw $e;
+            }
         }
     }
 

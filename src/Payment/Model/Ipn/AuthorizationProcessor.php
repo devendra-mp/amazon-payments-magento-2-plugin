@@ -88,6 +88,7 @@ class AuthorizationProcessor implements ProcessorInterface
 
         if (count($items = $collection->getItems())) {
             $pendingAuthorization = current($items);
+            $this->authorization->setThrowExceptions(true);
             $this->authorization->updateAuthorization($pendingAuthorization->getId(), $details);
         }
     }

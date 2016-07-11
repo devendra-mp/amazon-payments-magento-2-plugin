@@ -21,6 +21,13 @@ use Amazon\Payment\Domain\Details\AmazonOrderDetails;
 interface AuthorizationInterface
 {
     /**
+     * @param boolean $throwExceptions
+     *
+     * @return $this
+     */
+    public function setThrowExceptions($throwExceptions);
+
+    /**
      * Update authorization
      *
      * @param integer                         $pendingAuthorizationId

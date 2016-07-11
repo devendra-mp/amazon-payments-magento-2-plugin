@@ -85,6 +85,11 @@ class Capture extends AbstractOperation implements CaptureInterface
     protected $logger;
 
     /**
+     * @var bool
+     */
+    protected $throwExceptions = false;
+
+    /**
      * Capture constructor.
      *
      * @param ClientFactoryInterface              $clientFactory
@@ -132,6 +137,16 @@ class Capture extends AbstractOperation implements CaptureInterface
     /**
      * {@inheritdoc}
      */
+    public function setThrowExceptions($throwExceptions)
+    {
+        $this->throwExceptions = $throwExceptions;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function updateCapture($pendingCaptureId, AmazonCaptureDetails $captureDetails = null)
     {
         try {
@@ -165,6 +180,10 @@ class Capture extends AbstractOperation implements CaptureInterface
         } catch (Exception $e) {
             $this->logger->error($e);
             $pendingCapture->getResource()->rollBack();
+
+            if ($this->throwExceptions) {
+                throw $e;
+            }
         }
     }
 
