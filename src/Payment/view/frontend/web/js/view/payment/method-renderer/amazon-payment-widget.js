@@ -18,7 +18,7 @@ define(
         'Magento_Checkout/js/model/url-builder',
         'amazonPaymentConfig'
     ],
-    function(
+    function (
         $,
         Component,
         ko,
@@ -61,7 +61,7 @@ define(
                 self = this;
                 this._super();
             },
-            initPaymentWidget: function() {
+            initPaymentWidget: function () {
                 var $amazonPayment = $('#amazon_payment');
                 self.renderPaymentWidget();
                 $amazonPayment.trigger('click'); //activate amazon payments method on render
@@ -71,39 +71,39 @@ define(
             /**
              * render Amazon payment Widget
              */
-            renderPaymentWidget: function() {
+            renderPaymentWidget: function () {
                 new OffAmazonPayments.Widgets.Wallet({
                     sellerId: self.options.sellerId,
                     amazonOrderReferenceId: amazonStorage.getOrderReference(),
-                    onPaymentSelect: function(orderReference) {
+                    onPaymentSelect: function (orderReference) {
                         amazonStorage.isPlaceOrderDisabled(true);
                         self.setBillingAddressFromAmazon();
                     },
                     design: {
                         designMode: 'responsive'
                     },
-                    onError: function(error) {
+                    onError: function (error) {
                         errorProcessor.process(error);
                     }
                 }).bind(self.options.paymentWidgetDOMId);
             },
-            getCode: function() {
+            getCode: function () {
                 return 'amazon_payment';
             },
-            isActive: function() {
+            isActive: function () {
                 return true;
             },
-            getCountryName: function(countryId) {
+            getCountryName: function (countryId) {
                 return (countryData()[countryId] != undefined) ? countryData()[countryId].name : "";
             },
-            checkCountryName: function(countryId) {
+            checkCountryName: function (countryId) {
                 return (countryData()[countryId] != undefined);
             },
-            setBillingAddressFromAmazon: function() {
+            setBillingAddressFromAmazon: function () {
                 var serviceUrl = urlBuilder.createUrl('/amazon-billing-address/:amazonOrderReference', {amazonOrderReference: amazonStorage.getOrderReference()}),
                     payload = {
                         addressConsentToken : amazonStorage.getAddressConsentToken()
-                    };
+                };
 
                 fullScreenLoader.startLoader();
 
@@ -111,7 +111,7 @@ define(
                     serviceUrl,
                     JSON.stringify(payload)
                 ).done(
-                    function(data) {
+                    function (data) {
                         var amazonAddress = data.shift();
                         var addressData = addressConverter.formAddressDataToQuoteAddress(amazonAddress);
 
@@ -125,12 +125,12 @@ define(
                         errorProcessor.process(response);
                     }
                 ).always(
-                    function() {
+                    function () {
                         fullScreenLoader.stopLoader();
                     }
                 );
             },
-            getData: function() {
+            getData: function () {
                 return {
                     "method": this.item.method,
                     "additional_data": {

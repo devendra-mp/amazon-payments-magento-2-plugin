@@ -21,7 +21,7 @@ define([
     'modernizr/modernizr',
     'amazonCore',
     'jquery/ui'
-], function($, customerData, sectionConfig, amazonPaymentConfig, amazonCsrf) {
+], function ($, customerData, sectionConfig, amazonPaymentConfig, amazonCsrf) {
     "use strict";
 
     var _this,
@@ -37,7 +37,7 @@ define([
             loginPostUrl: null
         },
 
-        _create: function() {
+        _create: function () {
             _this = this;
             $button = this.element;
             this._verifyAmazonConfig();
@@ -47,8 +47,8 @@ define([
          * Verify if checkout config is available
          * @private
          */
-        _verifyAmazonConfig: function() {
-            if(amazonPaymentConfig.isDefined()) {
+        _verifyAmazonConfig: function () {
+            if (amazonPaymentConfig.isDefined()) {
                 _this.options.merchantId = amazonPaymentConfig.getValue('merchantId');
                 _this.options.buttonType = (_this.options.buttonType == 'LwA') ? amazonPaymentConfig.getValue('buttonTypeLwa') : amazonPaymentConfig.getValue('buttonTypePwa');
                 _this.options.buttonColor = amazonPaymentConfig.getValue('buttonColor');
@@ -59,7 +59,7 @@ define([
                 _this.options.buttonLanguage = amazonPaymentConfig.getValue('displayLanguage');
             }
         },
-        secureHttpsCallback: function(event) {
+        secureHttpsCallback: function (event) {
             if (!event.state || !amazonCsrf.isValid(event.state)) {
                 return window.location = amazonPaymentConfig.getValue('customerLoginPageUrl');
             }
@@ -74,10 +74,10 @@ define([
             }
             window.location = _this.options.redirectUrl + '?access_token=' + event.access_token;
         },
-        _popupCallback: function() {
+        _popupCallback: function () {
             return _this.usePopUp() ? _this.secureHttpsCallback : amazonPaymentConfig.getValue('oAuthHashRedirectUrl');
         },
-        usePopUp: function() {
+        usePopUp: function () {
             //always use redirect journey on product page and touch devices
             return ((window.location.protocol === 'https:' && !$('body').hasClass('catalog-product-view')) && !Modernizr.touch);
         },
@@ -85,7 +85,7 @@ define([
          * onAmazonPaymentsReady
          * @private
          */
-        _renderAmazonButton: function() {
+        _renderAmazonButton: function () {
             var authRequest;
 
             OffAmazonPayments.Button($button.attr('id'), _this.options.merchantId, {
@@ -104,7 +104,7 @@ define([
          * @returns {{scope: *, popup: *, state: *}}
          * @private
          */
-        _getLoginOptions: function() {
+        _getLoginOptions: function () {
             return {
                 scope: _this.options.loginScope,
                 popup: _this.usePopUp(),

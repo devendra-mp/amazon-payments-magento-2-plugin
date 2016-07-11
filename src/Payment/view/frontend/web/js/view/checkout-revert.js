@@ -10,7 +10,7 @@ define(
         'Magento_Checkout/js/model/error-processor',
         'Magento_Checkout/js/model/url-builder'
     ],
-    function(
+    function (
         $,
         _,
         ko,
@@ -34,12 +34,12 @@ define(
                 self = this;
                 this._super();
             },
-            revertCheckout: function() {
+            revertCheckout: function () {
                 var serviceUrl = urlBuilder.createUrl('/amazon/order-ref', {});
                 storage.delete(
                     serviceUrl
                 ).done(
-                    function() {
+                    function () {
                         amazonStorage.amazonlogOut();
                     }
                 ).fail(

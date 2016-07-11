@@ -17,7 +17,7 @@ define([
     'jquery',
     'amazonCore',
     'jquery/ui'
-], function($, core) {
+], function ($, core) {
     "use strict";
 
     var _this;
@@ -30,9 +30,9 @@ define([
          * Create Amazon Logout Widget
          * @private
          */
-        _create: function() {
+        _create: function () {
             _this = this;
-            if(this.options.onInit) {
+            if (this.options.onInit) {
                 core.AmazonLogout(); //logout amazon user on init
             }
         },
@@ -40,7 +40,7 @@ define([
          * Logs out a user if called directly
          * @private
          */
-        _logoutAmazonUser: function() {
+        _logoutAmazonUser: function () {
             core.AmazonLogout();
         }
     });

@@ -13,6 +13,6 @@
  * permissions and limitations under the License.
  */
 
-define([window.amazonPayment.widgetUrl], function() {
+define([window.amazonPayment.widgetUrl], function () {
     //after amazon widgets file as loaded
 });

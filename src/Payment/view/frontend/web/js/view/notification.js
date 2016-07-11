@@ -7,7 +7,7 @@ define(
         'uiComponent',
         'Amazon_Payment/js/model/storage'
     ],
-    function(
+    function (
         $,
         _,
         ko,
