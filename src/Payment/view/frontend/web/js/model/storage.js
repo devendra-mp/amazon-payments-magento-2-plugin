@@ -20,7 +20,7 @@ define(
         'amazonCore',
         'amazonPaymentConfig'
     ],
-    function(
+    function (
         $,
         ko,
         amazonCore,
@@ -40,80 +40,86 @@ define(
             isShippingMethodsLoading = ko.observable(true),
             isAmazonShippingAddressSelected = ko.observable(false),
             isQuoteDirty = ko.observable(amazonPaymentConfig.getValue('isQuoteDirty')),
-            isPwaVisible = ko.computed(function() { return isAmazonEnabled() && !isQuoteDirty(); }),
-            isAmazonCartInValid = ko.computed(function() { return isAmazonAccountLoggedIn() && isQuoteDirty() }),
+            isPwaVisible = ko.computed(function () {
+                return isAmazonEnabled() && !isQuoteDirty(); }),
+            isAmazonCartInValid = ko.computed(function () {
+                return isAmazonAccountLoggedIn() && isQuoteDirty() }),
             isLoginRedirectPage = $('body').hasClass('amazon-login-login-processauthhash');
 
         /**
          * Subscribes to amazonDefined observable which runs when amazon object becomes available
          * @param amazonDefined
          */
-        function checkAmazonDefined(amazonDefined) {
-            if(amazonDefined && !isLoginRedirectPage) {
-                verifyAmazonLoggedIn();
-                //remove subscription to amazonDefined once loaded
-                isAmazonDefined.dispose();
+            function checkAmazonDefined(amazonDefined)
+            {
+                if (amazonDefined && !isLoginRedirectPage) {
+                    verifyAmazonLoggedIn();
+                    //remove subscription to amazonDefined once loaded
+                    isAmazonDefined.dispose();
+                }
             }
-        }
 
         /** log out amazon user **/
-        function amazonLogOut() {
-            if(amazonCore.amazonDefined()) {
-                amazon.Login.logout();
+            function amazonLogOut()
+            {
+                if (amazonCore.amazonDefined()) {
+                    amazon.Login.logout();
+                }
+                this.isAmazonAccountLoggedIn(false);
             }
-            this.isAmazonAccountLoggedIn(false);
-        }
 
 
-        function setAmazonLoggedOutIfLoginError(isLoggedOut) {
-            if (true === isLoggedOut) {
-                isAmazonAccountLoggedIn(false);
-                amazonLoginError.dispose();
+            function setAmazonLoggedOutIfLoginError(isLoggedOut)
+            {
+                if (true === isLoggedOut) {
+                    isAmazonAccountLoggedIn(false);
+                    amazonLoginError.dispose();
+                }
             }
-        }
 
         /** if Amazon cart contents are invalid log user out **/
-        isAmazonCartInValid.subscribe(function(isCartInValid) {
-            if(isCartInValid) {
-                amazonLogOut();
-            }
-        });
+            isAmazonCartInValid.subscribe(function (isCartInValid) {
+                if (isCartInValid) {
+                    amazonLogOut();
+                }
+            });
 
         //run this on loading storage model. If not defined subscribe will trigger when true
-        checkAmazonDefined(amazonCore.amazonDefined());
-        setAmazonLoggedOutIfLoginError(amazonCore.amazonLoginError());
+            checkAmazonDefined(amazonCore.amazonDefined());
+            setAmazonLoggedOutIfLoginError(amazonCore.amazonLoginError());
 
         /**
          * Verifies amazon user is logged in
          */
-        function verifyAmazonLoggedIn() {
-            amazonCore.verifyAmazonLoggedIn().then(function(response) {
-                if (!amazonCore.amazonLoginError()) {
-                    isAmazonAccountLoggedIn(response);
-                }
-            });
-        }
-
-        return {
-            isAmazonAccountLoggedIn: isAmazonAccountLoggedIn,
-            isAmazonEnabled: isAmazonEnabled,
-            amazonDeclineCode: amazonDeclineCode,
-            sandboxSimulationReference: sandboxSimulationReference,
-            isPlaceOrderDisabled: isPlaceOrderDisabled,
-            isShippingMethodsLoading: isShippingMethodsLoading,
-            isAmazonShippingAddressSelected: isAmazonShippingAddressSelected,
-            isQuoteDirty: isQuoteDirty,
-            isPwaVisible: isPwaVisible,
-            amazonlogOut: amazonLogOut,
-            setOrderReference: function(or) {
-                orderReference = or;
-            },
-            getOrderReference: function() {
-                return orderReference;
-            },
-            getAddressConsentToken: function() {
-                return addressConsentToken();
+            function verifyAmazonLoggedIn()
+            {
+                amazonCore.verifyAmazonLoggedIn().then(function (response) {
+                    if (!amazonCore.amazonLoginError()) {
+                        isAmazonAccountLoggedIn(response);
+                    }
+                });
             }
+
+            return {
+                isAmazonAccountLoggedIn: isAmazonAccountLoggedIn,
+                isAmazonEnabled: isAmazonEnabled,
+                amazonDeclineCode: amazonDeclineCode,
+                sandboxSimulationReference: sandboxSimulationReference,
+                isPlaceOrderDisabled: isPlaceOrderDisabled,
+                isShippingMethodsLoading: isShippingMethodsLoading,
+                isAmazonShippingAddressSelected: isAmazonShippingAddressSelected,
+                isQuoteDirty: isQuoteDirty,
+                isPwaVisible: isPwaVisible,
+                amazonlogOut: amazonLogOut,
+                setOrderReference: function (or) {
+                    orderReference = or;
+                },
+                getOrderReference: function () {
+                    return orderReference;
+                },
+                getAddressConsentToken: function () {
+                    return addressConsentToken();
+                }
         }
     }
 );

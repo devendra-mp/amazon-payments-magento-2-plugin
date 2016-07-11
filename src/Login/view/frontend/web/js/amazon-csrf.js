@@ -17,7 +17,7 @@ define([
     'sjcl',
     'jquery',
     'mage/cookies'
-], function(sjcl, $) {
+], function (sjcl, $) {
     "use strict";
 
     return {
@@ -25,17 +25,17 @@ define([
             wordsLength: 8,
             cookieName: 'amazon-csrf-state'
         },
-        generateNewValue: function() {
+        generateNewValue: function () {
             var randomString = sjcl.codec.base64.fromBits(sjcl.random.randomWords(this.options.wordsLength));
             $.mage.cookies.set(this.options.cookieName, randomString);
             return randomString;
         },
-        isValid: function(stateString) {
+        isValid: function (stateString) {
             var isValid = $.mage.cookies.get(this.options.cookieName) === stateString;
             this.clear(); // always clear nonce when validating
             return isValid;
         },
-        clear: function() {
+        clear: function () {
             $.mage.cookies.clear(this.options.cookieName);
         }
     }

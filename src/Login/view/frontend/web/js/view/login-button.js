@@ -22,7 +22,7 @@ define(
         'Amazon_Payment/js/model/storage',
         'amazonPaymentConfig'
     ],
-    function(
+    function (
         $,
         Component,
         ko,
@@ -32,7 +32,7 @@ define(
     ) {
         'use strict';
         return Component.extend({
-             defaults: {
+            defaults: {
                 template: 'Amazon_Login/login-button'
             },
             isCustomerLoggedIn: customer.isLoggedIn,

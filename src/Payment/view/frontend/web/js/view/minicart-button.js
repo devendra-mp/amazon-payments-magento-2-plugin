@@ -9,7 +9,7 @@ define(
         'amazonPaymentConfig',
         'Magento_Customer/js/customer-data'
     ],
-    function(
+    function (
         $,
         Component,
         ko,
@@ -33,7 +33,7 @@ define(
                 var minicart = $("[data-block='minicart']");
 
                 // set observable flag on every minicart update
-                minicart.on('contentUpdated', function() {
+                minicart.on('contentUpdated', function () {
                     var quoteHasExcludedItems = customerData.get('cart')().amazon_quote_has_excluded_item;
                     amazonStorage.isQuoteDirty(quoteHasExcludedItems);
                 });

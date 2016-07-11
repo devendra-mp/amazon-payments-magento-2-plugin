@@ -12,7 +12,7 @@ define(
         'Magento_Checkout/js/model/shipping-service',
         'Magento_Checkout/js/model/quote'
     ],
-    function(
+    function (
         $,
         _,
         ko,
@@ -30,7 +30,7 @@ define(
                 template: 'Amazon_Payment/shipping'
             },
             isAmazonLoggedIn: amazonStorage.isAmazonAccountLoggedIn,
-            isLoading: ko.pureComputed(function() {
+            isLoading: ko.pureComputed(function () {
                 return amazonStorage.isAmazonAccountLoggedIn() ? amazonStorage.isShippingMethodsLoading() : shippingService.isLoading();
             }, this),
 
@@ -38,19 +38,19 @@ define(
                 var self = this;
                 this._super();
 
-                quote.shippingMethod.subscribe(function() {
-                    if(this.isAmazonLoggedIn()) {
+                quote.shippingMethod.subscribe(function () {
+                    if (this.isAmazonLoggedIn()) {
                         amazonStorage.isShippingMethodsLoading(false); //remove loader when shippingMethod is set
                     }
                 }, this);
 
                 //switch form inline based on amazon and customer loggedIn status
-                amazonStorage.isAmazonAccountLoggedIn.subscribe(function(loggedIn) {
+                amazonStorage.isAmazonAccountLoggedIn.subscribe(function (loggedIn) {
                     this.isFormInline = (loggedIn) ? false : !customer.isLoggedIn();
                 }, this);
 
             },
-            validateGuestEmail: function() {
+            validateGuestEmail: function () {
                 var loginFormSelector = 'form[data-role=email-with-possible-login]';
                 $(loginFormSelector).validation();
                 return $(loginFormSelector + ' input[type=email]').valid();
@@ -59,16 +59,17 @@ define(
              * New setShipping Action for Amazon payments to bypass validation
              */
             setShippingInformation: function () {
-                function setShippingInformationAmazon() {
+                function setShippingInformationAmazon()
+                {
                     setShippingInformationAction().done(
-                        function() {
+                        function () {
                             stepNavigator.next();
                         }
                     );
                 }
-                if(amazonStorage.isAmazonAccountLoggedIn() && customer.isLoggedIn()) {
+                if (amazonStorage.isAmazonAccountLoggedIn() && customer.isLoggedIn()) {
                     setShippingInformationAmazon();
-                } else if(amazonStorage.isAmazonAccountLoggedIn() && !customer.isLoggedIn()) {
+                } else if (amazonStorage.isAmazonAccountLoggedIn() && !customer.isLoggedIn()) {
                     if (this.validateGuestEmail()) {
                         setShippingInformationAmazon();
                     }

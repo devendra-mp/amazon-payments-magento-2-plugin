@@ -56,7 +56,8 @@ define(
             fullScreenLoader.startLoader();
 
             return storage.post(
-                serviceUrl, JSON.stringify(payload)
+                serviceUrl,
+                JSON.stringify(payload)
             ).done(
                 function () {
                     if (redirectOnSuccess) {

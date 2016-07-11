@@ -20,7 +20,7 @@ define(
         'Magento_Checkout/js/checkout-data',
         'Magento_Checkout/js/model/checkout-data-resolver'
     ],
-    function(
+    function (
         $,
         Component,
         ko,
@@ -61,16 +61,16 @@ define(
             /**
              * Call when component template is rendered
              */
-            initAddressWidget: function() {
+            initAddressWidget: function () {
                 self.renderAddressWidget();
             },
             /**
              * render Amazon address Widget
              */
-            renderAddressWidget: function() {
+            renderAddressWidget: function () {
                 new OffAmazonPayments.Widgets.AddressBook({
                     sellerId: self.options.sellerId,
-                    onOrderReferenceCreate: function(orderReference) {
+                    onOrderReferenceCreate: function (orderReference) {
                         var orderid = orderReference.getAmazonOrderReferenceId();
                         amazonStorage.setOrderReference(orderid);
                     },
@@ -88,12 +88,12 @@ define(
             /**
              * Get shipping address from Amazon API
              */
-            getShippingAddressFromAmazon: function() {
+            getShippingAddressFromAmazon: function () {
                 amazonStorage.isShippingMethodsLoading(true);
                 var serviceUrl = urlBuilder.createUrl('/amazon-shipping-address/:amazonOrderReference', {amazonOrderReference: amazonStorage.getOrderReference()}),
                     payload = {
                         addressConsentToken: amazonStorage.getAddressConsentToken()
-                    };
+                };
 
                 storage.put(
                     serviceUrl,
@@ -108,7 +108,7 @@ define(
 
                         //fill in blank street fields
                         if ($.isArray(addressData.street)) {
-                            for(var i = addressData.street.length; i <= 2; i++) {
+                            for (var i = addressData.street.length; i <= 2; i++) {
                                 addressData.street[i] = '';
                             }
                         }
@@ -125,12 +125,11 @@ define(
                 );
             },
 
-            getAmazonOrderReference: function() {
+            getAmazonOrderReference: function () {
                 return amazonStorage.getOrderReference();
             },
 
-            getAddressConsentToken: function()
-            {
+            getAddressConsentToken: function () {
                 return amazonStorage.getAddressConsentToken();
             }
         });

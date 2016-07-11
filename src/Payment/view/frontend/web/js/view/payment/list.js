@@ -12,12 +12,12 @@ define([
 
 ], function (
     $,
-    _, 
-    ko, 
-    Component, 
-    paymentMethods, 
-    checkoutDataResolver, 
-    addressConverter, 
+    _,
+    ko,
+    Component,
+    paymentMethods,
+    checkoutDataResolver,
+    addressConverter,
     quote,
     populateShippingAddress,
     amazonStorage
@@ -42,7 +42,7 @@ define([
                 checkoutDataResolver.resolvePaymentMethod();
                 //remove renderer for "deleted" payment methods
                 _.each(changes, function (change) {
-                    if(amazonStorage.isAmazonAccountLoggedIn() && change.value.method !== 'amazon_payment') {
+                    if (amazonStorage.isAmazonAccountLoggedIn() && change.value.method !== 'amazon_payment') {
                         this.removeRenderer(change.value.method);
                         change.status = 'deleted';
                     }
@@ -58,9 +58,9 @@ define([
          * handle decline codes
          * @private
          */
-        _setupDeclineHandler: function() {
-            amazonStorage.amazonDeclineCode.subscribe(function(declined) {
-                switch(declined) {
+        _setupDeclineHandler: function () {
+            amazonStorage.amazonDeclineCode.subscribe(function (declined) {
+                switch (declined) {
                     //hard decline
                     case 4273:
                         //populate shipping form
@@ -86,8 +86,8 @@ define([
          * When payment methods exist on load hook into widget render to remove when widget has rendered
          * @private
          */
-        _hidePaymentMethodsOnLoad: function() {
-            if(paymentMethods().length > 0) {
+        _hidePaymentMethodsOnLoad: function () {
+            if (paymentMethods().length > 0) {
                 //if the payment methods are already set
                 $(document).on('rendered', '#amazon_payment', function () {
                     _.each(paymentMethods(), function (payment) {
@@ -102,7 +102,7 @@ define([
          * reload payment methods on decline
          * @private
          */
-        _reloadPaymentMethods: function() {
+        _reloadPaymentMethods: function () {
             _.each(paymentMethods(), function (paymentMethodData) {
                 if (paymentMethodData.method === 'amazon_payment' && !amazonStorage.isAmazonAccountLoggedIn()) {
                     this.removeRenderer(paymentMethodData.method);
@@ -115,7 +115,7 @@ define([
          * re-intialises Amazon wallet widget
          * @private
          */
-        _reInitializeAmazonWalletWidget: function() {
+        _reInitializeAmazonWalletWidget: function () {
             var items = this.getRegion('payment-method-items');
             _.find(items(), function (value) {
                 if (value.index === 'amazon_payment') {
@@ -127,7 +127,7 @@ define([
          * hides editable content and links to prevent unexptect behaviour
          * @private
          */
-        _hideEditableOptions: function() {
+        _hideEditableOptions: function () {
             $('.payment-option.discount-code', '#payment').remove();
             $('.action-edit', '.shipping-information').remove();
             $('.opc-progress-bar-item._complete', '.opc-progress-bar').addClass('lock-step');

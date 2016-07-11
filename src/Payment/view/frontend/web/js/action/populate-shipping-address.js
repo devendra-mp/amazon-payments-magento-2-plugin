@@ -25,7 +25,8 @@ define(
     function ($, addressConverter, quote, registry, checkoutData, amazonStorage) {
         'use strict';
 
-        function populateShippingForm() {
+        function populateShippingForm()
+        {
             var shippingAddressData = checkoutData.getShippingAddressFromData();
             
             registry.async('checkoutProvider')(function (checkoutProvider) {
@@ -41,14 +42,14 @@ define(
          * Populate shipping address form in shipping step from quote model
          * @private
          */
-        return function() {
+        return function () {
             //check to see if user is logged out of amazon (otherwise shipping form won't be in DOM)
-            if(!amazonStorage.isAmazonAccountLoggedIn) {
+            if (!amazonStorage.isAmazonAccountLoggedIn) {
                 populateShippingForm();
             }
             //subscribe to logout and trigger shippingform population when logged out.
-            amazonStorage.isAmazonAccountLoggedIn.subscribe(function(loggedIn) {
-                if(!loggedIn) {
+            amazonStorage.isAmazonAccountLoggedIn.subscribe(function (loggedIn) {
+                if (!loggedIn) {
                     populateShippingForm();
                 }
             });
