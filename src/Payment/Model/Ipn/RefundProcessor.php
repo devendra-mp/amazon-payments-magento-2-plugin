@@ -85,6 +85,7 @@ class RefundProcessor implements ProcessorInterface
 
         if (count($items = $collection->getItems())) {
             $pendingRefund = current($items);
+            $this->queuedRefundUpdater->setThrowExceptions(true);
             $this->queuedRefundUpdater->checkAndUpdateRefund($pendingRefund->getId(), $details);
         }
     }

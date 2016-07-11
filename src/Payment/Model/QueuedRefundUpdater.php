@@ -70,6 +70,11 @@ class QueuedRefundUpdater
     protected $logger;
 
     /**
+     * @var bool
+     */
+    protected $throwExceptions = false;
+
+    /**
      * @param OrderRepositoryInterface           $orderRepository
      * @param OrderPaymentRepositoryInterface    $orderPaymentRepository
      * @param ClientFactoryInterface             $amazonHttpClientFactory
@@ -97,6 +102,16 @@ class QueuedRefundUpdater
         $this->pendingRefundFactory               = $pendingRefundFactory;
         $this->storeManager                       = $storeManager;
         $this->logger                             = $logger;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setThrowExceptions($throwExceptions)
+    {
+        $this->throwExceptions = $throwExceptions;
+
+        return $this;
     }
 
     /**
@@ -144,6 +159,10 @@ class QueuedRefundUpdater
         } catch (\Exception $e) {
             $this->logger->error($e);
             $pendingRefund->getResource()->rollBack();
+
+            if ($this->throwExceptions) {
+                throw $e;
+            }
         }
     }
 
