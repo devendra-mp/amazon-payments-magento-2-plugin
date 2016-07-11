@@ -121,6 +121,8 @@ class AddressManagement implements AddressManagementInterface
             }
 
             throw new Exception();
+        } catch (SessionException $e) {
+            throw $e;
         } catch (WebapiException $e) {
             throw $e;
         } catch (ValidatorException $e) {
