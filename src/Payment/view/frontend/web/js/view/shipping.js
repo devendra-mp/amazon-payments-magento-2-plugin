@@ -10,7 +10,8 @@ define(
         'Magento_Checkout/js/model/step-navigator',
         'Amazon_Payment/js/model/storage',
         'Magento_Checkout/js/model/shipping-service',
-        'Magento_Checkout/js/model/quote'
+        'Magento_Checkout/js/model/quote',
+        'Magento_Customer/js/model/address-list'
     ],
     function (
         $,
@@ -22,7 +23,8 @@ define(
         stepNavigator,
         amazonStorage,
         shippingService,
-        quote
+        quote,
+        addressList
     ) {
         'use strict';
         return Component.extend({
@@ -46,7 +48,7 @@ define(
 
                 //switch form inline based on amazon and customer loggedIn status
                 amazonStorage.isAmazonAccountLoggedIn.subscribe(function (loggedIn) {
-                    this.isFormInline = (loggedIn) ? false : !customer.isLoggedIn();
+                    this.isFormInline = (loggedIn) ? false : (customer.isLoggedIn()) ? (addressList().length === 0) : true;
                 }, this);
 
             },
