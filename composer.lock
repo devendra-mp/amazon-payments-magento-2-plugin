@@ -4,16 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "abb2b5f53c07e1ce7bb92e9fc63d7ba4",
-    "content-hash": "e643408412e0753d106e7a65b6701325",
+    "hash": "fc9f8bba56dd2a2ca9c52a1b2e4a4057",
+    "content-hash": "7a3a76818dd051086056d1268eb8ea3d",
     "packages": [
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
             "version": "dev-psr_logging",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mcurran-inviqa/login-and-pay-with-amazon-sdk-php.git",
-                "reference": "e74ecb7700cec51d99d623c69f05e86ac356f69f"
+                "url": "https://github.com/amzn/login-and-pay-with-amazon-sdk-php.git",
+                "reference": "14a3c792bf124f34ca8e18686adb5edf3075270d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amzn/login-and-pay-with-amazon-sdk-php/zipball/14a3c792bf124f34ca8e18686adb5edf3075270d",
+                "reference": "14a3c792bf124f34ca8e18686adb5edf3075270d",
+                "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
@@ -25,6 +31,7 @@
                     "PayWithAmazon\\": "PayWithAmazon/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache OSL-2"
             ],
@@ -44,7 +51,7 @@
                 "payment",
                 "payments"
             ],
-            "time": "2016-07-01 14:54:20"
+            "time": "2016-07-13 14:07:19"
         },
         {
             "name": "magento/framework",
