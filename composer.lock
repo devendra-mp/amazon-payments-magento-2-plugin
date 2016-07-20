@@ -4,9 +4,100 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fc9f8bba56dd2a2ca9c52a1b2e4a4057",
-    "content-hash": "7a3a76818dd051086056d1268eb8ea3d",
+    "hash": "8ffb475419acf361e3618dc5a9fe3936",
+    "content-hash": "d329307e1055529083de8fdcc22ae580",
     "packages": [
+        {
+            "name": "amazon/module-core",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "src/Core",
+                "reference": "e98b2240f580676b1c59cf72439be4af0610a356",
+                "shasum": null
+            },
+            "require": {
+                "amzn/login-and-pay-with-amazon-sdk-php": "dev-psr_logging",
+                "magento/framework": "^100.1.0",
+                "magento/module-config": "^100.1.0",
+                "magento/module-developer": "^100.1.0",
+                "magento/module-quote": "^100.1.0",
+                "magento/module-store": "^100.1.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amazon\\Core\\": ""
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Shared functionality for Amazon Login and Amazon Payment modules"
+        },
+        {
+            "name": "amazon/module-login",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "src/Login",
+                "reference": "9cc616c80715d44bb5c10a5a649a86b77bf20345",
+                "shasum": null
+            },
+            "require": {
+                "amazon/module-core": "^1.0.0",
+                "magento/module-checkout": "^100.1.0",
+                "magento/module-customer": "^100.1.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amazon\\Login\\": ""
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Amazon Payment module"
+        },
+        {
+            "name": "amazon/module-payment",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "src/Payment",
+                "reference": "1850706fdef568b65c7fb438e03c7a747aa51e69",
+                "shasum": null
+            },
+            "require": {
+                "amazon/module-core": "^1.0.0",
+                "amazon/module-login": "^1.0.0",
+                "magento/module-backend": "^100.1.0",
+                "magento/module-eav": "^100.1.0",
+                "magento/module-payment": "^100.1.0",
+                "magento/module-quote": "^100.1.0",
+                "magento/module-sales": "^100.1.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amazon\\Payment\\": ""
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Amazon Payment module"
+        },
         {
             "name": "amzn/login-and-pay-with-amazon-sdk-php",
             "version": "dev-psr_logging",
@@ -2744,27 +2835,27 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.2.0",
+            "version": "6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "d094e337976dff9d8e2424e8485872194e768662"
+                "reference": "3f808fba627f2c5b69e2501217bf31af349c1427"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d094e337976dff9d8e2424e8485872194e768662",
-                "reference": "d094e337976dff9d8e2424e8485872194e768662",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/3f808fba627f2c5b69e2501217bf31af349c1427",
+                "reference": "3f808fba627f2c5b69e2501217bf31af349c1427",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/promises": "~1.0",
-                "guzzlehttp/psr7": "~1.1",
-                "php": ">=5.5.0"
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.3.1",
+                "php": ">=5.5"
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "~4.0",
-                "psr/log": "~1.0"
+                "phpunit/phpunit": "^4.0",
+                "psr/log": "^1.0"
             },
             "type": "library",
             "extra": {
@@ -2802,7 +2893,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-03-21 20:02:09"
+            "time": "2016-07-15 17:22:37"
         },
         {
             "name": "guzzlehttp/promises",
@@ -3777,7 +3868,7 @@
         },
         {
             "name": "sensiolabs/behat-page-object-extension",
-            "version": "dev-master",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/BehatPageObjectExtension.git",
@@ -4626,7 +4717,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "amzn/login-and-pay-with-amazon-sdk-php": 20,
-        "sensiolabs/behat-page-object-extension": 20,
         "bex/behat-magento2-init": 20,
         "ciaranmcnulty/behat-stepthroughextension": 20
     },
