@@ -26,7 +26,7 @@ class InstallSchema implements InstallSchemaInterface
 {
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
-        $table = $setup->getConnection()->newTable(CustomerLink::TABLE_NAME);
+        $table = $setup->getConnection()->newTable($setup->getTable(CustomerLink::TABLE_NAME));
 
         $table
             ->addColumn(

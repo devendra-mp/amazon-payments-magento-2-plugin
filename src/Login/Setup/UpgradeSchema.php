@@ -28,7 +28,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '1.1.0', '<')) {
             $setup->getConnection()->addForeignKey(
                 $setup->getFkName(CustomerLink::TABLE_NAME, 'customer_id', 'customer_entity', 'entity_id'),
-                CustomerLink::TABLE_NAME,
+                $setup->getTable(CustomerLink::TABLE_NAME),
                 'customer_id',
                 'customer_entity',
                 'entity_id',
@@ -38,7 +38,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($context->getVersion(), '1.2.0', '<')) {
             $setup->getConnection()->addIndex(
-                CustomerLink::TABLE_NAME,
+                $setup->getTable(CustomerLink::TABLE_NAME),
                 $setup->getIdxName(CustomerLink::TABLE_NAME, ['customer_id'], AdapterInterface::INDEX_TYPE_UNIQUE),
                 ['customer_id'],
                 AdapterInterface::INDEX_TYPE_UNIQUE

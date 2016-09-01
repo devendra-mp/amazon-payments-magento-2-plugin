@@ -16,6 +16,7 @@
 namespace Amazon\Payment\Setup\Table;
 
 use Amazon\Payment\Api\Data\PendingRefundInterface;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 
@@ -29,11 +30,18 @@ class AmazonPendingRefund
     protected $connection;
 
     /**
-     * @param AdapterInterface $connection
+     * @var ResourceConnection
      */
-    public function __construct(AdapterInterface $connection)
+    protected $resource;
+
+    /**
+     * @param AdapterInterface   $connection
+     * @param ResourceConnection $resource
+     */
+    public function __construct(AdapterInterface $connection, ResourceConnection $resource)
     {
         $this->connection = $connection;
+        $this->resource = $resource;
     }
 
     /**
@@ -51,7 +59,7 @@ class AmazonPendingRefund
      */
     protected function doCreateTable()
     {
-        $table = $this->connection->newTable(static::TABLE_NAME);
+        $table = $this->connection->newTable($this->resource->getTableName(static::TABLE_NAME));
 
         $table
             ->addColumn(
@@ -118,13 +126,13 @@ class AmazonPendingRefund
         ];
 
         $indexName = $this->connection->getIndexName(
-            static::TABLE_NAME,
+            $this->resource->getTableName(static::TABLE_NAME),
             $pendingColumns,
             AdapterInterface::INDEX_TYPE_UNIQUE
         );
 
         $this->connection->addIndex(
-            static::TABLE_NAME,
+            $this->resource->getTableName(static::TABLE_NAME),
             $indexName,
             $pendingColumns,
             AdapterInterface::INDEX_TYPE_UNIQUE

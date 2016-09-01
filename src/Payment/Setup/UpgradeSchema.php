@@ -56,7 +56,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             ];
 
             foreach ($linkTables as $fieldName => $tableName) {
-                $table = $setup->getConnection()->newTable($tableName);
+                $table = $setup->getConnection()->newTable($setup->getTable($tableName));
 
                 $table
                     ->addColumn(
@@ -129,7 +129,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         }
 
         if (version_compare($context->getVersion(), '1.4.0', '<')) {
-            $table = $setup->getConnection()->newTable(PendingCapture::TABLE_NAME);
+            $table = $setup->getConnection()->newTable($setup->getTable(PendingCapture::TABLE_NAME));
 
             $table
                 ->addColumn(
@@ -175,7 +175,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '1.6.0', '<')) {
             $setup->getConnection()->addForeignKey(
                 $setup->getFkName(QuoteLink::TABLE_NAME, 'quote_id', 'quote', 'entity_id'),
-                QuoteLink::TABLE_NAME,
+                $setup->getTable(QuoteLink::TABLE_NAME),
                 'quote_id',
                 'quote',
                 'entity_id',
@@ -184,7 +184,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
             $setup->getConnection()->addForeignKey(
                 $setup->getFkName(OrderLink::TABLE_NAME, 'order_id', 'sales_order', 'entity_id'),
-                OrderLink::TABLE_NAME,
+                $setup->getTable(OrderLink::TABLE_NAME),
                 'order_id',
                 'sales_order',
                 'entity_id',
@@ -281,7 +281,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         );
 
         $setup->getConnection()->dropIndex(
-            PendingCapture::TABLE_NAME,
+            $setup->getTable(PendingCapture::TABLE_NAME),
             $setup->getIdxName(
                 PendingCapture::TABLE_NAME,
                 [PendingCaptureInterface::CAPTURE_ID],
@@ -296,7 +296,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         ];
 
         $setup->getConnection()->addIndex(
-            PendingCapture::TABLE_NAME,
+            $setup->getTable(PendingCapture::TABLE_NAME),
             $setup->getIdxName(
                 PendingCapture::TABLE_NAME,
                 $pendingColumns,
@@ -309,7 +309,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
     private function createPendingAuthorizationQueueTable(SchemaSetupInterface $setup)
     {
-        $table = $setup->getConnection()->newTable(PendingAuthorization::TABLE_NAME);
+        $table = $setup->getConnection()->newTable($setup->getTable(PendingAuthorization::TABLE_NAME));
 
         $table
             ->addColumn(
@@ -375,7 +375,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         ];
 
         $setup->getConnection()->addIndex(
-            PendingAuthorization::TABLE_NAME,
+            $setup->getTable(PendingAuthorization::TABLE_NAME),
             $setup->getIdxName(
                 PendingAuthorization::TABLE_NAME,
                 $pendingColumns,
