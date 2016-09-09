@@ -114,6 +114,7 @@ define(
                         }
                         checkoutData.setShippingAddressFromData(addressConverter.quoteAddressToFormAddressData(addressData));
                         checkoutDataResolver.resolveShippingAddress();
+                        amazonStorage.isShippingMethodsLoading(false);
                     }
                 ).fail(
                     function (response) {
